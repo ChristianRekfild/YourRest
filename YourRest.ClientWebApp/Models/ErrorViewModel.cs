@@ -1,4 +1,4 @@
-namespace YourRest.Models
+namespace YourRest.ClientWebApp.Models
 {
     public class ErrorViewModel
     {
