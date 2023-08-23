@@ -1,8 +1,10 @@
-﻿namespace YourRest.DAL.Postgre.Entities
+﻿using YourRest.DAL.Contracts;
+
+namespace YourRest.DAL.Postgre.Entities
 {
-    public class Country
-    {
-        public int Id { get; set; }
+    //TODO: разнести domain model и entity
+    public class Country : IntBaseEntity
+    {       
         public string Name { get; set; }
     }
 }

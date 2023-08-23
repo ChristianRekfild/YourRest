@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using NuGet.Versioning;
+using YourRest.DAL.Contracts;
 using YourRest.DAL.Postgre;
 using YourRest.DAL.Postgre.Entities;
 
@@ -12,9 +14,9 @@ namespace YourRest.ClientWebApp.Controllers
 {
     public class CountriesController : Controller
     {
-        private readonly ApplicationContext _context;
+        private readonly IRepository<Country, Int32> _context;
 
-        public CountriesController(ApplicationContext context)
+        public CountriesController(IRepository<Country, Int32> context)
         {
             _context = context;
         }
@@ -22,21 +24,21 @@ namespace YourRest.ClientWebApp.Controllers
         // GET: Countries
         public async Task<IActionResult> Index()
         {
-              return _context.Countries != null ? 
-                          View(await _context.Countries.ToListAsync()) :
-                          Problem("Entity set 'ApplicationContext.Countries'  is null.");
+            return _context != null ?
+                        View(await _context.GetAllAsync()) :
+                        Problem("Entity set 'ApplicationContext.Countries'  is null.");
         }
 
         // GET: Countries/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null || _context.Countries == null)
+            if (id == null || _context == null)
             {
                 return NotFound();
             }
 
-            var country = await _context.Countries
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var country = await _context.GetAsync((int)id);
+
             if (country == null)
             {
                 return NotFound();
@@ -60,8 +62,7 @@ namespace YourRest.ClientWebApp.Controllers
         {
             if (ModelState.IsValid)
             {
-                _context.Add(country);
-                await _context.SaveChangesAsync();
+                await _context.AddAsync(country);
                 return RedirectToAction(nameof(Index));
             }
             return View(country);
@@ -70,12 +71,12 @@ namespace YourRest.ClientWebApp.Controllers
         // GET: Countries/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null || _context.Countries == null)
+            if (id == null || _context == null)
             {
                 return NotFound();
             }
 
-            var country = await _context.Countries.FindAsync(id);
+            var country = await _context.GetAsync((int)id);
             if (country == null)
             {
                 return NotFound();
@@ -99,12 +100,11 @@ namespace YourRest.ClientWebApp.Controllers
             {
                 try
                 {
-                    _context.Update(country);
-                    await _context.SaveChangesAsync();
+                    await _context.UpdateAsync(country);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!CountryExists(country.Id))
+                    if (!(await CountryExists(country.Id)))
                     {
                         return NotFound();
                     }
@@ -121,13 +121,12 @@ namespace YourRest.ClientWebApp.Controllers
         // GET: Countries/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null || _context.Countries == null)
+            if (id == null || _context == null)
             {
                 return NotFound();
             }
 
-            var country = await _context.Countries
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var country = await _context.GetAsync((int)id);
             if (country == null)
             {
                 return NotFound();
@@ -141,23 +140,19 @@ namespace YourRest.ClientWebApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            if (_context.Countries == null)
+            if (_context == null)
             {
                 return Problem("Entity set 'ApplicationContext.Countries'  is null.");
             }
-            var country = await _context.Countries.FindAsync(id);
-            if (country != null)
-            {
-                _context.Countries.Remove(country);
-            }
-            
-            await _context.SaveChangesAsync();
+
+            await _context.DeleteAsync(id);
             return RedirectToAction(nameof(Index));
         }
 
-        private bool CountryExists(int id)
+        private async Task<bool> CountryExists(int id)
         {
-          return (_context.Countries?.Any(e => e.Id == id)).GetValueOrDefault();
+            var country = await _context.GetAsync(id);
+            return country != null;
         }
     }
 }
