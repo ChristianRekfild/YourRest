@@ -31,12 +31,14 @@ namespace YourRest.DAL.Postgre
 
         public async Task UpdateAsync(T entity)
         {
-            var entity2 = await _dataContext.Set<T>().FirstOrDefaultAsync(x => x.Id.Equals(entity.Id));
-            if (entity2 != null)
+            var oldEntity = await _dataContext.Set<T>().FirstOrDefaultAsync(x => x.Id.Equals(entity.Id));
+            if (oldEntity != null)
             {
                 foreach (PropertyInfo propInfo in typeof(T).GetProperties())
                 {
-                    propInfo.SetValue(entity2, propInfo.GetValue(entity));
+                    var newFieldValue = propInfo.GetValue(entity);
+                    if(newFieldValue != propInfo.GetValue(oldEntity))
+                    propInfo.SetValue(oldEntity, newFieldValue);
                 }
                 await _dataContext.SaveChangesAsync();
             }
