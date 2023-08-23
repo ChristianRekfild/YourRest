@@ -6,7 +6,10 @@ using System.Threading.Tasks;
 
 namespace YourRest.DAL.Postgre.Entities
 {
-    internal class City
+    public class City
     {
+        public int Id { get; set; }
+        public string Name { get; set; }
     }
 }
+
