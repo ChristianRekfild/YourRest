@@ -1,8 +1,9 @@
-﻿namespace YourRest.DAL.Postgre.Entities
+﻿using YourRest.DAL.Contracts;
+
+namespace YourRest.DAL.Postgre.Entities
 {
-    public class Room
+    public class Room : IntBaseEntity
     {
-        public int Id { get; set; }
         public string Name { get; set; }
     }
 }
