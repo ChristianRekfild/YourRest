@@ -14,18 +14,18 @@ namespace YourRest.DAL.Postgre
         public DbSet<Customer> Customers { get; set; }
         public DbSet<City> Cities { get; set; }
 
-        public ApplicationContext() : base()
-        {
-        }
+        //public ApplicationContext() : base()
+        //{
+        //}
         //public ApplicationContext(DbContextOptions<ApplicationContext> options) : base(options)
         //{
         //}
 
-        //public ApplicationContext(IConfiguration configuration)
-        //{
-        //    this.configuration = configuration;
-        //    Database.EnsureCreated();
-        //}
+        public ApplicationContext(IConfiguration configuration)
+        {
+            this.configuration = configuration;
+            Database.EnsureCreated();
+        }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
