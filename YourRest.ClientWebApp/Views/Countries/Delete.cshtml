@@ -1,6 +1,4 @@
-﻿@model YourRest.DAL.Postgre.Entities.Country
-
-@{
+﻿@{
     ViewData["Title"] = "Delete";
 }
 
@@ -11,17 +9,18 @@
     <h4>Country</h4>
     <hr />
     <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Name)
+        <dt class="col-sm-2">
+            Country Name
         </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Name)
+        <dd class="col-sm-10" id="countryNameDisplay"> <!-- JavaScript fill this dynamically -->
+            <!-- The country name would be inserted -->
         </dd>
     </dl>
     
-    <form asp-action="Delete">
-        <input type="hidden" asp-for="Id" />
+    <!-- Api method for delelte -->
+    <form action="https://localhost/api/countries/:id" method="post">
+        <input type="hidden" id="countryId" name="Id" />
         <input type="submit" value="Delete" class="btn btn-danger" /> |
-        <a asp-action="Index">Back to List</a>
+        <a href="/somepath">Back to List</a>
     </form>
 </div>

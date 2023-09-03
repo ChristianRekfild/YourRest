@@ -1,6 +1,4 @@
-﻿@model YourRest.DAL.Postgre.Entities.Country
-
-@{
+﻿@{
     ViewData["Title"] = "Details";
 }
 
@@ -10,15 +8,28 @@
     <h4>Country</h4>
     <hr />
     <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Name)
+        <dt class="col-sm-2">
+            Country Name
         </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Name)
+        <dd class="col-sm-10" id="countryNameDisplay">
+            <!-- The country name will be added dynamically -->
         </dd>
     </dl>
 </div>
+
 <div>
-    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+    <a href="/somepath/edit/:id" id="editLink">Edit</a> |
+    <a href="/somepath">Back to List</a>
 </div>
+
+<script>
+    fetch('https://localhost/api/countries/:id') 
+    .then(response => response.json())
+    .then(data => {
+        document.getElementById('countryNameDisplay').textContent = data.name;
+        document.getElementById('editLink').href = "/somepath/edit/" + data.id;
+    })
+    .catch(error => {
+        console.error('Error fetching country details:', error);
+    });
+</script>

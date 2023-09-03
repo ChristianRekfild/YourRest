@@ -1,17 +1,7 @@
-using Microsoft.EntityFrameworkCore;
-using YourRest.DAL.Contracts;
-using YourRest.DAL.Postgre;
-
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
-
-// получаем строку подключения из файла конфигурации
-string connection = builder.Configuration.GetConnectionString("YourRestDbConnection");
-builder.Services.AddDbContext<ApplicationContext>(options => options.UseNpgsql(connection));
-builder.Services.AddScoped(typeof(DbContext), typeof(ApplicationContext));
-builder.Services.AddScoped(typeof(IRepository<,>), typeof(PgRepository<,>));
 
 var app = builder.Build();
 
