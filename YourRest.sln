@@ -15,6 +15,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "YourRest.BLL.Tests", "YourR
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YourRest.DAL.Postgre.Migration", "YourRest.DAL.Postgre.Migration\YourRest.DAL.Postgre.Migration.csproj", "{7A45B06D-5BAF-434C-B78D-9D9495C7F509}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YourRest.Infrastructure", "YourRest.Infrastructure\YourRest.Infrastructure.csproj", "{C2DC889D-2ABB-454B-AFD2-F3F136D43E9F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -45,6 +47,10 @@ Global
 		{7A45B06D-5BAF-434C-B78D-9D9495C7F509}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7A45B06D-5BAF-434C-B78D-9D9495C7F509}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7A45B06D-5BAF-434C-B78D-9D9495C7F509}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C2DC889D-2ABB-454B-AFD2-F3F136D43E9F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C2DC889D-2ABB-454B-AFD2-F3F136D43E9F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C2DC889D-2ABB-454B-AFD2-F3F136D43E9F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C2DC889D-2ABB-454B-AFD2-F3F136D43E9F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

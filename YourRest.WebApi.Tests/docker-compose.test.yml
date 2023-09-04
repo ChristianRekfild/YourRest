@@ -1,0 +1,16 @@
+version: '3'
+
+services:
+  postgres_test:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_DB: your_rest_test
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+    ports:
+      - "5433:5432" 
+    volumes:
+      - pgdata_test:/var/lib/postgresql/data
+
+volumes:
+  pgdata_test:
