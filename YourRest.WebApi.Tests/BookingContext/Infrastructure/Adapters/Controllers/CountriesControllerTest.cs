@@ -10,6 +10,7 @@ using YourRest.Infrastructure.DbContexts;
 using YourRest.WebApi;
 using SharedKernel.Domain.Entities;
 using YourRest.WebApi.BookingContext.Application.Dto;
+using YourRest.WebApi.Tests;
 
 namespace YourRest.WebApi.Tests.BookingContext.Infrastructure.Adapters.Controllers
 {

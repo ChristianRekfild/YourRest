@@ -5,7 +5,7 @@ using Microsoft.Extensions.Configuration;
 using Testcontainers.PostgreSql;
 using YourRest.WebApi;
 
-namespace YourRest.WebApi.Tests.BookingContext.Infrastructure.Adapters.Controllers
+namespace YourRest.WebApi.Tests
 {
     public class ApiFixture : IDisposable
     {
@@ -22,7 +22,7 @@ namespace YourRest.WebApi.Tests.BookingContext.Infrastructure.Adapters.Controlle
         private void InitializePostgresContainer()
         {
             PostgresContainer = new PostgreSqlBuilder()
-                .WithImage("postgres:latest")
+                .WithImage("postgres:15.4-alpine")
                 .WithUsername("admin")
                 .WithPassword("admin")
                 .WithDatabase("your_rest_postgres_test")

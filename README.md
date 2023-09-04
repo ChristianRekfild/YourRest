@@ -16,7 +16,7 @@ dotnet add reference ../SharedKernel/SharedKernel.csproj
 dotnet add reference ../YourRest.Infrastructure/YourRest.Infrastructure.csproj
 ```
 
-[Подробнее о контекстах](./_docs/architecture.md)
+[Подробнее о контекстах](./_docs/bounded_contexts.md)
 ## Добавление миграции
 
 Для добавления новой миграции в общий SharedDbContext выполните:
@@ -44,6 +44,9 @@ dotnet test
 - **YourRest.BLL.Tests** - юнит-тесты.
 
 ## Документация в Swagger
+
+export ASPNETCORE_ENVIRONMENT=Development
+dotnet run
 
 Доступ к документации по API: [Swagger](http://localhost:5201/swagger/index.html)
 
