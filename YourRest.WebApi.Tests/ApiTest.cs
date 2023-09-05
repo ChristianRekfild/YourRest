@@ -10,7 +10,7 @@ using YourRest.Infrastructure.DbContexts;
 using YourRest.WebApi;
 using SharedKernel.Domain.Entities;
 
-namespace YourRest.WebApi.Tests.BookingContext.Infrastructure.Adapters.Controllers
+namespace YourRest.WebApi.Tests
 {
     public abstract class ApiTest : IClassFixture<ApiFixture>, IDisposable
 {
