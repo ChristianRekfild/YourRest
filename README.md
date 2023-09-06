@@ -45,7 +45,9 @@ dotnet test
 
 ## Документация в Swagger
 
-export ASPNETCORE_ENVIRONMENT=Development
+export ASPNETCORE_ENVIRONMENT=Development (Linux)
+setx ASPNETCORE_ENVIRONMENT "Development" (Windows)
+
 dotnet run
 
 Доступ к документации по API: [Swagger](http://localhost:5201/swagger/index.html)
