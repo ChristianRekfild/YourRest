@@ -9,6 +9,9 @@ namespace YourRest.Infrastructure.DbContexts
         private readonly IConfiguration configuration;
 
         public DbSet<Country> Countries { get; set; }
+        public DbSet<Customer> Customers { get; set; }
+
+        public DbSet<Booking> Bookings { get; set; }
 
         public SharedDbContext(DbContextOptions<SharedDbContext> options) : base(options)
         {
@@ -17,6 +20,8 @@ namespace YourRest.Infrastructure.DbContexts
         public void ClearAllTables()
         {
             Countries.RemoveRange(Countries);
+            Bookings.RemoveRange(Bookings);
+            Customers.RemoveRange(Customers);
             
             // Add other DbSet removals here
             // Example: 
