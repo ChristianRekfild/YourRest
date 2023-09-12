@@ -12,6 +12,8 @@ namespace YourRest.Infrastructure.DbContexts
         public DbSet<Customer> Customers { get; set; }
 
         public DbSet<Booking> Bookings { get; set; }
+        public DbSet<Region> Regions { get; set; }
+
 
         public SharedDbContext(DbContextOptions<SharedDbContext> options) : base(options)
         {
@@ -22,6 +24,7 @@ namespace YourRest.Infrastructure.DbContexts
             Countries.RemoveRange(Countries);
             Bookings.RemoveRange(Bookings);
             Customers.RemoveRange(Customers);
+            Regions.RemoveRange(Regions);
             
             // Add other DbSet removals here
             // Example: 
