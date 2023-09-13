@@ -55,6 +55,9 @@ public class Program
 
         services.AddScoped<IGetCountryListUseCase, GetCountryListUseCase>();
         services.AddScoped<ICountryRepository, CountryRepository>();
+
+        services.AddScoped<IGetRegionListUseCase, GetRegionListUseCase>();
+        services.AddScoped<IRegionRepository, RegionRepository>();
     }
 
     public static void Configure(IApplicationBuilder app)
@@ -64,7 +67,7 @@ public class Program
             app.UseSwagger();
             app.UseSwaggerUI();
         }
-
+        
         app.UseHttpsRedirection();
         app.UseRouting(); // This is necessary for the endpoints to work.
         app.UseAuthorization();

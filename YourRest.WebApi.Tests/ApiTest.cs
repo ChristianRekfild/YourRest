@@ -13,40 +13,48 @@ using SharedKernel.Domain.Entities;
 namespace YourRest.WebApi.Tests
 {
     public abstract class ApiTest : IClassFixture<ApiFixture>, IDisposable
-{
-    protected readonly ApiFixture Fixture;
-    protected readonly HttpClient Client;
-
-    protected ApiTest(ApiFixture fixture)
     {
-        Fixture = fixture;
-        Client = Fixture.Server.CreateClient();
+        protected readonly ApiFixture Fixture;
+        protected readonly HttpClient Client;
 
-        using var scope = Fixture.Server.Host.Services.CreateScope();
-        var context = scope.ServiceProvider.GetRequiredService<SharedDbContext>();
-        context.Database.Migrate();
-    }
+        protected ApiTest(ApiFixture fixture)
+        {
+            Fixture = fixture;
+            Client = Fixture.Server.CreateClient();
 
-    protected async Task InsertCountryIntoDatabase(Country country)
-    {
-        using var scope = Fixture.Server.Host.Services.CreateScope();
-        var context = scope.ServiceProvider.GetRequiredService<SharedDbContext>();
-        context.Countries.Add(country);
-        await context.SaveChangesAsync();
-    }
+            using var scope = Fixture.Server.Host.Services.CreateScope();
+            var context = scope.ServiceProvider.GetRequiredService<SharedDbContext>();
+            context.Database.Migrate();
+        }
 
-    protected void CleanDatabase()
-    {
-        using var scope = Fixture.Server.Host.Services.CreateScope();
-        var context = scope.ServiceProvider.GetRequiredService<SharedDbContext>();
-        
-        context.ClearAllTables();
-    }
+        protected async Task InsertCountryIntoDatabase(Country country)
+        {
+            using var scope = Fixture.Server.Host.Services.CreateScope();
+            var context = scope.ServiceProvider.GetRequiredService<SharedDbContext>();
+            context.Countries.Add(country);
+            await context.SaveChangesAsync();
+        }
 
-    public virtual void Dispose()
-    {
-        CleanDatabase();
+        protected async Task InsertObjectIntoDatabase<T>(T entity) 
+        {
+            using var scope = Fixture.Server.Host.Services.CreateScope();
+            var context = scope.ServiceProvider.GetRequiredService<SharedDbContext>();
+            context.Add(entity);
+            await context.SaveChangesAsync();
+        }
+
+        protected void CleanDatabase()
+        {
+            using var scope = Fixture.Server.Host.Services.CreateScope();
+            var context = scope.ServiceProvider.GetRequiredService<SharedDbContext>();
+
+            context.ClearAllTables();
+        }
+
+        public virtual void Dispose()
+        {
+            CleanDatabase();
+        }
     }
-}
 
 }
