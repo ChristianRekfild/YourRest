@@ -17,10 +17,13 @@ namespace YourRest.WebApi.BookingContext.Infrastructure.Adapters.Controllers
         }
 
         [HttpGet]
-        [Route("api/cities/get/{id}")]
+        [Route("api/cities/{id}")]
         public async Task<IActionResult> GetCityById(int id)
         {
             var city = await _getCityByIdUseCase.execute(id);
+
+            if (city is null) return NotFound(null);
+
             return Ok(city);
         }
 

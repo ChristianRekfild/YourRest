@@ -19,6 +19,8 @@ namespace YourRest.WebApi.BookingContext.Application.UseCases
         {
             var city = await _cityRepository.GetCityByIdAsync(id);
 
+            if (city is null) return null;
+
             return new CityDTO
             {
                 Id = city.Id,

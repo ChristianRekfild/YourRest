@@ -35,6 +35,14 @@ namespace YourRest.WebApi.Tests
         await context.SaveChangesAsync();
     }
 
+    protected async Task InsertCityIntoDatabase(City city)
+    {
+        using var scope = Fixture.Server.Host.Services.CreateScope();
+        var context = scope.ServiceProvider.GetRequiredService<SharedDbContext>();
+        context.Cities.Add(city);
+        await context.SaveChangesAsync();
+    }
+
     protected void CleanDatabase()
     {
         using var scope = Fixture.Server.Host.Services.CreateScope();
