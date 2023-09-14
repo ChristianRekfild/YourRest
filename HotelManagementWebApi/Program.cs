@@ -7,7 +7,10 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using HotelManagementWebApi.Infrastructure.Repositories;
 using HotelManagementWebApi.Infrastructure.Repositories.DbContexts;
-
+using HotelManagementWebApi.Application.UseCase.Review;
+using HotelManagementWebApi.Domain.Entities.Booking;
+using HotelManagementWebApi.Domain.Entities.Review;
+using HotelManagementWebApi.Domain.Repositories;
 
 namespace HotelManagementWebApi;
 public class Program
@@ -52,8 +55,9 @@ public class Program
             c.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" });
         });
 
-        //services.AddScoped<IGetCountryListUseCase, GetCountryListUseCase>();
-        //services.AddScoped<ICountryRepository, CountryRepository>();
+        services.AddScoped<ICreateReviewUseCase, CreateReviewUseCase>();
+        services.AddScoped<IBookingRepository, BookingRepository>();
+        services.AddScoped<IReviewRepository, ReviewRepository>();
     }
 
     public static void Configure(IApplicationBuilder app)

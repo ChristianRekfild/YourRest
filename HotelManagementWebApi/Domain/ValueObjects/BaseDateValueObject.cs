@@ -6,7 +6,7 @@ namespace HotelManagementWebApi.Domain.ValueObjects
 
         protected BaseDateValueObject(DateTime value)
         {
-            _value = value;
+            _value = value.ToUniversalTime();
         }
 
         public DateTime Value => _value;
