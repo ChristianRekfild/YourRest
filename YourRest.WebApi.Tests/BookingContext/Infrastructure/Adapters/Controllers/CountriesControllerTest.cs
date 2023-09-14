@@ -25,8 +25,8 @@ namespace YourRest.WebApi.Tests.BookingContext.Infrastructure.Adapters.Controlle
         {
             var expectedCountry1 = new Country { Name = "Russia" };
             var expectedCountry2 = new Country { Name = "Test" };
-            await InsertCountryIntoDatabase(expectedCountry1);
-            await InsertCountryIntoDatabase(expectedCountry2);
+            await InsertObjectIntoDatabase(expectedCountry1);
+            await InsertObjectIntoDatabase(expectedCountry2);
 
             var resultCountries = await GetCountriesFromApi();
 

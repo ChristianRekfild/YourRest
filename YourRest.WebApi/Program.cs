@@ -59,6 +59,9 @@ public class Program
         services.AddScoped<IGetCityByIdUseCase, GetCityByIdUseCase>();
         services.AddScoped<IGetCityListUseCase, GetCityListUseCase>();
         services.AddScoped<ICityRepository, CityRepository>();
+
+        services.AddScoped<IGetRegionListUseCase, GetRegionListUseCase>();
+        services.AddScoped<IRegionRepository, RegionRepository>();
     }
 
     public static void Configure(IApplicationBuilder app)
