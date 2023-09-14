@@ -1,16 +1,5 @@
-using System.Net.Http;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc.Testing;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 using System.Text.Json;
-using System.Collections.Generic;
-using Xunit;
-using YourRest.Infrastructure.DbContexts;
-using YourRest.WebApi;
 using SharedKernel.Domain.Entities;
-using YourRest.WebApi.BookingContext.Application.Dto;
-using YourRest.WebApi.Tests;
 
 namespace YourRest.WebApi.Tests.BookingContext.Infrastructure.Adapters.Controllers
 {
@@ -25,8 +14,8 @@ namespace YourRest.WebApi.Tests.BookingContext.Infrastructure.Adapters.Controlle
         {
             var expectedCity1 = new City { Name = "Moscow" };
             var expectedCity2 = new City { Name = "TestCity" };
-            await InsertCityIntoDatabase(expectedCity1);
-            await InsertCityIntoDatabase(expectedCity2);
+            await InsertObjectIntoDatabase(expectedCity1);
+            await InsertObjectIntoDatabase(expectedCity2);
 
             var resultCities = await GetCitiesFromApi();
 
@@ -58,8 +47,8 @@ namespace YourRest.WebApi.Tests.BookingContext.Infrastructure.Adapters.Controlle
                 Id = 2,
                 Name = "TestCity" 
             };
-            await InsertCityIntoDatabase(expectedCity1);
-            await InsertCityIntoDatabase(expectedCity2);
+            await InsertObjectIntoDatabase(expectedCity1);
+            await InsertObjectIntoDatabase(expectedCity2);
 
             var resultCity1 = await GetCityByIdFromApi(1);
             var resultCity2 = await GetCityByIdFromApi(2);
