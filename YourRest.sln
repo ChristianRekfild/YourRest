@@ -15,6 +15,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YourRest.WebApi.Tests", "Yo
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharedKernel", "SharedKernel\SharedKernel.csproj", "{995142AE-D4DD-46A9-8CB1-A8CD1A92DDF7}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HotelManagementWebApi", "HotelManagementWebApi\HotelManagementWebApi.csproj", "{95E45820-909B-4640-A5D0-98DDEA8C8CB8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HotelManagementWebApi.Tests", "HotelManagementWebApi.Tests\HotelManagementWebApi.Tests.csproj", "{15897541-D633-40F9-BF73-BCEB97201A08}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -45,6 +49,14 @@ Global
 		{995142AE-D4DD-46A9-8CB1-A8CD1A92DDF7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{995142AE-D4DD-46A9-8CB1-A8CD1A92DDF7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{995142AE-D4DD-46A9-8CB1-A8CD1A92DDF7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{95E45820-909B-4640-A5D0-98DDEA8C8CB8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{95E45820-909B-4640-A5D0-98DDEA8C8CB8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{95E45820-909B-4640-A5D0-98DDEA8C8CB8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{95E45820-909B-4640-A5D0-98DDEA8C8CB8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{15897541-D633-40F9-BF73-BCEB97201A08}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{15897541-D633-40F9-BF73-BCEB97201A08}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{15897541-D633-40F9-BF73-BCEB97201A08}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{15897541-D633-40F9-BF73-BCEB97201A08}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
