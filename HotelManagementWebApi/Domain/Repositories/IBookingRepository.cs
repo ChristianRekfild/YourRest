@@ -1,8 +1,7 @@
 using HotelManagementWebApi.Domain.Entities.Booking;
 
 namespace HotelManagementWebApi.Domain.Repositories;
-public interface IBookingRepository
+public interface IBookingRepository : IPgRepository<Booking, int>
 {
-    Task<Booking> FindAsync(int id);
 
 }

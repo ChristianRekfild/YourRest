@@ -12,12 +12,4 @@ public class ReviewRepository : PgRepository<Review, int>, IReviewRepository
     {
         _context = context;
     }
-
-
-    public async Task<Review> SaveReviewAsync(Review review)
-    {
-        _context.Reviews.Add(review);
-        await _context.SaveChangesAsync();
-        return review;
-    }
 }

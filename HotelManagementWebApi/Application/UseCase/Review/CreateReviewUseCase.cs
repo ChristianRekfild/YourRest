@@ -10,18 +10,18 @@ namespace HotelManagementWebApi.Application.UseCase.Review
 {
     public class CreateReviewUseCase : ICreateReviewUseCase
     {
-        private readonly IReviewRepository _repository;
+        private readonly IReviewRepository _reviewRepository;
         private readonly IBookingRepository _bookingRepository;
 
-        public CreateReviewUseCase(IReviewRepository repository, IBookingRepository bookingRepository)
+        public CreateReviewUseCase(IReviewRepository reviewRepository, IBookingRepository bookingRepository)
         {
-            _repository = repository;
+            _reviewRepository = reviewRepository;
             _bookingRepository = bookingRepository;
         }
 
         public async Task<SavedReviewDto> Execute(ReviewDto reviewDto)
         {
-            var booking = await _bookingRepository.FindAsync(reviewDto.BookingId);
+            var booking = await _bookingRepository.GetAsync(reviewDto.BookingId);
             var comment = new CommentVO(reviewDto.Comment);
             var rating = new RatingVO(reviewDto.Rating);
 
@@ -37,7 +37,8 @@ namespace HotelManagementWebApi.Application.UseCase.Review
                 Comment = comment
             };
 
-            var savedReview = await _repository.SaveReviewAsync(review);
+            var savedReview = await _reviewRepository.AddAsync(review);
+            await _reviewRepository.SaveChangesAsync();
 
             var savedReviewDto = new SavedReviewDto 
             {

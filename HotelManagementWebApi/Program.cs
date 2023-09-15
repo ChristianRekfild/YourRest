@@ -30,7 +30,6 @@ public class Program
     public static void ConfigureServices(IServiceCollection services)
     {
         var configuration = services.BuildServiceProvider().GetService<IConfiguration>();
-        var environment = services.BuildServiceProvider().GetService<IWebHostEnvironment>();
 
         string connectionString;
 

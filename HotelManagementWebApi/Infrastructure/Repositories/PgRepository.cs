@@ -3,10 +3,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using HotelManagementWebApi.Domain.Repositories;
 
 namespace HotelManagementWebApi.Infrastructure.Repositories;
 
-public class PgRepository<TEntity, U> where TEntity : class
+public class PgRepository<TEntity, TEntityIdType> : IPgRepository<TEntity, TEntityIdType> where TEntity : class
 {
     protected readonly DbContext _dataContext;
 
@@ -20,24 +21,28 @@ public class PgRepository<TEntity, U> where TEntity : class
         return await _dataContext.Set<TEntity>().ToListAsync();
     }
 
-    public async Task<TEntity> GetAsync(U id)
+    public async Task<TEntity> GetAsync(TEntityIdType id)
     {
         return await _dataContext.Set<TEntity>().FindAsync(id);
     }
 
-    public async Task AddAsync(TEntity entity)
+    public async Task<TEntity> AddAsync(TEntity entity)
     {
-        await _dataContext.Set<TEntity>().AddAsync(entity);
-        await _dataContext.SaveChangesAsync();
+        var t = _dataContext.Set<TEntity>().Add(entity).Entity;
+        return t;
     }
 
     public async Task UpdateAsync(TEntity entity)
     {
         _dataContext.Entry(entity).State = EntityState.Modified;
+    }
+
+    public async Task SaveChangesAsync()
+    {
         await _dataContext.SaveChangesAsync();
     }
 
-    public async Task DeleteAsync(U id)
+    public async Task DeleteAsync(TEntityIdType id)
     {
         var entity = await GetAsync(id);
         if (entity != null)
