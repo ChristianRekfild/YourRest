@@ -13,9 +13,9 @@ public interface IPgRepository <TEntity, TEntityIdType> where TEntity : class
 
     Task<TEntity> GetAsync(TEntityIdType id);
 
-    Task<TEntity> AddAsync(TEntity entity);
+    TEntity Add(TEntity entity);
 
-    Task UpdateAsync(TEntity entity);
+    void Update(TEntity entity);
 
     Task SaveChangesAsync();
 

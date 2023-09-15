@@ -37,7 +37,7 @@ namespace HotelManagementWebApi.Application.UseCase.Review
                 Comment = comment
             };
 
-            var savedReview = await _reviewRepository.AddAsync(review);
+            var savedReview = _reviewRepository.Add(review);
             await _reviewRepository.SaveChangesAsync();
 
             var savedReviewDto = new SavedReviewDto 

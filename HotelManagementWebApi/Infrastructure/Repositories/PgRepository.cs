@@ -26,13 +26,13 @@ public class PgRepository<TEntity, TEntityIdType> : IPgRepository<TEntity, TEnti
         return await _dataContext.Set<TEntity>().FindAsync(id);
     }
 
-    public async Task<TEntity> AddAsync(TEntity entity)
+  public TEntity Add(TEntity entity)
     {
         var t = _dataContext.Set<TEntity>().Add(entity).Entity;
         return t;
     }
 
-    public async Task UpdateAsync(TEntity entity)
+    public void Update(TEntity entity)
     {
         _dataContext.Entry(entity).State = EntityState.Modified;
     }
