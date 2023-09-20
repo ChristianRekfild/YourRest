@@ -4,6 +4,6 @@ namespace YourRest.WebApi.BookingContext.Application.Ports
 {
     public interface IGetCityByIdUseCase
     {
-        Task<CityDTO> execute(int id);
+        Task<CityDTO> Execute(int id);
     }
 }

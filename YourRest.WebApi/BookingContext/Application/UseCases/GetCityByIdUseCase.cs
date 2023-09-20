@@ -1,4 +1,5 @@
-﻿using YourRest.WebApi.BookingContext.Application.Dto;
+﻿using YourRest.WebApi.BookingContext.Application.CustomErrors;
+using YourRest.WebApi.BookingContext.Application.Dto;
 using YourRest.WebApi.BookingContext.Application.Ports;
 using YourRest.WebApi.BookingContext.Domain.Ports;
 
@@ -14,12 +15,11 @@ namespace YourRest.WebApi.BookingContext.Application.UseCases
         }
 
 
-        // TODO переделать
-        public async Task<CityDTO> execute(int id)
+        public async Task<CityDTO> Execute(int id)
         {
             var city = await _cityRepository.GetCityByIdAsync(id);
 
-            if (city is null) return null;
+            if (city is null) throw new CityNotFountException($"City with id {id} not found");
 
             return new CityDTO
             {

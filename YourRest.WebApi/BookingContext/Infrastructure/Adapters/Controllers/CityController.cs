@@ -2,6 +2,7 @@
 using YourRest.WebApi.BookingContext.Application.UseCases;
 using YourRest.WebApi.BookingContext.Application.Ports;
 using Microsoft.AspNetCore.Mvc;
+using YourRest.WebApi.BookingContext.Application.CustomErrors;
 
 namespace YourRest.WebApi.BookingContext.Infrastructure.Adapters.Controllers
 {
@@ -20,11 +21,18 @@ namespace YourRest.WebApi.BookingContext.Infrastructure.Adapters.Controllers
         [Route("api/cities/{id}")]
         public async Task<IActionResult> GetCityById(int id)
         {
-            var city = await _getCityByIdUseCase.execute(id);
-
-            if (city is null) return NotFound(null);
-
-            return Ok(city);
+            try
+            {
+                var city = await _getCityByIdUseCase.Execute(id);
+                return Ok(city);
+            } catch (CityNotFountException) // город с таким Id не был найден
+            {
+                return NotFound();
+            } catch (Exception ex) // на случай неведомого и непонятного
+            { 
+                return BadRequest(ex.Message);
+            }
+            
         }
 
     }

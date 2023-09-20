@@ -4,6 +4,6 @@ namespace YourRest.WebApi.BookingContext.Application.Ports
 {
     public interface IGetRegionListUseCase
     {
-        Task<IEnumerable<RegionDto>> execute();
+        Task<IEnumerable<RegionDto>> Execute();
     }
 }

@@ -13,7 +13,7 @@ namespace YourRest.WebApi.BookingContext.Application.UseCases
             _cityRepository = cityRepository;
         }
 
-        public async Task<IEnumerable<CityDTO>> execute()
+        public async Task<IEnumerable<CityDTO>> Execute()
         {
             var cities = await _cityRepository.GetCityListAsync();
 

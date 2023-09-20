@@ -20,7 +20,7 @@ namespace YourRest.WebApi.BookingContext.Infrastructure.Adapters.Controllers
         [Route("api/cities")]
         public async Task<IActionResult> GetAllCities()
         {
-            var cities = await _getCityListUseCase.execute();
+            var cities = await _getCityListUseCase.Execute();
             return Ok(cities);
         }
 

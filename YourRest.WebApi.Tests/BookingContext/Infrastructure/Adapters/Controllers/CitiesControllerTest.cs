@@ -12,8 +12,8 @@ namespace YourRest.WebApi.Tests.BookingContext.Infrastructure.Adapters.Controlle
         [Fact]
         public async Task GetAllcities_ReturnsExpectedCities_WhenDatabaseHasCities()
         {
-            var expectedCity1 = new City { Name = "Moscow" };
-            var expectedCity2 = new City { Name = "TestCity" };
+            var expectedCity1 = new City { Name = "Moscow", Id = 1 };
+            var expectedCity2 = new City { Name = "TestCity", Id = 2  };
             await InsertObjectIntoDatabase(expectedCity1);
             await InsertObjectIntoDatabase(expectedCity2);
 
