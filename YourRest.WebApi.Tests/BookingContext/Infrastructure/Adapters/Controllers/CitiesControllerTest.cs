@@ -1,5 +1,9 @@
+using System.Net;
+using System.Text;
 using System.Text.Json;
+using Newtonsoft.Json;
 using SharedKernel.Domain.Entities;
+using YourRest.WebApi.BookingContext.Application.Dto;
 
 namespace YourRest.WebApi.Tests.BookingContext.Infrastructure.Adapters.Controllers
 {
@@ -63,9 +67,17 @@ namespace YourRest.WebApi.Tests.BookingContext.Infrastructure.Adapters.Controlle
         [Fact]
         public async Task GetCityById_ReturnsExpectedNull_WhenDatabaseHasNoCitiesByNeedId()
         {
-            var resultCity = await GetCityByIdFromApi(1);
+            var invalidCity = new CityDTO
+            {
+                Id = 13,
+                Name = "Владипетербургомск"
+            };
 
-            Assert.Null(resultCity);
+            var content = new StringContent(JsonConvert.SerializeObject(invalidCity), Encoding.UTF8, "application/json");
+            var response = await Client.PostAsync($"/api/cities/{invalidCity.Id}", content);
+
+            Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+
         }
 
         private async Task<List<City>> GetCitiesFromApi()

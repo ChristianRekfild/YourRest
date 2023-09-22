@@ -1,6 +1,5 @@
 ﻿namespace YourRest.WebApi.BookingContext.Application.CustomErrors
 {
-    [Serializable]
     public class CityNotFountException : Exception
     {
         public int CityId { get; }
