@@ -17,7 +17,7 @@ namespace HotelManagementWebApi.Tests.Repositories
         [Fact]
         public async void EmptyRepositoryFindTest()
         {
-            var bookings = await repository.FindAsync(x => x.Id == 1);
+            var bookings = await repository.FindAsync(x => x.Id == 0);
 
             Assert.Empty(bookings);
         }

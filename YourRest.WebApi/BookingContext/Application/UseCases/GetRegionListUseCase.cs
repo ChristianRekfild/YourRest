@@ -1,8 +1,6 @@
-using SharedKernel.Domain.Entities;
+using YourRest.WebApi.BookingContext.Application.Dto;
 using YourRest.WebApi.BookingContext.Application.Ports;
 using YourRest.WebApi.BookingContext.Domain.Ports;
-using YourRest.WebApi.BookingContext.Application.Dto;
-using System;
 
 namespace YourRest.WebApi.BookingContext.Application.UseCases
 {
@@ -17,7 +15,7 @@ namespace YourRest.WebApi.BookingContext.Application.UseCases
 
         public async Task<IEnumerable<RegionDto>> execute()
         {
-            var regions = await _regionRepository.GetRegionListAsync();
+            var regions = await _regionRepository.GetAllAsync();
 
             return regions.Select(r => new RegionDto
             {
