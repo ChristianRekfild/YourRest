@@ -1,21 +1,11 @@
-using System.Net.Http;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc.Testing;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using System.Text.Json;
-using System.Collections.Generic;
-using Xunit;
-using Newtonsoft.Json;
-using System.Text;
-using System.Net;
-using System;
-using HotelManagementWebApi;
 using HotelManagementWebApi.Application.UseCase.Review.Dto;
 using HotelManagementWebApi.Domain.Entities.Booking;
+using HotelManagementWebApi.Tests.Fixtures;
+using Newtonsoft.Json;
+using System.Net;
+using System.Text;
 using BookingDateVO = HotelManagementWebApi.Domain.ValueObjects.Booking.BookingDate;
 using BookingStatusVO = HotelManagementWebApi.Domain.ValueObjects.Booking.BookingStatus;
-using HotelManagementWebApi.Application.UseCase.Review.Dto;
 
 namespace HotelManagementWebApi.Tests.Infrastructure.Adapters.Controllers
 {

@@ -1,17 +1,11 @@
-using System.Net.Http;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc.Testing;
+using HotelManagementWebApi.Infrastructure.Repositories.DbContexts;
+using HotelManagementWebApi.Tests.Fixtures;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using System.Text.Json;
-using System.Collections.Generic;
-using Xunit;
-using HotelManagementWebApi.Infrastructure.Repositories.DbContexts;
-using HotelManagementWebApi;
 
 namespace HotelManagementWebApi.Tests
 {
-   public abstract class ApiTest : IClassFixture<ApiFixture>, IDisposable
+    public abstract class ApiTest : IClassFixture<ApiFixture>, IDisposable
     {
         protected readonly ApiFixture Fixture;
         protected readonly HttpClient Client;

@@ -27,6 +27,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\HotelManagementWebApi\HotelManagementWebApi.csproj" />
+    <ProjectReference Include="..\YourRest.Infrastructure\YourRest.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

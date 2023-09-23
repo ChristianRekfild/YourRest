@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using HotelManagementWebApi.Domain.Repositories;
+using System.Linq.Expressions;
 
 namespace HotelManagementWebApi.Infrastructure.Repositories;
 
@@ -19,6 +20,11 @@ public class PgRepository<TEntity, TEntityIdType> : IPgRepository<TEntity, TEnti
     public async Task<IEnumerable<TEntity>> GetAllAsync()
     {
         return await _dataContext.Set<TEntity>().ToListAsync();
+    }
+
+    public async Task<IEnumerable<TEntity>> FindAsync(Expression<Func<TEntity, bool>> expression)
+    {
+        return await _dataContext.Set<TEntity>().Where(expression).ToListAsync();
     }
 
     public async Task<TEntity> GetAsync(TEntityIdType id)

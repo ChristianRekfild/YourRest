@@ -7,19 +7,19 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "YourRest.ClientWebApp", "Yo
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "YourRest.BLL.Tests", "YourRest.BLL.Tests\YourRest.BLL.Tests.csproj", "{F04D26BB-0200-43CC-8863-96F7AB102396}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YourRest.Infrastructure", "YourRest.Infrastructure\YourRest.Infrastructure.csproj", "{C2DC889D-2ABB-454B-AFD2-F3F136D43E9F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "YourRest.Infrastructure", "YourRest.Infrastructure\YourRest.Infrastructure.csproj", "{C2DC889D-2ABB-454B-AFD2-F3F136D43E9F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YourRest.WebApi", "YourRest.WebApi\YourRest.WebApi.csproj", "{9125AABC-BBA7-4083-BEEB-13F973363B8A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "YourRest.WebApi", "YourRest.WebApi\YourRest.WebApi.csproj", "{9125AABC-BBA7-4083-BEEB-13F973363B8A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YourRest.WebApi.Tests", "YourRest.WebApi.Tests\YourRest.WebApi.Tests.csproj", "{E142C09A-E200-44B3-98C5-CAE6B80FBB3B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "YourRest.WebApi.Tests", "YourRest.WebApi.Tests\YourRest.WebApi.Tests.csproj", "{E142C09A-E200-44B3-98C5-CAE6B80FBB3B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharedKernel", "SharedKernel\SharedKernel.csproj", "{995142AE-D4DD-46A9-8CB1-A8CD1A92DDF7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharedKernel", "SharedKernel\SharedKernel.csproj", "{995142AE-D4DD-46A9-8CB1-A8CD1A92DDF7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HotelManagementWebApi", "HotelManagementWebApi\HotelManagementWebApi.csproj", "{95E45820-909B-4640-A5D0-98DDEA8C8CB8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HotelManagementWebApi", "HotelManagementWebApi\HotelManagementWebApi.csproj", "{95E45820-909B-4640-A5D0-98DDEA8C8CB8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HotelManagementWebApi.Tests", "HotelManagementWebApi.Tests\HotelManagementWebApi.Tests.csproj", "{15897541-D633-40F9-BF73-BCEB97201A08}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HotelManagementWebApi.Tests", "HotelManagementWebApi.Tests\HotelManagementWebApi.Tests.csproj", "{15897541-D633-40F9-BF73-BCEB97201A08}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YourRest.Infrastructure.Tests", "YourRest.Infrastructure.Tests\YourRest.Infrastructure.Tests.csproj", "{D10FE6FC-11E8-4F34-B981-8CB6A8A4A250}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "YourRest.Infrastructure.Tests", "YourRest.Infrastructure.Tests\YourRest.Infrastructure.Tests.csproj", "{D10FE6FC-11E8-4F34-B981-8CB6A8A4A250}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

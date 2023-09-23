@@ -1,11 +1,8 @@
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Configuration.Json;
 using DoomedDatabases.Postgres;
-using YourRest.Infrastructure.DbContexts;
-using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Testcontainers.PostgreSql;
+using YourRest.Infrastructure.DbContexts;
 
 namespace YourRest.Infrastructure.Tests.Fixtures
 {

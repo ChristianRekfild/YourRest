@@ -1,15 +1,12 @@
-using HotelManagementWebApi.Domain.Entities.Review;
-using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using System.Linq.Expressions;
 
 namespace HotelManagementWebApi.Domain.Repositories;
 
 public interface IPgRepository <TEntity, TEntityIdType> where TEntity : class
 {
     Task<IEnumerable<TEntity>> GetAllAsync();
+
+    Task<IEnumerable<TEntity>> FindAsync(Expression<Func<TEntity, bool>> expression);
 
     Task<TEntity> GetAsync(TEntityIdType id);
 

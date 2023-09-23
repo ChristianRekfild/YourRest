@@ -1,11 +1,9 @@
-using System;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.Configuration;
 using Testcontainers.PostgreSql;
-using HotelManagementWebApi;
 
-namespace HotelManagementWebApi.Tests
+namespace HotelManagementWebApi.Tests.Fixtures
 {
     public class ApiFixture : IDisposable
     {
@@ -34,7 +32,7 @@ namespace HotelManagementWebApi.Tests
         private void StartApplication()
         {
             var builder = new WebHostBuilder()
-                .ConfigureAppConfiguration((context, configBuilder) => 
+                .ConfigureAppConfiguration((context, configBuilder) =>
                 {
                     var testConfig = new ConfigurationBuilder()
                         .AddInMemoryCollection(new[]
@@ -49,7 +47,7 @@ namespace HotelManagementWebApi.Tests
 
             Server = new TestServer(builder);
         }
-        
+
         public void Dispose()
         {
             PostgresContainer.StopAsync().Wait();
