@@ -1,4 +1,4 @@
-namespace HotelManagementWebApi.Domain.ValueObjects.Review
+namespace HotelManagementWebApi.Domain.ValueObjects.Reviews
 {
     public class Rating
     {

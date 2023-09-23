@@ -1,16 +1,9 @@
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Hosting;
-using Microsoft.OpenApi.Models;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
+using HotelManagementWebApi.Application.UseCase.Reviews;
+using HotelManagementWebApi.Domain.Repositories;
 using HotelManagementWebApi.Infrastructure.Repositories;
 using HotelManagementWebApi.Infrastructure.Repositories.DbContexts;
-using HotelManagementWebApi.Application.UseCase.Review;
-using HotelManagementWebApi.Domain.Entities.Booking;
-using HotelManagementWebApi.Domain.Entities.Review;
-using HotelManagementWebApi.Domain.Repositories;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi.Models;
 
 namespace HotelManagementWebApi;
 public class Program
@@ -41,7 +34,7 @@ public class Program
         services.AddSingleton<IDbContextFactory<HotelManagementDbContext>>(serviceProvider =>
         {
             var connString = configuration.GetConnectionString("DefaultConnection");
-            return new AppDbContextFactory(connString);
+            return new HotelManagementWebApi.Infrastructure.Repositories.DbContexts.AppDbContextFactory(connString);
         });
 
         services.AddControllers();

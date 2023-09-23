@@ -1,12 +1,10 @@
-using HotelManagementWebApi.Application.UseCase.Review.Dto;
-using CommentVO = HotelManagementWebApi.Domain.ValueObjects.Review.Comment;
-using RatingVO = HotelManagementWebApi.Domain.ValueObjects.Review.Rating;
-using HotelManagementWebApi.Domain.ValueObjects.Booking;
+using HotelManagementWebApi.Application.UseCase.Reviews.CustomException;
+using HotelManagementWebApi.Application.UseCase.Reviews.Dto;
+using HotelManagementWebApi.Domain.Entities;
 using HotelManagementWebApi.Domain.Repositories;
-using ReviewEntity = HotelManagementWebApi.Domain.Entities.Review.Review;
-using HotelManagementWebApi.Application.UseCase.Review.CustomException;
+using HotelManagementWebApi.Domain.ValueObjects.Reviews;
 
-namespace HotelManagementWebApi.Application.UseCase.Review
+namespace HotelManagementWebApi.Application.UseCase.Reviews
 {
     public class CreateReviewUseCase : ICreateReviewUseCase
     {
@@ -22,22 +20,22 @@ namespace HotelManagementWebApi.Application.UseCase.Review
         public async Task<SavedReviewDto> Execute(ReviewDto reviewDto)
         {
             var booking = await _bookingRepository.GetAsync(reviewDto.BookingId);
-            var comment = new CommentVO(reviewDto.Comment);
-            var rating = new RatingVO(reviewDto.Rating);
+            var comment = new Comment(reviewDto.Comment);
+            var rating = new Rating(reviewDto.Rating);
 
             if (booking == null)
             {
                 throw new BookingNotFoundException("Booking not found");
             }
 
-            var review = new ReviewEntity
+            var review = new Review
             {
                 Booking = booking,
                 Rating = rating,
                 Comment = comment
             };
 
-            var savedReview = _reviewRepository.Add(review);
+            var savedReview = await _reviewRepository.AddAsync(review, false);
             await _reviewRepository.SaveChangesAsync();
 
             var savedReviewDto = new SavedReviewDto 

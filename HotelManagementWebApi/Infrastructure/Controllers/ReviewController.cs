@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using HotelManagementWebApi.Application.UseCase.Review.Dto;
-using HotelManagementWebApi.Application.UseCase.Review;
-using HotelManagementWebApi.Application.UseCase.Review.CustomException;
+using HotelManagementWebApi.Application.UseCase.Reviews.Dto;
+using HotelManagementWebApi.Application.UseCase.Reviews;
+using HotelManagementWebApi.Application.UseCase.Reviews.CustomException;
 
 namespace HotelManagementWebApi.Infrastructure.Controllers
 {

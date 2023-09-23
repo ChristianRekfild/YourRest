@@ -1,7 +1,8 @@
-using HotelManagementWebApi.Domain.Entities.Booking;
+using HotelManagementWebApi.Domain.Entities;
+using SharedKernel.Domain.Repositories;
 
 namespace HotelManagementWebApi.Domain.Repositories;
-public interface IBookingRepository : IPgRepository<Booking, int>
+public interface IBookingRepository : IRepository<Booking, int>
 {
 
 }

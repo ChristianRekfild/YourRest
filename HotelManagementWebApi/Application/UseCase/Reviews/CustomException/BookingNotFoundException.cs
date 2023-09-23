@@ -1,4 +1,4 @@
-namespace HotelManagementWebApi.Application.UseCase.Review.CustomException
+namespace HotelManagementWebApi.Application.UseCase.Reviews.CustomException
 {
     public class BookingNotFoundException : Exception
     {

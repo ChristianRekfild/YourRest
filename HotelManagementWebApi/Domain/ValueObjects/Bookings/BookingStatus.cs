@@ -1,4 +1,4 @@
-namespace HotelManagementWebApi.Domain.ValueObjects.Booking
+namespace HotelManagementWebApi.Domain.ValueObjects.Bookings
 {
     public class BookingStatus : BaseIntValueObject
     {

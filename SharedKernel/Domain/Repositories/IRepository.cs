@@ -5,7 +5,7 @@ namespace SharedKernel.Domain.Repositories
 {
     public interface IRepository<T, U> where T : BaseEntity<U> where U : notnull
     {
-        Task AddAsync(T entity, bool saveChanges = true, CancellationToken cancellationToken = default);
+        Task<T> AddAsync(T entity, bool saveChanges = true, CancellationToken cancellationToken = default);
 
         Task AddRangeAsync(T[] entites, bool saveChanges = true, CancellationToken cancellationToken = default);
 

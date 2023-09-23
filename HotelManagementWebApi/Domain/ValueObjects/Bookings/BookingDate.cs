@@ -1,7 +1,4 @@
-using System;
-using System.Diagnostics;
-
-namespace HotelManagementWebApi.Domain.ValueObjects.Booking
+namespace HotelManagementWebApi.Domain.ValueObjects.Bookings
 {
     public class BookingDate : BaseDateValueObject
     {

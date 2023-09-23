@@ -1,15 +1,9 @@
-using HotelManagementWebApi.Domain.Entities.Review;
-using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-using ReviewEntity = HotelManagementWebApi.Domain.Entities.Review.Review;
+using HotelManagementWebApi.Domain.Entities;
+using SharedKernel.Domain.Repositories;
 
 namespace HotelManagementWebApi.Domain.Repositories;
 
-public interface IReviewRepository : IPgRepository<ReviewEntity, int>
+public interface IReviewRepository : IRepository<Review, int>
 {
 
 }

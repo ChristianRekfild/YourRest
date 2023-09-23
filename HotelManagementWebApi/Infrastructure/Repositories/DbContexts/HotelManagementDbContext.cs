@@ -1,7 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-using HotelManagementWebApi.Domain.Entities.Booking;
-using HotelManagementWebApi.Domain.Entities.Review;
+using HotelManagementWebApi.Domain.Entities;
 
 namespace HotelManagementWebApi.Infrastructure.Repositories.DbContexts
 {

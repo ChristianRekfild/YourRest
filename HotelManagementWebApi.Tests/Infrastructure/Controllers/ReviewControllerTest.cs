@@ -1,11 +1,10 @@
-using HotelManagementWebApi.Application.UseCase.Review.Dto;
-using HotelManagementWebApi.Domain.Entities.Booking;
+using HotelManagementWebApi.Application.UseCase.Reviews.Dto;
+using HotelManagementWebApi.Domain.Entities;
+using HotelManagementWebApi.Domain.ValueObjects.Bookings;
 using HotelManagementWebApi.Tests.Fixtures;
 using Newtonsoft.Json;
 using System.Net;
 using System.Text;
-using BookingDateVO = HotelManagementWebApi.Domain.ValueObjects.Booking.BookingDate;
-using BookingStatusVO = HotelManagementWebApi.Domain.ValueObjects.Booking.BookingStatus;
 
 namespace HotelManagementWebApi.Tests.Infrastructure.Adapters.Controllers
 {
@@ -19,9 +18,9 @@ namespace HotelManagementWebApi.Tests.Infrastructure.Adapters.Controllers
         public async Task GivenBookingAndCorrectReviewData_WhenPostCalled_ReturnsCreatedAtAction()
         {
             var booking = new Booking {
-                StartDate = new BookingDateVO(new DateTime(2023, 10, 1)),
-                EndDate = new BookingDateVO(new DateTime(2023, 10, 5)),
-                Status = new BookingStatusVO(1),
+                StartDate = new BookingDate(new DateTime(2023, 10, 1)),
+                EndDate = new BookingDate(new DateTime(2023, 10, 5)),
+                Status = new BookingStatus(1),
                 Comment = "test"
             };
 

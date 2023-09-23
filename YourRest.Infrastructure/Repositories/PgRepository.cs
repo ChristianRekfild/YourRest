@@ -14,14 +14,15 @@ namespace YourRest.Infrastructure.Repositories
             _dataContext = dataContext;
         }
 
-        public async Task AddAsync(T entity, bool saveChanges = true, CancellationToken cancellationToken = default)
+        public async Task<T> AddAsync(T entity, bool saveChanges = true, CancellationToken cancellationToken = default)
         {
-            await _dataContext.Set<T>().AddAsync(entity, cancellationToken);
+            var result = await _dataContext.Set<T>().AddAsync(entity, cancellationToken);
 
             if (saveChanges)
             {
                 await _dataContext.SaveChangesAsync(cancellationToken);
             }
+            return result.Entity;
         }
 
         public async Task AddRangeAsync(T[] entites, bool saveChanges = true, CancellationToken cancellationToken = default)
