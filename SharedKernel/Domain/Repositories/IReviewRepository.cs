@@ -1,8 +1,6 @@
-
 using SharedKernel.Domain.Entities;
-using SharedKernel.Domain.Repositories;
 
-namespace HotelManagementWebApi.Domain.Repositories;
+namespace SharedKernel.Domain.Repositories;
 
 public interface IReviewRepository : IRepository<Review, int>
 {

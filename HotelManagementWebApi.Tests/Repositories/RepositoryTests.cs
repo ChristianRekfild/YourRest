@@ -1,6 +1,4 @@
-﻿using HotelManagementWebApi.Domain.Repositories;
-using HotelManagementWebApi.Infrastructure.Repositories;
-using HotelManagementWebApi.Tests.Fixtures;
+﻿using HotelManagementWebApi.Tests.Fixtures;
 using SharedKernel.Domain.Entities;
 using SharedKernel.Domain.Repositories;
 using YourRest.Infrastructure.Repositories;

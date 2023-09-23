@@ -1,8 +1,7 @@
 using HotelManagementWebApi.Application.UseCase.Reviews.CustomException;
 using HotelManagementWebApi.Application.UseCase.Reviews.Dto;
-using HotelManagementWebApi.Domain.Repositories;
-using HotelManagementWebApi.Domain.ValueObjects.Reviews;
 using SharedKernel.Domain.Entities;
+using SharedKernel.Domain.Repositories;
 
 namespace HotelManagementWebApi.Application.UseCase.Reviews
 {

@@ -1,9 +1,9 @@
 using HotelManagementWebApi.Application.UseCase.Reviews;
-using HotelManagementWebApi.Domain.Repositories;
-using HotelManagementWebApi.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
+using SharedKernel.Domain.Repositories;
 using YourRest.Infrastructure.DbContexts;
+using YourRest.Infrastructure.Repositories;
 
 namespace HotelManagementWebApi;
 public class Program

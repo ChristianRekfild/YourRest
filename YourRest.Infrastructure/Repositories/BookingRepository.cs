@@ -1,9 +1,8 @@
-using HotelManagementWebApi.Domain.Repositories;
 using SharedKernel.Domain.Entities;
+using SharedKernel.Domain.Repositories;
 using YourRest.Infrastructure.DbContexts;
-using YourRest.Infrastructure.Repositories;
 
-namespace HotelManagementWebApi.Infrastructure.Repositories;
+namespace YourRest.Infrastructure.Repositories;
 
 public class BookingRepository : PgRepository<Booking, int>, IBookingRepository
 {
