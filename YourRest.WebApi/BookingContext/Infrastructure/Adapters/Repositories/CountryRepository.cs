@@ -4,10 +4,11 @@ using Microsoft.EntityFrameworkCore;
 using YourRest.WebApi.BookingContext.Domain.Ports;
 using YourRest.WebApi.BookingContext.Infrastructure.Adapters.Repositories;
 using YourRest.Infrastructure.DbContexts;
+using SharedKernel.Domain.Repositories;
 
 namespace YourRest.WebApi.BookingContext.Infrastructure.Adapters.Repositories
 {
-    public class CountryRepository : PgRepository<Country, int>, ICountryRepository
+    public class CountryRepository : PgRepository<Country, int>, ICountryRepository, IRepository<Country, int>
     {
         public CountryRepository(SharedDbContext dataContext) : base(dataContext) { }
 
@@ -19,6 +20,6 @@ namespace YourRest.WebApi.BookingContext.Infrastructure.Adapters.Repositories
         public async Task<IEnumerable<Country>> GetCountryListAsync()
         {
             return await _dataContext.Countries.ToListAsync();
-        }
+        }        
     }
 }
