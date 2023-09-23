@@ -1,10 +1,12 @@
 using HotelManagementWebApi.Application.UseCase.Reviews.Dto;
-using HotelManagementWebApi.Domain.Entities;
+
 using HotelManagementWebApi.Domain.ValueObjects.Bookings;
 using HotelManagementWebApi.Tests.Fixtures;
 using Newtonsoft.Json;
+using SharedKernel.Domain.Entities;
 using System.Net;
 using System.Text;
+using YourRest.Infrastructure.Repositories;
 
 namespace HotelManagementWebApi.Tests.Infrastructure.Adapters.Controllers
 {
@@ -17,11 +19,23 @@ namespace HotelManagementWebApi.Tests.Infrastructure.Adapters.Controllers
         [Fact]
         public async Task GivenBookingAndCorrectReviewData_WhenPostCalled_ReturnsCreatedAtAction()
         {
+            var customer = new Customer
+                {
+                    FirstName = "Иван",
+                    LastName = "Иванов",
+                    MiddleName = "Иванович",
+                    IsActive = true,
+                    Login = "ivanov@ivan.com",
+                    Password = "qwerty"
+                };
+            var customerId = await InsertObjectIntoDatabase(customer);
+
             var booking = new Booking {
-                StartDate = new BookingDate(new DateTime(2023, 10, 1)),
-                EndDate = new BookingDate(new DateTime(2023, 10, 5)),
-                Status = new BookingStatus(1),
-                Comment = "test"
+                StartDate = new DateTime(2023, 10, 1),
+                EndDate = new DateTime(2023, 10, 5),
+                Status = SharedKernel.Domain.Entities.BookingStatus.Pending,
+                Comment = "test",
+                CustomerId = customerId
             };
 
             var bookingId = await InsertObjectIntoDatabase(booking);

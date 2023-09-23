@@ -1,4 +1,6 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 using SharedKernel.Domain.Entities;
 
 namespace YourRest.Infrastructure.DbContexts
@@ -11,8 +13,23 @@ namespace YourRest.Infrastructure.DbContexts
         public DbSet<Region> Regions { get; set; }
         public DbSet<Review> Reviews { get; set; }
 
-        public SharedDbContext(DbContextOptions<SharedDbContext> options) : base(options)
+        static SharedDbContext()
         {
+            AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
+        }
+
+        public SharedDbContext() : base() { }
+
+        public SharedDbContext(DbContextOptions<SharedDbContext> options) : base(options) { }
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            if (!optionsBuilder.IsConfigured)
+            {
+                string conn = "Host=localhost;Database=hotel_management;Username=admin;Password=admin;Port=5432";
+                optionsBuilder.UseNpgsql(conn);
+            }
+            base.OnConfiguring(optionsBuilder);
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -68,7 +85,7 @@ namespace YourRest.Infrastructure.DbContexts
             Customers.RemoveRange(Customers);
             Regions.RemoveRange(Regions);
             Reviews.RemoveRange(Reviews);
-            
+
             // Add other DbSet removals here
             // Example: 
             // Rooms.RemoveRange(Rooms);
@@ -78,5 +95,5 @@ namespace YourRest.Infrastructure.DbContexts
             SaveChanges();
         }
     }
-    
+
 }
