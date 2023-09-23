@@ -1,12 +1,12 @@
-﻿using HotelManagementWebApi.Infrastructure.Repositories.DbContexts;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Testcontainers.PostgreSql;
+using YourRest.Infrastructure.DbContexts;
 
 namespace HotelManagementWebApi.Tests.Fixtures
 {
     public class DatabaseFixture : IAsyncLifetime
     {
-        public HotelManagementDbContext DbContext { get; private set; }
+        public SharedDbContext DbContext { get; private set; }
         private PostgreSqlContainer _postgreSqlContainer { get; }
         public DatabaseFixture()
         {
@@ -24,9 +24,9 @@ namespace HotelManagementWebApi.Tests.Fixtures
         {
             await _postgreSqlContainer.StartAsync();
 
-            var builder = new DbContextOptionsBuilder<HotelManagementDbContext>();
+            var builder = new DbContextOptionsBuilder<SharedDbContext>();
             builder.UseNpgsql(_postgreSqlContainer.GetConnectionString());
-            DbContext = new HotelManagementDbContext(builder.Options);
+            DbContext = new SharedDbContext(builder.Options);
             DbContext.Database.EnsureCreated();
         }
 

@@ -1,8 +1,8 @@
 using HotelManagementWebApi.Application.UseCase.Reviews.CustomException;
 using HotelManagementWebApi.Application.UseCase.Reviews.Dto;
-using HotelManagementWebApi.Domain.Entities;
 using HotelManagementWebApi.Domain.Repositories;
 using HotelManagementWebApi.Domain.ValueObjects.Reviews;
+using SharedKernel.Domain.Entities;
 
 namespace HotelManagementWebApi.Application.UseCase.Reviews
 {
@@ -20,8 +20,8 @@ namespace HotelManagementWebApi.Application.UseCase.Reviews
         public async Task<SavedReviewDto> Execute(ReviewDto reviewDto)
         {
             var booking = await _bookingRepository.GetAsync(reviewDto.BookingId);
-            var comment = new Comment(reviewDto.Comment);
-            var rating = new Rating(reviewDto.Rating);
+            var comment = reviewDto.Comment;
+            var rating = reviewDto.Rating;
 
             if (booking == null)
             {
@@ -42,8 +42,8 @@ namespace HotelManagementWebApi.Application.UseCase.Reviews
             {
                 Id = savedReview.Id,
                 BookingId = savedReview.Booking.Id,
-                Comment = savedReview.Comment.Value,
-                Rating = savedReview.Rating.Value
+                Comment = savedReview.Comment,
+                Rating = savedReview.Rating
             };
 
             return savedReviewDto;

@@ -3,6 +3,7 @@ using SharedKernel.Domain.Entities;
 
 namespace HotelManagementWebApi.Domain.Entities
 {
+    [Obsolete]
     public class Booking : IntBaseEntity
     {
         public BookingDate StartDate { get; set; }

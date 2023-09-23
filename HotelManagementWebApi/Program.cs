@@ -1,9 +1,9 @@
 using HotelManagementWebApi.Application.UseCase.Reviews;
 using HotelManagementWebApi.Domain.Repositories;
 using HotelManagementWebApi.Infrastructure.Repositories;
-using HotelManagementWebApi.Infrastructure.Repositories.DbContexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
+using YourRest.Infrastructure.DbContexts;
 
 namespace HotelManagementWebApi;
 public class Program
@@ -29,12 +29,12 @@ public class Program
    
         connectionString = configuration.GetConnectionString("DefaultConnection");
 
-        services.AddDbContext<HotelManagementDbContext>(options => options.UseNpgsql(connectionString));
+        services.AddDbContext<SharedDbContext>(options => options.UseNpgsql(connectionString));
 
-        services.AddSingleton<IDbContextFactory<HotelManagementDbContext>>(serviceProvider =>
+        services.AddSingleton<IDbContextFactory<SharedDbContext>>(serviceProvider =>
         {
             var connString = configuration.GetConnectionString("DefaultConnection");
-            return new HotelManagementWebApi.Infrastructure.Repositories.DbContexts.AppDbContextFactory(connString);
+            return new AppDbContextFactory(connString);
         });
 
         services.AddControllers();

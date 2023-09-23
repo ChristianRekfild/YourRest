@@ -1,7 +1,7 @@
-using HotelManagementWebApi.Infrastructure.Repositories.DbContexts;
 using HotelManagementWebApi.Tests.Fixtures;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using YourRest.Infrastructure.DbContexts;
 
 namespace HotelManagementWebApi.Tests
 {
@@ -16,14 +16,14 @@ namespace HotelManagementWebApi.Tests
             Client = Fixture.Server.CreateClient();
 
             using var scope = Fixture.Server.Host.Services.CreateScope();
-            var context = scope.ServiceProvider.GetRequiredService<HotelManagementDbContext>();
+            var context = scope.ServiceProvider.GetRequiredService<SharedDbContext>();
             context.Database.Migrate();
         }
 
         protected async Task<int> InsertObjectIntoDatabase<T>(T entity) where T : class
         {
             using var scope = Fixture.Server.Host.Services.CreateScope();
-            var context = scope.ServiceProvider.GetRequiredService<HotelManagementDbContext>();
+            var context = scope.ServiceProvider.GetRequiredService<SharedDbContext>();
             context.Add(entity);
             
             return await context.SaveChangesAsync();
@@ -32,7 +32,7 @@ namespace HotelManagementWebApi.Tests
         protected void CleanDatabase()
         {
             using var scope = Fixture.Server.Host.Services.CreateScope();
-            var context = scope.ServiceProvider.GetRequiredService<HotelManagementDbContext>();
+            var context = scope.ServiceProvider.GetRequiredService<SharedDbContext>();
             
             context.ClearAllTables();
         }

@@ -29,7 +29,7 @@ namespace HotelManagementWebApi.Tests.Infrastructure.Adapters.Controllers
             var review = new ReviewDto {
                 BookingId = bookingId,
                 Comment = "test",
-                Rating = 1
+                Rating = SharedKernel.Domain.Entities.Rating.One
             };
             var content = new StringContent(JsonConvert.SerializeObject(review), Encoding.UTF8, "application/json");
 
@@ -51,7 +51,7 @@ namespace HotelManagementWebApi.Tests.Infrastructure.Adapters.Controllers
             var invalidReview = new ReviewDto {
                 BookingId = 3,
                 Comment = "test",
-                Rating = 1
+                Rating = SharedKernel.Domain.Entities.Rating.One
             };
 
             var content = new StringContent(JsonConvert.SerializeObject(invalidReview), Encoding.UTF8, "application/json");

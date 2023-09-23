@@ -1,4 +1,5 @@
-using HotelManagementWebApi.Domain.Entities;
+
+using SharedKernel.Domain.Entities;
 using SharedKernel.Domain.Repositories;
 
 namespace HotelManagementWebApi.Domain.Repositories;

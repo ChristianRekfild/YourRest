@@ -9,6 +9,5 @@ namespace HotelManagementWebApi.Domain.ValueObjects.Reviews
             }
                 
         }
-
     }
 }
