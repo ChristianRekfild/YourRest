@@ -56,6 +56,10 @@ public class Program
         services.AddScoped<IGetCountryListUseCase, GetCountryListUseCase>();
         services.AddScoped<ICountryRepository, CountryRepository>();
 
+        services.AddScoped<IGetCityByIdUseCase, GetCityByIdUseCase>();
+        services.AddScoped<IGetCityListUseCase, GetCityListUseCase>();
+        services.AddScoped<ICityRepository, CityRepository>();
+
         services.AddScoped<IGetRegionListUseCase, GetRegionListUseCase>();
         services.AddScoped<IRegionRepository, RegionRepository>();
     }
@@ -67,7 +71,7 @@ public class Program
             app.UseSwagger();
             app.UseSwaggerUI();
         }
-        
+
         app.UseHttpsRedirection();
         app.UseRouting(); // This is necessary for the endpoints to work.
         app.UseAuthorization();
