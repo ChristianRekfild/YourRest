@@ -23,15 +23,15 @@ namespace YourRest.WebApi.Tests.BookingContext.Infrastructure.Adapters.Controlle
         [Fact]
         public async Task GetAllRegions_ReturnsExpectedRegions_WhenDatabaseHasRegions()
         {
-            var expectedRegion1 = new Region();
+            var expectedRegion1 = new RegionEntity();
             expectedRegion1.Name = "Ленинградская";
             expectedRegion1.CountryId = 1;
-            var expectedRegion2 = new Region();
+            var expectedRegion2 = new RegionEntity();
             expectedRegion2.Name = "Витебская";
             expectedRegion2.CountryId = 2;
 
-            var expectedCountry1 = new Country { Name = "Russia" };
-            var expectedCountry2 = new Country { Name = "Test" };
+            var expectedCountry1 = new CountryEntity { Name = "Russia" };
+            var expectedCountry2 = new CountryEntity { Name = "Test" };
 
             await InsertObjectIntoDatabase(expectedCountry1);
             await InsertObjectIntoDatabase(expectedCountry2);

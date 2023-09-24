@@ -1,6 +1,6 @@
-﻿namespace SharedKernel.Domain.Entities
+﻿namespace YourRestDomain.Entities
 {
-    public class Customer : IntBaseEntity
+    public class CustomerEntity : BaseEntity<int>
     {
         public string LastName { get; set; }
         public string MiddleName { get; set; }

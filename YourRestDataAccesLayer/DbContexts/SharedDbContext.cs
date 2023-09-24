@@ -1,8 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-using SharedKernel.Domain.Entities;
+using YourRestDomain.Entities;
 
-namespace YourRest.Infrastructure.DbContexts
+namespace YourRestDataAccesLayer.DbContexts
 {
     public class SharedDbContext : DbContext
     {

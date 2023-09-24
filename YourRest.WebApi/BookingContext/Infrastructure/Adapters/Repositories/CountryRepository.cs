@@ -7,16 +7,16 @@ using YourRest.Infrastructure.DbContexts;
 
 namespace YourRest.WebApi.BookingContext.Infrastructure.Adapters.Repositories
 {
-    public class CountryRepository : PgRepository<Country, int>, ICountryRepository
+    public class CountryRepository : PgRepository<CountryEntity, int>, ICountryRepository
     {
         public CountryRepository(SharedDbContext dataContext) : base(dataContext) { }
 
-        public async Task<Country> GetCountryByIdAsync(int id)
+        public async Task<CountryEntity> GetCountryByIdAsync(int id)
         {
             return await _dataContext.Countries.FindAsync(id);
         }
 
-        public async Task<IEnumerable<Country>> GetCountryListAsync()
+        public async Task<IEnumerable<CountryEntity>> GetCountryListAsync()
         {
             return await _dataContext.Countries.ToListAsync();
         }

@@ -7,8 +7,8 @@ namespace YourRest.WebApi.BookingContext.Domain.Ports
 {
     public interface ICountryRepository
     {
-        Task<Country> GetCountryByIdAsync(int id);
+        Task<CountryEntity> GetCountryByIdAsync(int id);
 
-        Task<IEnumerable<Country>> GetCountryListAsync();
+        Task<IEnumerable<CountryEntity>> GetCountryListAsync();
     }
 }

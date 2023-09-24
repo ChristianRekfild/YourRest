@@ -23,8 +23,8 @@ namespace YourRest.WebApi.Tests.BookingContext.Infrastructure.Adapters.Controlle
         [Fact]
         public async Task GetAllCountries_ReturnsExpectedCountries_WhenDatabaseHasCountries()
         {
-            var expectedCountry1 = new Country { Name = "Russia" };
-            var expectedCountry2 = new Country { Name = "Test" };
+            var expectedCountry1 = new CountryEntity { Name = "Russia" };
+            var expectedCountry2 = new CountryEntity { Name = "Test" };
             await InsertObjectIntoDatabase(expectedCountry1);
             await InsertObjectIntoDatabase(expectedCountry2);
 

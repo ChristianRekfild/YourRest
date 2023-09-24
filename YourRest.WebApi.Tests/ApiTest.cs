@@ -27,7 +27,7 @@ namespace YourRest.WebApi.Tests
             context.Database.Migrate();
         }
 
-        protected async Task InsertCountryIntoDatabase(Country country)
+        protected async Task InsertCountryIntoDatabase(CountryEntity country)
         {
             using var scope = Fixture.Server.Host.Services.CreateScope();
             var context = scope.ServiceProvider.GetRequiredService<SharedDbContext>();

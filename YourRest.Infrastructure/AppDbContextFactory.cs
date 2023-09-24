@@ -1,8 +1,5 @@
 using YourRest.Infrastructure.DbContexts;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Design;
-using Microsoft.Extensions.Configuration;
-using System.IO;
 
 public class AppDbContextFactory : IDbContextFactory<SharedDbContext>
 {
