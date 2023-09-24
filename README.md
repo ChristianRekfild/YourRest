@@ -1,37 +1,12 @@
 # Project "Your Rest"
 
-## Архитектура
+## Архитектура (./_docs/architecture.md)
 
 Проект основан на паттерне **Порты и Адаптеры**.
 Состоит из двух основных частей:
-1. **YourRest.ClientWebApp** - клиентская часть, чистое фронтенд приложение, откуда делаются запросы на сервер.
-2. **YourRest.WebApi** - серверная часть.
+1. **YourRest.HotelManagementWebApi** - серверная часть системы отельеров.
+2. **YourRest.WebApi** - серверная часть системы путешественников.
 
-В приложении присутствуют явно выделенные **BoundedContext** и общие библиотеки: **SharedKernel** (ядро домена) и **YourRest.Infrastructure**. Каждый контекст обладает своими слоями (Domain, Application, Infrastructure), но также может использовать общие слои из-за наличия единой базы данных. Несмотря на то, что в настоящее время проект является модульным монолитом, в будущем его можно разбить на микросервисы по границам BoundedContexts.
-
-Для добавления зависимостей из проекта используются команды:
-
-```
-dotnet add reference ../SharedKernel/SharedKernel.csproj
-dotnet add reference ../YourRest.Infrastructure/YourRest.Infrastructure.csproj
-```
-
-[Подробнее о контекстах](./_docs/bounded_contexts.md)
-## Добавление миграции
-
-Для добавления новой миграции в общий SharedDbContext выполните:
-```
-dotnet new webapi -n BookingContextApi
-cd BookingContextApi
-dotnet add reference ../SharedKernel/SharedKernel.csproj
-dotnet add reference ../YourRest.Infrastructure/YourRest.Infrastructure.csproj
-```
-### Добавление миграции из YourRest.WebApi в общий SharedDbContext.
-```
-dotnet ef migrations add InitialCreate --project ../YourRest.Infrastructure/ --startup-project ./
-dotnet ef database update --project ../YourRest.Infrastructure/ --startup-project ./
-
-```
 ## Запуск тестов
 
 Для запуска всех тестов используйте команду:
