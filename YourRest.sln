@@ -3,10 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.6.33815.320
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "YourRest.ClientWebApp", "YourRest.ClientWebApp\YourRest.ClientWebApp.csproj", "{98C97F8D-C1CD-4B34-9DF1-09C4942DD708}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "YourRest.BLL.Tests", "YourRest.BLL.Tests\YourRest.BLL.Tests.csproj", "{F04D26BB-0200-43CC-8863-96F7AB102396}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "YourRest.WebApi", "YourRest.WebApi\YourRest.WebApi.csproj", "{9125AABC-BBA7-4083-BEEB-13F973363B8A}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "YourRest.WebApi.Tests", "YourRest.WebApi.Tests\YourRest.WebApi.Tests.csproj", "{E142C09A-E200-44B3-98C5-CAE6B80FBB3B}"
@@ -19,14 +15,14 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HotelManagementWebApi.Tests
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "YourRestDataAccesLayer", "YourRestDataAccesLayer\YourRestDataAccesLayer.csproj", "{1AD73569-8C57-400B-BB67-0FB4C39370AB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YorRestDataTransferObject", "YorRestDataTransferObject\YorRestDataTransferObject.csproj", "{FFB7134E-3A33-4E67-BB30-CA01FCADD07F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "YorRestDataTransferObject", "YorRestDataTransferObject\YorRestDataTransferObject.csproj", "{FFB7134E-3A33-4E67-BB30-CA01FCADD07F}"
 	ProjectSection(ProjectDependencies) = postProject
 		{995142AE-D4DD-46A9-8CB1-A8CD1A92DDF7} = {995142AE-D4DD-46A9-8CB1-A8CD1A92DDF7}
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WebApplicationInterfaces", "WebApplicationInterfaces", "{137644F1-9B3F-4425-904C-3B7D2EA58FDB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YorRestServices", "YorRestServices\YorRestServices.csproj", "{08425B9A-FABE-4DCA-A7C6-DD06F5736A80}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "YorRestServices", "YorRestServices\YorRestServices.csproj", "{08425B9A-FABE-4DCA-A7C6-DD06F5736A80}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -34,14 +30,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{98C97F8D-C1CD-4B34-9DF1-09C4942DD708}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{98C97F8D-C1CD-4B34-9DF1-09C4942DD708}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{98C97F8D-C1CD-4B34-9DF1-09C4942DD708}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{98C97F8D-C1CD-4B34-9DF1-09C4942DD708}.Release|Any CPU.Build.0 = Release|Any CPU
-		{F04D26BB-0200-43CC-8863-96F7AB102396}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F04D26BB-0200-43CC-8863-96F7AB102396}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F04D26BB-0200-43CC-8863-96F7AB102396}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F04D26BB-0200-43CC-8863-96F7AB102396}.Release|Any CPU.Build.0 = Release|Any CPU
 		{9125AABC-BBA7-4083-BEEB-13F973363B8A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{9125AABC-BBA7-4083-BEEB-13F973363B8A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9125AABC-BBA7-4083-BEEB-13F973363B8A}.Release|Any CPU.ActiveCfg = Release|Any CPU

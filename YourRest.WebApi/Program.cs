@@ -1,15 +1,6 @@
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
-using YourRest.WebApi.BookingContext.Application.Ports;
-using YourRest.WebApi.BookingContext.Application.UseCases;
-using YourRest.WebApi.BookingContext.Domain.Ports;
-using YourRest.WebApi.BookingContext.Infrastructure.Adapters.Repositories;
-using YourRest.Infrastructure.DbContexts;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
+using YourRestDataAccesLayer;
 
 public class Program
 {
@@ -17,7 +8,7 @@ public class Program
     {
         var builder = WebApplication.CreateBuilder(args);
 
-        ConfigureServices(builder.Services);
+        ConfigureServices(builder.Services, builder.Configuration);
 
         var app = builder.Build();
         Configure(app);
@@ -25,23 +16,9 @@ public class Program
         app.Run();
     }
 
-    public static void ConfigureServices(IServiceCollection services)
+    public static void ConfigureServices(IServiceCollection services, IConfiguration configuration)
     {
-        var configuration = services.BuildServiceProvider().GetService<IConfiguration>();
-        var environment = services.BuildServiceProvider().GetService<IWebHostEnvironment>();
-
-        string connectionString;
-
-   
-        connectionString = configuration.GetConnectionString("DefaultConnection");
-
-        services.AddDbContext<SharedDbContext>(options => options.UseNpgsql(connectionString));
-
-        services.AddSingleton<IDbContextFactory<SharedDbContext>>(serviceProvider =>
-        {
-            var connString = configuration.GetConnectionString("DefaultConnection");
-            return new AppDbContextFactory(connString);
-        });
+        services.AddDbContext<YouRestDbContext>(options => options.UseNpgsql(configuration.GetConnectionString("DefaultConnection")));
 
         services.AddControllers();
 
@@ -53,11 +30,6 @@ public class Program
             c.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" });
         });
 
-        services.AddScoped<IGetCountryListUseCase, GetCountryListUseCase>();
-        services.AddScoped<ICountryRepository, CountryRepository>();
-
-        services.AddScoped<IGetRegionListUseCase, GetRegionListUseCase>();
-        services.AddScoped<IRegionRepository, RegionRepository>();
     }
 
     public static void Configure(IApplicationBuilder app)

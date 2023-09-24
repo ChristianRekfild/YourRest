@@ -1,13 +1,11 @@
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.EntityFrameworkCore;
 using YourRestDomain.Entities;
 
-namespace YourRestDataAccesLayer.DbContexts
+namespace YourRestDataAccesLayer
 {
-    public class SharedDbContext : DbContext
+    public class YouRestDbContext : DbContext
     {
-        private readonly IConfiguration configuration;
-        public SharedDbContext(DbContextOptions<SharedDbContext> options) : base(options)
+        public YouRestDbContext(DbContextOptions<YouRestDbContext> options) : base(options)
         {
         }
 
@@ -29,7 +27,7 @@ namespace YourRestDataAccesLayer.DbContexts
             Customers.RemoveRange(Customers);
             Regions.RemoveRange(Regions);
             Rooms.RemoveRange(Rooms);
-            
+
             // Add other DbSet removals here
             // Example: 
             // Rooms.RemoveRange(Rooms);
@@ -39,5 +37,5 @@ namespace YourRestDataAccesLayer.DbContexts
             SaveChanges();
         }
     }
-    
+
 }
