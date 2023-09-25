@@ -3,10 +3,10 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
-using YourRest.WebApi.BookingContext.Application.Ports;
-using YourRest.WebApi.BookingContext.Application.UseCases;
-using YourRest.WebApi.BookingContext.Domain.Ports;
-using YourRest.WebApi.BookingContext.Infrastructure.Adapters.Repositories;
+using YourRest.Application.Interfaces;
+using YourRest.Application.UseCases;
+using YourRest.Domain.Repositories;
+using YourRest.Infrastructure.Repositories;
 using YourRest.Infrastructure.DbContexts;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -54,14 +54,17 @@ public class Program
         });
 
         services.AddScoped<IGetCountryListUseCase, GetCountryListUseCase>();
-        services.AddScoped<ICountryRepository, CountryRepository>();
-
         services.AddScoped<IGetCityByIdUseCase, GetCityByIdUseCase>();
         services.AddScoped<IGetCityListUseCase, GetCityListUseCase>();
-        services.AddScoped<ICityRepository, CityRepository>();
-
         services.AddScoped<IGetRegionListUseCase, GetRegionListUseCase>();
-        services.AddScoped<IRegionRepository, RegionRepository>();
+        services.AddScoped<ICreateReviewUseCase, CreateReviewUseCase>();
+
+        services.AddScoped<IBookingRepository, BookingRepository>();
+        services.AddScoped<ICountryRepository, CountryRepository>();  
+        services.AddScoped<ICustomerRepository, CustomerRepository>();      
+        services.AddScoped<ICityRepository, CityRepository>();        
+        services.AddScoped<IRegionRepository, RegionRepository>();        
+        services.AddScoped<IReviewRepository, ReviewRepository>();
     }
 
     public static void Configure(IApplicationBuilder app)
