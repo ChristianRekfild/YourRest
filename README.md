@@ -7,12 +7,12 @@
 1. **YourRest.ClientWebApp** - клиентская часть, чистое фронтенд приложение, откуда делаются запросы на сервер.
 2. **YourRest.WebApi** - серверная часть.
 
-В приложении присутствуют явно выделенные **BoundedContext** и общие библиотеки: **SharedKernel** (ядро домена) и **YourRest.Infrastructure**. Каждый контекст обладает своими слоями (Domain, Application, Infrastructure), но также может использовать общие слои из-за наличия единой базы данных. Несмотря на то, что в настоящее время проект является модульным монолитом, в будущем его можно разбить на микросервисы по границам BoundedContexts.
+В приложении присутствуют явно выделенные **BoundedContext** и общие библиотеки: **YourRest.Domain** (ядро домена) и **YourRest.Infrastructure**. Каждый контекст обладает своими слоями (Domain, Application, Infrastructure), но также может использовать общие слои из-за наличия единой базы данных. Несмотря на то, что в настоящее время проект является модульным монолитом, в будущем его можно разбить на микросервисы по границам BoundedContexts.
 
 Для добавления зависимостей из проекта используются команды:
 
 ```
-dotnet add reference ../SharedKernel/SharedKernel.csproj
+dotnet add reference ../YourRest.Domain/YourRest.Domain.csproj
 dotnet add reference ../YourRest.Infrastructure/YourRest.Infrastructure.csproj
 ```
 
@@ -23,7 +23,7 @@ dotnet add reference ../YourRest.Infrastructure/YourRest.Infrastructure.csproj
 ```
 dotnet new webapi -n BookingContextApi
 cd BookingContextApi
-dotnet add reference ../SharedKernel/SharedKernel.csproj
+dotnet add reference ../YourRest.Domain/YourRest.Domain.csproj
 dotnet add reference ../YourRest.Infrastructure/YourRest.Infrastructure.csproj
 ```
 ### Добавление миграции из YourRest.WebApi в общий SharedDbContext.
@@ -41,7 +41,6 @@ dotnet test
 
 ```
 - **YourRest.WepApi.Tests** - интеграционные тесты.
-- **YourRest.BLL.Tests** - юнит-тесты.
 
 ## Документация в Swagger
 

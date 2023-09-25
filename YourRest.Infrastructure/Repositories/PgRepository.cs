@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using SharedKernel.Domain.Entities;
-using SharedKernel.Domain.Repositories;
+using YourRest.Domain.Entities;
+using YourRest.Domain.Repositories;
 using System.Linq.Expressions;
 
 namespace YourRest.Infrastructure.Repositories

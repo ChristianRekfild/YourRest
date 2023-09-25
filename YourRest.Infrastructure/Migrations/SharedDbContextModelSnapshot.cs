@@ -22,7 +22,7 @@ namespace YourRest.Infrastructure.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("SharedKernel.Domain.Entities.Booking", b =>
+            modelBuilder.Entity("YourRest.Domain.Entities.Booking", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -53,7 +53,7 @@ namespace YourRest.Infrastructure.Migrations
                     b.ToTable("Bookings");
                 });
 
-            modelBuilder.Entity("SharedKernel.Domain.Entities.City", b =>
+            modelBuilder.Entity("YourRest.Domain.Entities.City", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -70,7 +70,7 @@ namespace YourRest.Infrastructure.Migrations
                     b.ToTable("Cities");
                 });
 
-            modelBuilder.Entity("SharedKernel.Domain.Entities.Country", b =>
+            modelBuilder.Entity("YourRest.Domain.Entities.Country", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -87,7 +87,7 @@ namespace YourRest.Infrastructure.Migrations
                     b.ToTable("Countries");
                 });
 
-            modelBuilder.Entity("SharedKernel.Domain.Entities.Customer", b =>
+            modelBuilder.Entity("YourRest.Domain.Entities.Customer", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -126,7 +126,7 @@ namespace YourRest.Infrastructure.Migrations
                     b.ToTable("Customers");
                 });
 
-            modelBuilder.Entity("SharedKernel.Domain.Entities.Region", b =>
+            modelBuilder.Entity("YourRest.Domain.Entities.Region", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -148,7 +148,7 @@ namespace YourRest.Infrastructure.Migrations
                     b.ToTable("Regions");
                 });
 
-            modelBuilder.Entity("SharedKernel.Domain.Entities.Review", b =>
+            modelBuilder.Entity("YourRest.Domain.Entities.Review", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -173,9 +173,9 @@ namespace YourRest.Infrastructure.Migrations
                     b.ToTable("Reviews");
                 });
 
-            modelBuilder.Entity("SharedKernel.Domain.Entities.Booking", b =>
+            modelBuilder.Entity("YourRest.Domain.Entities.Booking", b =>
                 {
-                    b.HasOne("SharedKernel.Domain.Entities.Customer", "Customer")
+                    b.HasOne("YourRest.Domain.Entities.Customer", "Customer")
                         .WithMany()
                         .HasForeignKey("CustomerId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -184,9 +184,9 @@ namespace YourRest.Infrastructure.Migrations
                     b.Navigation("Customer");
                 });
 
-            modelBuilder.Entity("SharedKernel.Domain.Entities.Region", b =>
+            modelBuilder.Entity("YourRest.Domain.Entities.Region", b =>
                 {
-                    b.HasOne("SharedKernel.Domain.Entities.Country", "Country")
+                    b.HasOne("YourRest.Domain.Entities.Country", "Country")
                         .WithMany()
                         .HasForeignKey("CountryId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -195,9 +195,9 @@ namespace YourRest.Infrastructure.Migrations
                     b.Navigation("Country");
                 });
 
-            modelBuilder.Entity("SharedKernel.Domain.Entities.Review", b =>
+            modelBuilder.Entity("YourRest.Domain.Entities.Review", b =>
                 {
-                    b.HasOne("SharedKernel.Domain.Entities.Booking", "Booking")
+                    b.HasOne("YourRest.Domain.Entities.Booking", "Booking")
                         .WithMany()
                         .HasForeignKey("BookingId")
                         .OnDelete(DeleteBehavior.Cascade)

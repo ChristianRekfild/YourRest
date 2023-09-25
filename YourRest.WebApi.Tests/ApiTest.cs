@@ -1,14 +1,7 @@
-using System.Net.Http;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc.Testing;
+using YourRest.WebApi.Tests.Fixtures;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using System.Text.Json;
-using System.Collections.Generic;
-using Xunit;
 using YourRest.Infrastructure.DbContexts;
-using YourRest.WebApi;
-using SharedKernel.Domain.Entities;
 
 namespace YourRest.WebApi.Tests
 {
@@ -27,19 +20,20 @@ namespace YourRest.WebApi.Tests
             context.Database.Migrate();
         }
 
-        protected async Task InsertObjectIntoDatabase<T>(T entity)
+        protected async Task<int> InsertObjectIntoDatabase<T>(T entity) where T : class
         {
             using var scope = Fixture.Server.Host.Services.CreateScope();
             var context = scope.ServiceProvider.GetRequiredService<SharedDbContext>();
             context.Add(entity);
-            await context.SaveChangesAsync();
+            
+            return await context.SaveChangesAsync();
         }
 
         protected void CleanDatabase()
         {
             using var scope = Fixture.Server.Host.Services.CreateScope();
             var context = scope.ServiceProvider.GetRequiredService<SharedDbContext>();
-
+            
             context.ClearAllTables();
         }
 

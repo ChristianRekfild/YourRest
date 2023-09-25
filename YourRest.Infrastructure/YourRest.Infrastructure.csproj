@@ -23,7 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\SharedKernel\SharedKernel.csproj" />
+    <ProjectReference Include="..\YourRest.Domain\YourRest.Domain.csproj" />
   </ItemGroup>
 
   <ItemGroup>

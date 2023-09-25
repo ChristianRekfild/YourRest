@@ -12,8 +12,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\SharedKernel\SharedKernel.csproj" />
+    <ProjectReference Include="..\YourRest.Domain\YourRest.Domain.csproj" />
     <ProjectReference Include="..\YourRest.Infrastructure\YourRest.Infrastructure.csproj" />
+    <ProjectReference Include="..\YourRest.Application\YourRest.Application.csproj" />
   </ItemGroup>
 
 </Project>

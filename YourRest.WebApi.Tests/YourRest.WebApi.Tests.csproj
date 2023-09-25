@@ -27,7 +27,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\YourRest.WebApi\YourRest.WebApi.csproj" />
-    <ProjectReference Include="..\SharedKernel\SharedKernel.csproj" />
+    <ProjectReference Include="..\YourRest.Domain\YourRest.Domain.csproj" />
     <ProjectReference Include="..\YourRest.Infrastructure\YourRest.Infrastructure.csproj" />
   </ItemGroup>
 

@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
-using SharedKernel.Domain.Entities;
+using YourRest.Domain.Entities;
 
 namespace YourRest.Infrastructure.DbContexts
 {
