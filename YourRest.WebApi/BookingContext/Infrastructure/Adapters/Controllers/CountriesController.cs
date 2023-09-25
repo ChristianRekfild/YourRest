@@ -19,7 +19,7 @@ namespace YourRest.WebApi.BookingContext.Infrastructure.Adapters.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAllCountries()
         {
-            var countries = await _getCountryListUseCase.execute();
+            var countries = await _getCountryListUseCase.Execute();
             return Ok(countries);
         }
     }

@@ -13,7 +13,7 @@ namespace YourRest.WebApi.BookingContext.Application.UseCases
             _countryRepository = countryRepository;
         }
 
-        public async Task<IEnumerable<CountryDto>> execute()
+        public async Task<IEnumerable<CountryDto>> Execute()
         {
             var countries = await _countryRepository.GetAllAsync();
 

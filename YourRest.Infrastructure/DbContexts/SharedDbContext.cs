@@ -9,6 +9,8 @@ namespace YourRest.Infrastructure.DbContexts
     {
         public DbSet<Country> Countries { get; set; }
         public DbSet<Customer> Customers { get; set; }
+        public DbSet<City> Cities { get; set; }
+
         public DbSet<Booking> Bookings { get; set; }
         public DbSet<Region> Regions { get; set; }
         public DbSet<Review> Reviews { get; set; }
@@ -83,9 +85,9 @@ namespace YourRest.Infrastructure.DbContexts
             Countries.RemoveRange(Countries);
             Bookings.RemoveRange(Bookings);
             Customers.RemoveRange(Customers);
+            Cities.RemoveRange(Cities);
             Regions.RemoveRange(Regions);
-            Reviews.RemoveRange(Reviews);
-
+Reviews.RemoveRange(Reviews);
             // Add other DbSet removals here
             // Example: 
             // Rooms.RemoveRange(Rooms);

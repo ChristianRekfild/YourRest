@@ -6,9 +6,8 @@ using System.Threading.Tasks;
 
 namespace SharedKernel.Domain.Entities
 {
-    public class City
+    public class City : IntBaseEntity
     {
-        public int Id { get; set; }
         public string Name { get; set; }
     }
 }
