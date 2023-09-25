@@ -17,8 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\YourRest.DAL.Postgre\YourRest.DAL.Postgre.csproj" />
-    <ProjectReference Include="..\SharedKernel\SharedKernel.csproj" />
+    <ProjectReference Include="..\YourRest.Domain\YourRest.Domain.csproj" />
   </ItemGroup>
 
 </Project>

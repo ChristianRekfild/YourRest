@@ -16,7 +16,6 @@ dotnet test
 
 ```
 - **YourRest.WepApi.Tests** - интеграционные тесты.
-- **YourRest.BLL.Tests** - юнит-тесты.
 
 ## Документация в Swagger
 
