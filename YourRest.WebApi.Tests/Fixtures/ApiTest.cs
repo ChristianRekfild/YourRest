@@ -1,9 +1,8 @@
-using YourRest.WebApi.Tests.Fixtures;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using YourRest.Infrastructure.DbContexts;
 
-namespace YourRest.WebApi.Tests
+namespace YourRest.WebApi.Tests.Fixtures
 {
     public abstract class ApiTest : IClassFixture<ApiFixture>, IDisposable
     {
@@ -25,8 +24,8 @@ namespace YourRest.WebApi.Tests
             using var scope = Fixture.Server.Host.Services.CreateScope();
             var context = scope.ServiceProvider.GetRequiredService<SharedDbContext>();
             context.Add(entity);
-            
             return await context.SaveChangesAsync();
+
         }
 
         protected void CleanDatabase()

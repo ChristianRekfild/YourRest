@@ -1,33 +1,34 @@
-using DoomedDatabases.Postgres;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
+Ôªøusing Microsoft.EntityFrameworkCore;
 using Testcontainers.PostgreSql;
 using YourRest.Infrastructure.DbContexts;
 
-namespace YourRest.Infrastructure.Tests.Fixtures
+namespace YourRest.WebApi.Tests.Fixtures
 {
     public class DatabaseFixture : IAsyncLifetime
     {
         public SharedDbContext DbContext { get; private set; }
+        public string ConnectionString { get; private set; }
         private PostgreSqlContainer _postgreSqlContainer { get; }
         public DatabaseFixture()
         {
             _postgreSqlContainer = new PostgreSqlBuilder()
-                .WithImage("postgres:15.4-alpine")
-                .WithUsername("admin")
-                .WithPassword("admin")
-            //.WithPortBinding("5432") // ƒÎˇ ÔÓÒÏÓÚ‡ ‚ PgAdmin
+            .WithImage("postgres:15.4-alpine")
+            .WithUsername("admin")
+            .WithPassword("admin")
+            //.WithPortBinding("5432") // –î–ª—è –ø—Ä–æ—Å–º–æ—Ç—Ä–∞ –≤ PgAdmin
             .WithDatabase("db")
             .WithCleanUp(true)
-                .Build();
+            .Build();
         }
 
         public async Task InitializeAsync()
         {
             await _postgreSqlContainer.StartAsync();
+            
+            ConnectionString = _postgreSqlContainer.GetConnectionString();
 
             var builder = new DbContextOptionsBuilder<SharedDbContext>();
-            builder.UseNpgsql(_postgreSqlContainer.GetConnectionString());
+            builder.UseNpgsql(ConnectionString);
             DbContext = new SharedDbContext(builder.Options);
             DbContext.Database.EnsureCreated();
         }

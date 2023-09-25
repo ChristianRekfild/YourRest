@@ -10,7 +10,6 @@ using YourRest.Infrastructure.DbContexts;
 using YourRest.WebApi;
 using YourRest.Domain.Entities;
 using YourRest.Application.Dto;
-using YourRest.WebApi.Tests;
 using YourRest.WebApi.Tests.Fixtures;
 
 namespace YourRest.WebApi.Tests.Controllers
