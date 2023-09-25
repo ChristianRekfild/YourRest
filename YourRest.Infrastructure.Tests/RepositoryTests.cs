@@ -1,9 +1,8 @@
 using YourRest.Infrastructure.Tests.Fixtures;
 using YourRest.Infrastructure.DbContexts;
-using YourRest.WebApi.BookingContext.Domain.Ports;
-using YourRest.WebApi.BookingContext.Infrastructure.Adapters.Repositories;
-using SharedKernel.Domain.Entities;
-using SharedKernel.Domain.Repositories;
+using YourRest.Infrastructure.Repositories;
+using YourRest.Domain.Entities;
+using YourRest.Domain.Repositories;
 
 namespace YourRest.Infrastructure.Tests
 {
