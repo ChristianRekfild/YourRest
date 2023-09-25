@@ -1,59 +1,75 @@
+using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using System.Net;
 using System.Text;
-using SystemJson = System.Text.Json;
-using Newtonsoft.Json;
-using YourRest.Domain.Entities;
 using YourRest.Application.Dto;
+using YourRest.Domain.Entities;
+using YourRest.Infrastructure.DbContexts;
 using YourRest.WebApi.Tests.Fixtures;
+using SystemJson = System.Text.Json;
 
 namespace YourRest.WebApi.Tests.Controllers
 {
-    public class CitiesControllerTest : ApiTest
+    [Collection(nameof(SingletonApiTest))]
+    public class CitiesControllerTest// : ApiTest
     {
-        public CitiesControllerTest(ApiFixture fixture) : base(fixture)
+        private SharedDbContext _context;
+        private HttpClient Client;
+        //public CitiesControllerTest(ApiFixture fixture) : base(fixture)
+        //{
+        //}
+        public CitiesControllerTest(SingletonApiTest fixture)
         {
+            _context = fixture.dbFixture.DbContext;
+            Client = fixture.Client;
         }
 
         [Fact]
         public async Task GetAllcities_ReturnsExpectedCities_WhenDatabaseHasCities()
         {
-            var expectedCity1 = new City { Name = "Moscow", Id = 1 };
-            var expectedCity2 = new City { Name = "TestCity", Id = 2  };
-            await InsertObjectIntoDatabase(expectedCity1);
-            await InsertObjectIntoDatabase(expectedCity2);
+            var expectedCity1 = new City { Name = "Moscow"/*, Id = 1*/ };
+            var expectedCity2 = new City { Name = "TestCity"/*, Id = 2*/ };
+            //await _apiTest.InsertObjectIntoDatabase(expectedCity1);
+            //await _apiTest.InsertObjectIntoDatabase(expectedCity2);
+            expectedCity1 = (await _context.Cities.AddAsync(expectedCity1)).Entity;
+            expectedCity2 = (await _context.Cities.AddAsync(expectedCity2)).Entity;
+            await _context.SaveChangesAsync();
 
             var resultCities = await GetCitiesFromApi();
 
             Assert.NotNull(resultCities);
-            Assert.Collection(resultCities,
-                city => Assert.Equal("Moscow", city.Name),
-                city => Assert.Equal("TestCity", city.Name));
+            Assert.Equal(expectedCity1.Name, resultCities.FirstOrDefault(c => c.Id == expectedCity1.Id)?.Name);
+            Assert.Equal(expectedCity2.Name, resultCities.FirstOrDefault(c => c.Id == expectedCity2.Id)?.Name);
+            //Assert.Collection(resultCities,
+            //    city => Assert.Equal("Moscow", city.Name),
+            //    city => Assert.Equal("TestCity", city.Name));
         }
 
         [Fact]
         public async Task GetAllCities_ReturnsEmptyList_WhenDatabaseIsEmpty()
         {
+            var count = _context.Cities.Count();
             var resultCities = await GetCitiesFromApi();
 
             Assert.NotNull(resultCities);
-            Assert.Empty(resultCities);
+            Assert.Equal(count, resultCities.Count);
         }
 
         [Fact]
         public async Task GetCityById_ReturnsExpectedCity_WhenDatabaseHasCitiesByNeedId()
         {
-            var expectedCity1 = new City 
+            var expectedCity1 = new City
             {
-                Id = 1,
                 Name = "Moscow"
             };
-            var expectedCity2 = new City 
+            var expectedCity2 = new City
             {
-                Id = 2,
-                Name = "TestCity" 
+                Name = "TestCity"
             };
-            await InsertObjectIntoDatabase(expectedCity1);
-            await InsertObjectIntoDatabase(expectedCity2);
+
+            await _context.Cities.AddAsync(expectedCity1);
+            await _context.Cities.AddAsync(expectedCity2);
+            await _context.SaveChangesAsync();
 
             var resultCity1 = await GetCityByIdFromApi(1);
             var resultCity2 = await GetCityByIdFromApi(2);
@@ -68,16 +84,22 @@ namespace YourRest.WebApi.Tests.Controllers
         [Fact]
         public async Task GetCityById_ReturnsExpectedNull_WhenDatabaseHasNoCitiesByNeedId()
         {
+            var maxId = 1000;
+            if (await _context.Cities.AnyAsync())
+            {
+                maxId += await _context.Cities.Select(c => c.Id).MaxAsync();
+            }
+
             var invalidCity = new CityDTO
             {
-                Id = 13,
+                Id = maxId,
                 Name = "Test"
             };
 
             var content = new StringContent(JsonConvert.SerializeObject(invalidCity), Encoding.UTF8, "application/json");
-            var response = await Client.PostAsync($"/api/cities/{invalidCity.Id}", content);
+            var response = await Client.GetAsync($"/api/cities/{invalidCity.Id}");
 
-            //Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+            Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
 
         }
 
@@ -91,7 +113,7 @@ namespace YourRest.WebApi.Tests.Controllers
                 PropertyNameCaseInsensitive = true
             };
             var cities = SystemJson.JsonSerializer.Deserialize<List<City>>(content, options);
-            
+
             return cities;
         }
 
