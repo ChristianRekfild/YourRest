@@ -35,6 +35,5 @@
   <ItemGroup>
     <ProjectReference Include="..\YourRest.Infrastructure\YourRest.Infrastructure.csproj" />
     <ProjectReference Include="..\YourRest.WebApi\YourRest.WebApi.csproj" />
-    <ProjectReference Include="..\SharedKernel\SharedKernel.csproj" />
   </ItemGroup>
 </Project>
