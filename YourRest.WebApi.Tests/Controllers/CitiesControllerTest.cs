@@ -58,13 +58,13 @@ namespace YourRest.WebApi.Tests.Controllers
         [Fact]
         public async Task GetCityById_ReturnsExpectedCity_WhenDatabaseHasCitiesByNeedId()
         {
-            var expectedCity1 = new City
+            var expectedCity1 = new City 
             {
                 Name = "Moscow"
             };
-            var expectedCity2 = new City
+            var expectedCity2 = new City 
             {
-                Name = "TestCity"
+                Name = "TestCity" 
             };
 
             await _context.Cities.AddAsync(expectedCity1);
@@ -113,7 +113,7 @@ namespace YourRest.WebApi.Tests.Controllers
                 PropertyNameCaseInsensitive = true
             };
             var cities = SystemJson.JsonSerializer.Deserialize<List<City>>(content, options);
-
+            
             return cities;
         }
 

@@ -1,4 +1,6 @@
+using DoomedDatabases.Postgres;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Testcontainers.PostgreSql;
 using YourRest.Infrastructure.DbContexts;
 
@@ -11,13 +13,13 @@ namespace YourRest.Infrastructure.Tests.Fixtures
         public DatabaseFixture()
         {
             _postgreSqlContainer = new PostgreSqlBuilder()
-            .WithImage("postgres:15.4-alpine")
-            .WithUsername("admin")
-            .WithPassword("admin")
+                .WithImage("postgres:15.4-alpine")
+                .WithUsername("admin")
+                .WithPassword("admin")
             //.WithPortBinding("5432") // Для просмотра в PgAdmin
             .WithDatabase("db")
             .WithCleanUp(true)
-            .Build();
+                .Build();
         }
 
         public async Task InitializeAsync()

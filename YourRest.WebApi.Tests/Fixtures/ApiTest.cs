@@ -24,15 +24,14 @@ namespace YourRest.WebApi.Tests.Fixtures
             using var scope = Fixture.Server.Host.Services.CreateScope();
             var context = scope.ServiceProvider.GetRequiredService<SharedDbContext>();
             context.Add(entity);
-
-            return await context.SaveChangesAsync();
+            await context.SaveChangesAsync();
         }
 
         protected void CleanDatabase()
         {
             using var scope = Fixture.Server.Host.Services.CreateScope();
             var context = scope.ServiceProvider.GetRequiredService<SharedDbContext>();
-
+            
             context.ClearAllTables();
         }
 

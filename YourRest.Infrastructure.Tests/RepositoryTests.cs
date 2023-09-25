@@ -6,17 +6,18 @@ using YourRest.Domain.Repositories;
 
 namespace YourRest.Infrastructure.Tests
 {
+
     [Collection("Database")]
     public class RepositoryTest
     {
         private SharedDbContext _testDbContext;
         private readonly IRepository<Country, int> _countryRepository;
 
-        public RepositoryTest(DatabaseFixture databaseFixture)
-        {
+    public RepositoryTest(DatabaseFixture databaseFixture)
+    {
             _testDbContext = databaseFixture.DbContext;
             _countryRepository = new CountryRepository(_testDbContext);
-        }
+    }
 
         [Fact]
         public async Task TestWithChangeProperty()
@@ -32,7 +33,8 @@ namespace YourRest.Infrastructure.Tests
                 await _countryRepository.UpdateAsync(c);
             }
             var updatedCountry = await _countryRepository.GetAsync(id);
-
+            //var countries = testDbContext.Countries;
+            
             Assert.Equal(name, updatedCountry?.Name);
         }
 
@@ -45,12 +47,13 @@ namespace YourRest.Infrastructure.Tests
             string name = "Third Country";
             foreach (var c in fc)
             {
-                id = c.Id;
+                id = c.Id;                
                 var thirdCountry = new Country { Id = c.Id, Name = name };
                 await _countryRepository.UpdateAsync(thirdCountry);
             }
             var updatedCountry = await _countryRepository.GetAsync(id);
-
+            //var countries = testDbContext.Countries;
+            
             Assert.Equal(name, updatedCountry?.Name);
         }
     }
