@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using YourRest.Infrastructure.DbContexts;
+using YourRest.Infrastructure.Core.DbContexts;
 
 namespace YourRest.WebApi.Tests.Fixtures
 {
@@ -16,7 +16,8 @@ namespace YourRest.WebApi.Tests.Fixtures
 
             using var scope = Fixture.Server.Host.Services.CreateScope();
             var context = scope.ServiceProvider.GetRequiredService<SharedDbContext>();
-            context.Database.Migrate();
+            context.Database.EnsureCreated();
+            //context.Database.Migrate();
         }
 
         protected async Task<int> InsertObjectIntoDatabase<T>(T entity) where T : class
@@ -25,7 +26,6 @@ namespace YourRest.WebApi.Tests.Fixtures
             var context = scope.ServiceProvider.GetRequiredService<SharedDbContext>();
             context.Add(entity);
             return await context.SaveChangesAsync();
-
         }
 
         protected void CleanDatabase()

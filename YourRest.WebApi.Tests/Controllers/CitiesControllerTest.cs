@@ -4,7 +4,7 @@ using System.Net;
 using System.Text;
 using YourRest.Application.Dto;
 using YourRest.Domain.Entities;
-using YourRest.Infrastructure.DbContexts;
+using YourRest.Infrastructure.Core.DbContexts;
 using YourRest.WebApi.Tests.Fixtures;
 using SystemJson = System.Text.Json;
 

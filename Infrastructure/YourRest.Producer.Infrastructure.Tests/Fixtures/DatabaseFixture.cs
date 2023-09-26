@@ -1,8 +1,6 @@
-using DoomedDatabases.Postgres;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using Testcontainers.PostgreSql;
-using YourRest.Infrastructure.DbContexts;
+using YourRest.Infrastructure.Core.DbContexts;
 
 namespace YourRest.Infrastructure.Tests.Fixtures
 {

@@ -1,15 +1,12 @@
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using YourRest.Application.Interfaces;
 using YourRest.Application.UseCases;
 using YourRest.Domain.Repositories;
+using YourRest.Infrastructure.Core;
+using YourRest.Infrastructure.Core.DbContexts;
 using YourRest.Infrastructure.Repositories;
-using YourRest.Infrastructure.DbContexts;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
+using YourRest.Producer.Infrastructure.Repositories;
 
 public class Program
 {
@@ -84,5 +81,4 @@ public class Program
             endpoints.MapControllers();
         });
     }
-
 }

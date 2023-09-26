@@ -1,8 +1,9 @@
 using YourRest.Domain.Entities;
-using YourRest.Infrastructure.DbContexts;
+using YourRest.Infrastructure.Core.DbContexts;
 using YourRest.Domain.Repositories;
+using YourRest.Infrastructure.Core.Repositories;
 
-namespace YourRest.Infrastructure.Repositories
+namespace YourRest.Producer.Infrastructure.Repositories
 {
     public class RegionRepository : PgRepository<Region, int>, IRegionRepository
     {

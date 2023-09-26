@@ -5,17 +5,21 @@ VisualStudioVersion = 17.6.33815.320
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "YourRest.ClientWebApp", "YourRest.ClientWebApp\YourRest.ClientWebApp.csproj", "{98C97F8D-C1CD-4B34-9DF1-09C4942DD708}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "YourRest.Infrastructure", "YourRest.Infrastructure\YourRest.Infrastructure.csproj", "{C2DC889D-2ABB-454B-AFD2-F3F136D43E9F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "YourRest.Producer.Infrastructure", "Infrastructure\YourRest.Producer.Infrastructure\YourRest.Producer.Infrastructure.csproj", "{C2DC889D-2ABB-454B-AFD2-F3F136D43E9F}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "YourRest.WebApi", "YourRest.WebApi\YourRest.WebApi.csproj", "{9125AABC-BBA7-4083-BEEB-13F973363B8A}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "YourRest.Infrastructure.Tests", "YourRest.Infrastructure.Tests\YourRest.Infrastructure.Tests.csproj", "{E142C09A-E200-44B3-98C5-CAE6B80FBB3B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "YourRest.Producer.Infrastructure.Tests", "Infrastructure\YourRest.Producer.Infrastructure.Tests\YourRest.Producer.Infrastructure.Tests.csproj", "{E142C09A-E200-44B3-98C5-CAE6B80FBB3B}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "YourRest.Domain", "YourRest.Domain\YourRest.Domain.csproj", "{995142AE-D4DD-46A9-8CB1-A8CD1A92DDF7}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "YourRest.Application", "YourRest.Application\YourRest.Application.csproj", "{2D4E46B3-426A-4035-B9FF-66B044D33468}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "YourRest.WebApi.Tests", "YourRest.WebApi.Tests\YourRest.WebApi.Tests.csproj", "{B0E509F2-D7D7-4B9F-B899-908B130C6D31}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "YourRest.Infrastructure.Core", "Infrastructure\YourRest.Infrastructure.Core\YourRest.Infrastructure.Core.csproj", "{53828C4D-418F-4A93-B5DC-60D700E86501}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastructure", "{AB1D9707-7CCA-428C-964C-67EA9E5228EB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -51,9 +55,18 @@ Global
 		{B0E509F2-D7D7-4B9F-B899-908B130C6D31}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B0E509F2-D7D7-4B9F-B899-908B130C6D31}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B0E509F2-D7D7-4B9F-B899-908B130C6D31}.Release|Any CPU.Build.0 = Release|Any CPU
+		{53828C4D-418F-4A93-B5DC-60D700E86501}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{53828C4D-418F-4A93-B5DC-60D700E86501}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{53828C4D-418F-4A93-B5DC-60D700E86501}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{53828C4D-418F-4A93-B5DC-60D700E86501}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{C2DC889D-2ABB-454B-AFD2-F3F136D43E9F} = {AB1D9707-7CCA-428C-964C-67EA9E5228EB}
+		{E142C09A-E200-44B3-98C5-CAE6B80FBB3B} = {AB1D9707-7CCA-428C-964C-67EA9E5228EB}
+		{53828C4D-418F-4A93-B5DC-60D700E86501} = {AB1D9707-7CCA-428C-964C-67EA9E5228EB}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {F01EBCF2-BD79-4DE4-B7F0-9C9D41F8B0D5}
