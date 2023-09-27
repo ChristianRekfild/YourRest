@@ -28,7 +28,7 @@
   <ItemGroup>
     <ProjectReference Include="..\YourRest.WebApi\YourRest.WebApi.csproj" />
     <ProjectReference Include="..\YourRest.Domain\YourRest.Domain.csproj" />
-    <ProjectReference Include="..\YourRest.Infrastructure\YourRest.Infrastructure.csproj" />
+    <ProjectReference Include="..\Infrastructure\YourRest.Producer.Infrastructure\YourRest.Producer.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,16 +1,13 @@
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Options;
 using YourRest.Domain.Entities;
 
-namespace YourRest.Infrastructure.DbContexts
+namespace YourRest.Infrastructure.Core.DbContexts
 {
     public class SharedDbContext : DbContext
     {
         public DbSet<Country> Countries { get; set; }
         public DbSet<Customer> Customers { get; set; }
         public DbSet<City> Cities { get; set; }
-
         public DbSet<Booking> Bookings { get; set; }
         public DbSet<Region> Regions { get; set; }
         public DbSet<Review> Reviews { get; set; }
@@ -22,7 +19,9 @@ namespace YourRest.Infrastructure.DbContexts
 
         public SharedDbContext() : base() { }
 
-        public SharedDbContext(DbContextOptions<SharedDbContext> options) : base(options) { }
+        public SharedDbContext(DbContextOptions<SharedDbContext> options) : base(options) {
+            Database.EnsureCreated();
+        }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -32,6 +31,7 @@ namespace YourRest.Infrastructure.DbContexts
                 optionsBuilder.UseNpgsql(conn);
             }
             base.OnConfiguring(optionsBuilder);
+            
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -87,7 +87,7 @@ namespace YourRest.Infrastructure.DbContexts
             Customers.RemoveRange(Customers);
             Cities.RemoveRange(Cities);
             Regions.RemoveRange(Regions);
-Reviews.RemoveRange(Reviews);
+            Reviews.RemoveRange(Reviews);
             // Add other DbSet removals here
             // Example: 
             // Rooms.RemoveRange(Rooms);

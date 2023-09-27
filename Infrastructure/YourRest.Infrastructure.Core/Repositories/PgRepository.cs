@@ -3,7 +3,7 @@ using YourRest.Domain.Entities;
 using YourRest.Domain.Repositories;
 using System.Linq.Expressions;
 
-namespace YourRest.Infrastructure.Repositories
+namespace YourRest.Infrastructure.Core.Repositories
 {
     public class PgRepository<T, U> : IRepository<T, U> where T : BaseEntity<U> where U : notnull
     {

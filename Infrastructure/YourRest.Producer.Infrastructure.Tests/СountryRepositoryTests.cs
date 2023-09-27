@@ -1,6 +1,6 @@
 using YourRest.Infrastructure.Tests.Fixtures;
-using YourRest.Infrastructure.DbContexts;
-using YourRest.Infrastructure.Repositories;
+using YourRest.Infrastructure.Core.DbContexts;
+using YourRest.Producer.Infrastructure.Repositories;
 using YourRest.Domain.Entities;
 using YourRest.Domain.Repositories;
 
@@ -8,12 +8,12 @@ namespace YourRest.Infrastructure.Tests
 {
 
     [Collection("Database")]
-    public class RepositoryTest
+    public class ÑountryRepositoryTests
     {
         private SharedDbContext _testDbContext;
         private readonly IRepository<Country, int> _countryRepository;
 
-    public RepositoryTest(DatabaseFixture databaseFixture)
+    public ÑountryRepositoryTests(DatabaseFixture databaseFixture)
     {
             _testDbContext = databaseFixture.DbContext;
             _countryRepository = new CountryRepository(_testDbContext);

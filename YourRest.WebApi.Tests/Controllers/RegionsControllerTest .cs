@@ -1,15 +1,6 @@
-using System.Net.Http;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc.Testing;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 using System.Text.Json;
-using System.Collections.Generic;
-using Xunit;
-using YourRest.Infrastructure.DbContexts;
-using YourRest.WebApi;
-using YourRest.Domain.Entities;
 using YourRest.Application.Dto;
+using YourRest.Domain.Entities;
 using YourRest.WebApi.Tests.Fixtures;
 
 namespace YourRest.WebApi.Tests.Controllers
