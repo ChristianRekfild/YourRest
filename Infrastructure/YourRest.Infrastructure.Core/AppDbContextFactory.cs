@@ -15,7 +15,10 @@ namespace YourRest.Infrastructure.Core
         public SharedDbContext CreateDbContext()
         {
             var optionsBuilder = new DbContextOptionsBuilder<SharedDbContext>();
-            optionsBuilder.UseNpgsql(_connectionString);
+            optionsBuilder.UseNpgsql(
+                _connectionString,
+                x => x.MigrationsAssembly("YourRest.Producer.Infrastructure"));
+
             return new SharedDbContext(optionsBuilder.Options);
         }
     }

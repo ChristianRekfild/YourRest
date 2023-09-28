@@ -36,5 +36,7 @@ docker compose up -d
 В интеграционных тестах используется отдельная тестовая база, которая очищается после каждого выполненного теста. При добавлении новых сущностей необходимо обновить метод `ClearAllTables()` в `SharedDbContext`, чтобы очищать соответствующую таблицу. Если одна таблица ссылается на другую, следите за порядком удаления, учитывая foreign key.
 
 ## Добавление миграций
-## Из директории YourRest\Infrastructure выполнить:
-dotnet ef migrations update -s YourRest.Infrastructure.Core\YourRest.Infrastructure.Core.csproj -c SharedDbContext -o ..\YourRest.Producer.Infrastructure\Migration
+## Если выполнять из директории YourRest\Infrastructure:
+## Это для SharedDbContext
+dotnet ef migrations add InitialCreate -s ..\YourRest.WebApi\YourRest.WebApi.csproj -c SharedDbContext -p YourRest.Producer.Infrastructure\YourRest.Producer.Infrastructure.csproj -v
+dotnet ef database update -s ..\YourRest.WebApi\YourRest.WebApi.csproj -p YourRest.Producer.Infrastructure\YourRest.Producer.Infrastructure.csproj -c SharedDbContext -v

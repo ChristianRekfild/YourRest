@@ -9,10 +9,10 @@ using YourRest.Infrastructure.Core.DbContexts;
 
 #nullable disable
 
-namespace YourRest.Infrastructure.Core.Migrations
+namespace YourRest.Producer.Infrastructure.Migrations
 {
     [DbContext(typeof(SharedDbContext))]
-    [Migration("20230926093811_InitialCreate")]
+    [Migration("20230928210306_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />

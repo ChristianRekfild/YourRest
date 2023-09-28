@@ -8,7 +8,7 @@ using YourRest.Infrastructure.Core.DbContexts;
 
 #nullable disable
 
-namespace YourRest.Infrastructure.Core.Migrations
+namespace YourRest.Producer.Infrastructure.Migrations
 {
     [DbContext(typeof(SharedDbContext))]
     partial class SharedDbContextModelSnapshot : ModelSnapshot
