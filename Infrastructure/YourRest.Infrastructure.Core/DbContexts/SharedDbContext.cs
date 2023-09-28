@@ -27,7 +27,7 @@ namespace YourRest.Infrastructure.Core.DbContexts
         {
             if (!optionsBuilder.IsConfigured)
             {
-                string conn = "Host=localhost;Database=hotel_management;Username=admin;Password=admin;Port=5432";
+                string conn = "Host=localhost;Database=your_rest;Username=admin;Password=admin;Port=5433";
                 optionsBuilder.UseNpgsql(conn);
             }
             base.OnConfiguring(optionsBuilder);
