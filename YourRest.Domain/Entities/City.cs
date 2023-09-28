@@ -9,6 +9,8 @@ namespace YourRest.Domain.Entities
     public class City : IntBaseEntity
     {
         public string Name { get; set; }
+        // Navigation property
+        public ICollection<Address> Addresses { get; set; }
     }
 }
 

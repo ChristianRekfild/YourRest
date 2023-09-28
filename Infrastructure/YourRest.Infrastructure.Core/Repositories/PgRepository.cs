@@ -65,7 +65,7 @@ namespace YourRest.Infrastructure.Core.Repositories
             }
         }
 
-        public async Task UpdateAsync(T entity, bool saveChanges = true, CancellationToken cancellationToken = default)
+        public async Task<T> UpdateAsync(T entity, bool saveChanges = true, CancellationToken cancellationToken = default)
         {
             var oldEntity = await _dataContext.Set<T>().FindAsync(entity.Id, cancellationToken);
 
@@ -78,6 +78,8 @@ namespace YourRest.Infrastructure.Core.Repositories
                     await _dataContext.SaveChangesAsync(cancellationToken);
                 }
             }
+
+            return entity;
         }
 
         public async Task SaveChangesAsync(CancellationToken cancellationToken = default)

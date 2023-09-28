@@ -37,4 +37,4 @@ docker compose up -d
 
 ## Добавление миграций
 ## Из директории YourRest\Infrastructure выполнить:
-dotnet ef migrations add InitialCreate -s YourRest.Infrastructure.Core\YourRest.Infrastructure.Core.csproj -c SharedDbContext -o ..\YourRest.Producer.Infrastructure\Migration
+dotnet ef migrations update -s YourRest.Infrastructure.Core\YourRest.Infrastructure.Core.csproj -c SharedDbContext -o ..\YourRest.Producer.Infrastructure\Migration

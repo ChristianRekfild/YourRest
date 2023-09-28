@@ -11,6 +11,8 @@ namespace YourRest.Infrastructure.Core.DbContexts
         public DbSet<Booking> Bookings { get; set; }
         public DbSet<Region> Regions { get; set; }
         public DbSet<Review> Reviews { get; set; }
+        public DbSet<Address> Addresses { get; set; }
+        public DbSet<Accommodation> Accommodations { get; set; }
 
         static SharedDbContext()
         {
@@ -27,7 +29,7 @@ namespace YourRest.Infrastructure.Core.DbContexts
         {
             if (!optionsBuilder.IsConfigured)
             {
-                string conn = "Host=localhost;Database=hotel_management;Username=admin;Password=admin;Port=5432";
+                string conn = "Host=localhost;Database=your_rest;Username=admin;Password=admin;Port=5433";
                 optionsBuilder.UseNpgsql(conn);
             }
             base.OnConfiguring(optionsBuilder);
@@ -64,6 +66,11 @@ namespace YourRest.Infrastructure.Core.DbContexts
                     .HasForeignKey(r => r.BookingId);
             });
 
+            modelBuilder.Entity<Address>()
+                .HasOne(a => a.City)
+                .WithMany(c => c.Addresses)
+                .HasForeignKey(a => a.CityId);
+
             //modelBuilder.Entity<Review>().OwnsOne(
             //    b => b.Comment,
             //    sa =>
@@ -71,12 +78,19 @@ namespace YourRest.Infrastructure.Core.DbContexts
             //        sa.Property(p => p.Value).HasColumnName("Comment");
             //    });
 
-            //modelBuilder.Entity<Review>().OwnsOne(
-            //    b => b.Rating,
-            //    sa =>
-            //    {
-            //        sa.Property(p => p.Value).HasColumnName("Rating");
-            //    });
+            modelBuilder.Entity<Review>().OwnsOne(
+                b => b.Rating,
+                sa =>
+                {
+                    sa.Property(p => p.Value).HasColumnName("Rating");
+                });
+
+            modelBuilder.Entity<Address>().OwnsOne(
+                b => b.Type,
+                sa =>
+                {
+                    sa.Property(p => p.Value).HasColumnName("Type");
+                });
         }
 
 
@@ -88,6 +102,8 @@ namespace YourRest.Infrastructure.Core.DbContexts
             Cities.RemoveRange(Cities);
             Regions.RemoveRange(Regions);
             Reviews.RemoveRange(Reviews);
+            Addresses.RemoveRange(Addresses);
+            Accommodations.RemoveRange(Accommodations);
             // Add other DbSet removals here
             // Example: 
             // Rooms.RemoveRange(Rooms);
