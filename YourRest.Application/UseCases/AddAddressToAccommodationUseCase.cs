@@ -12,9 +12,10 @@ namespace YourRest.Application.UseCases
         private readonly IAccommodationRepository _accommodationRepository;
         private readonly ICityRepository _cityRepository;
 
-        public AddAddressToAccommodationUseCase(IAccommodationRepository accommodationRepository)
+        public AddAddressToAccommodationUseCase(IAccommodationRepository accommodationRepository, ICityRepository cityRepository)
         {
             _accommodationRepository = accommodationRepository;
+            _cityRepository = cityRepository;
         }
 
         public async Task<ResultDto> Execute(int accommodationId, AddressDto addressDto)
@@ -24,6 +25,8 @@ namespace YourRest.Application.UseCases
             {
                 throw new AccommodationNotFoundException(accommodationId);
             }
+            var accommodation = await accommodationTask;
+
             var cityId = addressDto.CityId;
             var cityTask = _cityRepository.GetAsync(cityId);
             if (cityTask == null)
@@ -31,7 +34,6 @@ namespace YourRest.Application.UseCases
                 throw new CityNotFoundException($"Country with id {cityId} not found");
             }
 
-            var accommodation = await accommodationTask;
             var city = await cityTask;
 
             var address = new Address
@@ -45,11 +47,11 @@ namespace YourRest.Application.UseCases
             };
 
             accommodation.Addresses.Add(address);
-            var entity = _accommodationRepository.UpdateAsync(accommodation);
+            await _accommodationRepository.UpdateAsync(accommodation);
 
             return new ResultDto
             {
-                Id = entity.Id
+                Id = address.Id
             };
         }
     }

@@ -25,9 +25,9 @@ namespace YourRest.WebApi.Controllers
 
                 return CreatedAtAction(nameof(Post), createdReview);
             }
-            catch (BookingNotFoundException)
+            catch (BookingNotFoundException exception)
             {
-                return NotFound();
+                return NotFound(exception.Message);
             }
         }
     }
