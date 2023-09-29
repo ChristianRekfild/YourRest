@@ -20,21 +20,19 @@ namespace YourRest.Application.UseCases
 
         public async Task<ResultDto> Execute(int accommodationId, AddressDto addressDto)
         {
-            var accommodationTask = _accommodationRepository.GetAsync(accommodationId);
-            if (accommodationTask == null)
+            var accommodation = await _accommodationRepository.GetAsync(accommodationId);
+
+            if (accommodation == null)
             {
                 throw new AccommodationNotFoundException(accommodationId);
             }
-            var accommodation = await accommodationTask;
 
             var cityId = addressDto.CityId;
-            var cityTask = _cityRepository.GetAsync(cityId);
-            if (cityTask == null)
+            var city = await _cityRepository.GetAsync(cityId);
+            if (city == null)
             {
-                throw new CityNotFoundException($"Country with id {cityId} not found");
-            }
-
-            var city = await cityTask;
+                throw new CityNotFoundException($"City with id {cityId} not found");
+            }           
 
             var address = new Address
             {

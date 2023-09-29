@@ -29,9 +29,6 @@ namespace YourRest.WebApi.Controllers
             catch (Exception exception) when (exception is AccommodationNotFoundException || exception is CityNotFoundException)
             {
                 return NotFound(new ErrorResponse{ Message = exception.Message});
-            } catch (Exception exception)
-            {
-                return NotFound(exception.Message);
             }
         }
     }
