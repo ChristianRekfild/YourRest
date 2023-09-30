@@ -4,38 +4,72 @@ using YourRest.Infrastructure.Core.DbContexts;
 
 namespace YourRest.WebApi.Tests.Fixtures
 {
-    public class DatabaseFixture : IAsyncLifetime
+    public class DatabaseFixture : IDisposable
     {
-        public SharedDbContext DbContext { get; private set; }
-        public string ConnectionString { get; private set; }
+        private static DatabaseFixture instance;
+        private static readonly object syncObj = new object();
+
+        public string ConnectionString
+        {
+            get
+            {
+                if (_postgreSqlContainer.State != DotNet.Testcontainers.Containers.TestcontainersStates.Running)
+                {
+                    lock (syncObj)
+                    {
+                        if (_postgreSqlContainer.State != DotNet.Testcontainers.Containers.TestcontainersStates.Running)
+                        {
+                            _postgreSqlContainer.ConfigureAwait(false);
+                            Task.Run(async () => await _postgreSqlContainer.StartAsync()).Wait();
+                        }
+                    }
+                }
+                return _postgreSqlContainer.GetConnectionString();
+            }
+        }
+
         private PostgreSqlContainer _postgreSqlContainer { get; }
-        public DatabaseFixture()
+        private DatabaseFixture()
         {
             _postgreSqlContainer = new PostgreSqlBuilder()
             .WithImage("postgres:15.4-alpine")
-            .WithUsername("admin")
-            .WithPassword("admin")
-            //.WithPortBinding("5432") // Для просмотра в PgAdmin
-            .WithDatabase("db")
+            .WithUsername("postgre")
+            .WithPassword("postgre")
+            .WithPortBinding("5433") // Для просмотра в PgAdmin
+            .WithDatabase("postgre")
             .WithCleanUp(true)
             .Build();
         }
 
-        public async Task InitializeAsync()
+        public static DatabaseFixture getInstance()
         {
-            await _postgreSqlContainer.StartAsync();
-            
-            ConnectionString = _postgreSqlContainer.GetConnectionString();
-
+            if (instance == null)
+            {
+                lock (syncObj)
+                {
+                    if (instance == null)
+                    {
+                        instance = new DatabaseFixture();
+                    }
+                }
+            }
+            return instance;
+        }
+        public SharedDbContext GetDbContext(string ConnectionString)
+        {
             var builder = new DbContextOptionsBuilder<SharedDbContext>();
             builder.UseNpgsql(ConnectionString);
-            DbContext = new SharedDbContext(builder.Options);
-            DbContext.Database.EnsureCreated();
+            SharedDbContext defaultDbContext = new SharedDbContext(builder.Options);
+            defaultDbContext.Database.EnsureCreated();
+
+            return defaultDbContext;
         }
 
-        public Task DisposeAsync()
+        public void Dispose()
         {
-            return _postgreSqlContainer.DisposeAsync().AsTask();
+            Task.Run(async () => await _postgreSqlContainer.StopAsync()).Wait();
+            var task = _postgreSqlContainer.DisposeAsync().AsTask();
+            task.Wait();
         }
     }
 }

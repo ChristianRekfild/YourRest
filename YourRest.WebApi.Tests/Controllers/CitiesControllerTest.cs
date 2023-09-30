@@ -20,7 +20,7 @@ namespace YourRest.WebApi.Tests.Controllers
         //}
         public CitiesControllerTest(SingletonApiTest fixture)
         {
-            _context = fixture.dbFixture.DbContext;
+            _context = fixture.DbContext;
             Client = fixture.Client;
         }
 
