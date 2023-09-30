@@ -25,49 +25,61 @@ namespace YourRest.Application.UseCases
         public async Task<ResultDto> Execute(int accommodationId, AddressDto addressDto)
         {
             var accommodations = await _accommodationRepository.GetWithIncludeAsync(a => a.Id == accommodationId, a => a.Address);
-            var accommodation = accommodations.FirstOrDefault(a => a.Id == accommodationId);
+            var accommodation = accommodations.FirstOrDefault();
 
             if (accommodation == null)
             {
                 throw new AccommodationNotFoundException(accommodationId);
             }
-            var existAddress = accommodation?.Address;
 
-            if (existAddress != null)
+            if (accommodation.Address != null)
             {
                 throw new AddressAlreadyExistsException(accommodationId);
             }
 
-            var cityId = addressDto.CityId;
-            var city = await _cityRepository.GetAsync(cityId);
+            var city = await _cityRepository.GetAsync(addressDto.CityId);
             if (city == null)
             {
-                throw new CityNotFoundException($"City with id {cityId} not found");
-            }           
+                throw new CityNotFoundException($"City with id {addressDto.CityId} not found");
+            }
 
-            var address = new Address
+            var addresses = await _addressRepository.FindAsync(
+                a => a.Street == addressDto.Street 
+                && a.ZipCode == addressDto.ZipCode 
+                && a.Longitude == addressDto.Longitude 
+                && a.Latitude == addressDto.Latitude
+            );
+            var address = addresses.FirstOrDefault();
+            
+            if (address == null)
             {
-                Street = addressDto.Street,
-                CityId = city.Id,
-                ZipCode = addressDto.ZipCode,
-                Longitude = addressDto.Longitude,
-                Latitude = addressDto.Latitude,
-                AccommodationId = accommodation.Id
-            };
+                address = new Address
+                {
+                    Street = addressDto.Street,
+                    CityId = city.Id,
+                    ZipCode = addressDto.ZipCode,
+                    Longitude = addressDto.Longitude,
+                    Latitude = addressDto.Latitude,
+                };
 
-            var savedAddress = await _addressRepository.AddAsync(address);
-            await _addressRepository.SaveChangesAsync();
+                address = await _addressRepository.AddAsync(address);
+                await _addressRepository.SaveChangesAsync();
+            }
+
+            accommodation.AddressId = address.Id;
+            await _accommodationRepository.UpdateAsync(accommodation);
+            await _accommodationRepository.SaveChangesAsync();
 
             return new ResultDto
             {
-                Id = savedAddress.Id,
-                Street = savedAddress.Street,
-                ZipCode = savedAddress.ZipCode,
-                Longitude = savedAddress.Longitude,
-                Latitude = savedAddress.Latitude,
-                CityId = savedAddress.CityId,
-                AccommodationId = savedAddress.AccommodationId
+                Id = address.Id,
+                Street = address.Street,
+                ZipCode = address.ZipCode,
+                Longitude = address.Longitude,
+                Latitude = address.Latitude,
+                CityId = address.CityId,
             };
         }
+
     }
 }

@@ -30,11 +30,17 @@ namespace YourRest.Producer.Infrastructure.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
+                    b.Property<int?>("AddressId")
+                        .HasColumnType("integer");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("AddressId")
+                        .IsUnique();
 
                     b.ToTable("Accommodations");
                 });
@@ -46,9 +52,6 @@ namespace YourRest.Producer.Infrastructure.Migrations
                         .HasColumnType("integer");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("AccommodationId")
-                        .HasColumnType("integer");
 
                     b.Property<int>("CityId")
                         .HasColumnType("integer");
@@ -68,9 +71,6 @@ namespace YourRest.Producer.Infrastructure.Migrations
                         .HasColumnType("text");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("AccommodationId")
-                        .IsUnique();
 
                     b.HasIndex("CityId");
 
@@ -225,21 +225,22 @@ namespace YourRest.Producer.Infrastructure.Migrations
                     b.ToTable("Reviews");
                 });
 
+            modelBuilder.Entity("YourRest.Domain.Entities.Accommodation", b =>
+                {
+                    b.HasOne("YourRest.Domain.Entities.Address", "Address")
+                        .WithOne()
+                        .HasForeignKey("YourRest.Domain.Entities.Accommodation", "AddressId");
+
+                    b.Navigation("Address");
+                });
+
             modelBuilder.Entity("YourRest.Domain.Entities.Address", b =>
                 {
-                    b.HasOne("YourRest.Domain.Entities.Accommodation", "Accommodation")
-                        .WithOne("Address")
-                        .HasForeignKey("YourRest.Domain.Entities.Address", "AccommodationId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("YourRest.Domain.Entities.City", "City")
                         .WithMany("Addresses")
                         .HasForeignKey("CityId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Accommodation");
 
                     b.Navigation("City");
                 });
@@ -294,12 +295,6 @@ namespace YourRest.Producer.Infrastructure.Migrations
                     b.Navigation("Booking");
 
                     b.Navigation("Rating")
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("YourRest.Domain.Entities.Accommodation", b =>
-                {
-                    b.Navigation("Address")
                         .IsRequired();
                 });
 

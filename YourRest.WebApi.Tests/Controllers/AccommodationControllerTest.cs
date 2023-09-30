@@ -15,7 +15,7 @@ namespace YourRest.WebApi.Tests.Controllers
         }
 
         [Fact]
-        public async Task GivenValidAddress_WhenAddAddressToAccommodationAsyncInvoked_ThenReturns200Ok()
+        public async Task GivenAccommodation_WhenApiMethodInvokedWithValidAddress_ThenReturns200Ok()
         {     
             var accommodationEntity = new Accommodation
             {
@@ -28,6 +28,41 @@ namespace YourRest.WebApi.Tests.Controllers
             var cityEntity = new City { Name = "Moscow"};
             var city = await InsertObjectIntoDatabase(cityEntity);
             var addressDto = CreateValidAddressDto(city.Id);
+
+            var content = new StringContent(JsonConvert.SerializeObject(addressDto), Encoding.UTF8, "application/json");
+            var response = await Client.PostAsync($"api/operator/accommodation/{accommodationId}/address", content);
+            
+            Assert.Equal(HttpStatusCode.Created, response.StatusCode);
+
+            var responseString = await response.Content.ReadAsStringAsync();           
+            var createdAddress = JsonConvert.DeserializeObject<ResultDto>(responseString);
+
+            Assert.True(createdAddress.Id > 0);
+        }
+
+        [Fact]
+        public async Task GivenAccommodationAndExistAddressInDB_WhenApiMethodInvokedWithTheSameAddress_ThenReturns200Ok()
+        {     
+            var cityEntity = new City { Name = "Moscow"};
+            var city = await InsertObjectIntoDatabase(cityEntity);
+            var addressDto = CreateValidAddressDto(city.Id);
+
+            var addressEntity = new Address
+                {
+                    Street = "Тестовая улица",
+                    CityId = city.Id,
+                    ZipCode = "188644",
+                    Longitude = 100,
+                    Latitude = 100,
+                };
+            await InsertObjectIntoDatabase(addressEntity);
+
+            var accommodationEntity = new Accommodation
+            {
+                Name = "Test",
+            };
+            var accommodation = await InsertObjectIntoDatabase(accommodationEntity);
+            var accommodationId = accommodation.Id;   
 
             var content = new StringContent(JsonConvert.SerializeObject(addressDto), Encoding.UTF8, "application/json");
             var response = await Client.PostAsync($"api/operator/accommodation/{accommodationId}/address", content);
@@ -124,27 +159,27 @@ namespace YourRest.WebApi.Tests.Controllers
         [Fact]
        public async Task GivenAccommodationWithAddress_WhenAddAddressToAccommodationAsyncInvoked_ThenThrows422()
        {
-            var accommodationEntity = new Accommodation
-            {
-                Name = "Test",
-            };
-            var accommodation = await InsertObjectIntoDatabase(accommodationEntity);
-            var accommodationId = accommodation.Id;            
-        
             var cityEntity = new City { Name = "Moscow"};
             var city = await InsertObjectIntoDatabase(cityEntity);
             var addressDto = CreateValidAddressDto(city.Id);
 
             var addressEntity = new Address
-            {
-                Street = "Тестовая улица",
-                CityId = city.Id,
-                ZipCode = "188644",
-                Longitude = 100,
-                Latitude = 100,
-                AccommodationId = accommodation.Id
-            };
+                {
+                    Street = "Тестовая улица",
+                    CityId = city.Id,
+                    ZipCode = "188644",
+                    Longitude = 100,
+                    Latitude = 100,
+                };
             await InsertObjectIntoDatabase(addressEntity);
+
+            var accommodationEntity = new Accommodation
+            {
+                Name = "Test",
+                AddressId = addressEntity.Id
+            };
+            var accommodation = await InsertObjectIntoDatabase(accommodationEntity);
+            var accommodationId = accommodation.Id;            
 
             var content = new StringContent(JsonConvert.SerializeObject(addressDto), Encoding.UTF8, "application/json");
             var response = await Client.PostAsync($"api/operator/accommodation/{accommodationId}/address", content);

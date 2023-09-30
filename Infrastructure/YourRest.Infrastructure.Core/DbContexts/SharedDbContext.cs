@@ -64,13 +64,7 @@ namespace YourRest.Infrastructure.Core.DbContexts
                 r.HasOne(r => r.Booking)
                     .WithMany()
                     .HasForeignKey(r => r.BookingId);
-            });
-
-            modelBuilder.Entity<Address>()
-                .HasOne(a => a.City)
-                .WithMany(c => c.Addresses)
-                .HasForeignKey(a => a.CityId);
-
+            });       
 
             //modelBuilder.Entity<Review>().OwnsOne(
             //    b => b.Comment,
@@ -85,6 +79,13 @@ namespace YourRest.Infrastructure.Core.DbContexts
                 {
                     sa.Property(p => p.Value).HasColumnName("Rating");
                 });
+            
+            modelBuilder.Entity<Accommodation>(r =>
+            {
+                r.HasOne(r => r.Address)
+                    .WithOne()
+                    .HasForeignKey<Accommodation>(r => r.AddressId);
+            }); 
         }
 
         public void ClearAllTables()

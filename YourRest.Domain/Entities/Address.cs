@@ -7,8 +7,6 @@
         public string ZipCode { get; set; }
         public double Longitude { get; set; }
         public double Latitude { get; set; }
-        public Accommodation Accommodation { get; set; }
         public int CityId { get; set; }
-        public int AccommodationId { get; set; }
     }
 }
