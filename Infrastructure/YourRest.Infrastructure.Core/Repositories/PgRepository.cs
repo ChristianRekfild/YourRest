@@ -84,7 +84,7 @@ namespace YourRest.Infrastructure.Core.Repositories
                 }
             }
 
-            return entity;
+            return oldEntity;
         }
 
         public async Task SaveChangesAsync(CancellationToken cancellationToken = default)
