@@ -6,7 +6,7 @@ namespace YourRest.WebApi.Tests.Fixtures
 {
     public class DatabaseFixture : IDisposable
     {
-        private static DatabaseFixture instance;
+        private static DatabaseFixture instance = null;
         private static readonly object syncObj = new object();
 
         public string ConnectionString
@@ -55,6 +55,7 @@ namespace YourRest.WebApi.Tests.Fixtures
             }
             return instance;
         }
+
         public SharedDbContext GetDbContext(string ConnectionString)
         {
             var builder = new DbContextOptionsBuilder<SharedDbContext>();
@@ -68,8 +69,7 @@ namespace YourRest.WebApi.Tests.Fixtures
         public void Dispose()
         {
             Task.Run(async () => await _postgreSqlContainer.StopAsync()).Wait();
-            var task = _postgreSqlContainer.DisposeAsync().AsTask();
-            task.Wait();
+            Task.Run(async () => await _postgreSqlContainer.DisposeAsync()).Wait();
         }
     }
 }
