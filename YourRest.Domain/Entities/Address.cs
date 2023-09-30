@@ -1,6 +1,4 @@
-﻿using YourRest.Domain.ValueObjects.Addresses;
-
-namespace YourRest.Domain.Entities
+﻿namespace YourRest.Domain.Entities
 {
     public class Address : IntBaseEntity
     {
@@ -9,7 +7,8 @@ namespace YourRest.Domain.Entities
         public string ZipCode { get; set; }
         public double Longitude { get; set; }
         public double Latitude { get; set; }
-        public AddressTypeVO Type { get; set; }
+        public Accommodation Accommodation { get; set; }
         public int CityId { get; set; }
+        public int AccommodationId { get; set; }
     }
 }

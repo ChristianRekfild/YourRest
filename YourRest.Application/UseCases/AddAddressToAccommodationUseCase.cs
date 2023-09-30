@@ -3,18 +3,22 @@ using YourRest.Application.Dto;
 using YourRest.Application.Interfaces;
 using YourRest.Domain.Entities;
 using YourRest.Domain.Repositories;
-using YourRest.Domain.ValueObjects.Addresses;
 
 namespace YourRest.Application.UseCases
 {
     public class AddAddressToAccommodationUseCase : IAddAddressToAccommodationUseCase
     {
         private readonly IAccommodationRepository _accommodationRepository;
+        private readonly IAddressRepository _addressRepository;
         private readonly ICityRepository _cityRepository;
 
-        public AddAddressToAccommodationUseCase(IAccommodationRepository accommodationRepository, ICityRepository cityRepository)
-        {
+        public AddAddressToAccommodationUseCase(
+            IAccommodationRepository accommodationRepository,
+            IAddressRepository addressRepository,
+            ICityRepository cityRepository
+        ) {
             _accommodationRepository = accommodationRepository;
+            _addressRepository = addressRepository;
             _cityRepository = cityRepository;
         }
 
@@ -25,6 +29,11 @@ namespace YourRest.Application.UseCases
             if (accommodation == null)
             {
                 throw new AccommodationNotFoundException(accommodationId);
+            }
+            
+            if (accommodation.Address != null)
+            {
+                throw new AddressAlreadyExistsException(accommodationId);
             }
 
             var cityId = addressDto.CityId;
@@ -37,19 +46,25 @@ namespace YourRest.Application.UseCases
             var address = new Address
             {
                 Street = addressDto.Street,
-                City = city,
+                CityId = city.Id,
                 ZipCode = addressDto.ZipCode,
                 Longitude = addressDto.Longitude,
                 Latitude = addressDto.Latitude,
-                Type = AddressTypeVO.Create(addressDto.Type)
+                AccommodationId = accommodation.Id
             };
 
-            accommodation.Addresses.Add(address);
-            await _accommodationRepository.UpdateAsync(accommodation);
+            var savedAddress = await _addressRepository.AddAsync(address);
+            await _addressRepository.SaveChangesAsync();
 
             return new ResultDto
             {
-                Id = address.Id
+                Id = savedAddress.Id,
+                Street = savedAddress.Street,
+                ZipCode = savedAddress.ZipCode,
+                Longitude = savedAddress.Longitude,
+                Latitude = savedAddress.Latitude,
+                CityId = savedAddress.CityId,
+                AccommodationId = savedAddress.AccommodationId
             };
         }
     }

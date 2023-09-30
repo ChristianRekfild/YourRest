@@ -34,9 +34,8 @@ namespace YourRest.Producer.Infrastructure.Migrations
                     ZipCode = table.Column<string>(type: "text", nullable: false),
                     Longitude = table.Column<double>(type: "double precision", nullable: false),
                     Latitude = table.Column<double>(type: "double precision", nullable: false),
-                    Type = table.Column<string>(type: "text", nullable: false),
                     CityId = table.Column<int>(type: "integer", nullable: false),
-                    AccommodationId = table.Column<int>(type: "integer", nullable: true)
+                    AccommodationId = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -45,7 +44,8 @@ namespace YourRest.Producer.Infrastructure.Migrations
                         name: "FK_Addresses_Accommodations_AccommodationId",
                         column: x => x.AccommodationId,
                         principalTable: "Accommodations",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Addresses_Cities_CityId",
                         column: x => x.CityId,
@@ -57,7 +57,8 @@ namespace YourRest.Producer.Infrastructure.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_Addresses_AccommodationId",
                 table: "Addresses",
-                column: "AccommodationId");
+                column: "AccommodationId",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Addresses_CityId",

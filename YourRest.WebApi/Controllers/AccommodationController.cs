@@ -17,18 +17,25 @@ namespace YourRest.WebApi.Controllers
             _addAddressToAccommodationUseCase = addAddressToAccommodationUseCase;
         }
 
-        [HttpPost("{accommodationId}/address")]
-        public async Task<IActionResult> AddAddressToAccommodationAsync([FromBody] AddressDto addressDto, [FromRoute] int accommodationId)
-        {            
+        [HttpPost("{accommodationId}/address", Name = "AddAddressToAccommodationAsync")]
+        public async Task<IActionResult> AddAddressToAccommodationAsync(int accommodationId, [FromBody] AddressDto addressDto)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
             try
             {
                 var result = await _addAddressToAccommodationUseCase.Execute(accommodationId, addressDto);
 
-                return CreatedAtAction(nameof(AddAddressToAccommodationAsync), new { id = result.Id }, result);
+                return CreatedAtRoute(nameof(AddAddressToAccommodationAsync), result);
             }
             catch (Exception exception) when (exception is AccommodationNotFoundException || exception is CityNotFoundException)
             {
                 return NotFound(new ErrorResponse{ Message = exception.Message});
+            } catch (AddressAlreadyExistsException exception)
+            {
+                return UnprocessableEntity(new ErrorResponse{ Message = exception.Message});
             }
         }
     }

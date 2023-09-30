@@ -71,6 +71,7 @@ namespace YourRest.Infrastructure.Core.DbContexts
                 .WithMany(c => c.Addresses)
                 .HasForeignKey(a => a.CityId);
 
+
             //modelBuilder.Entity<Review>().OwnsOne(
             //    b => b.Comment,
             //    sa =>
@@ -84,15 +85,7 @@ namespace YourRest.Infrastructure.Core.DbContexts
                 {
                     sa.Property(p => p.Value).HasColumnName("Rating");
                 });
-
-            modelBuilder.Entity<Address>().OwnsOne(
-                b => b.Type,
-                sa =>
-                {
-                    sa.Property(p => p.Value).HasColumnName("Type");
-                });
         }
-
 
         public void ClearAllTables()
         {

@@ -12,7 +12,7 @@ using YourRest.Infrastructure.Core.DbContexts;
 namespace YourRest.Producer.Infrastructure.Migrations
 {
     [DbContext(typeof(SharedDbContext))]
-    [Migration("20230929142507_AddAccommodationAndAddress")]
+    [Migration("20230929222616_AddAccommodationAndAddress")]
     partial class AddAccommodationAndAddress
     {
         /// <inheritdoc />
@@ -50,7 +50,7 @@ namespace YourRest.Producer.Infrastructure.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<int?>("AccommodationId")
+                    b.Property<int>("AccommodationId")
                         .HasColumnType("integer");
 
                     b.Property<int>("CityId")
@@ -72,7 +72,8 @@ namespace YourRest.Producer.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AccommodationId");
+                    b.HasIndex("AccommodationId")
+                        .IsUnique();
 
                     b.HasIndex("CityId");
 
@@ -229,9 +230,11 @@ namespace YourRest.Producer.Infrastructure.Migrations
 
             modelBuilder.Entity("YourRest.Domain.Entities.Address", b =>
                 {
-                    b.HasOne("YourRest.Domain.Entities.Accommodation", null)
-                        .WithMany("Addresses")
-                        .HasForeignKey("AccommodationId");
+                    b.HasOne("YourRest.Domain.Entities.Accommodation", "Accommodation")
+                        .WithOne("Address")
+                        .HasForeignKey("YourRest.Domain.Entities.Address", "AccommodationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("YourRest.Domain.Entities.City", "City")
                         .WithMany("Addresses")
@@ -239,28 +242,9 @@ namespace YourRest.Producer.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.OwnsOne("YourRest.Domain.ValueObjects.Addresses.AddressTypeVO", "Type", b1 =>
-                        {
-                            b1.Property<int>("AddressId")
-                                .HasColumnType("integer");
-
-                            b1.Property<string>("Value")
-                                .IsRequired()
-                                .HasColumnType("text")
-                                .HasColumnName("Type");
-
-                            b1.HasKey("AddressId");
-
-                            b1.ToTable("Addresses");
-
-                            b1.WithOwner()
-                                .HasForeignKey("AddressId");
-                        });
+                    b.Navigation("Accommodation");
 
                     b.Navigation("City");
-
-                    b.Navigation("Type")
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("YourRest.Domain.Entities.Booking", b =>
@@ -318,7 +302,8 @@ namespace YourRest.Producer.Infrastructure.Migrations
 
             modelBuilder.Entity("YourRest.Domain.Entities.Accommodation", b =>
                 {
-                    b.Navigation("Addresses");
+                    b.Navigation("Address")
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("YourRest.Domain.Entities.City", b =>

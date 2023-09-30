@@ -64,6 +64,7 @@ public class Program
         services.AddScoped<IRegionRepository, RegionRepository>();        
         services.AddScoped<IReviewRepository, ReviewRepository>();
         services.AddScoped<IAccommodationRepository, AccommodationRepository>();
+        services.AddScoped<IAddressRepository, AddressRepository>();
     }
 
     public static void Configure(IApplicationBuilder app)
