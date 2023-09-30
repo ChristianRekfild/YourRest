@@ -33,10 +33,10 @@ namespace YourRest.WebApi.Tests.Fixtures
         {
             _postgreSqlContainer = new PostgreSqlBuilder()
             .WithImage("postgres:15.4-alpine")
-            .WithUsername("postgre")
-            .WithPassword("postgre")
-            .WithPortBinding("5433") // Для просмотра в PgAdmin
-            .WithDatabase("postgre")
+            .WithUsername("postgres")
+            .WithPassword("postgres")
+            //.WithPortBinding("5433") // Для просмотра в PgAdmin
+            .WithDatabase("postgres")
             .WithCleanUp(true)
             .Build();
         }
