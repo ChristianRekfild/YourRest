@@ -24,14 +24,16 @@ namespace YourRest.Application.UseCases
 
         public async Task<ResultDto> Execute(int accommodationId, AddressDto addressDto)
         {
-            var accommodation = await _accommodationRepository.GetAsync(accommodationId);
+            var accommodations = await _accommodationRepository.GetWithIncludeAsync(a => a.Id == accommodationId, a => a.Address);
+            var accommodation = accommodations.FirstOrDefault(a => a.Id == accommodationId);
 
             if (accommodation == null)
             {
                 throw new AccommodationNotFoundException(accommodationId);
             }
-            
-            if (accommodation.Address != null)
+            var existAddress = accommodation?.Address;
+
+            if (existAddress != null)
             {
                 throw new AddressAlreadyExistsException(accommodationId);
             }

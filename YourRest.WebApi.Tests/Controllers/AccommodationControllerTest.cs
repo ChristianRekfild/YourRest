@@ -149,12 +149,12 @@ namespace YourRest.WebApi.Tests.Controllers
             var content = new StringContent(JsonConvert.SerializeObject(addressDto), Encoding.UTF8, "application/json");
             var response = await Client.PostAsync($"api/operator/accommodation/{accommodationId}/address", content);
 
-            Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+            Assert.Equal(HttpStatusCode.UnprocessableEntity, response.StatusCode);
 
             var errorResponseString = await response.Content.ReadAsStringAsync();
             var errorResponse = JsonConvert.DeserializeObject<ErrorResponse>(errorResponseString);
 
-            Assert.Equal("City with id 100 not found", errorResponse.Message);
+            Assert.Equal($"Address for accommodation with id {accommodationId} already exists", errorResponse.Message);
         }
 
         private AddressDto CreateValidAddressDto(int cityId)

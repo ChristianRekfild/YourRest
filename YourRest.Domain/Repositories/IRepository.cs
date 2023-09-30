@@ -20,5 +20,7 @@ namespace YourRest.Domain.Repositories
         Task DeleteAsync(U id, bool saveChanges = true, CancellationToken cancellationToken = default);
 
         Task SaveChangesAsync(CancellationToken cancellationToken = default);
+
+        Task<IEnumerable<T>> GetWithIncludeAsync(Expression<Func<T, bool>> predicate, params Expression<Func<T, object>>[] includeProperties);
     }
 }
