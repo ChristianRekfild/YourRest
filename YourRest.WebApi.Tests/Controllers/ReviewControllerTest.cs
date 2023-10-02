@@ -6,6 +6,7 @@ using YourRest.Domain.Entities;
 using YourRest.Application.Dto;
 using YourRest.Domain.ValueObjects.Bookings;
 using YourRest.WebApi.Tests.Fixtures;
+using YourRest.Domain.ValueObjects.Reviews;
 
 namespace YourRest.WebApi.Tests.Controllers
 {
@@ -32,7 +33,7 @@ namespace YourRest.WebApi.Tests.Controllers
                     Login = "ivanov@ivan.com",
                     Password = "qwerty"
                 };
-            var customerId = await fixture.InsertObjectIntoDatabase(customer);
+            var customerId = (await fixture.InsertObjectIntoDatabase(customer)).Id;
 
             var booking = new Booking {
                 StartDate = new DateTime(2023, 10, 1),
@@ -42,12 +43,12 @@ namespace YourRest.WebApi.Tests.Controllers
                 CustomerId = customerId
             };
 
-            var bookingId = await fixture.InsertObjectIntoDatabase(booking);
+            var bookingId = (await fixture.InsertObjectIntoDatabase(booking)).Id;
 
             var review = new ReviewDto {
                 BookingId = bookingId,
                 Comment = "test",
-                Rating = YourRest.Domain.Entities.Rating.One
+                Rating = 1
             };
             var content = new StringContent(JsonConvert.SerializeObject(review), Encoding.UTF8, "application/json");
 
@@ -69,7 +70,7 @@ namespace YourRest.WebApi.Tests.Controllers
             var invalidReview = new ReviewDto {
                 BookingId = 3,
                 Comment = "test",
-                Rating = YourRest.Domain.Entities.Rating.One
+                Rating = 1
             };
 
             var content = new StringContent(JsonConvert.SerializeObject(invalidReview), Encoding.UTF8, "application/json");

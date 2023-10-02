@@ -49,6 +49,11 @@ namespace YourRest.Infrastructure.Core.Repositories
         {
             return await _dataContext.Set<T>().FirstOrDefaultAsync(x => x.Id.Equals(id), cancellationToken);
         }
+
+       public async Task<IEnumerable<T>> GetWithIncludeAsync(Expression<Func<T, bool>> predicate, params Expression<Func<T, object>>[] includeProperties)
+        {
+            return await Include(includeProperties).Where(predicate).ToListAsync();
+        }
         
         public async Task DeleteAsync(U id, bool saveChanges = true, CancellationToken cancellationToken = default)
         {
@@ -65,7 +70,7 @@ namespace YourRest.Infrastructure.Core.Repositories
             }
         }
 
-        public async Task UpdateAsync(T entity, bool saveChanges = true, CancellationToken cancellationToken = default)
+        public async Task<T> UpdateAsync(T entity, bool saveChanges = true, CancellationToken cancellationToken = default)
         {
             var oldEntity = await _dataContext.Set<T>().FindAsync(entity.Id, cancellationToken);
 
@@ -78,11 +83,20 @@ namespace YourRest.Infrastructure.Core.Repositories
                     await _dataContext.SaveChangesAsync(cancellationToken);
                 }
             }
+
+            return oldEntity;
         }
 
         public async Task SaveChangesAsync(CancellationToken cancellationToken = default)
         {
             await _dataContext.SaveChangesAsync(cancellationToken);
+        }
+
+        private IQueryable<T> Include(params Expression<Func<T, object>>[] includeProperties)
+        {
+            IQueryable<T> query = _dataContext.Set<T>().AsNoTracking();
+            return includeProperties
+                .Aggregate(query, (current, includeProperty) => current.Include(includeProperty));
         }
     }
 }

@@ -2,6 +2,7 @@ using YourRest.Application.CustomErrors;
 using YourRest.Application.Dto;
 using YourRest.Application.Interfaces;
 using YourRest.Domain.Entities;
+using YourRest.Domain.ValueObjects.Reviews;
 using YourRest.Domain.Repositories;
 
 namespace YourRest.Application.UseCases
@@ -21,7 +22,7 @@ namespace YourRest.Application.UseCases
         {
             var booking = await _bookingRepository.GetAsync(reviewDto.BookingId);
             var comment = reviewDto.Comment;
-            var rating = reviewDto.Rating;
+            var rating = RatingVO.Create(reviewDto.Rating);
 
             if (booking == null)
             {
@@ -43,7 +44,7 @@ namespace YourRest.Application.UseCases
                 Id = savedReview.Id,
                 BookingId = savedReview.Booking.Id,
                 Comment = savedReview.Comment,
-                Rating = savedReview.Rating
+                Rating = savedReview.Rating.Value
             };
 
             return savedReviewDto;

@@ -8,16 +8,16 @@ namespace YourRest.Infrastructure.Tests
 {
 
     [Collection("Database")]
-    public class ÑountryRepositoryTests
+    public class CountryRepositoryTests
     {
         private SharedDbContext _testDbContext;
         private readonly IRepository<Country, int> _countryRepository;
 
-    public ÑountryRepositoryTests(DatabaseFixture databaseFixture)
-    {
-            _testDbContext = databaseFixture.DbContext;
-            _countryRepository = new CountryRepository(_testDbContext);
-    }
+        public CountryRepositoryTests(DatabaseFixture databaseFixture)
+        {
+                _testDbContext = databaseFixture.DbContext;
+                _countryRepository = new CountryRepository(_testDbContext);
+        }
 
         [Fact]
         public async Task TestWithChangeProperty()
