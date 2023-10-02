@@ -9,7 +9,7 @@ namespace YourRest.Application.Dto
         public string Street { get; set; }
 
         [Required]
-        [RegularExpression(@"^\d{5}$", ErrorMessage = "Zip code must be 5 digits")]
+        [RegularExpression(@"^\d{6}$", ErrorMessage = "Zip code must be 6 digits")]
         public string ZipCode { get; set; }
 
         [Range(-180, 180)]

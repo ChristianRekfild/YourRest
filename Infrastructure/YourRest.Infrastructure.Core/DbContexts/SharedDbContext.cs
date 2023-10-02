@@ -96,8 +96,8 @@ namespace YourRest.Infrastructure.Core.DbContexts
             Cities.RemoveRange(Cities);
             Regions.RemoveRange(Regions);
             Reviews.RemoveRange(Reviews);
-            Addresses.RemoveRange(Addresses);
             Accommodations.RemoveRange(Accommodations);
+            Addresses.RemoveRange(Addresses);
             // Add other DbSet removals here
             // Example: 
             // Rooms.RemoveRange(Rooms);
