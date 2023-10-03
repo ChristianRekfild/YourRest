@@ -1,31 +1,60 @@
 ﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using System.Text;
+using YourRest.Infrastructure.Core.DbContexts;
 
 namespace YourRest.WebApi.Tests.Fixtures
 {
 
-    public class SingletonApiTest : IAsyncLifetime
+    public class SingletonApiTest : IDisposable
     {
         public HttpClient Client { get; private set; }
         public TestServer Server { get; private set; }
 
-        public readonly DatabaseFixture dbFixture;
+        public SharedDbContext DbContext { get; private set; }
+
+        private readonly DatabaseFixture dbFixture;
+
+        private static int index = 0;
+        private static readonly object syncObj = new object();
         public SingletonApiTest()
         {
-            dbFixture = new DatabaseFixture();
-        }
+            dbFixture = DatabaseFixture.getInstance();
 
-        public async Task DisposeAsync()
-        {
-            await dbFixture.DisposeAsync();
-            Server?.Dispose();
-        }
+            string connectionString = string.Empty;
 
-        public async Task InitializeAsync()
-        {
-            await dbFixture.InitializeAsync();
-            //dbFixture.DbContext.Database.Migrate();
+            if (index == 0)
+            {
+                lock (syncObj)
+                {
+                    if (index == 0)
+                    {
+                        connectionString = dbFixture.ConnectionString;
+                    }
+                    index++;
+                }
+            }
+            if (string.IsNullOrEmpty(connectionString))
+            {
+                StringBuilder sb = new StringBuilder();
+                foreach (var part in dbFixture.ConnectionString.Split(';'))
+                {
+                    if (part.StartsWith("Database"))
+                    {
+                        sb.Append(part + "_" + Guid.NewGuid().ToString().Replace("-", string.Empty));
+                    }
+                    else
+                    {
+                        sb.Append(part);
+                    }
+                    sb.Append(";");
+                }
+                connectionString = sb.ToString();
+            }
+
+            DbContext = dbFixture.GetDbContext(connectionString);
 
             var builder = new WebHostBuilder()
                 .ConfigureAppConfiguration((context, configBuilder) =>
@@ -33,7 +62,7 @@ namespace YourRest.WebApi.Tests.Fixtures
                     var testConfig = new ConfigurationBuilder()
                         .AddInMemoryCollection(new[]
                         {
-                            new KeyValuePair<string, string>("ConnectionStrings:DefaultConnection", dbFixture.ConnectionString)
+                            new KeyValuePair<string, string>("ConnectionStrings:DefaultConnection", connectionString)
                         })
                         .Build();
 
@@ -44,6 +73,28 @@ namespace YourRest.WebApi.Tests.Fixtures
             Server = new TestServer(builder);
 
             Client = Server.CreateClient();
+        }
+
+        public async Task<int> InsertObjectIntoDatabase<T>(T entity) where T : class
+        {
+            DbContext.Add(entity);
+            return await DbContext.SaveChangesAsync();
+        }
+
+        public void CleanDatabase()
+        {
+            DbContext.ClearAllTables();
+        }
+        
+        public void Dispose()
+        {
+            Server?.Dispose();
+            
+            Interlocked.Decrement(ref index);
+            if (index == 0)
+            {
+                dbFixture.Dispose();
+            }
         }
     }
 }

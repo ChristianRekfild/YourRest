@@ -5,10 +5,15 @@ using YourRest.WebApi.Tests.Fixtures;
 
 namespace YourRest.WebApi.Tests.Controllers
 {
-    public class CountriesControllerTest : ApiTest
+    public class CountriesControllerTest : IClassFixture<SingletonApiTest> //ApiTest
     {
-        public CountriesControllerTest(ApiFixture fixture) : base(fixture)
+        //public CountriesControllerTest(ApiFixture fixture) : base(fixture)
+        //{
+        //}
+        private readonly SingletonApiTest fixture;
+        public CountriesControllerTest(SingletonApiTest fixture)
         {
+            this.fixture = fixture;
         }
 
         [Fact]
@@ -16,8 +21,8 @@ namespace YourRest.WebApi.Tests.Controllers
         {
             var expectedCountry1 = new Country { Name = "Russia" };
             var expectedCountry2 = new Country { Name = "Test" };
-            await InsertObjectIntoDatabase(expectedCountry1);
-            await InsertObjectIntoDatabase(expectedCountry2);
+            await fixture.InsertObjectIntoDatabase(expectedCountry1);
+            await fixture.InsertObjectIntoDatabase(expectedCountry2);
 
             var resultCountries = await GetCountriesFromApi();
 
@@ -30,6 +35,8 @@ namespace YourRest.WebApi.Tests.Controllers
         [Fact]
         public async Task GetAllCountries_ReturnsEmptyList_WhenDatabaseIsEmpty()
         {
+            fixture.DbContext.Countries.RemoveRange(fixture.DbContext.Countries);
+            await fixture.DbContext.SaveChangesAsync();
             var resultCountries = await GetCountriesFromApi();
 
             Assert.NotNull(resultCountries);
@@ -38,7 +45,7 @@ namespace YourRest.WebApi.Tests.Controllers
 
         private async Task<List<CountryDto>> GetCountriesFromApi()
         {
-            var response = await Client.GetAsync("/api/countries");
+            var response = await fixture.Client.GetAsync("/api/countries");
             response.EnsureSuccessStatusCode();
             var content = await response.Content.ReadAsStringAsync();
             var options = new JsonSerializerOptions

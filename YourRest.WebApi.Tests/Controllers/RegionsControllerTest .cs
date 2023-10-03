@@ -5,10 +5,16 @@ using YourRest.WebApi.Tests.Fixtures;
 
 namespace YourRest.WebApi.Tests.Controllers
 {
-    public class RegionsControllerTest : ApiTest
+    public class RegionsControllerTest : IClassFixture<SingletonApiTest> //ApiTest
     {
-        public RegionsControllerTest(ApiFixture fixture) : base(fixture)
+        //public RegionsControllerTest(ApiFixture fixture) : base(fixture)
+        //{
+        //}
+
+        private readonly SingletonApiTest fixture;
+        public RegionsControllerTest(SingletonApiTest fixture)
         {
+            this.fixture = fixture;
         }
 
         [Fact]
@@ -24,12 +30,12 @@ namespace YourRest.WebApi.Tests.Controllers
             var expectedCountry1 = new Country { Name = "Russia" };
             var expectedCountry2 = new Country { Name = "Test" };
 
-            await InsertObjectIntoDatabase(expectedCountry1);
-            await InsertObjectIntoDatabase(expectedCountry2);
+            await fixture.InsertObjectIntoDatabase(expectedCountry1);
+            await fixture.InsertObjectIntoDatabase(expectedCountry2);
 
 
-            await InsertObjectIntoDatabase(expectedRegion1);
-            await InsertObjectIntoDatabase(expectedRegion2);
+            await fixture.InsertObjectIntoDatabase(expectedRegion1);
+            await fixture.InsertObjectIntoDatabase(expectedRegion2);
 
             var resultRegions = await GetRegionFromApi();
 
@@ -50,6 +56,8 @@ namespace YourRest.WebApi.Tests.Controllers
         [Fact]
         public async Task GetAllRegions_ReturnsEmptyList_WhenDatabaseIsEmpty()
         {
+            fixture.DbContext.Regions.RemoveRange(fixture.DbContext.Regions);
+            await fixture.DbContext.SaveChangesAsync();
             var resultCountries = await GetRegionFromApi();
 
             Assert.NotNull(resultCountries);
@@ -58,7 +66,7 @@ namespace YourRest.WebApi.Tests.Controllers
 
         private async Task<List<RegionDto>> GetRegionFromApi()
         {
-            var response = await Client.GetAsync("/api/regions");
+            var response = await fixture.Client.GetAsync("/api/regions");
             response.EnsureSuccessStatusCode();
             var content = await response.Content.ReadAsStringAsync();
             var options = new JsonSerializerOptions
