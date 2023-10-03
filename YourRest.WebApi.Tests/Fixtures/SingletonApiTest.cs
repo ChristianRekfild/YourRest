@@ -75,10 +75,11 @@ namespace YourRest.WebApi.Tests.Fixtures
             Client = Server.CreateClient();
         }
 
-        public async Task<int> InsertObjectIntoDatabase<T>(T entity) where T : class
+        public async Task<T> InsertObjectIntoDatabase<T>(T entity) where T : class
         {
-            DbContext.Add(entity);
-            return await DbContext.SaveChangesAsync();
+            var item = await DbContext.AddAsync(entity);
+            await DbContext.SaveChangesAsync();
+            return item.Entity;
         }
 
         public void CleanDatabase()
