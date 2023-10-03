@@ -5,6 +5,7 @@ using YourRest.Domain.Entities;
 using YourRest.Application.Dto;
 using YourRest.WebApi.Tests.Fixtures;
 using YourRest.WebApi.Responses;
+//using Docker.DotNet.Models;
 
 namespace YourRest.WebApi.Tests.Controllers
 {
@@ -31,7 +32,7 @@ namespace YourRest.WebApi.Tests.Controllers
 
             var content = new StringContent(JsonConvert.SerializeObject(addressDto), Encoding.UTF8, "application/json");
             var response = await Client.PostAsync($"api/operator/accommodation/{accommodationId}/address", content);
-            
+
             Assert.Equal(HttpStatusCode.Created, response.StatusCode);
 
             var responseString = await response.Content.ReadAsStringAsync();           
@@ -107,7 +108,7 @@ namespace YourRest.WebApi.Tests.Controllers
             var addressDto = new AddressDto
             {
                 Street = "Test Street",
-                ZipCode = "12345",
+                ZipCode = "123456",
                 Longitude = 0,
                 Latitude = 0,
                 CityId = 100
@@ -197,7 +198,7 @@ namespace YourRest.WebApi.Tests.Controllers
             return new AddressDto
             {
                 Street = "Test Street",
-                ZipCode = "12345",
+                ZipCode = "123456",
                 Longitude = 0,
                 Latitude = 0,
                 CityId = cityId
