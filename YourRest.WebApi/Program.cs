@@ -56,6 +56,9 @@ public class Program
         services.AddScoped<IGetRegionListUseCase, GetRegionListUseCase>();
         services.AddScoped<ICreateReviewUseCase, CreateReviewUseCase>();
         services.AddScoped<IAddAddressToAccommodationUseCase, AddAddressToAccommodationUseCase>();
+        services.AddScoped<IGetRoomListUseCase, GetRoomListUseCase>();
+        services.AddScoped<ICreateRoomUseCase, CreateRoomUseCase>();
+
 
         services.AddScoped<IBookingRepository, BookingRepository>();
         services.AddScoped<ICountryRepository, CountryRepository>();  
@@ -65,6 +68,8 @@ public class Program
         services.AddScoped<IReviewRepository, ReviewRepository>();
         services.AddScoped<IAccommodationRepository, AccommodationRepository>();
         services.AddScoped<IAddressRepository, AddressRepository>();
+        services.AddScoped<IRoomRepository, RoomRepository>();
+
     }
 
     public static void Configure(IApplicationBuilder app)

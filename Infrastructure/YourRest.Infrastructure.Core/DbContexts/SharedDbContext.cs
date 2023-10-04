@@ -13,6 +13,8 @@ namespace YourRest.Infrastructure.Core.DbContexts
         public DbSet<Review> Reviews { get; set; }
         public DbSet<Address> Addresses { get; set; }
         public DbSet<Accommodation> Accommodations { get; set; }
+        public DbSet<Room> Rooms { get; set; }
+
 
         static SharedDbContext()
         {
@@ -98,6 +100,7 @@ namespace YourRest.Infrastructure.Core.DbContexts
             Reviews.RemoveRange(Reviews);
             Accommodations.RemoveRange(Accommodations);
             Addresses.RemoveRange(Addresses);
+            Rooms.RemoveRange(Rooms);
             // Add other DbSet removals here
             // Example: 
             // Rooms.RemoveRange(Rooms);
