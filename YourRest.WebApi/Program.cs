@@ -32,13 +32,13 @@ public class Program
    
         connectionString = configuration.GetConnectionString("DefaultConnection");
 
-        services.AddDbContext<SharedDbContext>(options => options.UseNpgsql(connectionString));
+        services.AddDbContext<SharedDbContext>(options => options.UseNpgsql(connectionString), ServiceLifetime.Singleton );
 
-        services.AddSingleton<IDbContextFactory<SharedDbContext>>(serviceProvider =>
-        {
-            var connString = configuration.GetConnectionString("DefaultConnection");
-            return new AppDbContextFactory(connString);
-        });
+        //services.AddSingleton<IDbContextFactory<SharedDbContext>>(serviceProvider =>
+        //{
+        //    var connString = configuration.GetConnectionString("DefaultConnection");
+        //    return new AppDbContextFactory(connString);
+        //});
 
         services.AddControllers();
 
