@@ -50,18 +50,18 @@ namespace YourRest.WebApi.Tests.Controllers
             await _context.SaveChangesAsync();
 
             var expectedCity1 = new City { Name = "Moscow", RegionId = expectedRegion.Id /*, Id = 1*/ };
-            //var expectedCity2 = new City { Name = "TestCity", RegionId = expectedRegion.Id /*, Id = 2*/ };
+            var expectedCity2 = new City { Name = "TestCity", RegionId = expectedRegion.Id /*, Id = 2*/ };
             //await _apiTest.InsertObjectIntoDatabase(expectedCity1);
             //await _apiTest.InsertObjectIntoDatabase(expectedCity2);
             expectedCity1 = (await _context.Cities.AddAsync(expectedCity1)).Entity;
-            //expectedCity2 = (await _context.Cities.AddAsync(expectedCity2)).Entity;
+            expectedCity2 = (await _context.Cities.AddAsync(expectedCity2)).Entity;
             await _context.SaveChangesAsync();
 
             var resultCities = await GetCitiesFromApi();
 
             Assert.NotNull(resultCities);
             Assert.Equal(expectedCity1.Name, resultCities.FirstOrDefault(c => c.Id == expectedCity1.Id)?.Name);
-            //Assert.Equal(expectedCity2.Name, resultCities.FirstOrDefault(c => c.Id == expectedCity2.Id)?.Name);
+            Assert.Equal(expectedCity2.Name, resultCities.FirstOrDefault(c => c.Id == expectedCity2.Id)?.Name);
             //Assert.Collection(resultCities,
             //    city => Assert.Equal("Moscow", city.Name),
             //    city => Assert.Equal("TestCity", city.Name));
@@ -80,13 +80,35 @@ namespace YourRest.WebApi.Tests.Controllers
         [Fact]
         public async Task GetCityById_ReturnsExpectedCity_WhenDatabaseHasCitiesByNeedId()
         {
+            var expectedCountry = new Country()
+            {
+                Name = "TestCountry"
+            };
+
+
+
+            expectedCountry = (await _context.Countries.AddAsync(expectedCountry)).Entity;
+            await _context.SaveChangesAsync();
+
+            var expectedRegion = new Region()
+            {
+                Name = "TestRegion",
+                CountryId = expectedCountry.Id
+
+            };
+
+            expectedRegion = (await _context.Regions.AddAsync(expectedRegion)).Entity;
+            await _context.SaveChangesAsync();
+
             var expectedCity1 = new City 
             {
-                Name = "Moscow"
+                Name = "Moscow",
+                RegionId = expectedRegion.Id
             };
             var expectedCity2 = new City 
             {
-                Name = "TestCity" 
+                Name = "TestCity",
+                RegionId = expectedRegion.Id
             };
 
             expectedCity1 = await fixture.InsertObjectIntoDatabase(expectedCity1);
