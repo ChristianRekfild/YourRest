@@ -32,7 +32,7 @@ public class Program
    
         connectionString = configuration.GetConnectionString("DefaultConnection");
 
-        services.AddDbContext<SharedDbContext>(options => options.UseNpgsql(connectionString), ServiceLifetime.Singleton );
+        services.AddDbContext<SharedDbContext>(options => options.UseNpgsql(connectionString));
 
         //services.AddSingleton<IDbContextFactory<SharedDbContext>>(serviceProvider =>
         //{
