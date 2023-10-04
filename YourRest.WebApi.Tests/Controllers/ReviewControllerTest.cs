@@ -57,7 +57,7 @@ namespace YourRest.WebApi.Tests.Controllers
            
             var createdReview = JsonConvert.DeserializeObject<SavedReviewDto>(responseString);
 
-            Assert.True(createdReview.Id > 0);
+            Assert.True(createdReview?.Id > 0);
         }
 
         [Fact]
