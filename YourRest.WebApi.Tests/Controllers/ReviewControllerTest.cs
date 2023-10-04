@@ -1,18 +1,21 @@
 using Newtonsoft.Json;
 using System.Net;
 using System.Text;
-using YourRest.Infrastructure.Repositories;
-using YourRest.Domain.Entities;
 using YourRest.Application.Dto;
-using YourRest.Domain.ValueObjects.Bookings;
+using YourRest.Domain.Entities;
 using YourRest.WebApi.Tests.Fixtures;
 
 namespace YourRest.WebApi.Tests.Controllers
 {
-    public class ReviewControllerTest : ApiTest
+    public class ReviewControllerTest : IClassFixture<SingletonApiTest> //ApiTest
     {
-        public ReviewControllerTest(ApiFixture fixture) : base(fixture)
+        //public ReviewControllerTest(ApiFixture fixture) : base(fixture)
+        //{
+        //}
+        private readonly SingletonApiTest fixture;
+        public ReviewControllerTest(SingletonApiTest fixture)
         {
+            this.fixture = fixture;
         }
 
         [Fact]
@@ -27,7 +30,7 @@ namespace YourRest.WebApi.Tests.Controllers
                     Login = "ivanov@ivan.com",
                     Password = "qwerty"
                 };
-            var customerId = await InsertObjectIntoDatabase(customer);
+            var customerId = (await fixture.InsertObjectIntoDatabase(customer)).Id;
 
             var booking = new Booking {
                 StartDate = new DateTime(2023, 10, 1),
@@ -37,16 +40,16 @@ namespace YourRest.WebApi.Tests.Controllers
                 CustomerId = customerId
             };
 
-            var bookingId = await InsertObjectIntoDatabase(booking);
+            var bookingId = (await fixture.InsertObjectIntoDatabase(booking)).Id;
 
             var review = new ReviewDto {
                 BookingId = bookingId,
                 Comment = "test",
-                Rating = YourRest.Domain.Entities.Rating.One
+                Rating = 1
             };
             var content = new StringContent(JsonConvert.SerializeObject(review), Encoding.UTF8, "application/json");
 
-            var response = await Client.PostAsync("api/operator/review", content);
+            var response = await fixture.Client.PostAsync("api/operator/review", content);
 
             response.EnsureSuccessStatusCode();
 
@@ -64,12 +67,12 @@ namespace YourRest.WebApi.Tests.Controllers
             var invalidReview = new ReviewDto {
                 BookingId = 3,
                 Comment = "test",
-                Rating = YourRest.Domain.Entities.Rating.One
+                Rating = 1
             };
 
             var content = new StringContent(JsonConvert.SerializeObject(invalidReview), Encoding.UTF8, "application/json");
 
-            var response = await Client.PostAsync("api/operator/review", content);
+            var response = await fixture.Client.PostAsync("api/operator/review", content);
 
             Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
         }

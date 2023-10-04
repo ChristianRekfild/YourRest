@@ -34,11 +34,11 @@ public class Program
 
         services.AddDbContext<SharedDbContext>(options => options.UseNpgsql(connectionString));
 
-        services.AddSingleton<IDbContextFactory<SharedDbContext>>(serviceProvider =>
-        {
-            var connString = configuration.GetConnectionString("DefaultConnection");
-            return new AppDbContextFactory(connString);
-        });
+        //services.AddSingleton<IDbContextFactory<SharedDbContext>>(serviceProvider =>
+        //{
+        //    var connString = configuration.GetConnectionString("DefaultConnection");
+        //    return new AppDbContextFactory(connString);
+        //});
 
         services.AddControllers();
 
@@ -59,6 +59,7 @@ public class Program
 
         services.AddScoped<IGetRegionListUseCase, GetRegionListUseCase>();
         services.AddScoped<ICreateReviewUseCase, CreateReviewUseCase>();
+        services.AddScoped<IAddAddressToAccommodationUseCase, AddAddressToAccommodationUseCase>();
 
         services.AddScoped<IBookingRepository, BookingRepository>();
         services.AddScoped<ICountryRepository, CountryRepository>();  
@@ -66,6 +67,8 @@ public class Program
         services.AddScoped<ICityRepository, CityRepository>();        
         services.AddScoped<IRegionRepository, RegionRepository>();        
         services.AddScoped<IReviewRepository, ReviewRepository>();
+        services.AddScoped<IAccommodationRepository, AccommodationRepository>();
+        services.AddScoped<IAddressRepository, AddressRepository>();
     }
 
     public static void Configure(IApplicationBuilder app)

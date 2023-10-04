@@ -11,6 +11,8 @@ namespace YourRest.Infrastructure.Core.DbContexts
         public DbSet<Booking> Bookings { get; set; }
         public DbSet<Region> Regions { get; set; }
         public DbSet<Review> Reviews { get; set; }
+        public DbSet<Address> Addresses { get; set; }
+        public DbSet<Accommodation> Accommodations { get; set; }
 
         static SharedDbContext()
         {
@@ -62,7 +64,7 @@ namespace YourRest.Infrastructure.Core.DbContexts
                 r.HasOne(r => r.Booking)
                     .WithMany()
                     .HasForeignKey(r => r.BookingId);
-            });
+            });       
 
             //modelBuilder.Entity<Review>().OwnsOne(
             //    b => b.Comment,
@@ -71,14 +73,20 @@ namespace YourRest.Infrastructure.Core.DbContexts
             //        sa.Property(p => p.Value).HasColumnName("Comment");
             //    });
 
-            //modelBuilder.Entity<Review>().OwnsOne(
-            //    b => b.Rating,
-            //    sa =>
-            //    {
-            //        sa.Property(p => p.Value).HasColumnName("Rating");
-            //    });
+            modelBuilder.Entity<Review>().OwnsOne(
+                b => b.Rating,
+                sa =>
+                {
+                    sa.Property(p => p.Value).HasColumnName("Rating");
+                });
+            
+            modelBuilder.Entity<Accommodation>(r =>
+            {
+                r.HasOne(r => r.Address)
+                    .WithOne()
+                    .HasForeignKey<Accommodation>(r => r.AddressId);
+            }); 
         }
-
 
         public void ClearAllTables()
         {
@@ -88,6 +96,8 @@ namespace YourRest.Infrastructure.Core.DbContexts
             Cities.RemoveRange(Cities);
             Regions.RemoveRange(Regions);
             Reviews.RemoveRange(Reviews);
+            Accommodations.RemoveRange(Accommodations);
+            Addresses.RemoveRange(Addresses);
             // Add other DbSet removals here
             // Example: 
             // Rooms.RemoveRange(Rooms);

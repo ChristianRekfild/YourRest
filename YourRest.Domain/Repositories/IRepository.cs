@@ -15,10 +15,12 @@ namespace YourRest.Domain.Repositories
 
         Task<T?> GetAsync(U id, CancellationToken cancellationToken = default);
 
-        Task UpdateAsync(T entity, bool saveChanges = true, CancellationToken cancellationToken = default);
+        Task<T> UpdateAsync(T entity, bool saveChanges = true, CancellationToken cancellationToken = default);
 
         Task DeleteAsync(U id, bool saveChanges = true, CancellationToken cancellationToken = default);
 
         Task SaveChangesAsync(CancellationToken cancellationToken = default);
+
+        Task<IEnumerable<T>> GetWithIncludeAsync(Expression<Func<T, bool>> predicate, params Expression<Func<T, object>>[] includeProperties);
     }
 }

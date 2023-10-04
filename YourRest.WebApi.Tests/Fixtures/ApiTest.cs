@@ -20,12 +20,14 @@ namespace YourRest.WebApi.Tests.Fixtures
             //context.Database.Migrate();
         }
 
-        protected async Task<int> InsertObjectIntoDatabase<T>(T entity) where T : class
+        protected async Task<T> InsertObjectIntoDatabase<T>(T entity) where T : class
         {
             using var scope = Fixture.Server.Host.Services.CreateScope();
             var context = scope.ServiceProvider.GetRequiredService<SharedDbContext>();
-            context.Add(entity);
-            return await context.SaveChangesAsync();
+            var result = await context.Set<T>().AddAsync(entity);
+            await context.SaveChangesAsync();
+            
+            return result.Entity;
         }
 
         protected void CleanDatabase()

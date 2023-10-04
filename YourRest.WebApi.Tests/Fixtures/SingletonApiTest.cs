@@ -1,31 +1,39 @@
 ﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.Configuration;
+using System.Text;
+using YourRest.Infrastructure.Core.DbContexts;
 
 namespace YourRest.WebApi.Tests.Fixtures
 {
-
-    public class SingletonApiTest : IAsyncLifetime
+    public class SingletonApiTest : IDisposable
     {
         public HttpClient Client { get; private set; }
         public TestServer Server { get; private set; }
+        public SharedDbContext DbContext { get; private set; }
 
-        public readonly DatabaseFixture dbFixture;
+        private readonly DatabaseFixture dbFixture;
+
         public SingletonApiTest()
         {
-            dbFixture = new DatabaseFixture();
-        }
+            dbFixture = DatabaseFixture.getInstance();
 
-        public async Task DisposeAsync()
-        {
-            await dbFixture.DisposeAsync();
-            Server?.Dispose();
-        }
+            StringBuilder sb = new StringBuilder();
+            foreach (var part in dbFixture.ConnectionString.Split(';'))
+            {
+                if (part.StartsWith("Database"))
+                {
+                    sb.Append(part + "_" + Guid.NewGuid().ToString().Replace("-", string.Empty));
+                }
+                else
+                {
+                    sb.Append(part);
+                }
+                sb.Append(";");
+            }
+            var connectionString = sb.ToString();
 
-        public async Task InitializeAsync()
-        {
-            await dbFixture.InitializeAsync();
-            //dbFixture.DbContext.Database.Migrate();
+            DbContext = dbFixture.GetDbContext(connectionString);
 
             var builder = new WebHostBuilder()
                 .ConfigureAppConfiguration((context, configBuilder) =>
@@ -33,7 +41,7 @@ namespace YourRest.WebApi.Tests.Fixtures
                     var testConfig = new ConfigurationBuilder()
                         .AddInMemoryCollection(new[]
                         {
-                            new KeyValuePair<string, string>("ConnectionStrings:DefaultConnection", dbFixture.ConnectionString)
+                            new KeyValuePair<string, string>("ConnectionStrings:DefaultConnection", connectionString)
                         })
                         .Build();
 
@@ -44,6 +52,27 @@ namespace YourRest.WebApi.Tests.Fixtures
             Server = new TestServer(builder);
 
             Client = Server.CreateClient();
+        }
+
+        public async Task<T> InsertObjectIntoDatabase<T>(T entity) where T : class
+        {
+            var item = await DbContext.AddAsync(entity);
+            await DbContext.SaveChangesAsync();
+            return item.Entity;
+        }
+
+        public void CleanDatabase()
+        {
+            DbContext.ClearAllTables();
+        }
+
+        public void Dispose()
+        {
+            Server?.Dispose();
+
+            //TODO: Подумать как останавливать контейнер
+            // и нужно ли это делать
+            //dbFixture.Dispose();
         }
     }
 }

@@ -11,18 +11,20 @@ using SystemJson = System.Text.Json;
 namespace YourRest.WebApi.Tests.Controllers
 {
     [Collection(nameof(SingletonApiTest))]
-    public class CitiesControllerTest// : ApiTest
+    public class CitiesControllerTest // : ApiTest
     {
         private SharedDbContext _context;
         private HttpClient Client;
+        private SingletonApiTest fixture;
         //public CitiesControllerTest(ApiFixture fixture) : base(fixture)
         //{
         //}
         public CitiesControllerTest(SingletonApiTest fixture)
         {
-            _context = fixture.dbFixture.DbContext;
+            this.fixture = fixture;
+            _context = fixture.DbContext;
             Client = fixture.Client;
-        }
+        }        
 
         [Fact]
         public async Task GetAllcities_ReturnsExpectedCities_WhenDatabaseHasCities()
@@ -87,9 +89,8 @@ namespace YourRest.WebApi.Tests.Controllers
                 Name = "TestCity" 
             };
 
-            await _context.Cities.AddAsync(expectedCity1);
-            await _context.Cities.AddAsync(expectedCity2);
-            await _context.SaveChangesAsync();
+            expectedCity1 = await fixture.InsertObjectIntoDatabase(expectedCity1);
+            expectedCity2 = await fixture.InsertObjectIntoDatabase(expectedCity2);
 
             var resultCity1 = await GetCityByIdFromApi(1);
             var resultCity2 = await GetCityByIdFromApi(2);
