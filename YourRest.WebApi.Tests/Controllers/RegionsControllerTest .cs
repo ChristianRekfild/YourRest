@@ -17,7 +17,7 @@ namespace YourRest.WebApi.Tests.Controllers
             this.fixture = fixture;
         }
 
-        [Fact(Skip = "Настройка Actions")]
+        [Fact]
         public async Task GetAllRegions_ReturnsExpectedRegions_WhenDatabaseHasRegions()
         {
             var expectedRegion1 = new Region();
@@ -53,7 +53,7 @@ namespace YourRest.WebApi.Tests.Controllers
             });
         }
 
-        [Fact(Skip = "Настройка Actions")]
+        [Fact]
         public async Task GetAllRegions_ReturnsEmptyList_WhenDatabaseIsEmpty()
         {
             var regions = fixture.DbContext.Regions.ToList();

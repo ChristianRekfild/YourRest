@@ -91,7 +91,7 @@ namespace YourRest.WebApi.Tests.Fixtures
         {
             Server?.Dispose();
 
-            if (index > 1)
+            if (index > 0)
             {
                 lock (syncObj)
                 {
@@ -101,9 +101,9 @@ namespace YourRest.WebApi.Tests.Fixtures
                     }
                 }
             }
-            if (index <= 0)
+            if (index == 0)
             {
-                dbFixture.Dispose();
+                //dbFixture.Dispose();
             }
         }
     }

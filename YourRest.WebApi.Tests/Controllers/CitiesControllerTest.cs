@@ -26,7 +26,7 @@ namespace YourRest.WebApi.Tests.Controllers
             Client = fixture.Client;
         }        
 
-        [Fact(Skip = "Настройка Actions")]
+        [Fact]
         public async Task GetAllcities_ReturnsExpectedCities_WhenDatabaseHasCities()
         {
             var expectedCity1 = new City { Name = "Moscow"/*, Id = 1*/ };
@@ -47,7 +47,7 @@ namespace YourRest.WebApi.Tests.Controllers
             //    city => Assert.Equal("TestCity", city.Name));
         }
 
-        [Fact(Skip = "Настройка Actions")]
+        [Fact]
         public async Task GetAllCities_ReturnsEmptyList_WhenDatabaseIsEmpty()
         {
             var count = _context.Cities.Count();
@@ -57,7 +57,7 @@ namespace YourRest.WebApi.Tests.Controllers
             Assert.Equal(count, resultCities.Count);
         }
 
-        [Fact(Skip = "Настройка Actions")]
+        [Fact]
         public async Task GetCityById_ReturnsExpectedCity_WhenDatabaseHasCitiesByNeedId()
         {
             var expectedCity1 = new City 
@@ -82,7 +82,7 @@ namespace YourRest.WebApi.Tests.Controllers
             Assert.Equal("TestCity", expectedCity2.Name);
         }
 
-        [Fact(Skip = "Настройка Actions")]
+        [Fact]
         public async Task GetCityById_ReturnsExpectedNull_WhenDatabaseHasNoCitiesByNeedId()
         {
             var maxId = 1000;
