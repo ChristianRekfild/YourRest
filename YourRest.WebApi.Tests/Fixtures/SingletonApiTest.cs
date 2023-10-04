@@ -90,9 +90,18 @@ namespace YourRest.WebApi.Tests.Fixtures
         public void Dispose()
         {
             Server?.Dispose();
-            
-            Interlocked.Decrement(ref index);
-            if (index == 0)
+
+            if (index > 1)
+            {
+                lock (syncObj)
+                {
+                    if (index > 0)
+                    {
+                        index--;
+                    }
+                }
+            }
+            if (index <= 0)
             {
                 dbFixture.Dispose();
             }
