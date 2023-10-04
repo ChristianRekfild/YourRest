@@ -1,12 +1,11 @@
 using Newtonsoft.Json;
 using System.Net;
 using System.Text;
-using YourRest.Domain.Entities;
 using YourRest.Application.Dto;
-using YourRest.WebApi.Tests.Fixtures;
+using YourRest.Domain.Entities;
 using YourRest.WebApi.Responses;
-using Microsoft.EntityFrameworkCore;
-//using Docker.DotNet.Models;
+using YourRest.WebApi.Tests.Fixtures;
+
 
 namespace YourRest.WebApi.Tests.Controllers
 {
