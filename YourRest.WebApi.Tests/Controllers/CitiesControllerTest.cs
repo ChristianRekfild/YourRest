@@ -10,18 +10,25 @@ using SystemJson = System.Text.Json;
 
 namespace YourRest.WebApi.Tests.Controllers
 {
-    [Collection(nameof(SingletonApiTest))]
-    public class CitiesControllerTest// : ApiTest
+    //[Collection(nameof(SingletonApiTest))]
+    public class CitiesControllerTest : IClassFixture<SingletonApiTest>// : ApiTest
     {
         private SharedDbContext _context;
         private HttpClient Client;
         //public CitiesControllerTest(ApiFixture fixture) : base(fixture)
         //{
         //}
+        //public CitiesControllerTest(SingletonApiTest fixture)
+        //{
+        //    _context = fixture.DbContext;
+        //    Client = fixture.Client;
+        //}
+        private readonly SingletonApiTest fixture;
         public CitiesControllerTest(SingletonApiTest fixture)
         {
-            _context = fixture.DbContext;
-            Client = fixture.Client;
+            this.fixture = fixture;
+            this._context = fixture.DbContext;
+            this.Client = fixture.Client;
         }
 
         [Fact]
