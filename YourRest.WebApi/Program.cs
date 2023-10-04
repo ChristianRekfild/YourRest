@@ -53,6 +53,10 @@ public class Program
         services.AddScoped<IGetCountryListUseCase, GetCountryListUseCase>();
         services.AddScoped<IGetCityByIdUseCase, GetCityByIdUseCase>();
         services.AddScoped<IGetCityListUseCase, GetCityListUseCase>();
+
+        services.AddScoped<IGetCityByRegionIdUseCase, GetCityByRegionIdUseCase>();
+        services.AddScoped<IGetCityByCountryIdUseCase, GetCityByCountryIdUseCase>();
+
         services.AddScoped<IGetRegionListUseCase, GetRegionListUseCase>();
         services.AddScoped<ICreateReviewUseCase, CreateReviewUseCase>();
 

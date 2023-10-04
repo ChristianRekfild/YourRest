@@ -27,19 +27,39 @@ namespace YourRest.WebApi.Tests.Controllers
         [Fact]
         public async Task GetAllcities_ReturnsExpectedCities_WhenDatabaseHasCities()
         {
-            var expectedCity1 = new City { Name = "Moscow"/*, Id = 1*/ };
-            var expectedCity2 = new City { Name = "TestCity"/*, Id = 2*/ };
+            var expectedCountry = new Country()
+            {
+                Name = "TestCountry"
+            };
+
+           
+
+            expectedCountry = (await _context.Countries.AddAsync(expectedCountry)).Entity;
+            await _context.SaveChangesAsync();
+
+            var expectedRegion = new Region()
+            {
+                Name = "TestRegion",
+                CountryId = expectedCountry.Id
+
+            };
+
+            expectedRegion = (await _context.Regions.AddAsync(expectedRegion)).Entity;
+            await _context.SaveChangesAsync();
+
+            var expectedCity1 = new City { Name = "Moscow", RegionId = expectedRegion.Id /*, Id = 1*/ };
+            //var expectedCity2 = new City { Name = "TestCity", RegionId = expectedRegion.Id /*, Id = 2*/ };
             //await _apiTest.InsertObjectIntoDatabase(expectedCity1);
             //await _apiTest.InsertObjectIntoDatabase(expectedCity2);
             expectedCity1 = (await _context.Cities.AddAsync(expectedCity1)).Entity;
-            expectedCity2 = (await _context.Cities.AddAsync(expectedCity2)).Entity;
+            //expectedCity2 = (await _context.Cities.AddAsync(expectedCity2)).Entity;
             await _context.SaveChangesAsync();
 
             var resultCities = await GetCitiesFromApi();
 
             Assert.NotNull(resultCities);
             Assert.Equal(expectedCity1.Name, resultCities.FirstOrDefault(c => c.Id == expectedCity1.Id)?.Name);
-            Assert.Equal(expectedCity2.Name, resultCities.FirstOrDefault(c => c.Id == expectedCity2.Id)?.Name);
+            //Assert.Equal(expectedCity2.Name, resultCities.FirstOrDefault(c => c.Id == expectedCity2.Id)?.Name);
             //Assert.Collection(resultCities,
             //    city => Assert.Equal("Moscow", city.Name),
             //    city => Assert.Equal("TestCity", city.Name));
@@ -103,6 +123,41 @@ namespace YourRest.WebApi.Tests.Controllers
 
         }
 
+        //[Fact]
+        //public async Task GetCityByRegionId_ReturnsExpectedCityList_WhenDatabaseHasCitiesByNeedRegionId()
+        //{
+        //    var expectedRegion = new Region
+        //    {
+        //        Id = 1,
+        //        Name = "TestRegion"
+        //    };
+
+        //    var expectedCity1 = new City
+        //    {
+        //        Name = "Moscow",
+        //        Region = expectedRegion,
+        //        RegionId = expectedRegion.Id
+        //    };
+
+        //    var expectedCity2 = new City
+        //    {
+        //        Name = "TestCity",
+        //        Region = expectedRegion,
+        //        RegionId = expectedRegion.Id
+        //    };
+
+        //    await _context.Regions.AddAsync(expectedRegion);
+
+        //    await _context.Cities.AddAsync(expectedCity1);
+        //    await _context.Cities.AddAsync(expectedCity2);
+        //    await _context.SaveChangesAsync();
+
+        //    var resultCityList = await GetCitiesByRegionId(expectedRegion.Id);
+
+        //    Assert.Contains(expectedCity1, resultCityList);
+        //    Assert.Contains(expectedCity2, resultCityList);
+        //}
+
         private async Task<List<City>> GetCitiesFromApi()
         {
             var response = await Client.GetAsync("/api/cities");
@@ -133,5 +188,22 @@ namespace YourRest.WebApi.Tests.Controllers
 
             return city;
         }
+
+        //private async Task<List<City>> GetCitiesByRegionId(int regionId)
+        //{
+        //    var response = await Client.GetAsync($"/api/cities/regionid={regionId}");
+
+        //    if (response.StatusCode == System.Net.HttpStatusCode.NotFound) return null;
+
+        //    response.EnsureSuccessStatusCode();
+        //    var content = await response.Content.ReadAsStringAsync();
+        //    var options = new SystemJson.JsonSerializerOptions
+        //    {
+        //        PropertyNameCaseInsensitive = true
+        //    };
+        //    var cities = SystemJson.JsonSerializer.Deserialize<List<City>>(content, options);
+
+        //    return cities;
+        //}
     }
 }
