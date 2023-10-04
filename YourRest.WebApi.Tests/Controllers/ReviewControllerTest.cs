@@ -1,12 +1,9 @@
 using Newtonsoft.Json;
 using System.Net;
 using System.Text;
-using YourRest.Infrastructure.Repositories;
-using YourRest.Domain.Entities;
 using YourRest.Application.Dto;
-using YourRest.Domain.ValueObjects.Bookings;
+using YourRest.Domain.Entities;
 using YourRest.WebApi.Tests.Fixtures;
-using YourRest.Domain.ValueObjects.Reviews;
 
 namespace YourRest.WebApi.Tests.Controllers
 {

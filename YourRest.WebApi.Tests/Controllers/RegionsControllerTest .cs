@@ -56,7 +56,8 @@ namespace YourRest.WebApi.Tests.Controllers
         [Fact]
         public async Task GetAllRegions_ReturnsEmptyList_WhenDatabaseIsEmpty()
         {
-            fixture.DbContext.Regions.RemoveRange(fixture.DbContext.Regions);
+            var regions = fixture.DbContext.Regions.ToList();
+            fixture.DbContext.Regions.RemoveRange(regions);
             await fixture.DbContext.SaveChangesAsync();
             var resultCountries = await GetRegionFromApi();
 
