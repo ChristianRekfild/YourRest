@@ -6,7 +6,7 @@ namespace YourRest.WebApi.Tests.Fixtures
 {
     public class DatabaseFixture : IDisposable
     {
-        private static DatabaseFixture instance = null;
+        private static DatabaseFixture? instance = null;
         private static readonly object syncObj = new object();
 
         public string ConnectionString

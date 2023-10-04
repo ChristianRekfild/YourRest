@@ -38,7 +38,7 @@ namespace YourRest.WebApi.Tests.Controllers
             var responseString = await response.Content.ReadAsStringAsync();           
             var createdAddress = JsonConvert.DeserializeObject<ResultDto>(responseString);
 
-            Assert.True(createdAddress.Id > 0);
+            Assert.True(createdAddress?.Id > 0);
         }
 
         [Fact]
@@ -73,7 +73,7 @@ namespace YourRest.WebApi.Tests.Controllers
             var responseString = await response.Content.ReadAsStringAsync();           
             var createdAddress = JsonConvert.DeserializeObject<ResultDto>(responseString);
 
-            Assert.True(createdAddress.Id > 0);
+            Assert.True(createdAddress?.Id > 0);
         }
 
        [Fact]
@@ -91,7 +91,7 @@ namespace YourRest.WebApi.Tests.Controllers
            var errorResponse = JsonConvert.DeserializeObject<ErrorResponse>(errorResponseString);
 
            Assert.Equal(HttpStatusCode.NotFound, response.StatusCode); 
-           Assert.Equal($"Accommodation with id {accommodationId} not found", errorResponse.Message);
+           Assert.Equal($"Accommodation with id {accommodationId} not found", errorResponse?.Message);
        }
 
        [Fact]
@@ -122,7 +122,7 @@ namespace YourRest.WebApi.Tests.Controllers
             var errorResponseString = await response.Content.ReadAsStringAsync();
             var errorResponse = JsonConvert.DeserializeObject<ErrorResponse>(errorResponseString);
 
-            Assert.Equal("City with id 100 not found", errorResponse.Message);
+            Assert.Equal("City with id 100 not found", errorResponse?.Message);
         }
 
        [Fact]
@@ -150,11 +150,11 @@ namespace YourRest.WebApi.Tests.Controllers
             var errorData = JsonConvert.DeserializeObject<ErrorData>(errorResponseString); 
 
             Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
-            Assert.Equal("The Street field is required.", errorData.Errors["Street"][0]);
-            Assert.Equal("The ZipCode field is required.", errorData.Errors["ZipCode"][0]);
-            Assert.Equal("The field Longitude must be between -180 and 180.", errorData.Errors["Longitude"][0]);
-            Assert.Equal("The field Latitude must be between -90 and 90.", errorData.Errors["Latitude"][0]);
-            Assert.Equal("City Id should be more than zero.", errorData.Errors["CityId"][0]);
+            Assert.Equal("The Street field is required.", errorData?.Errors["Street"][0]);
+            Assert.Equal("The ZipCode field is required.", errorData?.Errors["ZipCode"][0]);
+            Assert.Equal("The field Longitude must be between -180 and 180.", errorData?.Errors["Longitude"][0]);
+            Assert.Equal("The field Latitude must be between -90 and 90.", errorData?.Errors["Latitude"][0]);
+            Assert.Equal("City Id should be more than zero.", errorData?.Errors["CityId"][0]);
         }
 
         [Fact]
@@ -190,7 +190,7 @@ namespace YourRest.WebApi.Tests.Controllers
             var errorResponseString = await response.Content.ReadAsStringAsync();
             var errorResponse = JsonConvert.DeserializeObject<ErrorResponse>(errorResponseString);
 
-            Assert.Equal($"Address for accommodation with id {accommodationId} already exists", errorResponse.Message);
+            Assert.Equal($"Address for accommodation with id {accommodationId} already exists", errorResponse?.Message);
         }
 
         private AddressDto CreateValidAddressDto(int cityId)
