@@ -22,7 +22,7 @@ namespace YourRest.Application.UseCases
                 Id = r.Id,
                 Name = r.Name,
                 SquareInMeter = r.SquareInMeter,
-                AccomodationId = r.AccommodationId,     
+                AccommodationId = r.AccommodationId,     
                 RoomType = r.RoomType,
                 Capacity = r.Capacity
 

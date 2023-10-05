@@ -21,23 +21,23 @@ namespace YourRest.Application.UseCases
         public async Task<RoomDto> Execute(RoomDto roomDto)
         {
             var room = await _roomRepository.GetAsync(roomDto.Id);
-            var accomodation = await _accommodationRepository.GetAsync(roomDto.AccomodationId);
+            var accommodation = await _accommodationRepository.GetAsync(roomDto.AccommodationId);
 
             if (room != null)
             {
                 throw new RoomNotFoundException($"Room with Id {roomDto.Id} already exist");
             }
 
-            if (accomodation == null)
+            if (accommodation == null)
             {
-                throw new AccommodationNotFoundException(roomDto.AccomodationId);
+                throw new AccommodationNotFoundException(roomDto.AccommodationId);
             }
 
             Room savedRoom = new Room();
             savedRoom.Id = roomDto.Id;
             savedRoom.SquareInMeter = roomDto.SquareInMeter;
             savedRoom.Name = roomDto.Name;
-            savedRoom.AccommodationId = accomodation.Id;
+            savedRoom.AccommodationId = accommodation.Id;
             savedRoom.Capacity = roomDto.Capacity;
             savedRoom.RoomType = roomDto.RoomType;
 

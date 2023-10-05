@@ -22,10 +22,10 @@ namespace YourRest.WebApi.Controllers
         }
 
         [HttpGet]
-        [Route("api/rooms/{accomodationId}")]
-        public async Task<IActionResult> GetAllRooms(int accomodationId)
+        [Route("api/rooms/{accommodationId}")]
+        public async Task<IActionResult> GetAllRooms(int accommodationId)
         {
-            var regions = await _getRoomListUseCase.Execute(accomodationId);
+            var regions = await _getRoomListUseCase.Execute(accommodationId);
             return Ok(regions);
         }
         [HttpPost]
