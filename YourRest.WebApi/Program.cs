@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using YourRest.Application.Interfaces;
@@ -65,6 +66,7 @@ public class Program
         services.AddScoped<IReviewRepository, ReviewRepository>();
         services.AddScoped<IAccommodationRepository, AccommodationRepository>();
         services.AddScoped<IAddressRepository, AddressRepository>();
+
     }
 
     public static void Configure(IApplicationBuilder app)
