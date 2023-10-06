@@ -1,12 +1,13 @@
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
+using YourRest.Application;
 using YourRest.Application.Interfaces;
 using YourRest.Application.UseCases;
 using YourRest.Domain.Repositories;
 using YourRest.Infrastructure.Core;
 using YourRest.Infrastructure.Core.DbContexts;
-using YourRest.Infrastructure.Repositories;
+using YourRest.Producer.Infrastructure;
 using YourRest.Producer.Infrastructure.Repositories;
 
 public class Program
@@ -51,22 +52,8 @@ public class Program
             c.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" });
         });
 
-        services.AddScoped<IGetCountryListUseCase, GetCountryListUseCase>();
-        services.AddScoped<IGetCityByIdUseCase, GetCityByIdUseCase>();
-        services.AddScoped<IGetCityListUseCase, GetCityListUseCase>();
-        services.AddScoped<IGetRegionListUseCase, GetRegionListUseCase>();
-        services.AddScoped<ICreateReviewUseCase, CreateReviewUseCase>();
-        services.AddScoped<IAddAddressToAccommodationUseCase, AddAddressToAccommodationUseCase>();
-
-        services.AddScoped<IBookingRepository, BookingRepository>();
-        services.AddScoped<ICountryRepository, CountryRepository>();  
-        services.AddScoped<ICustomerRepository, CustomerRepository>();      
-        services.AddScoped<ICityRepository, CityRepository>();        
-        services.AddScoped<IRegionRepository, RegionRepository>();        
-        services.AddScoped<IReviewRepository, ReviewRepository>();
-        services.AddScoped<IAccommodationRepository, AccommodationRepository>();
-        services.AddScoped<IAddressRepository, AddressRepository>();
-
+        services.AddInfrastructure();
+        services.AddApplication();
     }
 
     public static void Configure(IApplicationBuilder app)
