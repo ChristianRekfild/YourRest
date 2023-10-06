@@ -1,14 +1,8 @@
-using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using YourRest.Application;
-using YourRest.Application.Interfaces;
-using YourRest.Application.UseCases;
-using YourRest.Domain.Repositories;
-using YourRest.Infrastructure.Core;
 using YourRest.Infrastructure.Core.DbContexts;
 using YourRest.Producer.Infrastructure;
-using YourRest.Producer.Infrastructure.Repositories;
 
 public class Program
 {
@@ -33,8 +27,10 @@ public class Program
 
    
         connectionString = configuration.GetConnectionString("DefaultConnection");
+        var migrationsAssembly = typeof(YourRest.Producer.Infrastructure.DependencyInjections).Assembly.GetName().Name;
 
-        services.AddDbContext<SharedDbContext>(options => options.UseNpgsql(connectionString));
+        services.AddDbContext<SharedDbContext>(options => options.UseNpgsql(connectionString,
+            sql => sql.MigrationsAssembly(migrationsAssembly)));
 
         //services.AddSingleton<IDbContextFactory<SharedDbContext>>(serviceProvider =>
         //{

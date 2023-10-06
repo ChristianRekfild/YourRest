@@ -14,7 +14,7 @@ namespace YourRest.Application.Dto.Mappers
             .ForMember(target => target.Name, opt => opt.MapFrom(src => src.Name))
             .ForMember(target => target.RoomFacilities, opt => opt.MapFrom(src => src.RoomFacilities));
 
-            cfg.CreateMap<RoomFacilityViewModel, RoomFacilityEntity>()
+            cfg.CreateMap<RoomFacilityViewModel, RoomFacility>()
             .ForMember(target => target.Id, opt => opt.MapFrom(src => src.Id))
             .ForMember(target => target.RoomId, opt => opt.MapFrom(src => src.RoomId))
             .ForMember(target => target.Name, opt => opt.MapFrom(src => src.Name));
@@ -27,7 +27,7 @@ namespace YourRest.Application.Dto.Mappers
             .ForMember(target => target.Name, opt => opt.MapFrom(src => src.Name))
             .ForMember(target => target.RoomFacilities, opt => opt.MapFrom(src => src.RoomFacilities));
 
-            cfg.CreateMap<RoomFacilityEntity, RoomFacilityViewModel>()
+            cfg.CreateMap<RoomFacility, RoomFacilityViewModel>()
             .ForMember(target => target.Id, opt => opt.MapFrom(src => src.Id))
             .ForMember(target => target.RoomId, opt => opt.MapFrom(src => src.RoomId))
             .ForMember(target => target.Name, opt => opt.MapFrom(src => src.Name));

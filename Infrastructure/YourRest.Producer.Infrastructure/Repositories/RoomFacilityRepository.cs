@@ -5,7 +5,7 @@ using YourRest.Infrastructure.Core.Repositories;
 
 namespace YourRest.Producer.Infrastructure.Repositories
 {
-    public class RoomFacilityRepository : PgRepository<RoomFacilityEntity, int>, IRoomFacilityRepository
+    public class RoomFacilityRepository : PgRepository<RoomFacility, int>, IRoomFacilityRepository
     {
         public RoomFacilityRepository(SharedDbContext context) : base(context)
         {

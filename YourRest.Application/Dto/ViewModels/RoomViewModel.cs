@@ -1,4 +1,5 @@
-﻿using YourRest.Domain.Entities;
+﻿using System.Text.Json.Serialization;
+using YourRest.Domain.Entities;
 
 namespace YourRest.Application.Dto.Models
 {
@@ -7,6 +8,6 @@ namespace YourRest.Application.Dto.Models
         public int Id { get; set; }
         public int AccommodationId { get; set; }
         public string Name { get; set; }
-        public List<RoomFacilityEntity> RoomFacilities { get; set; }
+        public List<RoomFacilityViewModel> RoomFacilities { get; set; }
     }
 }

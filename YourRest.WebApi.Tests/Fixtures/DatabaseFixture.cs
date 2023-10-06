@@ -58,10 +58,11 @@ namespace YourRest.WebApi.Tests.Fixtures
 
         public SharedDbContext GetDbContext(string ConnectionString)
         {
+            var migrationsAssembly = typeof(YourRest.Producer.Infrastructure.DependencyInjections).Assembly.GetName().Name;
             var builder = new DbContextOptionsBuilder<SharedDbContext>();
-            builder.UseNpgsql(ConnectionString);
+            builder.UseNpgsql(ConnectionString, sql => sql.MigrationsAssembly(migrationsAssembly));
             SharedDbContext defaultDbContext = new SharedDbContext(builder.Options);
-            defaultDbContext.Database.EnsureCreated();
+            defaultDbContext.Database.MigrateAsync().Wait();
 
             return defaultDbContext;
         }

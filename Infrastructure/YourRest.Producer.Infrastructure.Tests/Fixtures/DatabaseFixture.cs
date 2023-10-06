@@ -22,12 +22,13 @@ namespace YourRest.Infrastructure.Tests.Fixtures
 
         public async Task InitializeAsync()
         {
+            var migrationsAssembly = typeof(YourRest.Producer.Infrastructure.DependencyInjections).Assembly.GetName().Name;
             await _postgreSqlContainer.StartAsync();
 
             var builder = new DbContextOptionsBuilder<SharedDbContext>();
-            builder.UseNpgsql(_postgreSqlContainer.GetConnectionString());
+            builder.UseNpgsql(_postgreSqlContainer.GetConnectionString(), sql => sql.MigrationsAssembly(migrationsAssembly));
             DbContext = new SharedDbContext(builder.Options);
-            DbContext.Database.EnsureCreated();
+            DbContext.Database.MigrateAsync().Wait();
         }
 
         public Task DisposeAsync()

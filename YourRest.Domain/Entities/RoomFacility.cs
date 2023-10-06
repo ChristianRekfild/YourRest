@@ -1,6 +1,6 @@
 ﻿namespace YourRest.Domain.Entities
 {
-    public class RoomFacilityEntity: IntBaseEntity
+    public class RoomFacility: IntBaseEntity
     {
         public string Name { get; set; }
 

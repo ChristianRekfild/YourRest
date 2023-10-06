@@ -2,7 +2,7 @@
 
 namespace YourRest.Domain.Repositories
 {
-    public interface IRoomFacilityRepository: IRepository<RoomFacilityEntity, int>
+    public interface IRoomFacilityRepository: IRepository<RoomFacility, int>
     {
     }
 }

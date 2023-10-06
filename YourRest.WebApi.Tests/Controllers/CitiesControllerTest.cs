@@ -11,7 +11,7 @@ using SystemJson = System.Text.Json;
 namespace YourRest.WebApi.Tests.Controllers
 {
     [Collection(nameof(SingletonApiTest))]
-    public class CitiesControllerTest // : ApiTest
+    public class CitiesControllerTest  : IClassFixture<SingletonApiTest>
     {
         private SharedDbContext _context;
         private HttpClient Client;

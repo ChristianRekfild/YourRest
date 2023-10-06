@@ -1,4 +1,5 @@
-﻿using YourRest.Application.Dto.Models;
+﻿using YourRest.Application.CustomErrors;
+using YourRest.Application.Dto.Models;
 using YourRest.Application.Interfaces.Room;
 using YourRest.Domain.Repositories;
 using RoomEntity = YourRest.Domain.Entities.Room;
@@ -16,7 +17,7 @@ namespace YourRest.Application.UseCases.Room
         {
             if (await roomRepository.FindAsync(room => room.Id == reviewDto.Id) is not RoomEntity room)
             {
-                throw new Exception("Room i not exists");
+                throw new RoomNotFoundExeption(reviewDto.Id);
             }
             await roomRepository.DeleteAsync(reviewDto.Id);
         }
