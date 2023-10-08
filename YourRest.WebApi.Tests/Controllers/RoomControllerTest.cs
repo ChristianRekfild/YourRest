@@ -1,4 +1,5 @@
 using Newtonsoft.Json;
+using System.Collections.Generic;
 using System.Net;
 using System.Text;
 using System.Text.Json;
@@ -50,21 +51,47 @@ namespace YourRest.WebApi.Tests.Controllers
         }
 
 
-        //[Fact]
-        //public async Task AddRoom_ReturnsStatusCodeOk()
-        //{
+        [Fact]
+        public async Task AddRoom_ReturnsStatusCodeCreated()
+        {
 
-        //    var accommodationEntity = new Accommodation { Name = "Test" };
-        //    var accommodation = await InsertObjectIntoDatabase(accommodationEntity);
-        //    var accommodationId = accommodation.Id;
+            var accommodationEntity = new Accommodation { Name = "Test" };
+            var accommodation = await InsertObjectIntoDatabase(accommodationEntity);
+            var accommodationId = accommodation.Id;
 
-        //    var roomEntity = new Room { Name = "Lyxar", AccommodationId = accommodationId, Capacity = 20, Id = 20, SquareInMeter = 30, RoomType = "Lyx" };
-        //    var content = new StringContent(JsonConvert.SerializeObject(roomEntity), Encoding.UTF8, "application/json");
-        //    var response = await Client.PostAsync($"api/rooms/", content);
+            var roomEntity = new Room { Name = "Lyxar", AccommodationId = accommodationId, Capacity = 20, Id = 20, SquareInMeter = 30, RoomType = "Lyx" };
+            var content = new StringContent(JsonConvert.SerializeObject(roomEntity), Encoding.UTF8, "application/json");
+            var response = await Client.PostAsync($"api/rooms/", content);
 
-        //    Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-        //}
+            Assert.Equal(HttpStatusCode.Created, response.StatusCode);
+        }
 
+        [Fact]
+        public async Task GetAllRoom_ReturnsExpectedRoom_WhenAddRoom()
+        {
+
+            var accommodationEntity = new Accommodation { Name = "Test" };
+            var accommodation = await InsertObjectIntoDatabase(accommodationEntity);
+            var accommodationId = accommodation.Id;
+
+            var roomEntity = new Room { Name = "Lyxar", AccommodationId = accommodationId, Capacity = 20, Id = 20, SquareInMeter = 30, RoomType = "Lyx" };
+            var content = new StringContent(JsonConvert.SerializeObject(roomEntity), Encoding.UTF8, "application/json");
+            var response = await Client.PostAsync($"api/rooms/", content);
+            Assert.Equal(HttpStatusCode.Created, response.StatusCode);
+
+
+            var roomResponse = await Client.GetAsync($"api/rooms/{accommodationId}");
+            var roomResponseContent = await roomResponse.Content.ReadAsStringAsync();
+
+
+            var roomReturn = JsonConvert.DeserializeObject<List<RoomDto>>(roomResponseContent);
+
+            Assert.Equal(roomReturn.First().Name, roomEntity.Name);
+            Assert.Equal(roomReturn.First().AccommodationId, roomEntity.AccommodationId);
+            Assert.Equal(roomReturn.First().RoomType, roomEntity.RoomType);
+            Assert.Equal(roomReturn.First().Capacity, roomEntity.Capacity);
+            Assert.Equal(roomReturn.First().SquareInMeter, roomEntity.SquareInMeter);
+        }
 
 
         private AddressDto CreateValidAddressDto(int cityId)
