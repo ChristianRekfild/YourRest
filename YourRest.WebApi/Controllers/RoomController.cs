@@ -6,7 +6,7 @@ using YourRest.Application.Interfaces.Room;
 namespace YourRest.WebApi.Controllers
 {
     [ApiController]
-    [Route("api/operator/accommodation/")]
+    [Route("api/operator/{operatorId}/accommodation/{accommodationId}")]
     public class RoomController : ControllerBase
     {
         private readonly IAddRoomUseCase addRoomUseCase;
@@ -44,7 +44,7 @@ namespace YourRest.WebApi.Controllers
             }
         }
         [HttpPut]
-        [Route("room/edit")]
+        [Route("room/{roomId}/edit")]
         public async Task<IActionResult> EditRoom([FromBody] RoomViewModel room)
         {
             try
@@ -62,7 +62,7 @@ namespace YourRest.WebApi.Controllers
             }
         }
         [HttpPost]
-        [Route("room/remove")]
+        [Route("room/{roomId}/remove")]
         public async Task<IActionResult> RemoveRoom([FromBody] RoomViewModel room)
         {
             try
