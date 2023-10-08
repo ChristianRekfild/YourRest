@@ -11,7 +11,7 @@ namespace YourRest.WebApi.Controllers
         private readonly IAddRoomFacilityUseCase addRoomFacilityUseCase;
         private readonly IEditRoomFacilityUseCase editRoomFacilityUseCase;
         private readonly IGetRoomFacilitiesByRoomIdUseCase getRoomFacilitiesByRoomIdUseCase;
-        private readonly IGetRoomFacilityByIdUseCase getRoomFacilityByIdUse;
+        private readonly IGetRoomFacilityByIdUseCase getRoomFacilityByIdUseCase;
         private readonly IRemoveRoomFacilityUseCase removeRoomFacilityUseCase;
         public RoomFacilityController(
             IAddRoomFacilityUseCase addRoomFacilityUseCase,
@@ -23,7 +23,7 @@ namespace YourRest.WebApi.Controllers
             this.addRoomFacilityUseCase = addRoomFacilityUseCase;
             this.editRoomFacilityUseCase = editRoomFacilityUseCase;
             this.getRoomFacilitiesByRoomIdUseCase = getRoomFacilitiesByRoomIdUseCase;
-            this.getRoomFacilityByIdUse = getRoomFacilityByIdUse;
+            this.getRoomFacilityByIdUseCase = getRoomFacilityByIdUse;
             this.removeRoomFacilityUseCase = removeRoomFacilityUseCase;
         }
         [HttpGet]
@@ -32,18 +32,22 @@ namespace YourRest.WebApi.Controllers
         {
             try
             {
-                return Ok(await getRoomFacilityByIdUse.ExecuteAsync(roomId));
+                return Ok(await getRoomFacilitiesByRoomIdUseCase.ExecuteAsync(roomId));
             }
-            catch (RoomNotFoundExeption ex)
-            {
-                return Problem(detail: ex.Message, statusCode: 404);
-            }
-            catch (Exception ex)
-            {
-                return Problem(detail: ex.Message, statusCode: 500);
-            }
+            catch (RoomNotFoundExeption ex) { return Problem(detail: ex.Message, statusCode: 404); }
+            catch (RoomFacilityNotFoundException ex) { return Problem(detail: ex.Message, statusCode: 422); }
+            catch (Exception ex) { return Problem(detail: ex.Message, statusCode: 500); }
         }
-       
-
+        [HttpGet]
+        [Route("facility/{id}")]
+        public async Task<IActionResult> GetRoomFacilityById(int id)
+        {
+            try
+            {
+                return Ok(await getRoomFacilityByIdUseCase.ExecuteAsync(id));
+            }
+            catch (RoomFacilityNotFoundException ex) { return Problem(detail: ex.Message, statusCode: 404); }
+            catch (Exception ex) { return Problem(detail: ex.Message, statusCode: 500); }
+        }
     }
 }

@@ -1,4 +1,5 @@
-﻿using YourRest.Application.Dto.Mappers;
+﻿using YourRest.Application.CustomErrors;
+using YourRest.Application.Dto.Mappers;
 using YourRest.Application.Dto.Models;
 using YourRest.Application.Interfaces.Facility;
 using YourRest.Domain.Repositories;
@@ -18,7 +19,7 @@ namespace YourRest.Application.UseCases.Facility
         {
             if (roomRepository.GetWithIncludeAsync(room => room.Id == roomId, include => include.RoomFacilities).Result.FirstOrDefault() is not RoomEntity room)
             {
-                throw new Exception("Room not found!");
+                throw new RoomNotFoundExeption(roomId);
             }
             return Task.FromResult(room.RoomFacilities.ToList().ToViewModel());
         }
