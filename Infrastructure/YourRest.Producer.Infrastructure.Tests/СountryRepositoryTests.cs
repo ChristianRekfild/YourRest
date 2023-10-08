@@ -15,8 +15,15 @@ namespace YourRest.Infrastructure.Tests
 
         public CountryRepositoryTests(DatabaseFixture databaseFixture)
         {
+            if (databaseFixture.DbContext != null)
+            {
                 _testDbContext = databaseFixture.DbContext;
                 _countryRepository = new CountryRepository(_testDbContext);
+            }
+            else
+            {
+                throw new NullReferenceException("DatabaseFixture.DbContext is null");
+            }
         }
 
         [Fact]
