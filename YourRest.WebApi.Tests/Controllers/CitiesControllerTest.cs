@@ -50,11 +50,11 @@ namespace YourRest.WebApi.Tests.Controllers
             await _context.SaveChangesAsync();
 
             var expectedCity1 = new City { Name = "Moscow", RegionId = expectedRegion.Id /*, Id = 1*/ };
-            //var expectedCity2 = new City { Name = "TestCity", RegionId = expectedRegion.Id /*, Id = 2*/ };
+            var expectedCity2 = new City { Name = "TestCity", RegionId = expectedRegion.Id /*, Id = 2*/ };
             //await _apiTest.InsertObjectIntoDatabase(expectedCity1);
             //await _apiTest.InsertObjectIntoDatabase(expectedCity2);
             expectedCity1 = (await _context.Cities.AddAsync(expectedCity1)).Entity;
-            //expectedCity2 = (await _context.Cities.AddAsync(expectedCity2)).Entity;
+            expectedCity2 = (await _context.Cities.AddAsync(expectedCity2)).Entity;
             await _context.SaveChangesAsync();
 
             var resultCities = await GetCitiesFromApi();
