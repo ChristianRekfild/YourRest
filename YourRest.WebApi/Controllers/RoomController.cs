@@ -38,7 +38,11 @@ namespace YourRest.WebApi.Controllers
 
                 return CreatedAtAction(nameof(Post), createdRoom);
             }
-            catch (RoomNotFoundException exception)
+            catch (RoomCondlictException exception)
+            {
+                return Conflict(exception.Message);
+            }
+            catch (AccommodationNotFoundException exception)
             {
                 return NotFound(exception.Message);
             }

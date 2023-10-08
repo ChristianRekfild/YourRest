@@ -17,6 +17,9 @@ namespace YourRest.WebApi.Tests.Controllers
         {
         }
 
+
+
+
         [Fact]
         public async Task GetAllRoom_ReturnsExpectedRoom_WhenDatabaseHasRoom()
         {
@@ -59,7 +62,7 @@ namespace YourRest.WebApi.Tests.Controllers
             var accommodation = await InsertObjectIntoDatabase(accommodationEntity);
             var accommodationId = accommodation.Id;
 
-            var roomEntity = new Room { Name = "Lyxar", AccommodationId = accommodationId, Capacity = 20, Id = 20, SquareInMeter = 30, RoomType = "Lyx" };
+            var roomEntity = new Room { Name = "Lyxar1", AccommodationId = accommodationId, Capacity = 20, SquareInMeter = 30, RoomType = "Lyx" };
             var content = new StringContent(JsonConvert.SerializeObject(roomEntity), Encoding.UTF8, "application/json");
             var response = await Client.PostAsync($"api/rooms/", content);
 
@@ -74,7 +77,7 @@ namespace YourRest.WebApi.Tests.Controllers
             var accommodation = await InsertObjectIntoDatabase(accommodationEntity);
             var accommodationId = accommodation.Id;
 
-            var roomEntity = new Room { Name = "Lyxar", AccommodationId = accommodationId, Capacity = 20, Id = 20, SquareInMeter = 30, RoomType = "Lyx" };
+            var roomEntity = new Room { Name = "Lyxar", AccommodationId = accommodationId, Capacity = 20, SquareInMeter = 30, RoomType = "Lyx" };
             var content = new StringContent(JsonConvert.SerializeObject(roomEntity), Encoding.UTF8, "application/json");
             var response = await Client.PostAsync($"api/rooms/", content);
             Assert.Equal(HttpStatusCode.Created, response.StatusCode);
@@ -93,6 +96,82 @@ namespace YourRest.WebApi.Tests.Controllers
             Assert.Equal(roomReturn.First().SquareInMeter, roomEntity.SquareInMeter);
         }
 
+        [Fact]
+        public async Task AddRoom_ReturnsBadRequest400_WhenAddVoid()
+        {
+            var content = new StringContent(JsonConvert.SerializeObject(null), Encoding.UTF8, "application/json");
+            var response = await Client.PostAsync($"api/rooms/", content);
+            Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        }
+
+        [Fact]
+        public async Task AddRoom_ReturnsBadRequest400_WhenAddRoomIncomplete()
+        {
+            var accommodationEntity = new Accommodation { Name = "Test" };
+            var accommodation = await InsertObjectIntoDatabase(accommodationEntity);
+            var accommodationId = accommodation.Id;
+
+            var roomEntity = new Room { Name = "Lyxar" };
+            var content = new StringContent(JsonConvert.SerializeObject(roomEntity), Encoding.UTF8, "application/json");
+            var response = await Client.PostAsync($"api/rooms/", content);
+            Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        }
+
+        [Fact]
+        public async Task AddRoom_ReturnsConflict_WhenAddRoomWithNameDuplication()
+        {
+
+            var accommodationEntity = new Accommodation { Name = "Test" };
+            var accommodation = await InsertObjectIntoDatabase(accommodationEntity);
+            var accommodationId = accommodation.Id;
+
+            var roomEntity = new Room { Name = "Lyxar", AccommodationId = accommodationId, Capacity = 20, SquareInMeter = 30, RoomType = "Lyx" };
+            var content = new StringContent(JsonConvert.SerializeObject(roomEntity), Encoding.UTF8, "application/json");
+            var response = await Client.PostAsync($"api/rooms/", content);
+
+
+            var roomEntity1 = new Room { Name = "Lyxar", AccommodationId = accommodationId, Capacity = 30, SquareInMeter = 30, RoomType = "Lyx" };
+            var content1 = new StringContent(JsonConvert.SerializeObject(roomEntity1), Encoding.UTF8, "application/json");
+            var response1 = await Client.PostAsync($"api/rooms/", content1);
+            Assert.Equal(HttpStatusCode.Created, response.StatusCode);
+            Assert.Equal(HttpStatusCode.Conflict, response1.StatusCode);
+
+        }
+
+
+        [Fact]
+        public async Task AddRoom_ReturnsNotFound_WhenAddRoomWitFakeAccommodation()
+        {
+
+            var accommodationEntity = new Accommodation { Name = "Test" };
+            var accommodation = await InsertObjectIntoDatabase(accommodationEntity);
+            var accommodationId = accommodation.Id;
+
+            var roomEntity = new Room { Name = "Lyxar", AccommodationId = accommodationId + 100, Capacity = 20, SquareInMeter = 30, RoomType = "Lyx" };
+            var content = new StringContent(JsonConvert.SerializeObject(roomEntity), Encoding.UTF8, "application/json");
+            var response = await Client.PostAsync($"api/rooms/", content);
+
+            Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+        }
+
+        [Fact]
+        public async Task AddRoom_ReturnsBadRequset_WhenAddFakeRoom()
+        {
+
+
+            var accommodationEntity = new Accommodation { Name = "Test" };
+            var accommodation = await InsertObjectIntoDatabase(accommodationEntity);
+            var accommodationId = accommodation.Id;
+
+
+
+
+            var roomEntity = new FakeRoom { Name = "Lyxar", AccommodationId = accommodationId + 100, Capacity = 20, SquareInMeter = "ten", RoomType = "Lyx" };
+            var content = new StringContent(JsonConvert.SerializeObject(roomEntity), Encoding.UTF8, "application/json");
+            var response = await Client.PostAsync($"api/rooms/", content);
+
+            Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        }
 
         private AddressDto CreateValidAddressDto(int cityId)
         {
@@ -104,6 +183,17 @@ namespace YourRest.WebApi.Tests.Controllers
                 Latitude = 0,
                 CityId = cityId
             };
+        }
+        private class FakeRoom : IntBaseEntity
+        {
+            public string Name { get; set; }
+            public string SquareInMeter { get; set; }
+
+            public string RoomType { get; set; }
+
+            public int Capacity { get; set; }
+            public int AccommodationId { get; set; }
+            public virtual Accommodation Accommodation { get; set; }
         }
 
     }

@@ -20,13 +20,14 @@ namespace YourRest.Application.UseCases
 
         public async Task<SavedRoomDto> Execute(SavedRoomDto roomDto)
         {
-            //var room = await _roomRepository.GetAsync(roomDto.Id);
+            var room = await _roomRepository.GetWithIncludeAsync(t => t.Name == roomDto.Name && t.AccommodationId == roomDto.AccommodationId);
             var accommodation = await _accommodationRepository.GetAsync(roomDto.AccommodationId);
 
-            //if (room != null)
-            //{
-            //    throw new RoomNotFoundException($"Room with Id {roomDto.Id} already exist");
-            //}
+            if (room.Count() != 0)
+            {
+                throw new RoomCondlictException($"Room with name {roomDto.Name} already exist");
+            }
+
 
             if (accommodation == null)
             {
