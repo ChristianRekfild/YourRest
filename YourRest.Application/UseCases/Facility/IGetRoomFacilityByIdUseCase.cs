@@ -1,4 +1,5 @@
-﻿using YourRest.Application.Dto.Mappers;
+﻿using YourRest.Application.CustomErrors;
+using YourRest.Application.Dto.Mappers;
 using YourRest.Application.Dto.Models;
 using YourRest.Application.Interfaces.Facility;
 using YourRest.Domain.Entities;
@@ -18,7 +19,7 @@ namespace YourRest.Application.UseCases.Facility
         {
             if (await roomFacilityRepository.GetAsync(id) is not RoomFacility roomFacility)
             {
-                throw new Exception("Facility not found!");
+                throw new RoomFacilityNotFoundException(id);
             }
             return roomFacility.ToViewModel();
         }

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using YourRest.Application.CustomErrors;
+using YourRest.Application.Dto.Models;
 using YourRest.Application.Interfaces.Facility;
 
 namespace YourRest.WebApi.Controllers
@@ -45,6 +46,18 @@ namespace YourRest.WebApi.Controllers
             try
             {
                 return Ok(await getRoomFacilityByIdUseCase.ExecuteAsync(id));
+            }
+            catch (RoomFacilityNotFoundException ex) { return Problem(detail: ex.Message, statusCode: 404); }
+            catch (Exception ex) { return Problem(detail: ex.Message, statusCode: 500); }
+        }
+        [HttpDelete]
+        [Route("facility/remove")]
+        public async Task<IActionResult> RemoveRoomFacilityById([FromBody] RoomFacilityViewModel roomFacility)
+        {
+            try
+            {
+                await removeRoomFacilityUseCase.ExecuteAsync(roomFacility);
+                return Ok($"Service \"{roomFacility.Name}\" has been removed from the current room");
             }
             catch (RoomFacilityNotFoundException ex) { return Problem(detail: ex.Message, statusCode: 404); }
             catch (Exception ex) { return Problem(detail: ex.Message, statusCode: 500); }

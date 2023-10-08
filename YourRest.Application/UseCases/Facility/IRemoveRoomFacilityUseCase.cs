@@ -1,4 +1,5 @@
-﻿using YourRest.Application.Dto.Models;
+﻿using YourRest.Application.CustomErrors;
+using YourRest.Application.Dto.Models;
 using YourRest.Application.Interfaces.Facility;
 using YourRest.Domain.Entities;
 using YourRest.Domain.Repositories;
@@ -17,7 +18,7 @@ namespace YourRest.Application.UseCases.Facility
         {
             if (await roomFacilityRepository.GetAsync(reviewDto.Id) is not RoomFacility roomFacility)
             {
-                throw new Exception("Facility is not found!");
+                throw new RoomFacilityNotFoundException(reviewDto.Id);
             }
             await roomFacilityRepository.DeleteAsync(reviewDto.Id);
         }
