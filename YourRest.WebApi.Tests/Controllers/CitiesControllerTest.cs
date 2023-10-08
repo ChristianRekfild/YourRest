@@ -119,7 +119,6 @@ namespace YourRest.WebApi.Tests.Controllers
             var response = await Client.GetAsync($"/api/cities/{invalidCity.Id}");
 
             Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
-
         }
 
         [Fact]
