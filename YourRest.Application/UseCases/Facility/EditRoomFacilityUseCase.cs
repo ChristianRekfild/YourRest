@@ -1,4 +1,5 @@
-﻿using YourRest.Application.Dto.Mappers;
+﻿using YourRest.Application.CustomErrors;
+using YourRest.Application.Dto.Mappers;
 using YourRest.Application.Dto.Models;
 using YourRest.Application.Interfaces.Facility;
 using YourRest.Domain.Entities;
@@ -17,7 +18,11 @@ namespace YourRest.Application.UseCases.Facility
         {
             if (await roomFacilityRepository.FindAsync(f => f.Id == reviewDto.Id) is not RoomFacility roomFacility)
             {
-                throw new Exception("roo facility is not found!");
+                throw new RoomFacilityNotFoundException(reviewDto.Id);
+            }
+            if (roomFacilityRepository.FindAsync(rf => rf.RoomId == reviewDto.RoomId).Result.Select(f => f.Name).Contains(reviewDto.Name))
+            {
+                throw new RoomFacilityInProcessException(reviewDto);
             }
             await roomFacilityRepository.UpdateAsync(reviewDto.ToEntity());
         }

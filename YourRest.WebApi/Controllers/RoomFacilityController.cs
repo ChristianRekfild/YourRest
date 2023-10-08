@@ -62,5 +62,32 @@ namespace YourRest.WebApi.Controllers
             catch (RoomFacilityNotFoundException ex) { return Problem(detail: ex.Message, statusCode: 404); }
             catch (Exception ex) { return Problem(detail: ex.Message, statusCode: 500); }
         }
+        [HttpPost]
+        [Route("facility/add")]
+        public async Task<IActionResult> AddRoomFacility([FromBody] RoomFacilityViewModel roomFacility)
+        {
+            try
+            {
+                await addRoomFacilityUseCase.ExecuteAsync(roomFacility);
+                return Ok($"Service \"{roomFacility.Name}\" has been added to the current room");
+            }
+            catch (RoomAlreadyExistsException ex) { return Problem(detail: ex.Message, statusCode: 422); }
+            catch (Exception ex) { return Problem(detail: ex.Message, statusCode: 500); }
+        }
+        [HttpPut]
+        [Route("facility/edit")]
+        public async Task<IActionResult> EditRoomFacility([FromBody] RoomFacilityViewModel roomFacility)
+        {
+            try
+            {
+                await editRoomFacilityUseCase.ExecuteAsync(roomFacility);
+                return Ok($"Service {roomFacility.Name} has been successfully changed in the current issue");
+            }
+            catch(RoomFacilityNotFoundException ex) { return Problem(detail: ex.Message, statusCode: 404); }
+            catch (RoomAlreadyExistsException ex) { return Problem(detail: ex.Message, statusCode: 422); }
+            catch (Exception ex) { return Problem(detail: ex.Message, statusCode: 500); }
+        }
+
+
     }
 }
