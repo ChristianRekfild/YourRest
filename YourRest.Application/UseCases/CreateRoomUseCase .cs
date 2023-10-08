@@ -18,15 +18,15 @@ namespace YourRest.Application.UseCases
             _accommodationRepository = accommodationRepository;
         }
 
-        public async Task<RoomDto> Execute(RoomDto roomDto)
+        public async Task<SavedRoomDto> Execute(SavedRoomDto roomDto)
         {
-            var room = await _roomRepository.GetAsync(roomDto.Id);
+            //var room = await _roomRepository.GetAsync(roomDto.Id);
             var accommodation = await _accommodationRepository.GetAsync(roomDto.AccommodationId);
 
-            if (room != null)
-            {
-                throw new RoomNotFoundException($"Room with Id {roomDto.Id} already exist");
-            }
+            //if (room != null)
+            //{
+            //    throw new RoomNotFoundException($"Room with Id {roomDto.Id} already exist");
+            //}
 
             if (accommodation == null)
             {
@@ -34,7 +34,7 @@ namespace YourRest.Application.UseCases
             }
 
             Room savedRoom = new Room();
-            savedRoom.Id = roomDto.Id;
+            //savedRoom.Id = roomDto.Id;
             savedRoom.SquareInMeter = roomDto.SquareInMeter;
             savedRoom.Name = roomDto.Name;
             savedRoom.AccommodationId = accommodation.Id;

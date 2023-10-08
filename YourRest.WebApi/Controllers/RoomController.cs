@@ -30,7 +30,7 @@ namespace YourRest.WebApi.Controllers
         }
         [HttpPost]
         [Route("api/rooms")]
-        public async Task<IActionResult> Post([FromBody] RoomDto roomDto)
+        public async Task<IActionResult> Post([FromBody] SavedRoomDto roomDto)
         {
             try
             {
