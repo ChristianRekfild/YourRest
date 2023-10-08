@@ -151,7 +151,7 @@ namespace YourRest.WebApi.Tests.Controllers
             var content = new StringContent(JsonConvert.SerializeObject(roomEntity), Encoding.UTF8, "application/json");
             var response = await Client.PostAsync($"api/rooms/", content);
 
-            Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+            Assert.Equal(HttpStatusCode.UnprocessableEntity, response.StatusCode);
         }
 
         [Fact]

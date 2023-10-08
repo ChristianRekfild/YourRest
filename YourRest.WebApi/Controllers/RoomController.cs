@@ -44,7 +44,7 @@ namespace YourRest.WebApi.Controllers
             }
             catch (AccommodationNotFoundException exception)
             {
-                return NotFound(exception.Message);
+                return UnprocessableEntity(exception.Message);
             }
         }
     }
