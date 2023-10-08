@@ -108,7 +108,7 @@ namespace YourRest.WebApi.Tests.Controllers
             var errorResponse = JsonConvert.DeserializeObject<ErrorResponse>(errorResponseString);
 
             Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
-            Assert.Equal($"Accommodation with id {accommodationId} not found", errorResponse.Message);
+            Assert.Equal($"Accommodation with id {accommodationId} not found", errorResponse?.Message);
         }
 
         [Fact]
