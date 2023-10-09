@@ -40,7 +40,7 @@ namespace YourRest.WebApi.Tests.Controllers
             //var content = new StringContent(JsonConvert.SerializeObject(expectedRoom), Encoding.UTF8, "application/json");
             var response = await Client.GetAsync($"api/rooms/{accommodationId}");
 
-            Assert.Equal(HttpStatusCode.OK, response?.StatusCode);
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             var content = await response.Content.ReadAsStringAsync();
 
             var roomResponse = JsonConvert.DeserializeObject<List<RoomDto>>(content);
@@ -66,7 +66,7 @@ namespace YourRest.WebApi.Tests.Controllers
             var content = new StringContent(JsonConvert.SerializeObject(roomEntity), Encoding.UTF8, "application/json");
             var response = await Client.PostAsync($"api/rooms/", content);
 
-            Assert.Equal(HttpStatusCode.Created, response?.StatusCode);
+            Assert.Equal(HttpStatusCode.Created, response.StatusCode);
         }
 
         [Fact]
@@ -80,7 +80,7 @@ namespace YourRest.WebApi.Tests.Controllers
             var roomEntity = new Room { Name = "Lyxar", AccommodationId = accommodationId, Capacity = 20, SquareInMeter = 30, RoomType = "Lyx" };
             var content = new StringContent(JsonConvert.SerializeObject(roomEntity), Encoding.UTF8, "application/json");
             var response = await Client.PostAsync($"api/rooms/", content);
-            Assert.Equal(HttpStatusCode.Created, response?.StatusCode);
+            Assert.Equal(HttpStatusCode.Created, response.StatusCode);
 
 
             var roomResponse = await Client.GetAsync($"api/rooms/{accommodationId}");
@@ -101,7 +101,7 @@ namespace YourRest.WebApi.Tests.Controllers
         {
             var content = new StringContent(JsonConvert.SerializeObject(null), Encoding.UTF8, "application/json");
             var response = await Client.PostAsync($"api/rooms/", content);
-            Assert.Equal(HttpStatusCode.BadRequest, response?.StatusCode);
+            Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         }
 
         [Fact]
@@ -114,7 +114,7 @@ namespace YourRest.WebApi.Tests.Controllers
             var roomEntity = new Room { Name = "Lyxar" };
             var content = new StringContent(JsonConvert.SerializeObject(roomEntity), Encoding.UTF8, "application/json");
             var response = await Client.PostAsync($"api/rooms/", content);
-            Assert.Equal(HttpStatusCode.BadRequest, response?.StatusCode);
+            Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         }
 
         [Fact]
@@ -133,9 +133,9 @@ namespace YourRest.WebApi.Tests.Controllers
             var roomEntity1 = new Room { Name = "Lyxar", AccommodationId = accommodationId, Capacity = 30, SquareInMeter = 30, RoomType = "Lyx" };
             var content1 = new StringContent(JsonConvert.SerializeObject(roomEntity1), Encoding.UTF8, "application/json");
             var response1 = await Client.PostAsync($"api/rooms/", content1);
-            Assert.Equal(HttpStatusCode.Created, response?.StatusCode);
-            Assert.Equal(HttpStatusCode.Conflict, response1?.StatusCode);
-            var errorMassage = await response1?.Content.ReadAsStringAsync();
+            Assert.Equal(HttpStatusCode.Created, response.StatusCode);
+            Assert.Equal(HttpStatusCode.Conflict, response1.StatusCode);
+            var errorMassage = await response1.Content.ReadAsStringAsync();
             Assert.Equal($"Room with name {roomEntity1.Name} already exist", errorMassage);
 
 
@@ -154,8 +154,8 @@ namespace YourRest.WebApi.Tests.Controllers
             var content = new StringContent(JsonConvert.SerializeObject(roomEntity), Encoding.UTF8, "application/json");
             var response = await Client.PostAsync($"api/rooms/", content);
 
-            Assert.Equal(HttpStatusCode.UnprocessableEntity, response?.StatusCode);
-            var errorMassage = await response?.Content.ReadAsStringAsync();
+            Assert.Equal(HttpStatusCode.UnprocessableEntity, response.StatusCode);
+            var errorMassage = await response.Content.ReadAsStringAsync();
             Assert.Equal($"Accommodation with id {accommodationId} not found", errorMassage);
 
         }
@@ -173,7 +173,7 @@ namespace YourRest.WebApi.Tests.Controllers
             var content = new StringContent(JsonConvert.SerializeObject(roomEntity), Encoding.UTF8, "application/json");
             var response = await Client.PostAsync($"api/rooms/", content);
 
-            Assert.Equal(HttpStatusCode.BadRequest, response?.StatusCode);
+            Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         }
 
         private AddressDto CreateValidAddressDto(int cityId)
