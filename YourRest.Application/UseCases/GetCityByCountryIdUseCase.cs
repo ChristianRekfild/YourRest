@@ -28,8 +28,8 @@ namespace YourRest.Application.UseCases
             var regions = (await _regionRepository.FindAsync(x => x.CountryId == countryId)).Select(c => c.Id).ToList();
             if (regions.Count == 0) throw new RegionNotFoundException($"Regions in country {countryId} not found");
 
-            var cities = (await _cityRepository.FindAsync(x => regions.Any(c => c == x.RegionId))).ToList(); ;
-            if (cities.Count == 0) throw new CityNotFoundException($"Cities in country {countryId} not found");
+            var cities = await _cityRepository.FindAsync(x => regions.Contains(x.RegionId));
+            if (!cities.Any()) throw new CityNotFoundException($"Cities in country {countryId} not found");
 
             var resultCitiesList = cities.Select(c => new CityDTO
             {

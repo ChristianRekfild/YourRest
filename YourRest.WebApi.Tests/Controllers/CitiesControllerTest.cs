@@ -27,7 +27,7 @@ namespace YourRest.WebApi.Tests.Controllers
         }
 
         [Fact]
-        public async Task GetAllcities_ReturnsExpectedCities_WhenDatabaseHasCities()
+        public async Task GetAllCities_ReturnsExpectedCities_WhenDatabaseHasCities()
         {
             var expectedCountry = new Country()
             {
@@ -78,10 +78,10 @@ namespace YourRest.WebApi.Tests.Controllers
         [Fact]
         public async Task GetCityById_ReturnsExpectedCity_WhenDatabaseHasCitiesByNeedId()
         {
-            var counryEntity = new Country { Name = "Russia" };
-            var counry = await fixture.InsertObjectIntoDatabase(counryEntity);
+            var countryEntity = new Country { Name = "Russia" };
+            var country = await fixture.InsertObjectIntoDatabase(countryEntity);
 
-            var regionEntity = new Region { Name = "Московская область", CountryId = counry.Id };
+            var regionEntity = new Region { Name = "test", CountryId = country.Id };
             var region = await fixture.InsertObjectIntoDatabase(regionEntity);
 
             var expectedCity1 = new City { Name = "Moscow", RegionId = region.Id };
@@ -137,7 +137,7 @@ namespace YourRest.WebApi.Tests.Controllers
             await _context.Cities.AddAsync(expectedCity2);
             await _context.SaveChangesAsync();
 
-            var response = await Client.GetAsync($"/api/cities/countryid={country.Id}");
+            var response = await Client.GetAsync($"/api/cities?country_id={country.Id}");
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
             var content = await response.Content.ReadAsStringAsync();
@@ -150,15 +150,15 @@ namespace YourRest.WebApi.Tests.Controllers
             var city1 = cities.FirstOrDefault(x => x.Name == "Moscow666");
             var city2 = cities.FirstOrDefault(x => x.Name == "TestCity666");
 
-            Assert.True(city1 != null);
-            Assert.True(city2 != null);
+            Assert.Equal(true, city1 != null);
+            Assert.Equal(true, city2 != null);
         }
 
         [Fact]
-        public async Task GetCityByCountryId_Returns404_WhenDatabaseDoesntHaveCitiesByNeedRegionId()
+        public async Task GetCityByCountryId_Returns404_WhenDatabaseDoesntHaveCitiesByNeedCountryId()
         {
-            int regionId = int.MaxValue;
-            var response = await Client.GetAsync($"/api/cities/countryid={regionId}");
+            int countryId = int.MaxValue;
+            var response = await Client.GetAsync($"/api/cities?countryId={countryId}");
 
             Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
         }
@@ -179,7 +179,7 @@ namespace YourRest.WebApi.Tests.Controllers
             await _context.Cities.AddAsync(expectedCity2);
             await _context.SaveChangesAsync();
 
-            var response = await Client.GetAsync($"/api/cities/regionid={region.Id}");
+            var response = await Client.GetAsync($"/api/cities?regionId={region.Id}");
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
             var content = await response.Content.ReadAsStringAsync();
@@ -192,17 +192,20 @@ namespace YourRest.WebApi.Tests.Controllers
             var city1 = cities.FirstOrDefault(x => x.Name == "Moscow666");
             var city2 = cities.FirstOrDefault(x => x.Name == "TestCity666");
 
-            Assert.True(city1 != null);
-            Assert.True(city2 != null);
+            Assert.Equal(true, city1 != null);
+            Assert.Equal(true, city2 != null);
         }
 
         [Fact]
-        public async Task GetCityByRegionId_Returns404_WhenDatabaseDoesntHaveCitiesByNeedRegionId()
+        public async Task GetCityByRegionId_Returns200Ok_WhenDatabaseDoesntHaveCitiesByGivenRegionId()
         {
-            int regionId = int.MaxValue;
-            var response = await Client.GetAsync($"/api/cities/regionid={regionId}");
+            var response = await Client.GetAsync($"/api/cities?regionId=200");
 
-            Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+
+            var content = await response.Content.ReadAsStringAsync();
+            var cities = JsonConvert.DeserializeObject<IEnumerable<CityDTO>>(content);
+            Assert.Empty(cities);
         }
 
         private async Task<List<City>> GetCitiesFromApi()
@@ -236,5 +239,38 @@ namespace YourRest.WebApi.Tests.Controllers
             return city;
         }
 
+        private async Task<List<City>> GetCitiesByRegionId(int regionId)
+        {
+            var response = await Client.GetAsync($"/api/cities?regionId={regionId}");
+
+            if (response.StatusCode == System.Net.HttpStatusCode.NotFound) return null;
+
+            response.EnsureSuccessStatusCode();
+            var content = await response.Content.ReadAsStringAsync();
+            var options = new SystemJson.JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true
+            };
+            var cities = SystemJson.JsonSerializer.Deserialize<List<City>>(content, options);
+
+            return cities;
+        }
+
+        private async Task<List<City>> GetCitiesByCountryId(int countryId)
+        {
+            var response = await Client.GetAsync($"/api/cities?countryId={countryId}");
+
+            if (response.StatusCode == System.Net.HttpStatusCode.NotFound) return null;
+
+            response.EnsureSuccessStatusCode();
+            var content = await response.Content.ReadAsStringAsync();
+            var options = new SystemJson.JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true
+            };
+            var cities = SystemJson.JsonSerializer.Deserialize<List<City>>(content, options);
+
+            return cities;
+        }
     }
 }
