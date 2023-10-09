@@ -40,7 +40,7 @@ namespace YourRest.WebApi.Tests.Controllers
             //var content = new StringContent(JsonConvert.SerializeObject(expectedRoom), Encoding.UTF8, "application/json");
             var response = await Client.GetAsync($"api/rooms/{accommodationId}");
 
-            Assert.Equal(HttpStatusCode.OK, response?.StatusCode);
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             var content = await response.Content.ReadAsStringAsync();
 
             var roomResponse = JsonConvert.DeserializeObject<List<RoomDto>>(content);
@@ -80,7 +80,7 @@ namespace YourRest.WebApi.Tests.Controllers
             var roomEntity = new Room { Name = "Lyxar", AccommodationId = accommodationId, Capacity = 20, SquareInMeter = 30, RoomType = "Lyx" };
             var content = new StringContent(JsonConvert.SerializeObject(roomEntity), Encoding.UTF8, "application/json");
             var response = await Client.PostAsync($"api/rooms/", content);
-            Assert.Equal(HttpStatusCode.Created, response?.StatusCode);
+            Assert.Equal(HttpStatusCode.Created, response.StatusCode);
 
 
             var roomResponse = await Client.GetAsync($"api/rooms/{accommodationId}");
