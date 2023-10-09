@@ -61,8 +61,8 @@ namespace YourRest.WebApi.Controllers
                 return Problem(detail: ex.Message, statusCode: 500);
             }
         }
-        [HttpDelete]
-        [Route("room/{roomId}/remove")]
+        [HttpPost]
+        [Route("room/remove")]
         public async Task<IActionResult> RemoveRoom([FromBody] RoomViewModel room)
         {
             try

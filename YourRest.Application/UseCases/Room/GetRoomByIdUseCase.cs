@@ -16,7 +16,7 @@ namespace YourRest.Application.UseCases.Room
         }
         public async Task<RoomViewModel> ExecuteAsync(int id)
         {
-            if(await roomRepository.FindAsync(room => room.Id == id) is RoomEntity room) 
+            if(await roomRepository.GetAsync(id) is RoomEntity room) 
             {
                 return room.ToViewModel();
             }
