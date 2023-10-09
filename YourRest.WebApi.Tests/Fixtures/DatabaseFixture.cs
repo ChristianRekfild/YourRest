@@ -56,13 +56,13 @@ namespace YourRest.WebApi.Tests.Fixtures
             return instance;
         }
 
-        public SharedDbContext GetDbContext(string ConnectionString)
+        public SharedDbContext GetDbContext(string connectionString)
         {
             var builder = new DbContextOptionsBuilder<SharedDbContext>();
-            builder.UseNpgsql(ConnectionString);
+            var migrationsAssembly = typeof(Producer.Infrastructure.DependencyInjections).Assembly.GetName().Name;
+            builder.UseNpgsql(connectionString, sql => sql.MigrationsAssembly(migrationsAssembly));
             SharedDbContext defaultDbContext = new SharedDbContext(builder.Options);
-            defaultDbContext.Database.EnsureCreated();
-
+            defaultDbContext.Database.Migrate();
             return defaultDbContext;
         }
 

@@ -1,12 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
-using YourRest.Application.Interfaces;
-using YourRest.Application.UseCases;
-using YourRest.Domain.Repositories;
-using YourRest.Infrastructure.Core;
+using YourRest.Application;
 using YourRest.Infrastructure.Core.DbContexts;
-using YourRest.Infrastructure.Repositories;
-using YourRest.Producer.Infrastructure.Repositories;
+using YourRest.Producer.Infrastructure;
 
 public class Program
 {
@@ -31,14 +27,10 @@ public class Program
 
    
         connectionString = configuration.GetConnectionString("DefaultConnection");
+        var migrationsAssembly = typeof(InfrastructureDependencyInjections).Assembly.GetName().Name;
 
-        services.AddDbContext<SharedDbContext>(options => options.UseNpgsql(connectionString));
-
-        //services.AddSingleton<IDbContextFactory<SharedDbContext>>(serviceProvider =>
-        //{
-        //    var connString = configuration.GetConnectionString("DefaultConnection");
-        //    return new AppDbContextFactory(connString);
-        //});
+        services.AddDbContext<SharedDbContext>(options => options.UseNpgsql(connectionString,
+            sql => sql.MigrationsAssembly(migrationsAssembly)));
 
         services.AddControllers();
 
@@ -50,21 +42,8 @@ public class Program
             c.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" });
         });
 
-        services.AddScoped<IGetCountryListUseCase, GetCountryListUseCase>();
-        services.AddScoped<IGetCityByIdUseCase, GetCityByIdUseCase>();
-        services.AddScoped<IGetCityListUseCase, GetCityListUseCase>();
-        services.AddScoped<IGetRegionListUseCase, GetRegionListUseCase>();
-        services.AddScoped<ICreateReviewUseCase, CreateReviewUseCase>();
-        services.AddScoped<IAddAddressToAccommodationUseCase, AddAddressToAccommodationUseCase>();
-
-        services.AddScoped<IBookingRepository, BookingRepository>();
-        services.AddScoped<ICountryRepository, CountryRepository>();  
-        services.AddScoped<ICustomerRepository, CustomerRepository>();      
-        services.AddScoped<ICityRepository, CityRepository>();        
-        services.AddScoped<IRegionRepository, RegionRepository>();        
-        services.AddScoped<IReviewRepository, ReviewRepository>();
-        services.AddScoped<IAccommodationRepository, AccommodationRepository>();
-        services.AddScoped<IAddressRepository, AddressRepository>();
+        services.AddInfrastructure();
+        services.AddApplication();
     }
 
     public static void Configure(IApplicationBuilder app)
