@@ -21,8 +21,8 @@ namespace YourRest.Application.UseCases
 
         public async Task<IEnumerable<CityDTO>> Execute(int regionId)
         {
-            var region = _regionRepository.FindAsync(x => x.Id == regionId).Result.ToList();
-            if (region.Count == 0) throw new RegionNotFoundException($"Region with id {regionId} not found");
+            var region = _regionRepository.GetAsync(regionId).Result;
+            if (region is null) throw new RegionNotFoundException($"Region with id {regionId} not found");
 
             var cities = _cityRepository.FindAsync(x => x.RegionId == regionId).Result.ToList();
             if (cities.Count == 0) throw new CityNotFoundException($"Cities in region {regionId} not found");
