@@ -16,7 +16,7 @@ namespace YourRest.Application.UseCases.Facility
         }
         public async Task ExecuteAsync(RoomFacilityViewModel reviewDto)
         {
-            if (await roomFacilityRepository.FindAsync(f => f.Id == reviewDto.Id) is not RoomFacility roomFacility)
+            if (await roomFacilityRepository.GetAsync(reviewDto.Id) is not RoomFacility roomFacility)
             {
                 throw new RoomFacilityNotFoundException(reviewDto.Id);
             }

@@ -24,7 +24,7 @@ namespace YourRest.WebApi.Tests.Controllers
             var room = await CreateRoomAsync();
             var content = new StringContent(JsonConvert.SerializeObject(room.ToViewModel()), Encoding.UTF8, "application/json");
             var response = await fixture.Client.PostAsync($"api/operator/1/accommodation/{room.AccommodationId}/room/add", content);
-
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             Assert.Equal("The room has been added", response.Content.ReadAsStringAsync().Result);
         }
         [Fact]

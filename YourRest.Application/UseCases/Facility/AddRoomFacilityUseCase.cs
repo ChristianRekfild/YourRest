@@ -2,6 +2,7 @@
 using YourRest.Application.Dto.Mappers;
 using YourRest.Application.Dto.Models;
 using YourRest.Application.Interfaces.Facility;
+using YourRest.Domain.Entities;
 using YourRest.Domain.Repositories;
 using RoomEntity = YourRest.Domain.Entities.Room;
 
@@ -19,11 +20,11 @@ namespace YourRest.Application.UseCases.Facility
         }
         public async Task ExecuteAsync(RoomFacilityViewModel reviewDto)
         {
-            if (roomRepository.GetWithIncludeAsync(r => r.Id == reviewDto.RoomId, include => include.RoomFacilities).Result.FirstOrDefault() is not RoomEntity room)
+            if (await roomRepository.GetAsync(reviewDto.RoomId) is not RoomEntity room)
             {
                 throw new RoomNotFoundExeption(reviewDto.RoomId);
             }
-            if (room.RoomFacilities.Select(f => f.Name).Contains(reviewDto.Name))
+            if (roomFacilityRepository.FindAsync(rf => rf.RoomId == reviewDto.RoomId).Result.Select(rf => rf.Name).Contains(reviewDto.Name))
             {
                 throw new RoomFacilityInProcessException(reviewDto);
             }
