@@ -169,9 +169,6 @@ namespace YourRest.WebApi.Tests.Controllers
             var accommodation = await InsertObjectIntoDatabase(accommodationEntity);
             var accommodationId = accommodation.Id;
 
-
-
-
             var roomEntity = new FakeRoom { Name = "Lyxar", AccommodationId = accommodationId + 100, Capacity = 20, SquareInMeter = "ten", RoomType = "Lyx" };
             var content = new StringContent(JsonConvert.SerializeObject(roomEntity), Encoding.UTF8, "application/json");
             var response = await Client.PostAsync($"api/rooms/", content);
