@@ -26,7 +26,7 @@ namespace YourRest.WebApi.Tests.Fixtures
                 .WithDatabase("your_rest_postgres_test")
                 .Build();
 
-            await PostgresContainer.StartAsync();
+            PostgresContainer.StartAsync().Wait();
         }
 
         private void StartApplication()

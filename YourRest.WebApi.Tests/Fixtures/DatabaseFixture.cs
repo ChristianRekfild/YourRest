@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Testcontainers.PostgreSql;
 using YourRest.Infrastructure.Core.DbContexts;
+using YourRest.Producer.Infrastructure;
 
 namespace YourRest.WebApi.Tests.Fixtures
 {
@@ -59,7 +60,7 @@ namespace YourRest.WebApi.Tests.Fixtures
         public SharedDbContext GetDbContext(string connectionString)
         {
             var builder = new DbContextOptionsBuilder<SharedDbContext>();
-            var migrationsAssembly = typeof(Producer.Infrastructure.DependencyInjections).Assembly.GetName().Name;
+            var migrationsAssembly = typeof(InfrastructureDependencyInjections).Assembly.GetName().Name;
             builder.UseNpgsql(connectionString, sql => sql.MigrationsAssembly(migrationsAssembly));
             SharedDbContext defaultDbContext = new SharedDbContext(builder.Options);
             defaultDbContext.Database.Migrate();
