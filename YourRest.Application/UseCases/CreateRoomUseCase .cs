@@ -18,7 +18,7 @@ namespace YourRest.Application.UseCases
             _accommodationRepository = accommodationRepository;
         }
 
-        public async Task<SavedRoomDto> Execute(SavedRoomDto roomDto)
+        public async Task<RoomDto> Execute(RoomWithIdDto roomDto)
         {
             var room = await _roomRepository.GetWithIncludeAsync(t => t.Name == roomDto.Name && t.AccommodationId == roomDto.AccommodationId);
             var accommodation = await _accommodationRepository.GetAsync(roomDto.AccommodationId);
@@ -34,19 +34,26 @@ namespace YourRest.Application.UseCases
                 throw new AccommodationNotFoundException(roomDto.AccommodationId);
             }
 
-            Room savedRoom = new Room();
-            //savedRoom.Id = roomDto.Id;
-            savedRoom.SquareInMeter = roomDto.SquareInMeter;
-            savedRoom.Name = roomDto.Name;
-            savedRoom.AccommodationId = accommodation.Id;
-            savedRoom.Capacity = roomDto.Capacity;
-            savedRoom.RoomType = roomDto.RoomType;
+            var room = new Room;
+            room.SquareInMeter = roomDto.SquareInMeter;
+            room.Name = roomDto.Name;
+            room.AccommodationId = accommodation.Id;
+            room.Capacity = roomDto.Capacity;
+            room.RoomType = roomDto.RoomType;
 
+            var savedRoom = await _roomRepository.AddAsync(room);
 
-            await _roomRepository.AddAsync(savedRoom, false);
-            await _roomRepository.SaveChangesAsync();
+            var savedRoomDto = new RoomWithIdDto
+            {
+                Id = savedRoom.Id,
+                SquareInMeter = savedRoom.SquareInMeter,
+                Name = savedRoom.Name,
+                AccommodationId = savedRoom.AccommodationId,
+                Capacity = savedRoom.Capacity,
+                RoomType = savedRoom.RoomType,
+            };
 
-            return roomDto;
+            return savedRoomDto;
         }
     }
 }
