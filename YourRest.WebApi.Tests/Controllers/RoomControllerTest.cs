@@ -135,6 +135,9 @@ namespace YourRest.WebApi.Tests.Controllers
             var response1 = await Client.PostAsync($"api/rooms/", content1);
             Assert.Equal(HttpStatusCode.Created, response.StatusCode);
             Assert.Equal(HttpStatusCode.Conflict, response1.StatusCode);
+            var errorMassage = await response1.Content.ReadAsStringAsync();
+            Assert.Equal($"Room with name {roomEntity1.Name} already exist", errorMassage);
+
 
         }
 
@@ -145,13 +148,16 @@ namespace YourRest.WebApi.Tests.Controllers
 
             var accommodationEntity = new Accommodation { Name = "Test" };
             var accommodation = await InsertObjectIntoDatabase(accommodationEntity);
-            var accommodationId = accommodation.Id;
+            var accommodationId = accommodation.Id + 100;
 
-            var roomEntity = new Room { Name = "Lyxar", AccommodationId = accommodationId + 100, Capacity = 20, SquareInMeter = 30, RoomType = "Lyx" };
+            var roomEntity = new Room { Name = "Lyxar", AccommodationId = accommodationId , Capacity = 20, SquareInMeter = 30, RoomType = "Lyx" };
             var content = new StringContent(JsonConvert.SerializeObject(roomEntity), Encoding.UTF8, "application/json");
             var response = await Client.PostAsync($"api/rooms/", content);
 
             Assert.Equal(HttpStatusCode.UnprocessableEntity, response.StatusCode);
+            var errorMassage = await response.Content.ReadAsStringAsync();
+            Assert.Equal($"Accommodation with id {accommodationId} not found", errorMassage);
+
         }
 
         [Fact]
