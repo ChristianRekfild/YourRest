@@ -45,12 +45,12 @@ namespace YourRest.WebApi.Tests.Controllers
 
             var roomResponse = JsonConvert.DeserializeObject<List<RoomDto>>(content);
 
-            Assert.Equal(roomResponse.First().Id, expectedRoom?.Id);
-            Assert.Equal(roomResponse.First().Name, expectedRoom?.Name);
-            Assert.Equal(roomResponse.First().AccommodationId, expectedRoom?.AccommodationId);
-            Assert.Equal(roomResponse.First().RoomType, expectedRoom?.RoomType);
-            Assert.Equal(roomResponse.First().Capacity, expectedRoom?.Capacity);
-            Assert.Equal(roomResponse.First().SquareInMeter, expectedRoom?.SquareInMeter);
+            Assert.Equal(roomResponse.First().Id, expectedRoom.Id);
+            Assert.Equal(roomResponse.First().Name, expectedRoom.Name);
+            Assert.Equal(roomResponse.First().AccommodationId, expectedRoom.AccommodationId);
+            Assert.Equal(roomResponse.First().RoomType, expectedRoom.RoomType);
+            Assert.Equal(roomResponse.First().Capacity, expectedRoom.Capacity);
+            Assert.Equal(roomResponse.First().SquareInMeter, expectedRoom.SquareInMeter);
         }
 
 
@@ -89,11 +89,11 @@ namespace YourRest.WebApi.Tests.Controllers
 
             var roomReturn = JsonConvert.DeserializeObject<List<RoomDto>>(roomResponseContent);
 
-            Assert.Equal(roomReturn.First().Name, roomEntity?.Name);
-            Assert.Equal(roomReturn.First().AccommodationId, roomEntity?.AccommodationId);
-            Assert.Equal(roomReturn.First().RoomType, roomEntity?.RoomType);
-            Assert.Equal(roomReturn.First().Capacity, roomEntity?.Capacity);
-            Assert.Equal(roomReturn.First().SquareInMeter, roomEntity?.SquareInMeter);
+            Assert.Equal(roomReturn.First().Name, roomEntity.Name);
+            Assert.Equal(roomReturn.First().AccommodationId, roomEntity.AccommodationId);
+            Assert.Equal(roomReturn.First().RoomType, roomEntity.RoomType);
+            Assert.Equal(roomReturn.First().Capacity, roomEntity.Capacity);
+            Assert.Equal(roomReturn.First().SquareInMeter, roomEntity.SquareInMeter);
         }
 
         [Fact]
