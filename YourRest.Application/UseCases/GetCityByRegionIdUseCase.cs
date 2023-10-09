@@ -1,8 +1,6 @@
 ﻿using YourRest.Application.CustomErrors;
 using YourRest.Application.Dto;
 using YourRest.Application.Interfaces;
-using YourRest.Application.Dto;
-using YourRest.Application.Interfaces;
 using YourRest.Domain.Repositories;
 
 namespace YourRest.Application.UseCases
