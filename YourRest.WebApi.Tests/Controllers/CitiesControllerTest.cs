@@ -236,21 +236,5 @@ namespace YourRest.WebApi.Tests.Controllers
             return city;
         }
 
-        private async Task<List<City>> GetCitiesByRegionId(int regionId)
-        {
-            var response = await Client.GetAsync($"/api/cities/regionid={regionId}");
-
-            if (response.StatusCode == System.Net.HttpStatusCode.NotFound) return null;
-
-            response.EnsureSuccessStatusCode();
-            var content = await response.Content.ReadAsStringAsync();
-            var options = new SystemJson.JsonSerializerOptions
-            {
-                PropertyNameCaseInsensitive = true
-            };
-            var cities = SystemJson.JsonSerializer.Deserialize<List<City>>(content, options);
-
-            return cities;
-        }
     }
 }
