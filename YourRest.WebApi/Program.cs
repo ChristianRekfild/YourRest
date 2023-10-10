@@ -45,10 +45,6 @@ public class Program
         });
 
         services.AddInfrastructure();
-
-        services.AddScoped<IGetCityByRegionIdUseCase, GetCityByRegionIdUseCase>();
-        services.AddScoped<IGetCityByCountryIdUseCase, GetCityByCountryIdUseCase>();
-
         services.AddApplication();
     }
 
