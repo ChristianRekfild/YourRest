@@ -1,23 +1,25 @@
-﻿using YourRest.Application.Dto;
+﻿using YourRest.Application.CustomErrors;
+using YourRest.Application.Dto;
 using YourRest.Application.Interfaces;
 using YourRest.Domain.Repositories;
 
 namespace YourRest.Application.UseCases
 {
-    public class GetCityListUseCase : IGetCityListUseCase
+    public class GetCityByRegionIdUseCase : IGetCityByRegionIdUseCase
     {
         private readonly ICityRepository _cityRepository;
 
-        public GetCityListUseCase(ICityRepository cityRepository)
+        public GetCityByRegionIdUseCase(ICityRepository cityRepository)
         {
             _cityRepository = cityRepository;
         }
 
-        public async Task<IEnumerable<CityDTO>> Execute()
-        {
-            var cities = await _cityRepository.GetAllAsync();
 
-            if (!cities.Any()) 
+        public async Task<IEnumerable<CityDTO>> Execute(int regionId)
+        {
+            var cities = await _cityRepository.FindAsync(x => x.RegionId == regionId);
+
+            if (!cities.Any())
             {
                 return new List<CityDTO>();
             }
@@ -28,6 +30,5 @@ namespace YourRest.Application.UseCases
                 Name = c.Name,
             }).ToList();
         }
-
     }
 }

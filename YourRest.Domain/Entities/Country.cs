@@ -4,5 +4,7 @@
     public class Country : IntBaseEntity
     {       
         public string Name { get; set; }
+
+        public List<Region> Regions { get; set; }
     }
 }
