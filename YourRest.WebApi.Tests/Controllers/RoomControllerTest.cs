@@ -81,7 +81,6 @@ namespace YourRest.WebApi.Tests.Controllers
             Assert.Equal(roomResponse.RoomType, roomEntity.RoomType);
             Assert.Equal(roomResponse.Capacity, roomEntity.Capacity);
             Assert.Equal(roomResponse.SquareInMeter, roomEntity.SquareInMeter);
-            //сравнить структуру ответа
         }
 
         [Fact]
@@ -108,8 +107,18 @@ namespace YourRest.WebApi.Tests.Controllers
             var content = new StringContent(JsonConvert.SerializeObject(roomEntity), Encoding.UTF8, "application/json");
             var response = await Client.PostAsync($"api/rooms/", content);
             Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
-            //сообщение об ошибке - Compulsory fields - capacity....
+
+            var errorResponseString = await response.Content.ReadAsStringAsync();
+            var errorResponse = JsonConvert.DeserializeObject<ErrorData>(errorResponseString);
+
+            Assert.Equal("Capacity should be more than zero.", errorResponse?.Errors["Capacity"].First());
+            Assert.Equal("The RoomType field is required.", errorResponse?.Errors["RoomType"].First());
+            Assert.Equal("SquareInMeter should be more than zero.", errorResponse?.Errors["SquareInMeter"].First());
+            Assert.Equal("AccommodationId should be more than zero.", errorResponse?.Errors["AccommodationId"].First());
+
         }
+
+
 
 
         // ЕСли имя комнаты нужно уникальным
@@ -148,6 +157,8 @@ namespace YourRest.WebApi.Tests.Controllers
             Assert.Equal(HttpStatusCode.UnprocessableEntity, response.StatusCode);
             var errorMassage = await response.Content.ReadAsStringAsync();
             Assert.Equal($"Accommodation with id {accommodationId} not found", errorMassage);
+
+
         }
 
         [Fact]
@@ -157,12 +168,20 @@ namespace YourRest.WebApi.Tests.Controllers
             var accommodation = await InsertObjectIntoDatabase(accommodationEntity);
             var accommodationId = accommodation.Id;
 
-            var roomEntity = new FakeRoom { Name = "Lyxar", AccommodationId = accommodationId + 100, Capacity = 20, SquareInMeter = "ten", RoomType = 1 };
+            var roomEntity = new FakeRoom { Name = "Lyxar", AccommodationId = accommodationId, Capacity = 20, SquareInMeter = "ten", RoomType = "231" };
             var content = new StringContent(JsonConvert.SerializeObject(roomEntity), Encoding.UTF8, "application/json");
             var response = await Client.PostAsync($"api/rooms/", content);
 
             Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
-            //Invalid data
+
+            var responseContent = await response.Content.ReadAsStringAsync();
+            var errorResponse1 = JsonConvert.DeserializeObject<ErrorResponseDict>(responseContent);
+            var error = errorResponse1?.Errors["roomDto"].First();
+
+            Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+            Assert.Equal("The roomDto field is required.", error);
+
+            //Такая ошибка т.к. не отрабатывает JSON и не переводит текст в double
         }
 
         [Fact]
@@ -172,12 +191,18 @@ namespace YourRest.WebApi.Tests.Controllers
             var accommodation = await InsertObjectIntoDatabase(accommodationEntity);
             var accommodationId = accommodation.Id;
 
-            var roomEntity = new FakeRoom { Name = "Lyxar", AccommodationId = -100, Capacity = -200, SquareInMeter = "ten", RoomType = -200 };
+            var roomEntity = new FakeRoom { Name = "Lyxar", AccommodationId = -100, Capacity = -200, SquareInMeter = "-20", RoomType = "asd" };
             var content = new StringContent(JsonConvert.SerializeObject(roomEntity), Encoding.UTF8, "application/json");
             var response = await Client.PostAsync($"api/rooms/", content);
 
             Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
-            //Invalid data
+
+            var errorResponseString = await response.Content.ReadAsStringAsync();
+            var errorResponse = JsonConvert.DeserializeObject<ErrorData>(errorResponseString);
+
+            Assert.Equal("Capacity should be more than zero.", errorResponse?.Errors["Capacity"].First());
+            Assert.Equal("SquareInMeter should be more than zero.", errorResponse?.Errors["SquareInMeter"].First());
+            Assert.Equal("AccommodationId should be more than zero.", errorResponse?.Errors["AccommodationId"].First());
         }
 
         private AddressDto CreateValidAddressDto(int cityId)
@@ -196,7 +221,7 @@ namespace YourRest.WebApi.Tests.Controllers
             public string Name { get; set; }
             public string SquareInMeter { get; set; }
 
-            public int RoomType { get; set; }
+            public string RoomType { get; set; }
 
             public int Capacity { get; set; }
             public int AccommodationId { get; set; }
