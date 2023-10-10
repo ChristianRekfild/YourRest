@@ -13,11 +13,11 @@ namespace YourRest.Application.UseCases
             _roomRepository = roomRepository;
         }
 
-        public async Task<IEnumerable<RoomDto>> Execute(int accommodationId)
+        public async Task<IEnumerable<RoomWithIdDto>> Execute(int accommodationId)
         {
             var rooms = await _roomRepository.FindAsync(t => t.AccommodationId == accommodationId);
 
-            return rooms.Select(r => new RoomDto   
+            return rooms.Select(r => new RoomWithIdDto   
             {
                 Id = r.Id,
                 Name = r.Name,

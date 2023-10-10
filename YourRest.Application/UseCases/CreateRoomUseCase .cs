@@ -18,23 +18,29 @@ namespace YourRest.Application.UseCases
             _accommodationRepository = accommodationRepository;
         }
 
-        public async Task<RoomDto> Execute(RoomWithIdDto roomDto)
+        public async Task<RoomWithIdDto> Execute(RoomDto roomDto)
         {
-            var room = await _roomRepository.GetWithIncludeAsync(t => t.Name == roomDto.Name && t.AccommodationId == roomDto.AccommodationId);
+            // ЕСли имя комнаты нужно уникальным
+            //var roomCheck = await _roomRepository.GetWithIncludeAsync(t => t.Name == roomDto.Name && t.AccommodationId == roomDto.AccommodationId);  
+
+            //if (roomCheck.Any())
+            //{
+            //    throw new RoomCondlictException($"Room with name {roomDto.Name} already exist");
+            //}
+
             var accommodation = await _accommodationRepository.GetAsync(roomDto.AccommodationId);
-
-            if (room.Count() != 0)
-            {
-                throw new RoomCondlictException($"Room with name {roomDto.Name} already exist");
-            }
-
 
             if (accommodation == null)
             {
                 throw new AccommodationNotFoundException(roomDto.AccommodationId);
             }
+            if (accommodation == null)
+            {
+                throw new AccommodationNotFoundException(roomDto.AccommodationId);
+            }
 
-            var room = new Room;
+
+            var room = new Room();
             room.SquareInMeter = roomDto.SquareInMeter;
             room.Name = roomDto.Name;
             room.AccommodationId = accommodation.Id;
@@ -50,7 +56,7 @@ namespace YourRest.Application.UseCases
                 Name = savedRoom.Name,
                 AccommodationId = savedRoom.AccommodationId,
                 Capacity = savedRoom.Capacity,
-                RoomType = savedRoom.RoomType,
+                RoomType = savedRoom.RoomType
             };
 
             return savedRoomDto;

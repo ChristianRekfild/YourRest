@@ -12,8 +12,8 @@ using YourRest.Infrastructure.Core.DbContexts;
 namespace YourRest.Producer.Infrastructure.Migrations
 {
     [DbContext(typeof(SharedDbContext))]
-    [Migration("20231008124356_AddRoom")]
-    partial class AddRoom
+    [Migration("20231010113751_AddRooms")]
+    partial class AddRooms
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -250,8 +250,8 @@ namespace YourRest.Producer.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int>("SquareInMeter")
-                        .HasColumnType("integer");
+                    b.Property<double>("SquareInMeter")
+                        .HasColumnType("double precision");
 
                     b.HasKey("Id");
 
@@ -336,12 +336,17 @@ namespace YourRest.Producer.Infrastructure.Migrations
             modelBuilder.Entity("YourRest.Domain.Entities.Room", b =>
                 {
                     b.HasOne("YourRest.Domain.Entities.Accommodation", "Accommodation")
-                        .WithMany()
+                        .WithMany("Rooms")
                         .HasForeignKey("AccommodationId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Accommodation");
+                });
+
+            modelBuilder.Entity("YourRest.Domain.Entities.Accommodation", b =>
+                {
+                    b.Navigation("Rooms");
                 });
 
             modelBuilder.Entity("YourRest.Domain.Entities.City", b =>

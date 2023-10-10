@@ -30,13 +30,18 @@ namespace YourRest.WebApi.Controllers
         }
         [HttpPost]
         [Route("api/rooms")]
-        public async Task<IActionResult> Post([FromBody] SavedRoomDto roomDto)
+        public async Task<IActionResult> Post([FromBody] RoomDto roomDto)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
             try
             {
                 var createdRoom = await _createtRoomUseCase.Execute(roomDto);
 
                 return CreatedAtAction(nameof(Post), createdRoom);
+
             }
             catch (RoomCondlictException exception)
             {

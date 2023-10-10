@@ -4,6 +4,6 @@ namespace YourRest.Application.Interfaces
 {
     public interface ICreateRoomUseCase
     {
-        Task<RoomDto> Execute(RoomWithIdDto roomDto);
+        Task<RoomWithIdDto> Execute(RoomDto roomDto);
     }
 }

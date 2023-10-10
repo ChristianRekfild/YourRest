@@ -247,8 +247,8 @@ namespace YourRest.Producer.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int>("SquareInMeter")
-                        .HasColumnType("integer");
+                    b.Property<double>("SquareInMeter")
+                        .HasColumnType("double precision");
 
                     b.HasKey("Id");
 
@@ -333,12 +333,17 @@ namespace YourRest.Producer.Infrastructure.Migrations
             modelBuilder.Entity("YourRest.Domain.Entities.Room", b =>
                 {
                     b.HasOne("YourRest.Domain.Entities.Accommodation", "Accommodation")
-                        .WithMany()
+                        .WithMany("Rooms")
                         .HasForeignKey("AccommodationId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Accommodation");
+                });
+
+            modelBuilder.Entity("YourRest.Domain.Entities.Accommodation", b =>
+                {
+                    b.Navigation("Rooms");
                 });
 
             modelBuilder.Entity("YourRest.Domain.Entities.City", b =>

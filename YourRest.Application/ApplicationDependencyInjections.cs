@@ -14,6 +14,9 @@ namespace YourRest.Application
             services.AddScoped<IGetRegionListUseCase, GetRegionListUseCase>();
             services.AddScoped<ICreateReviewUseCase, CreateReviewUseCase>();
             services.AddScoped<IAddAddressToAccommodationUseCase, AddAddressToAccommodationUseCase>();
+            services.AddScoped<IGetRoomListUseCase, GetRoomListUseCase>();
+            services.AddScoped<ICreateRoomUseCase, CreateRoomUseCase>();
+
             return services;
         }
     }

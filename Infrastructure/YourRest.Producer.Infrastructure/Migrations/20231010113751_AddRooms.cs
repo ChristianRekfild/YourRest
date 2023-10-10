@@ -6,7 +6,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace YourRest.Producer.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class AddRoom : Migration
+    public partial class AddRooms : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -18,7 +18,7 @@ namespace YourRest.Producer.Infrastructure.Migrations
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Name = table.Column<string>(type: "text", nullable: false),
-                    SquareInMeter = table.Column<int>(type: "integer", nullable: false),
+                    SquareInMeter = table.Column<double>(type: "double precision", nullable: false),
                     RoomType = table.Column<string>(type: "text", nullable: false),
                     Capacity = table.Column<int>(type: "integer", nullable: false),
                     AccommodationId = table.Column<int>(type: "integer", nullable: false)
