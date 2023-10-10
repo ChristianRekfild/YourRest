@@ -57,7 +57,6 @@ namespace YourRest.WebApi.Tests.Controllers
             var content = await response.Content.ReadAsStringAsync();
             Assert.Equal("[]", content);
 
-            //проверить пустой ответ
         }
 
         [Fact]
