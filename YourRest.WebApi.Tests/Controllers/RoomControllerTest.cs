@@ -35,12 +35,12 @@ namespace YourRest.WebApi.Tests.Controllers
 
             var roomResponse = JsonConvert.DeserializeObject<List<RoomWithIdDto>>(content);
 
-            Assert.Equal(roomResponse.First().Id, expectedRoom.Id);
-            Assert.Equal(roomResponse.First().Name, expectedRoom.Name);
-            Assert.Equal(roomResponse.First().AccommodationId, expectedRoom.AccommodationId);
-            Assert.Equal(roomResponse.First().RoomType, expectedRoom.RoomType);
-            Assert.Equal(roomResponse.First().Capacity, expectedRoom.Capacity);
-            Assert.Equal(roomResponse.First().SquareInMeter, expectedRoom.SquareInMeter);
+            Assert.Equal(roomResponse?.First().Id, expectedRoom.Id);
+            Assert.Equal(roomResponse?.First().Name, expectedRoom.Name);
+            Assert.Equal(roomResponse?.First().AccommodationId, expectedRoom.AccommodationId);
+            Assert.Equal(roomResponse?.First().RoomType, expectedRoom.RoomType);
+            Assert.Equal(roomResponse?.First().Capacity, expectedRoom.Capacity);
+            Assert.Equal(roomResponse?.First().SquareInMeter, expectedRoom.SquareInMeter);
         }
 
 
@@ -75,11 +75,11 @@ namespace YourRest.WebApi.Tests.Controllers
             var responseContent = await response.Content.ReadAsStringAsync();
             var roomResponse = JsonConvert.DeserializeObject<RoomWithIdDto>(responseContent);
 
-            Assert.Equal(roomResponse.Name, roomEntity.Name);
-            Assert.Equal(roomResponse.AccommodationId, roomEntity.AccommodationId);
-            Assert.Equal(roomResponse.RoomType, roomEntity.RoomType);
-            Assert.Equal(roomResponse.Capacity, roomEntity.Capacity);
-            Assert.Equal(roomResponse.SquareInMeter, roomEntity.SquareInMeter);
+            Assert.Equal(roomResponse?.Name, roomEntity.Name);
+            Assert.Equal(roomResponse?.AccommodationId, roomEntity.AccommodationId);
+            Assert.Equal(roomResponse?.RoomType, roomEntity.RoomType);
+            Assert.Equal(roomResponse?.Capacity, roomEntity.Capacity);
+            Assert.Equal(roomResponse?.SquareInMeter, roomEntity.SquareInMeter);
         }
 
         [Fact]
@@ -89,7 +89,7 @@ namespace YourRest.WebApi.Tests.Controllers
             var response = await Client.PostAsync($"api/rooms/", content);
             var responseContent = await response.Content.ReadAsStringAsync();
             var errorResponse = JsonConvert.DeserializeObject<ErrorResponseDict>(responseContent);
-            var errMsg = errorResponse.Errors[""].First();
+            var errMsg = errorResponse?.Errors[""].First();
 
             Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode); 
             Assert.Equal("A non-empty request body is required.", errMsg);
