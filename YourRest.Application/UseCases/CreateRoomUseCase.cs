@@ -20,25 +20,12 @@ namespace YourRest.Application.UseCases
 
         public async Task<RoomWithIdDto> Execute(RoomDto roomDto)
         {
-            // ЕСли имя комнаты нужно уникальным
-            //var roomCheck = await _roomRepository.GetWithIncludeAsync(t => t.Name == roomDto.Name && t.AccommodationId == roomDto.AccommodationId);  
-
-            //if (roomCheck.Any())
-            //{
-            //    throw new RoomCondlictException($"Room with name {roomDto.Name} already exist");
-            //}
-
             var accommodation = await _accommodationRepository.GetAsync(roomDto.AccommodationId);
 
             if (accommodation == null)
             {
                 throw new AccommodationNotFoundException(roomDto.AccommodationId);
             }
-            if (accommodation == null)
-            {
-                throw new AccommodationNotFoundException(roomDto.AccommodationId);
-            }
-
 
             var room = new Room();
             room.SquareInMeter = roomDto.SquareInMeter;

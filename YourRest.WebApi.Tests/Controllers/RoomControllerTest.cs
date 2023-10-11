@@ -35,7 +35,7 @@ namespace YourRest.WebApi.Tests.Controllers
 
             var roomResponse = JsonConvert.DeserializeObject<List<RoomWithIdDto>>(content);
 
-            Assert.Equal(roomResponse.First().Id, expectedRoom.Id);//исправить реализацию
+            Assert.Equal(roomResponse.First().Id, expectedRoom.Id);
             Assert.Equal(roomResponse.First().Name, expectedRoom.Name);
             Assert.Equal(roomResponse.First().AccommodationId, expectedRoom.AccommodationId);
             Assert.Equal(roomResponse.First().RoomType, expectedRoom.RoomType);
@@ -65,7 +65,6 @@ namespace YourRest.WebApi.Tests.Controllers
             var accommodationEntity = new Accommodation { Name = "Test" };
             var accommodation = await InsertObjectIntoDatabase(accommodationEntity);
             var accommodationId = accommodation.Id;
-            
 
             var roomEntity = new Room { Name = "Lyxar1", AccommodationId = accommodationId, Capacity = 20, SquareInMeter = 30, RoomType = "Lyx" };
             var content = new StringContent(JsonConvert.SerializeObject(roomEntity), Encoding.UTF8, "application/json");
@@ -118,31 +117,6 @@ namespace YourRest.WebApi.Tests.Controllers
 
         }
 
-
-
-
-        // ЕСли имя комнаты нужно уникальным
-        //[Fact]
-        //public async Task AddRoom_ReturnsConflict_WhenAddRoomWithNameDuplication()
-        //{
-        //    var accommodationEntity = new Accommodation { Name = "Test" };
-        //    var accommodation = await InsertObjectIntoDatabase(accommodationEntity);
-        //    var accommodationId = accommodation.Id;
-
-        //    var roomEntity = new Room { Name = "Lyxar", AccommodationId = accommodationId, Capacity = 20, SquareInMeter = 30, RoomType = "Lyx" };
-        //    var content = new StringContent(JsonConvert.SerializeObject(roomEntity), Encoding.UTF8, "application/json");
-        //    var response = await Client.PostAsync($"api/rooms/", content);
-
-
-        //    var roomEntity1 = new Room { Name = "Lyxar", AccommodationId = accommodationId, Capacity = 30, SquareInMeter = 30, RoomType = "Lyx" };
-        //    var content1 = new StringContent(JsonConvert.SerializeObject(roomEntity1), Encoding.UTF8, "application/json");
-        //    var response1 = await Client.PostAsync($"api/rooms/", content1);
-        //    Assert.Equal(HttpStatusCode.Created, response.StatusCode);
-        //    Assert.Equal(HttpStatusCode.Conflict, response1.StatusCode);
-        //    var errorMassage = await response1.Content.ReadAsStringAsync();
-        //    Assert.Equal($"Room with name {roomEntity1.Name} already exist", errorMassage);
-        //}
-
         [Fact]
         public async Task AddRoom_ReturnsNotFound_WhenAddRoomWitFakeAccommodation()
         {
@@ -157,8 +131,6 @@ namespace YourRest.WebApi.Tests.Controllers
             Assert.Equal(HttpStatusCode.UnprocessableEntity, response.StatusCode);
             var errorMassage = await response.Content.ReadAsStringAsync();
             Assert.Equal($"Accommodation with id {accommodationId} not found", errorMassage);
-
-
         }
 
         [Fact]
@@ -180,7 +152,6 @@ namespace YourRest.WebApi.Tests.Controllers
 
             Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
             Assert.Equal("The roomDto field is required.", error);
-
             //Такая ошибка т.к. не отрабатывает JSON и не переводит текст в double
         }
 

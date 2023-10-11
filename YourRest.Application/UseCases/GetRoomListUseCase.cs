@@ -27,7 +27,6 @@ namespace YourRest.Application.UseCases
                 Capacity = r.Capacity
 
             }).ToList();
-        
         }
     }
 }
