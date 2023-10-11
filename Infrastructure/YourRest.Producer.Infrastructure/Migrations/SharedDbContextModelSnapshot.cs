@@ -371,6 +371,16 @@ namespace YourRest.Producer.Infrastructure.Migrations
                 {
                     b.Navigation("Cities");
                 });
+
+            modelBuilder.Entity("YourRest.Domain.Entities.Country", b =>
+                {
+                    b.Navigation("Regions");
+                });
+
+            modelBuilder.Entity("YourRest.Domain.Entities.Region", b =>
+                {
+                    b.Navigation("Cities");
+                });
 #pragma warning restore 612, 618
         }
     }
