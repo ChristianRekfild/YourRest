@@ -4,6 +4,6 @@ namespace YourRest.Application.Interfaces.Room
 {
     public interface IRemoveRoomUseCase
     {
-        Task ExecuteAsync(RoomViewModel reviewDto);
+        Task ExecuteAsync(int id);
     }
 }

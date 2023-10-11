@@ -23,9 +23,9 @@ namespace YourRest.WebApi.Tests.Controllers
         {
             var room = await CreateRoomAsync();
             var content = new StringContent(JsonConvert.SerializeObject(room.ToViewModel()), Encoding.UTF8, "application/json");
-            var response = await fixture.Client.PostAsync($"api/operator/1/accommodation/{room.AccommodationId}/room/add", content);
+            var response = await fixture.Client.PostAsync($"api/rooms", content);
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-            Assert.Equal("The room has been added", response.Content.ReadAsStringAsync().Result);
+            Assert.Equal("The room has been added", await response.Content.ReadAsStringAsync());
         }
         [Fact]
         public async Task UpdatedRoomTest_WhenPutCalledEditMethod_ReturnsMessageOfSuccsessfulyEdited()
@@ -39,11 +39,11 @@ namespace YourRest.WebApi.Tests.Controllers
             };
 
             var content = new StringContent(JsonConvert.SerializeObject(editedRoom.ToViewModel()), Encoding.UTF8, "application/json");
-            var response = await fixture.Client.PutAsync($"api/operator/1/accommodation/{room.AccommodationId}/room/{room.Id}/edit", content);
+            var response = await fixture.Client.PutAsync($"api/rooms", content);
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-            Assert.Equal("The room has been edited", response.Content.ReadAsStringAsync().Result);
-           
-            response = await fixture.Client.GetAsync($"api/operator/1/accommodation/{room.AccommodationId}/room/{room.Id}");
+            Assert.Equal("The room has been edited", await response.Content.ReadAsStringAsync());
+
+            response = await fixture.Client.GetAsync($"api/rooms/{room.Id}");
             var recivedRoom = await response.Content.ReadFromJsonAsync<RoomViewModel>();
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             Assert.NotNull(recivedRoom);
@@ -53,12 +53,11 @@ namespace YourRest.WebApi.Tests.Controllers
         public async Task DeleteRoomTest_WhenDeletCalledRemoveMethod_ReturnsMessageOfSuccsessfulyRemoved()
         {
             var room = await fixture.InsertObjectIntoDatabase(await CreateRoomAsync());
-            
-            var content = new StringContent(JsonConvert.SerializeObject(room.ToViewModel()), Encoding.UTF8, "application/json");
-            var response = await fixture.Client.PostAsync($"api/operator/1/accommodation/{room.AccommodationId}/room/remove", content);
+
+            var response = await fixture.Client.DeleteAsync($"api/rooms/{room.Id}");
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-            Assert.Equal("The room has been removed", response.Content.ReadAsStringAsync().Result);
-            response = await fixture.Client.GetAsync($"api/operator/1/accommodation/{room.AccommodationId}/room/{room.Id}");
+            Assert.Equal("The room has been removed", await response.Content.ReadAsStringAsync());
+            response = await fixture.Client.GetAsync($"api/rooms/{room.Id}");
             Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
 
         }
@@ -66,7 +65,7 @@ namespace YourRest.WebApi.Tests.Controllers
         public async Task GetRoomByIdTest_WhenGetCalledGetByIdMethod_ReturnsRoomViewModel()
         {
             var room = await fixture.InsertObjectIntoDatabase(await CreateRoomAsync());
-            var response = await fixture.Client.GetAsync($"api/operator/1/accommodation/{room.AccommodationId}/room/{room.Id}");
+            var response = await fixture.Client.GetAsync($"api/rooms/{room.Id}");
             var recivedRoom = await response.Content.ReadFromJsonAsync<RoomViewModel>();
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             Assert.NotNull(recivedRoom);
@@ -74,7 +73,37 @@ namespace YourRest.WebApi.Tests.Controllers
             Assert.Equal(room.AccommodationId, recivedRoom.AccommodationId);
             Assert.Equal(room.Name, recivedRoom.Name);
         }
+        [Fact]
+        public async Task GetFacilitiesByRoomIdTest_WhenGetCalledGetFacilitiesByRoomIdMethod_ReturnsIEnumerableOfRoomFacilitiyViewModels()
+        {
+            var room = await CreateRoomAsync();
+            room.RoomFacilities = new List<RoomFacility>
+            {
+                new RoomFacility(){ Name = "Air Conditioner" },
+                new RoomFacility(){ Name = "Minibar" },
+                new RoomFacility(){ Name = "Locker" }
+            };
+            room = await fixture.InsertObjectIntoDatabase(room);
+            var response = await fixture.Client.GetAsync($"api/rooms/{room.Id}/facilities");
+            var recivedRoomFacilities = await response.Content.ReadFromJsonAsync<IEnumerable<RoomFacilityViewModel>>();
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            Assert.NotNull(recivedRoomFacilities);
+            Assert.NotEmpty(recivedRoomFacilities);
+            Assert.Equal(3, recivedRoomFacilities.Count());
+            Assert.Equivalent(room.RoomFacilities.ToViewModel(), recivedRoomFacilities);
 
+        }
+        [Fact]
+        public async Task AddRoomFacilityToCurrentRoomTest_WhenPostCalledAddFacilityToRoomMethod_ReturnsMessageOfSuccsessfulyCreated()
+        {
+            var room = await fixture.InsertObjectIntoDatabase(await CreateRoomAsync());
+            var roomFacility = new RoomFacility { RoomId = room.Id, Name = "Locker" };
+            
+            var content = new StringContent(JsonConvert.SerializeObject(roomFacility.ToViewModel()), Encoding.UTF8, "application/json");
+            var response = await fixture.Client.PostAsync($"api/rooms/{room.Id}/facilities", content);
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            Assert.Equal($"The room facility has been added to current room", await response.Content.ReadAsStringAsync());
+        }
 
         private async Task<Room> CreateRoomAsync()
         {

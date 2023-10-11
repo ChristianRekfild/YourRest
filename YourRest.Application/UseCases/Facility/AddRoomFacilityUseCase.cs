@@ -2,7 +2,6 @@
 using YourRest.Application.Dto.Mappers;
 using YourRest.Application.Dto.Models;
 using YourRest.Application.Interfaces.Facility;
-using YourRest.Domain.Entities;
 using YourRest.Domain.Repositories;
 using RoomEntity = YourRest.Domain.Entities.Room;
 

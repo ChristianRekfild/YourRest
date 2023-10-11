@@ -32,12 +32,6 @@ public class Program
         services.AddDbContext<SharedDbContext>(options => options.UseNpgsql(connectionString,
             sql => sql.MigrationsAssembly(migrationsAssembly)));
 
-        //services.AddSingleton<IDbContextFactory<SharedDbContext>>(serviceProvider =>
-        //{
-        //    var connString = configuration.GetConnectionString("DefaultConnection");
-        //    return new AppDbContextFactory(connString);
-        //});
-
         services.AddControllers();
 
         // Swagger/OpenAPI configuration

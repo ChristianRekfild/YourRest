@@ -23,12 +23,13 @@ namespace YourRest.Application
             services.AddScoped<IEditRoomUseCase, EditRoomUseCase>();
             services.AddScoped<IGetRoomByIdUseCase, GetRoomByIdUseCase>();
             services.AddScoped<IRemoveRoomUseCase, RemoveRoomUseCase>();
-            //RoomFacility
+            services.AddScoped<IGetFacilitiesByRoomIdUseCase, GetRoomFacilitiesByRoomIdUseCase>();
             services.AddScoped<IAddRoomFacilityUseCase, AddRoomFacilityUseCase>();
+            //RoomFacility
             services.AddScoped<IEditRoomFacilityUseCase, EditRoomFacilityUseCase>();
-            services.AddScoped<IGetRoomFacilitiesByRoomIdUseCase, GetRoomFacilitiesByRoomIdUseCase>();
             services.AddScoped<IGetRoomFacilityByIdUseCase, GetRoomFacilityByIdUseCase>();
             services.AddScoped<IRemoveRoomFacilityUseCase, RemoveRoomFacilityUseCase>();
+            
 
             return services;
         }

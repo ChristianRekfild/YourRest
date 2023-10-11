@@ -1,5 +1,4 @@
 ﻿using YourRest.Application.CustomErrors;
-using YourRest.Application.Dto.Models;
 using YourRest.Application.Interfaces.Room;
 using YourRest.Domain.Repositories;
 using RoomEntity = YourRest.Domain.Entities.Room;
@@ -13,13 +12,13 @@ namespace YourRest.Application.UseCases.Room
         {
             this.roomRepository = roomRepository;
         }
-        public async Task ExecuteAsync(RoomViewModel reviewDto)
+        public async Task ExecuteAsync(int id)
         {
-            if (await roomRepository.GetAsync(reviewDto.Id) is not RoomEntity room)
+            if (await roomRepository.GetAsync(id) is not RoomEntity room)
             {
-                throw new RoomNotFoundExeption(reviewDto.Id);
+                throw new RoomNotFoundExeption(id);
             }
-            await roomRepository.DeleteAsync(reviewDto.Id);
+            await roomRepository.DeleteAsync(id);
         }
     }
 }

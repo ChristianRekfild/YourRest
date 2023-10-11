@@ -1,5 +1,4 @@
 ﻿using YourRest.Application.CustomErrors;
-using YourRest.Application.Dto.Models;
 using YourRest.Application.Interfaces.Facility;
 using YourRest.Domain.Entities;
 using YourRest.Domain.Repositories;
@@ -14,13 +13,13 @@ namespace YourRest.Application.UseCases.Facility
         {
             this.roomFacilityRepository = roomFacilityRepository;
         }
-        public async Task ExecuteAsync(RoomFacilityViewModel reviewDto)
+        public async Task ExecuteAsync(int id)
         {
-            if (await roomFacilityRepository.GetAsync(reviewDto.Id) is not RoomFacility roomFacility)
+            if (await roomFacilityRepository.GetAsync(id) is not RoomFacility roomFacility)
             {
-                throw new RoomFacilityNotFoundException(reviewDto.Id);
+                throw new RoomFacilityNotFoundException(id);
             }
-            await roomFacilityRepository.DeleteAsync(reviewDto.Id);
+            await roomFacilityRepository.DeleteAsync(id);
         }
     }
 }
