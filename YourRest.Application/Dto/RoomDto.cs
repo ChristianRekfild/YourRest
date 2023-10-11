@@ -8,7 +8,6 @@ namespace YourRest.Application.Dto
         [MaxLength(100)]
         public string Name { get; set; }
 
-
         [Required]
         [RegularExpression(@"^[1-9]\d*$", ErrorMessage = "SquareInMeter should be more than zero.")]
         public double SquareInMeter { get; set; }
@@ -23,7 +22,6 @@ namespace YourRest.Application.Dto
         [Required]
         [RegularExpression(@"^[1-9]\d*$", ErrorMessage = "Capacity should be more than zero.")]
         public int Capacity { get; set; }
-
     }
 }
 

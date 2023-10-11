@@ -15,7 +15,6 @@ namespace YourRest.Infrastructure.Core.DbContexts
         public DbSet<Accommodation> Accommodations { get; set; }
         public DbSet<Room> Rooms { get; set; }
 
-
         static SharedDbContext()
         {
             AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);

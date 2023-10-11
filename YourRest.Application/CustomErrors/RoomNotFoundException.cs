@@ -1,8 +1,8 @@
 namespace YourRest.Application.CustomErrors
 {
-    public class RoomCondlictException : Exception
+    public class RoomNotFoundException : Exception
     {
-        public RoomCondlictException(string message) : base(message)
+        public RoomNotFoundException(string message) : base(message)
         {
         }
     }

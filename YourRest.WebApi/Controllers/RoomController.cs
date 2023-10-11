@@ -43,10 +43,6 @@ namespace YourRest.WebApi.Controllers
                 return CreatedAtAction(nameof(Post), createdRoom);
 
             }
-            catch (RoomCondlictException exception)
-            {
-                return Conflict(exception.Message);
-            }
             catch (AccommodationNotFoundException exception)
             {
                 return UnprocessableEntity(exception.Message);
