@@ -17,7 +17,7 @@ namespace YourRest.WebApi.Tests.Controllers
 
         [Fact]
         public async Task GivenAccommodation_WhenApiMethodInvokedWithValidAddress_ThenReturns200Ok()
-        {     
+        {
             var accommodationEntity = new Accommodation
             {
                 Name = "Test",
@@ -26,7 +26,13 @@ namespace YourRest.WebApi.Tests.Controllers
             var accommodation = await InsertObjectIntoDatabase(accommodationEntity);
             var accommodationId = accommodation.Id;
 
-            var cityEntity = new City { Name = "Moscow"};
+            var countryEntity = new Country() { Name = "Russia" };
+            var country = await InsertObjectIntoDatabase(countryEntity);
+
+            var regionEntity = new Region() { Name = "Московская область", CountryId = country.Id };
+            var region = await InsertObjectIntoDatabase(regionEntity);
+
+            var cityEntity = new City { Name = "Moscow", RegionId = region.Id };
             var city = await InsertObjectIntoDatabase(cityEntity);
             var addressDto = CreateValidAddressDto(city.Id);
 
@@ -35,27 +41,33 @@ namespace YourRest.WebApi.Tests.Controllers
 
             Assert.Equal(HttpStatusCode.Created, response.StatusCode);
 
-            var responseString = await response.Content.ReadAsStringAsync();           
+            var responseString = await response.Content.ReadAsStringAsync();
             var createdAddress = JsonConvert.DeserializeObject<ResultDto>(responseString);
 
-            Assert.True(createdAddress.Id > 0);
+            Assert.True(createdAddress?.Id > 0);
         }
 
         [Fact]
         public async Task GivenAccommodationAndExistAddressInDB_WhenApiMethodInvokedWithTheSameAddress_ThenReturns200Ok()
-        {     
-            var cityEntity = new City { Name = "Moscow"};
+        {
+            var countryEntity = new Country { Name = "Russia" };
+            var country = await InsertObjectIntoDatabase(countryEntity);
+            var regionEntity = new Region { Name = "Московская область", CountryId = country.Id };
+            var region = await InsertObjectIntoDatabase(regionEntity);
+
+            var cityEntity = new City { Name = "Moscow", RegionId = region.Id };
             var city = await InsertObjectIntoDatabase(cityEntity);
+
             var addressDto = CreateValidAddressDto(city.Id);
 
             var addressEntity = new Address
-                {
-                    Street = "Тестовая улица",
-                    CityId = city.Id,
-                    ZipCode = "188644",
-                    Longitude = 100,
-                    Latitude = 100,
-                };
+            {
+                Street = "Тестовая улица",
+                CityId = city.Id,
+                ZipCode = "188644",
+                Longitude = 100,
+                Latitude = 100,
+            };
             await InsertObjectIntoDatabase(addressEntity);
 
             var accommodationEntity = new Accommodation
@@ -63,40 +75,45 @@ namespace YourRest.WebApi.Tests.Controllers
                 Name = "Test",
             };
             var accommodation = await InsertObjectIntoDatabase(accommodationEntity);
-            var accommodationId = accommodation.Id;   
+            var accommodationId = accommodation.Id;
 
             var content = new StringContent(JsonConvert.SerializeObject(addressDto), Encoding.UTF8, "application/json");
             var response = await Client.PostAsync($"api/operator/accommodation/{accommodationId}/address", content);
-            
+
             Assert.Equal(HttpStatusCode.Created, response.StatusCode);
 
-            var responseString = await response.Content.ReadAsStringAsync();           
+            var responseString = await response.Content.ReadAsStringAsync();
             var createdAddress = JsonConvert.DeserializeObject<ResultDto>(responseString);
 
-            Assert.True(createdAddress.Id > 0);
+            Assert.True(createdAddress?.Id > 0);
         }
 
-       [Fact]
-       public async Task GivenNonexistentAccommodation_WhenAddAddressToAccommodationAsyncInvoked_ThenReturns404()
-       {
-           var accommodationId = -1;
-           var cityEntity = new City { Name = "Moscow"};
-           var city = await InsertObjectIntoDatabase(cityEntity);
+        [Fact]
+        public async Task GivenNonexistentAccommodation_WhenAddAddressToAccommodationAsyncInvoked_ThenReturns404()
+        {
+            var countryEntity = new Country { Name = "Russia" };
+            var country = await InsertObjectIntoDatabase(countryEntity);
+            var regionEntity = new Region { Name = "Московская область", CountryId = country.Id };
+            var region = await InsertObjectIntoDatabase(regionEntity);
 
-           var addressDto = CreateValidAddressDto(city.Id);
+            var accommodationId = -1;
+            var cityEntity = new City { Name = "Moscow" , RegionId = region.Id };
+            var city = await InsertObjectIntoDatabase(cityEntity);
 
-           var content = new StringContent(JsonConvert.SerializeObject(addressDto), Encoding.UTF8, "application/json");
-           var response = await Client.PostAsync($"api/operator/accommodation/{accommodationId}/address", content);          
-           var errorResponseString = await response.Content.ReadAsStringAsync();            
-           var errorResponse = JsonConvert.DeserializeObject<ErrorResponse>(errorResponseString);
+            var addressDto = CreateValidAddressDto(city.Id);
 
-           Assert.Equal(HttpStatusCode.NotFound, response.StatusCode); 
-           Assert.Equal($"Accommodation with id {accommodationId} not found", errorResponse.Message);
-       }
+            var content = new StringContent(JsonConvert.SerializeObject(addressDto), Encoding.UTF8, "application/json");
+            var response = await Client.PostAsync($"api/operator/accommodation/{accommodationId}/address", content);
+            var errorResponseString = await response.Content.ReadAsStringAsync();
+            var errorResponse = JsonConvert.DeserializeObject<ErrorResponse>(errorResponseString);
 
-       [Fact]
-       public async Task GivenNonexistentCity_WhenAddAddressToAccommodationAsyncInvoked_ThenReturns400()
-       {
+            Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+            Assert.Equal($"Accommodation with id {accommodationId} not found", errorResponse?.Message);
+        }
+
+        [Fact]
+        public async Task GivenNonexistentCity_WhenAddAddressToAccommodationAsyncInvoked_ThenReturns400()
+        {
             var accommodationEntity = new Accommodation
             {
                 Name = "Test",
@@ -122,12 +139,12 @@ namespace YourRest.WebApi.Tests.Controllers
             var errorResponseString = await response.Content.ReadAsStringAsync();
             var errorResponse = JsonConvert.DeserializeObject<ErrorResponse>(errorResponseString);
 
-            Assert.Equal("City with id 100 not found", errorResponse.Message);
+            Assert.Equal("City with id 100 not found", errorResponse?.Message);
         }
 
-       [Fact]
-       public async Task GivenInvalidAddress_WhenAddAddressToAccommodationAsyncInvoked_ThenReturns404()
-       {
+        [Fact]
+        public async Task GivenInvalidAddress_WhenAddAddressToAccommodationAsyncInvoked_ThenReturns404()
+        {
             var accommodation = new Accommodation
             {
                 Name = "Test2",
@@ -137,41 +154,46 @@ namespace YourRest.WebApi.Tests.Controllers
             var id = entity.Id;
             var addressDto = new AddressDto
             {
-               Street = "",
-               ZipCode = "",
-               Longitude = 200,
-               Latitude = -200,
-               CityId = -1
+                Street = "",
+                ZipCode = "",
+                Longitude = 200,
+                Latitude = -200,
+                CityId = -1
             };
 
             var content = new StringContent(JsonConvert.SerializeObject(addressDto), Encoding.UTF8, "application/json");
             var response = await Client.PostAsync($"api/operator/accommodation/{id}/address", content);
             var errorResponseString = await response.Content.ReadAsStringAsync();
-            var errorData = JsonConvert.DeserializeObject<ErrorData>(errorResponseString); 
+            var errorData = JsonConvert.DeserializeObject<ErrorData>(errorResponseString);
 
             Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
-            Assert.Equal("The Street field is required.", errorData.Errors["Street"][0]);
-            Assert.Equal("The ZipCode field is required.", errorData.Errors["ZipCode"][0]);
-            Assert.Equal("The field Longitude must be between -180 and 180.", errorData.Errors["Longitude"][0]);
-            Assert.Equal("The field Latitude must be between -90 and 90.", errorData.Errors["Latitude"][0]);
-            Assert.Equal("City Id should be more than zero.", errorData.Errors["CityId"][0]);
+            Assert.Equal("The Street field is required.", errorData?.Errors["Street"][0]);
+            Assert.Equal("The ZipCode field is required.", errorData?.Errors["ZipCode"][0]);
+            Assert.Equal("The field Longitude must be between -180 and 180.", errorData?.Errors["Longitude"][0]);
+            Assert.Equal("The field Latitude must be between -90 and 90.", errorData?.Errors["Latitude"][0]);
+            Assert.Equal("City Id should be more than zero.", errorData?.Errors["CityId"][0]);
         }
 
         [Fact]
-       public async Task GivenAccommodationWithAddress_WhenAddAddressToAccommodationAsyncInvoked_ThenThrows422()
-       {
-            var cityEntity = new City { Name = "Moscow"};
+        public async Task GivenAccommodationWithAddress_WhenAddAddressToAccommodationAsyncInvoked_ThenThrows422()
+        {
+            var countryEntity = new Country { Name = "Russia" };
+            var country = await InsertObjectIntoDatabase(countryEntity);
+            var regionEntity = new Region { Name = "Московская область", CountryId = country.Id };
+            var region = await InsertObjectIntoDatabase(regionEntity);
+
+            var cityEntity = new City { Name = "Moscow", RegionId = region.Id };
             var city = await InsertObjectIntoDatabase(cityEntity);
             var addressDto = CreateValidAddressDto(city.Id);
 
             var addressEntity = new Address
-                {
-                    Street = "Тестовая улица",
-                    CityId = city.Id,
-                    ZipCode = "188644",
-                    Longitude = 100,
-                    Latitude = 100,
-                };
+            {
+                Street = "Тестовая улица",
+                CityId = city.Id,
+                ZipCode = "188644",
+                Longitude = 100,
+                Latitude = 100,
+            };
             await InsertObjectIntoDatabase(addressEntity);
 
             var accommodationEntity = new Accommodation
@@ -180,7 +202,7 @@ namespace YourRest.WebApi.Tests.Controllers
                 AddressId = addressEntity.Id
             };
             var accommodation = await InsertObjectIntoDatabase(accommodationEntity);
-            var accommodationId = accommodation.Id;            
+            var accommodationId = accommodation.Id;
 
             var content = new StringContent(JsonConvert.SerializeObject(addressDto), Encoding.UTF8, "application/json");
             var response = await Client.PostAsync($"api/operator/accommodation/{accommodationId}/address", content);
@@ -190,7 +212,7 @@ namespace YourRest.WebApi.Tests.Controllers
             var errorResponseString = await response.Content.ReadAsStringAsync();
             var errorResponse = JsonConvert.DeserializeObject<ErrorResponse>(errorResponseString);
 
-            Assert.Equal($"Address for accommodation with id {accommodationId} already exists", errorResponse.Message);
+            Assert.Equal($"Address for accommodation with id {accommodationId} already exists", errorResponse?.Message);
         }
 
         private AddressDto CreateValidAddressDto(int cityId)

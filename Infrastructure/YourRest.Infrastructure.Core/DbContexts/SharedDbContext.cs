@@ -24,7 +24,7 @@ namespace YourRest.Infrastructure.Core.DbContexts
         public SharedDbContext() : base() { }
 
         public SharedDbContext(DbContextOptions<SharedDbContext> options) : base(options) {
-            Database.MigrateAsync().Wait();
+            Database.Migrate();
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -32,7 +32,7 @@ namespace YourRest.Infrastructure.Core.DbContexts
             if (!optionsBuilder.IsConfigured)
             {
                 string conn = "Host=localhost;Database=your_rest;Username=admin;Password=admin;Port=5433";
-                optionsBuilder.UseNpgsql(conn);
+                optionsBuilder.UseNpgsql(conn, sql => sql.MigrationsAssembly("YourRest.Producer.Infrastructure"));
             }
             base.OnConfiguring(optionsBuilder);
             

@@ -1,12 +1,13 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Testcontainers.PostgreSql;
 using YourRest.Infrastructure.Core.DbContexts;
+using YourRest.Producer.Infrastructure;
 
 namespace YourRest.WebApi.Tests.Fixtures
 {
     public class DatabaseFixture : IDisposable
     {
-        private static DatabaseFixture instance = null;
+        private static DatabaseFixture? instance = null;
         private static readonly object syncObj = new object();
 
         public string ConnectionString
@@ -56,14 +57,14 @@ namespace YourRest.WebApi.Tests.Fixtures
             return instance;
         }
 
-        public SharedDbContext GetDbContext(string ConnectionString)
+        public SharedDbContext GetDbContext(string connectionString)
         {
             var migrationsAssembly = typeof(YourRest.Producer.Infrastructure.DependencyInjections).Assembly.GetName().Name;
             var builder = new DbContextOptionsBuilder<SharedDbContext>();
-            builder.UseNpgsql(ConnectionString, sql => sql.MigrationsAssembly(migrationsAssembly));
+            var migrationsAssembly = typeof(InfrastructureDependencyInjections).Assembly.GetName().Name;
+            builder.UseNpgsql(connectionString, sql => sql.MigrationsAssembly(migrationsAssembly));
             SharedDbContext defaultDbContext = new SharedDbContext(builder.Options);
-            defaultDbContext.Database.MigrateAsync().Wait();
-
+            defaultDbContext.Database.Migrate();
             return defaultDbContext;
         }
 

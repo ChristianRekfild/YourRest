@@ -20,14 +20,16 @@ public class Program
 
     public static void ConfigureServices(IServiceCollection services)
     {
+        //TODO: �������� ��� ����� ���-�� ��������
+#pragma warning disable ASP0000 // Do not call 'IServiceCollection.BuildServiceProvider' in 'ConfigureServices'
         var configuration = services.BuildServiceProvider().GetService<IConfiguration>();
-        var environment = services.BuildServiceProvider().GetService<IWebHostEnvironment>();
+#pragma warning restore ASP0000 // Do not call 'IServiceCollection.BuildServiceProvider' in 'ConfigureServices'
+                               //var environment = services.BuildServiceProvider().GetService<IWebHostEnvironment>();
 
-        string connectionString;
-
+        string? connectionString;
    
-        connectionString = configuration.GetConnectionString("DefaultConnection");
-        var migrationsAssembly = typeof(YourRest.Producer.Infrastructure.DependencyInjections).Assembly.GetName().Name;
+        connectionString = configuration?.GetConnectionString("DefaultConnection");
+        var migrationsAssembly = typeof(InfrastructureDependencyInjections).Assembly.GetName().Name;
 
         services.AddDbContext<SharedDbContext>(options => options.UseNpgsql(connectionString,
             sql => sql.MigrationsAssembly(migrationsAssembly)));
@@ -36,7 +38,7 @@ public class Program
 
         // Swagger/OpenAPI configuration
         services.AddEndpointsApiExplorer();
-        services.AddSwaggerGen();
+        //services.AddSwaggerGen();
         services.AddSwaggerGen(c =>
         {
             c.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" });
@@ -48,11 +50,13 @@ public class Program
 
     public static void Configure(IApplicationBuilder app)
     {
+#pragma warning disable CS8604 // ��������, ��������-������, ����������� �������� NULL.
         if (app.ApplicationServices.GetService<IWebHostEnvironment>().IsDevelopment())
         {
             app.UseSwagger();
             app.UseSwaggerUI();
         }
+#pragma warning restore CS8604 // ��������, ��������-������, ����������� �������� NULL.
 
         app.UseHttpsRedirection();
         app.UseRouting(); // This is necessary for the endpoints to work.

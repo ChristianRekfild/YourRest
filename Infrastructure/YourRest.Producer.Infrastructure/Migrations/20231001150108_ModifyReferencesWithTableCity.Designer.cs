@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using YourRest.Infrastructure.Core.DbContexts;
@@ -11,9 +12,11 @@ using YourRest.Infrastructure.Core.DbContexts;
 namespace YourRest.Producer.Infrastructure.Migrations
 {
     [DbContext(typeof(SharedDbContext))]
-    partial class SharedDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231001150108_ModifyReferencesWithTableCity")]
+    partial class ModifyReferencesWithTableCity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,61 +24,6 @@ namespace YourRest.Producer.Infrastructure.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
-
-            modelBuilder.Entity("YourRest.Domain.Entities.Accommodation", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<int?>("AddressId")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AddressId")
-                        .IsUnique();
-
-                    b.ToTable("Accommodations");
-                });
-
-            modelBuilder.Entity("YourRest.Domain.Entities.Address", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("CityId")
-                        .HasColumnType("integer");
-
-                    b.Property<double>("Latitude")
-                        .HasColumnType("double precision");
-
-                    b.Property<double>("Longitude")
-                        .HasColumnType("double precision");
-
-                    b.Property<string>("Street")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("ZipCode")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CityId");
-
-                    b.ToTable("Addresses");
-                });
 
             modelBuilder.Entity("YourRest.Domain.Entities.Booking", b =>
                 {
@@ -223,63 +171,14 @@ namespace YourRest.Producer.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<int>("Rating")
+                        .HasColumnType("integer");
+
                     b.HasKey("Id");
 
                     b.HasIndex("BookingId");
 
                     b.ToTable("Reviews");
-                });
-
-            modelBuilder.Entity("YourRest.Domain.Entities.Room", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("AccommodationId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("Capacity")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("RoomType")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<double>("SquareInMeter")
-                        .HasColumnType("double precision");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AccommodationId");
-
-                    b.ToTable("Rooms");
-                });
-
-            modelBuilder.Entity("YourRest.Domain.Entities.Accommodation", b =>
-                {
-                    b.HasOne("YourRest.Domain.Entities.Address", "Address")
-                        .WithOne()
-                        .HasForeignKey("YourRest.Domain.Entities.Accommodation", "AddressId");
-
-                    b.Navigation("Address");
-                });
-
-            modelBuilder.Entity("YourRest.Domain.Entities.Address", b =>
-                {
-                    b.HasOne("YourRest.Domain.Entities.City", "City")
-                        .WithMany()
-                        .HasForeignKey("CityId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("City");
                 });
 
             modelBuilder.Entity("YourRest.Domain.Entities.Booking", b =>
@@ -323,53 +222,7 @@ namespace YourRest.Producer.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.OwnsOne("YourRest.Domain.ValueObjects.Reviews.RatingVO", "Rating", b1 =>
-                        {
-                            b1.Property<int>("ReviewId")
-                                .HasColumnType("integer");
-
-                            b1.Property<int>("Value")
-                                .HasColumnType("integer")
-                                .HasColumnName("Rating");
-
-                            b1.HasKey("ReviewId");
-
-                            b1.ToTable("Reviews");
-
-                            b1.WithOwner()
-                                .HasForeignKey("ReviewId");
-                        });
-
                     b.Navigation("Booking");
-
-                    b.Navigation("Rating")
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("YourRest.Domain.Entities.Room", b =>
-                {
-                    b.HasOne("YourRest.Domain.Entities.Accommodation", "Accommodation")
-                        .WithMany("Rooms")
-                        .HasForeignKey("AccommodationId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Accommodation");
-                });
-
-            modelBuilder.Entity("YourRest.Domain.Entities.Accommodation", b =>
-                {
-                    b.Navigation("Rooms");
-                });
-
-            modelBuilder.Entity("YourRest.Domain.Entities.Country", b =>
-                {
-                    b.Navigation("Regions");
-                });
-
-            modelBuilder.Entity("YourRest.Domain.Entities.Region", b =>
-                {
-                    b.Navigation("Cities");
                 });
 
             modelBuilder.Entity("YourRest.Domain.Entities.Country", b =>
