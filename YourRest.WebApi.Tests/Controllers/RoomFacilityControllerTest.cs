@@ -59,7 +59,9 @@ namespace YourRest.WebApi.Tests.Controllers
 
         private async Task<RoomFacility> CreateRoomFacilityAsync()
         {
-            var city = await fixture.InsertObjectIntoDatabase(new City { Name = "Moscow" });
+            var country = await fixture.InsertObjectIntoDatabase(new Country { Name = "Russia" });
+            var region = await fixture.InsertObjectIntoDatabase(new Region { Name = "MO", CountryId = country.Id });
+            var city = await fixture.InsertObjectIntoDatabase(new City { Name = "Moscow", RegionId = region.Id });
             var address = await fixture.InsertObjectIntoDatabase(new Address
             {
                 CityId = city.Id,
@@ -72,7 +74,8 @@ namespace YourRest.WebApi.Tests.Controllers
             var room = await fixture.InsertObjectIntoDatabase(new Room
             {
                 AccommodationId = accommodation.Id,
-                Name = "DeluxeRoom"
+                Name = "DeluxeRoom",
+                RoomType = "Lux"
             });
            
             CityId = city.Id;

@@ -23,7 +23,6 @@ namespace YourRest.Infrastructure.Tests.Fixtures
 
         public async Task InitializeAsync()
         {
-            var migrationsAssembly = typeof(YourRest.Producer.Infrastructure.DependencyInjections).Assembly.GetName().Name;
             await _postgreSqlContainer.StartAsync();
 
             var builder = new DbContextOptionsBuilder<SharedDbContext>();

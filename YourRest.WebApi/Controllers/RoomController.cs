@@ -12,7 +12,6 @@ namespace YourRest.WebApi.Controllers
 {
     [ApiController]
     [Route("api/rooms")]
-   
     public class RoomController : ControllerBase
     {
         private readonly IAddRoomUseCase addRoomUseCase;
@@ -30,9 +29,9 @@ namespace YourRest.WebApi.Controllers
             IGetRoomByIdUseCase getRoomByIdUseCase,
             IRemoveRoomUseCase removeRoomUseCase,
             IGetFacilitiesByRoomIdUseCase getFacilitiesByRoomIdUseCase,
-            IAddRoomFacilityUseCase addRoomFacilityUseCase)
-
-        public RoomController(IGetRoomListUseCase getRoomListUseCase, ICreateRoomUseCase createtRoomUseCase)
+            IAddRoomFacilityUseCase addRoomFacilityUseCase,
+            IGetRoomListUseCase getRoomListUseCase,
+            ICreateRoomUseCase createtRoomUseCase)
         {
             this.addRoomUseCase = addRoomUseCase;
             this.editRoomUseCase = editRoomUseCase;
@@ -45,14 +44,13 @@ namespace YourRest.WebApi.Controllers
         }
 
         [HttpGet]
-        [Route("api/rooms/{accommodationId}")]
+        [Route("accommodations/{accommodationId}")]
         public async Task<IActionResult> GetAllRooms(int accommodationId)
         {
             var regions = await _getRoomListUseCase.Execute(accommodationId);
             return Ok(regions);
         }
         [HttpPost]
-        [Route("api/rooms")]
         public async Task<IActionResult> Post([FromBody] RoomDto roomDto)
         {
             if (!ModelState.IsValid)
@@ -71,8 +69,7 @@ namespace YourRest.WebApi.Controllers
                 return UnprocessableEntity(exception.Message);
             }
         }
-    }
-        
+
         [HttpGet]
         [Route("{id}")]
         public async Task<IActionResult> GetRoomById(int id)
@@ -113,17 +110,17 @@ namespace YourRest.WebApi.Controllers
             catch (RoomNotFoundExeption ex) { return Problem(detail: ex.Message, statusCode: 404); }
             catch (Exception ex) { return Problem(detail: ex.Message, statusCode: 500); }
         }
-        [HttpPost]
-        public async Task<IActionResult> AddRoom([FromBody] RoomViewModel room)
-        {
-            try
-            {
-                await addRoomUseCase.ExecuteAsync(room);
-                return Ok("The room has been added");
-            }
-            catch (RoomAlreadyExistsException ex) { return Problem(detail: ex.Message, statusCode: 409); }
-            catch (Exception ex) { return Problem(detail: ex.Message, statusCode: 500); }
-        }
+        //[HttpPost]
+        //public async Task<IActionResult> AddRoom([FromBody] RoomViewModel room)
+        //{
+        //    try
+        //    {
+        //        await addRoomUseCase.ExecuteAsync(room);
+        //        return Ok("The room has been added");
+        //    }
+        //    catch (RoomAlreadyExistsException ex) { return Problem(detail: ex.Message, statusCode: 409); }
+        //    catch (Exception ex) { return Problem(detail: ex.Message, statusCode: 500); }
+        //}
         [HttpGet]
         [Route("{id}/facilities")]
         public async Task<IActionResult> GetFacilitiesByRoomId([FromRoute] int id)
@@ -152,9 +149,4 @@ namespace YourRest.WebApi.Controllers
         }
 
     }
-
-
-
-
-
 }

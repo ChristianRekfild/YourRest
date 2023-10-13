@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Numerics;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace YourRest.Domain.Entities
+﻿namespace YourRest.Domain.Entities
 {
     public class City : IntBaseEntity
     {
@@ -15,6 +8,7 @@ namespace YourRest.Domain.Entities
 
         public int RegionId { get; set; }
         public Region Region { get; set; }
+        ICollection<Address> Addresses { get; set;}
     }
 }
 
