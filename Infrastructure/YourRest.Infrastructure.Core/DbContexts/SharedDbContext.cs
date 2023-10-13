@@ -13,6 +13,7 @@ namespace YourRest.Infrastructure.Core.DbContexts
         public DbSet<Review> Reviews { get; set; }
         public DbSet<Address> Addresses { get; set; }
         public DbSet<Accommodation> Accommodations { get; set; }
+        public DbSet<User> Users { get; set; }
 
         static SharedDbContext()
         {
@@ -29,7 +30,7 @@ namespace YourRest.Infrastructure.Core.DbContexts
         {
             if (!optionsBuilder.IsConfigured)
             {
-                string conn = "Host=localhost;Database=your_rest;Username=admin;Password=admin;Port=5433";
+                string conn = "Host=webapidb;Database=your_rest;Username=admin;Password=admin;Port=5432";
                 optionsBuilder.UseNpgsql(conn);
             }
             base.OnConfiguring(optionsBuilder);

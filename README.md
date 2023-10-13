@@ -3,9 +3,10 @@
 ## Архитектура (./_docs/architecture.md)
 
 Проект основан на паттерне **Порты и Адаптеры**.
-Состоит из двух основных частей:
-1. **YourRest.HotelManagementWebApi** - серверная часть системы отельеров.
-2. **YourRest.WebApi** - серверная часть системы путешественников.
+Состоит из нескольких проектов:
+1. **YourRest.WebApi** - серверная часть системы отельеров.
+2. **TravelSystem.WebApi** - серверная часть системы путешественников. (будет добавлена)
+3. **KeycloakAuthenticationService** - сервис аутентификации и авторизации, реализованный на основе Keycloak. Этот сервис обеспечивает возможность единого входа (Single Sign-On, SSO) для двух систем. Позволяет входить в обе системы под одним и тем же логином и паролем.
 
 ## Запуск тестов
 
@@ -44,5 +45,15 @@ dotnet ef migrations add InitialCreate -s ..\YourRest.WebApi\YourRest.WebApi.csp
 dotnet ef database update -s ..\YourRest.WebApi\YourRest.WebApi.csproj -p YourRest.Producer.Infrastructure\YourRest.Producer.Infrastructure.csproj -c SharedDbContext -v
 
 Linux:
-dotnet ef migrations add AddAccommodationAndAddress -s ../YourRest.WebApi/YourRest.WebApi.csproj -c SharedDbContext -p YourRest.Producer.Infrastructure/YourRest.Producer.Infrastructure.csproj -v
+dotnet ef migrations add AddUserAndUpdateReviewAndBooking -s ../YourRest.WebApi/YourRest.WebApi.csproj -c SharedDbContext -p YourRest.Producer.Infrastructure/YourRest.Producer.Infrastructure.csproj -v
 dotnet ef database update -s ../YourRest.WebApi/YourRest.WebApi.csproj -p YourRest.Producer.Infrastructure/YourRest.Producer.Infrastructure.csproj -c SharedDbContext -v
+dotnet ef migrations remove -s ../YourRest.WebApi/YourRest.WebApi.csproj -c SharedDbContext -p YourRest.Producer.Infrastructure/YourRest.Producer.Infrastructure.csproj -v
+
+## Запуск сервиса аутентификации и авторизации
+Из папки KeycloakAuthenticationService:
+docker compose up -d
+dotnet run 
+
+Пользовательский интерфейс Keycloak - http://localhost:8080/auth/
+Keycloak Admin Console - http://localhost:8080/auth/admin/
+

@@ -2,6 +2,10 @@
 using YourRest.Application.Dto;
 using YourRest.Application.Interfaces;
 using YourRest.Application.CustomErrors;
+using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
+using YourRest.WebApi.Responses;
+using Microsoft.AspNetCore.Mvc;
 
 namespace YourRest.WebApi.Controllers
 {
@@ -16,18 +20,35 @@ namespace YourRest.WebApi.Controllers
             _useCase = useCase;
         }
 
+        [Authorize]
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] ReviewDto reviewDto)
         {
             try
             {
-                var createdReview = await _useCase.Execute(reviewDto);
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
+
+                var user = HttpContext.User;
+                var identity = user.Identity as ClaimsIdentity;
+                var sub = identity?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+                if (sub == null)
+                {
+                    return NotFound("User not found");
+                }
+
+                var createdReview = await _useCase.Execute(reviewDto, sub);
 
                 return CreatedAtAction(nameof(Post), createdReview);
-            }
-            catch (BookingNotFoundException exception)
+            } catch (Exception exception) when (exception is BookingNotFoundException || exception is UserNotFoundException)
             {
                 return NotFound(exception.Message);
+            }  catch (UserReviewCreationException exception)
+            {
+                return UnprocessableEntity(new ErrorResponse{ Message = exception.Message});
             }
         }
     }
