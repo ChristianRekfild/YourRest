@@ -12,8 +12,8 @@ using YourRest.Infrastructure.Core.DbContexts;
 namespace YourRest.Producer.Infrastructure.Migrations
 {
     [DbContext(typeof(SharedDbContext))]
-    [Migration("20231006150000_Added_Room_And_RoomFacilities")]
-    partial class Added_Room_And_RoomFacilities
+    [Migration("20231013102754_AddRoomFacility")]
+    partial class AddRoomFacility
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -123,7 +123,12 @@ namespace YourRest.Producer.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<int>("RegionId")
+                        .HasColumnType("integer");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("RegionId");
 
                     b.ToTable("Cities");
                 });
@@ -239,9 +244,19 @@ namespace YourRest.Producer.Infrastructure.Migrations
                     b.Property<int>("AccommodationId")
                         .HasColumnType("integer");
 
+                    b.Property<int>("Capacity")
+                        .HasColumnType("integer");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text");
+
+                    b.Property<string>("RoomType")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<double>("SquareInMeter")
+                        .HasColumnType("double precision");
 
                     b.HasKey("Id");
 
@@ -303,10 +318,21 @@ namespace YourRest.Producer.Infrastructure.Migrations
                     b.Navigation("Customer");
                 });
 
+            modelBuilder.Entity("YourRest.Domain.Entities.City", b =>
+                {
+                    b.HasOne("YourRest.Domain.Entities.Region", "Region")
+                        .WithMany("Cities")
+                        .HasForeignKey("RegionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Region");
+                });
+
             modelBuilder.Entity("YourRest.Domain.Entities.Region", b =>
                 {
                     b.HasOne("YourRest.Domain.Entities.Country", "Country")
-                        .WithMany()
+                        .WithMany("Regions")
                         .HasForeignKey("CountryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -375,6 +401,16 @@ namespace YourRest.Producer.Infrastructure.Migrations
             modelBuilder.Entity("YourRest.Domain.Entities.City", b =>
                 {
                     b.Navigation("Addresses");
+                });
+
+            modelBuilder.Entity("YourRest.Domain.Entities.Country", b =>
+                {
+                    b.Navigation("Regions");
+                });
+
+            modelBuilder.Entity("YourRest.Domain.Entities.Region", b =>
+                {
+                    b.Navigation("Cities");
                 });
 
             modelBuilder.Entity("YourRest.Domain.Entities.Room", b =>

@@ -15,8 +15,8 @@ namespace YourRest.WebApi.Controllers
     [Route("api/rooms")]
     public class RoomController : ControllerBase
     {
-        private readonly IGetRoomListUseCase _getRoomListUseCase;
-        private readonly ICreateRoomUseCase _createtRoomUseCase;
+        private readonly IGetRoomListUseCase getRoomListUseCase;
+        private readonly ICreateRoomUseCase createtRoomUseCase;
         private readonly IEditRoomUseCase editRoomUseCase;
         private readonly IGetRoomByIdUseCase getRoomByIdUseCase;
         private readonly IRemoveRoomUseCase removeRoomUseCase;
@@ -26,7 +26,7 @@ namespace YourRest.WebApi.Controllers
 
         public RoomController(
             IGetRoomListUseCase getRoomListUseCase,
-            ICreateRoomUseCase createtRoomUseCase
+            ICreateRoomUseCase createtRoomUseCase,
             IEditRoomUseCase editRoomUseCase,
             IGetRoomByIdUseCase getRoomByIdUseCase,
             IRemoveRoomUseCase removeRoomUseCase,

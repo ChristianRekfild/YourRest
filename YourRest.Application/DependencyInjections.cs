@@ -12,6 +12,8 @@ namespace YourRest.Application
     {
         public static IServiceCollection AddApplication(this IServiceCollection services) 
         {
+
+
             services.AddScoped<IGetCountryListUseCase, GetCountryListUseCase>();
             services.AddScoped<IGetCityByIdUseCase, GetCityByIdUseCase>();
             services.AddScoped<IGetCityListUseCase, GetCityListUseCase>();
@@ -19,7 +21,8 @@ namespace YourRest.Application
             services.AddScoped<ICreateReviewUseCase, CreateReviewUseCase>();
             services.AddScoped<IAddAddressToAccommodationUseCase, AddAddressToAccommodationUseCase>();
             //Room
-            services.AddScoped<IAddRoomUseCase, AddRoomUseCase>();
+            services.AddScoped<IGetRoomListUseCase, GetRoomListUseCase>();
+            services.AddScoped<ICreateRoomUseCase, CreateRoomUseCase>();
             services.AddScoped<IEditRoomUseCase, EditRoomUseCase>();
             services.AddScoped<IGetRoomByIdUseCase, GetRoomByIdUseCase>();
             services.AddScoped<IRemoveRoomUseCase, RemoveRoomUseCase>();

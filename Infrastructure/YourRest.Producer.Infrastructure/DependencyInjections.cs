@@ -8,7 +8,6 @@ namespace YourRest.Producer.Infrastructure
     {
         public static IServiceCollection AddInfrastructure(this IServiceCollection services)
         {
-
             services.AddScoped<IBookingRepository, BookingRepository>();
             services.AddScoped<ICountryRepository, CountryRepository>();
             services.AddScoped<ICustomerRepository, CustomerRepository>();

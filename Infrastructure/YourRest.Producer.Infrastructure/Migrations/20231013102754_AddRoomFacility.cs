@@ -6,31 +6,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace YourRest.Producer.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class Added_Room_And_RoomFacilities : Migration
+    public partial class AddRoomFacility : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.CreateTable(
-                name: "Rooms",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Name = table.Column<string>(type: "text", nullable: false),
-                    AccommodationId = table.Column<int>(type: "integer", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Rooms", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Rooms_Accommodations_AccommodationId",
-                        column: x => x.AccommodationId,
-                        principalTable: "Accommodations",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
             migrationBuilder.CreateTable(
                 name: "RoomFacilities",
                 columns: table => new
@@ -55,11 +35,6 @@ namespace YourRest.Producer.Infrastructure.Migrations
                 name: "IX_RoomFacilities_RoomId",
                 table: "RoomFacilities",
                 column: "RoomId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Rooms_AccommodationId",
-                table: "Rooms",
-                column: "AccommodationId");
         }
 
         /// <inheritdoc />
@@ -67,9 +42,6 @@ namespace YourRest.Producer.Infrastructure.Migrations
         {
             migrationBuilder.DropTable(
                 name: "RoomFacilities");
-
-            migrationBuilder.DropTable(
-                name: "Rooms");
         }
     }
 }
