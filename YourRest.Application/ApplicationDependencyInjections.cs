@@ -23,7 +23,6 @@ namespace YourRest.Application
             services.AddScoped<IGetRoomListUseCase, GetRoomListUseCase>();
             services.AddScoped<ICreateRoomUseCase, CreateRoomUseCase>();
             //Room
-            services.AddScoped<IAddRoomUseCase, AddRoomUseCase>();
             services.AddScoped<IEditRoomUseCase, EditRoomUseCase>();
             services.AddScoped<IGetRoomByIdUseCase, GetRoomByIdUseCase>();
             services.AddScoped<IRemoveRoomUseCase, RemoveRoomUseCase>();

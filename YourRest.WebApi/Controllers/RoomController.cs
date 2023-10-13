@@ -1,12 +1,10 @@
-﻿using YourRest.Application.Interfaces;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using YourRest.Application.CustomErrors;
+using YourRest.Application.Dto;
 using YourRest.Application.Dto.Models;
+using YourRest.Application.Interfaces;
 using YourRest.Application.Interfaces.Facility;
 using YourRest.Application.Interfaces.Room;
-using YourRest.Application.Dto;
-using YourRest.Domain.Entities;
-using YourRest.Application.UseCases;
 
 namespace YourRest.WebApi.Controllers
 {
@@ -14,7 +12,6 @@ namespace YourRest.WebApi.Controllers
     [Route("api/rooms")]
     public class RoomController : ControllerBase
     {
-        private readonly IAddRoomUseCase addRoomUseCase;
         private readonly IEditRoomUseCase editRoomUseCase;
         private readonly IGetRoomByIdUseCase getRoomByIdUseCase;
         private readonly IRemoveRoomUseCase removeRoomUseCase;
@@ -24,7 +21,6 @@ namespace YourRest.WebApi.Controllers
         private readonly ICreateRoomUseCase _createtRoomUseCase;
 
         public RoomController(
-            IAddRoomUseCase addRoomUseCase,
             IEditRoomUseCase editRoomUseCase,
             IGetRoomByIdUseCase getRoomByIdUseCase,
             IRemoveRoomUseCase removeRoomUseCase,
@@ -33,7 +29,6 @@ namespace YourRest.WebApi.Controllers
             IGetRoomListUseCase getRoomListUseCase,
             ICreateRoomUseCase createtRoomUseCase)
         {
-            this.addRoomUseCase = addRoomUseCase;
             this.editRoomUseCase = editRoomUseCase;
             this.getRoomByIdUseCase = getRoomByIdUseCase;
             this.removeRoomUseCase = removeRoomUseCase;
@@ -110,17 +105,6 @@ namespace YourRest.WebApi.Controllers
             catch (RoomNotFoundExeption ex) { return Problem(detail: ex.Message, statusCode: 404); }
             catch (Exception ex) { return Problem(detail: ex.Message, statusCode: 500); }
         }
-        //[HttpPost]
-        //public async Task<IActionResult> AddRoom([FromBody] RoomViewModel room)
-        //{
-        //    try
-        //    {
-        //        await addRoomUseCase.ExecuteAsync(room);
-        //        return Ok("The room has been added");
-        //    }
-        //    catch (RoomAlreadyExistsException ex) { return Problem(detail: ex.Message, statusCode: 409); }
-        //    catch (Exception ex) { return Problem(detail: ex.Message, statusCode: 500); }
-        //}
         [HttpGet]
         [Route("{id}/facilities")]
         public async Task<IActionResult> GetFacilitiesByRoomId([FromRoute] int id)
