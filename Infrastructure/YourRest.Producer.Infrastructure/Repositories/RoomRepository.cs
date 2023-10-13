@@ -1,4 +1,4 @@
-﻿using YourRest.Domain.Entities;
+using YourRest.Domain.Entities;
 using YourRest.Domain.Repositories;
 using YourRest.Infrastructure.Core.DbContexts;
 using YourRest.Infrastructure.Core.Repositories;

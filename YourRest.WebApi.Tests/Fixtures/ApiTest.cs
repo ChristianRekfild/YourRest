@@ -13,7 +13,7 @@ namespace YourRest.WebApi.Tests.Fixtures
         {
             Fixture = fixture;
             Client = Fixture.Server.CreateClient();
-            
+
             using var scope = Fixture.Server.Host.Services.CreateScope();
             var context = scope.ServiceProvider.GetRequiredService<SharedDbContext>();
             context.Database.MigrateAsync().Wait();

@@ -1,12 +1,13 @@
 using Microsoft.EntityFrameworkCore;
 using Testcontainers.PostgreSql;
 using YourRest.Infrastructure.Core.DbContexts;
+using YourRest.Producer.Infrastructure;
 
 namespace YourRest.Infrastructure.Tests.Fixtures
 {
     public class DatabaseFixture : IAsyncLifetime
     {
-        public SharedDbContext DbContext { get; private set; }
+        public SharedDbContext? DbContext { get; private set; }
         private PostgreSqlContainer _postgreSqlContainer { get; }
         public DatabaseFixture()
         {
@@ -14,7 +15,7 @@ namespace YourRest.Infrastructure.Tests.Fixtures
                 .WithImage("postgres:15.4-alpine")
                 .WithUsername("admin")
                 .WithPassword("admin")
-            //.WithPortBinding("5432") // Для просмотра в PgAdmin
+            //.WithPortBinding("5432") // пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ PgAdmin
             .WithDatabase("db")
             .WithCleanUp(true)
                 .Build();

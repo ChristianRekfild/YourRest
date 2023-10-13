@@ -1,5 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using YourRest.Application.Interfaces;
+using Microsoft.AspNetCore.Mvc;
 using YourRest.Application.CustomErrors;
+using YourRest.Application.Dto;
+using YourRest.Domain.Entities;
+using YourRest.Application.UseCases;
 using YourRest.Application.Dto.Models;
 using YourRest.Application.Interfaces.Facility;
 using YourRest.Application.Interfaces.Room;
@@ -11,27 +15,59 @@ namespace YourRest.WebApi.Controllers
     [Route("api/rooms")]
     public class RoomController : ControllerBase
     {
-        private readonly IAddRoomUseCase addRoomUseCase;
+        private readonly IGetRoomListUseCase _getRoomListUseCase;
+        private readonly ICreateRoomUseCase _createtRoomUseCase;
         private readonly IEditRoomUseCase editRoomUseCase;
         private readonly IGetRoomByIdUseCase getRoomByIdUseCase;
         private readonly IRemoveRoomUseCase removeRoomUseCase;
         private readonly IGetFacilitiesByRoomIdUseCase getFacilitiesByRoomIdUseCase;
         private readonly IAddRoomFacilityUseCase addRoomFacilityUseCase;
 
+
         public RoomController(
-            IAddRoomUseCase addRoomUseCase,
+            IGetRoomListUseCase getRoomListUseCase,
+            ICreateRoomUseCase createtRoomUseCase
             IEditRoomUseCase editRoomUseCase,
             IGetRoomByIdUseCase getRoomByIdUseCase,
             IRemoveRoomUseCase removeRoomUseCase,
             IGetFacilitiesByRoomIdUseCase getFacilitiesByRoomIdUseCase,
             IAddRoomFacilityUseCase addRoomFacilityUseCase)
         {
-            this.addRoomUseCase = addRoomUseCase;
+            this.getRoomListUseCase = getRoomListUseCase;
+            this.createtRoomUseCase = createtRoomUseCase;
             this.editRoomUseCase = editRoomUseCase;
             this.getRoomByIdUseCase = getRoomByIdUseCase;
             this.removeRoomUseCase = removeRoomUseCase;
             this.getFacilitiesByRoomIdUseCase = getFacilitiesByRoomIdUseCase;
             this.addRoomFacilityUseCase = addRoomFacilityUseCase;
+        }
+
+        [HttpGet]
+        [Route("/{accommodationId}")]
+        public async Task<IActionResult> GetAllRooms(int accommodationId)
+        {
+            var regions = await this.getRoomListUseCase.Execute(accommodationId);
+            return Ok(regions);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Post([FromBody] RoomDto roomDto)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            try
+            {
+                var createdRoom = await this.createtRoomUseCase.Execute(roomDto);
+
+                return CreatedAtAction(nameof(Post), createdRoom);
+
+            }
+            catch (AccommodationNotFoundException exception)
+            {
+                return UnprocessableEntity(exception.Message);
+            }
         }
 
         [HttpGet]
@@ -74,17 +110,7 @@ namespace YourRest.WebApi.Controllers
             catch (RoomNotFoundExeption ex) { return Problem(detail: ex.Message, statusCode: 404); }
             catch (Exception ex) { return Problem(detail: ex.Message, statusCode: 500); }
         }
-        [HttpPost]
-        public async Task<IActionResult> AddRoom([FromBody] RoomViewModel room)
-        {
-            try
-            {
-                await addRoomUseCase.ExecuteAsync(room);
-                return Ok("The room has been added");
-            }
-            catch (RoomAlreadyExistsException ex) { return Problem(detail: ex.Message, statusCode: 409); }
-            catch (Exception ex) { return Problem(detail: ex.Message, statusCode: 500); }
-        }
+
         [HttpGet]
         [Route("{id}/facilities")]
         public async Task<IActionResult> GetFacilitiesByRoomId([FromRoute] int id)
@@ -111,6 +137,5 @@ namespace YourRest.WebApi.Controllers
             catch (RoomFacilityInProcessException ex) { return Problem(detail: ex.Message, statusCode: 422); }
             catch (Exception ex) { return Problem(detail: ex.Message, statusCode: 500); }
         }
-
     }
 }

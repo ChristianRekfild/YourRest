@@ -1,4 +1,4 @@
-﻿using YourRest.Domain.Entities;
+using YourRest.Domain.Entities;
 
 namespace YourRest.Domain.Repositories
 {
