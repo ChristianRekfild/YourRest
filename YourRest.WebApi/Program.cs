@@ -47,12 +47,13 @@ public class Program
 
     public static void Configure(IApplicationBuilder app)
     {
+#pragma warning disable CS8604// Code that generates warning CS8604 is written here and will be ignored by the compiler.
         if (app.ApplicationServices.GetService<IWebHostEnvironment>().IsDevelopment())
         {
             app.UseSwagger();
             app.UseSwaggerUI();
         }
-
+#pragma warning disable CS8604// Code that generates warning CS8604 is written here and will be ignored by the compiler.
         app.UseHttpsRedirection();
         app.UseRouting(); // This is necessary for the endpoints to work.
         app.UseAuthorization();
