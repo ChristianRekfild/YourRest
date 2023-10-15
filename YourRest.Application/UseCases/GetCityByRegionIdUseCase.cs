@@ -1,4 +1,4 @@
-﻿using YourRest.Application.CustomErrors;
+﻿using YourRest.Application.Exceptions;
 using YourRest.Application.Dto;
 using YourRest.Application.Interfaces;
 using YourRest.Domain.Repositories;

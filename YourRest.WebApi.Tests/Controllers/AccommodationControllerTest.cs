@@ -105,10 +105,12 @@ namespace YourRest.WebApi.Tests.Controllers
             var content = new StringContent(JsonConvert.SerializeObject(addressDto), Encoding.UTF8, "application/json");
             var response = await Client.PostAsync($"api/operator/accommodation/{accommodationId}/address", content);
             var errorResponseString = await response.Content.ReadAsStringAsync();
-            var errorResponse = JsonConvert.DeserializeObject<ErrorResponse>(errorResponseString);
+            var errorMassage = await response.Content.ReadAsStringAsync();
+            var expectedMessage = new { message = $"Accommodation with id {accommodationId} not found" };
+            var expectedMessageJson = JsonConvert.SerializeObject(expectedMessage);
 
             Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
-            Assert.Equal($"Accommodation with id {accommodationId} not found", errorResponse?.Message);
+            Assert.Equal(errorMassage, expectedMessageJson);
         }
 
         [Fact]
@@ -137,9 +139,11 @@ namespace YourRest.WebApi.Tests.Controllers
             Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
 
             var errorResponseString = await response.Content.ReadAsStringAsync();
-            var errorResponse = JsonConvert.DeserializeObject<ErrorResponse>(errorResponseString);
+            var expectedMessage = new { message = "City with id 100 not found" };
+            var expectedMessageJson = JsonConvert.SerializeObject(expectedMessage);
 
-            Assert.Equal("City with id 100 not found", errorResponse?.Message);
+            Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+            Assert.Equal(errorResponseString, expectedMessageJson);
         }
 
         [Fact]

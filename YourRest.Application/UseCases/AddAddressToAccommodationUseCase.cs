@@ -1,4 +1,4 @@
-using YourRest.Application.CustomErrors;
+using YourRest.Application.Exceptions;
 using YourRest.Application.Dto;
 using YourRest.Application.Interfaces;
 using YourRest.Domain.Entities;
@@ -29,18 +29,18 @@ namespace YourRest.Application.UseCases
 
             if (accommodation == null)
             {
-                throw new AccommodationNotFoundException(accommodationId);
+                throw new EntityNotFoundException($"Accommodation with id {accommodationId} not found");
             }
 
             if (accommodation.Address != null)
             {
-                throw new AddressAlreadyExistsException(accommodationId);
+                throw new ValidationException($"Address for accommodation with id {accommodationId} already exists");
             }
 
             var city = await _cityRepository.GetAsync(addressDto.CityId);
             if (city == null)
             {
-                throw new CityNotFoundException($"City with id {addressDto.CityId} not found");
+                throw new EntityNotFoundException($"City with id {addressDto.CityId} not found");
             }
 
             var addresses = await _addressRepository.FindAsync(

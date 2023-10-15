@@ -14,10 +14,13 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="7.0.4" />
+    <PackageReference Include="Microsoft.AspNetCore" Version="2.2.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\YourRest.Infrastructure.Core\YourRest.Infrastructure.Core.csproj" />
+    <ProjectReference Include="..\..\YourRest.Application\YourRest.Application.csproj" />
   </ItemGroup>
 
   <PropertyGroup>
