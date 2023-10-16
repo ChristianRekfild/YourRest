@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using YourRest.Application.Dto;
 using YourRest.Application.Interfaces;
-using YourRest.Application.CustomErrors;
+using YourRest.Application.Exceptions;
 
 namespace YourRest.WebApi.Controllers
 {
@@ -19,16 +19,9 @@ namespace YourRest.WebApi.Controllers
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] ReviewDto reviewDto)
         {
-            try
-            {
-                var createdReview = await _useCase.Execute(reviewDto);
+            var createdReview = await _useCase.Execute(reviewDto);
 
-                return CreatedAtAction(nameof(Post), createdReview);
-            }
-            catch (BookingNotFoundException exception)
-            {
-                return NotFound(exception.Message);
-            }
+            return CreatedAtAction(nameof(Post), createdReview);
         }
     }
 }

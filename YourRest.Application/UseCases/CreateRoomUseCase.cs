@@ -1,4 +1,4 @@
-using YourRest.Application.CustomErrors;
+using YourRest.Application.Exceptions;
 using YourRest.Application.Dto;
 using YourRest.Application.Interfaces;
 using YourRest.Domain.Repositories;
@@ -23,7 +23,7 @@ namespace YourRest.Application.UseCases
 
             if (accommodation == null)
             {
-                throw new AccommodationNotFoundException(roomDto.AccommodationId);
+                throw new EntityNotFoundException($"Accommodation with id {roomDto.AccommodationId} not found");
             }
 
             var room = new RoomEntity();

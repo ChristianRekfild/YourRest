@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using SharpGrip.FluentValidation.AutoValidation.Mvc.Attributes;
-using YourRest.Application.CustomErrors;
+using YourRest.Application.Exceptions;
 using YourRest.Application.Dto;
 using YourRest.Application.Dto.Models;
 using YourRest.Application.Dto.ViewModels;
@@ -55,9 +54,7 @@ namespace YourRest.WebApi.Controllers
             {
                 return BadRequest(ModelState);
             }
-            try
-            {
-                var createdRoom = await _createtRoomUseCase.Execute(roomDto);
+            var createdRoom = await _createtRoomUseCase.Execute(roomDto);
 
                 return CreatedAtAction(nameof(Post), createdRoom);
 

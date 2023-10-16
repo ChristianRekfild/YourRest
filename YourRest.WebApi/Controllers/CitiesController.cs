@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System;
-using YourRest.Application.CustomErrors;
+using YourRest.Application.Exceptions;
 using YourRest.Application.Interfaces;
 using YourRest.Application.UseCases;
 
@@ -32,41 +32,28 @@ namespace YourRest.WebApi.Controllers
         [Route("api/cities/{id}")]
         public async Task<IActionResult> GetCityById(int id)
         {
-            try
-            {
-                var city = await _getCityByIdUseCase.Execute(id);
-                return Ok(city);
-            }
-            catch (CityNotFoundException exception)
-            {
-                return NotFound(exception.Message);
-            }
+            var city = await _getCityByIdUseCase.Execute(id);
+            return Ok(city);
         }
 
         [HttpGet]
         [Route("api/cities")]
         public async Task<IActionResult> GetCities([FromQuery] int? regionId = null, [FromQuery] int? countryId = null)
         {
-            try
+            if (regionId.HasValue)
             {
-                if (regionId.HasValue)
-                {
-                    var citiesByRegion = await _getCityByRegionIdUseCase.Execute(regionId.Value);
-                    return Ok(citiesByRegion);
-                }
-                else if (countryId.HasValue)
-                {
-                    var citiesByCountry = await _getCityByCountryIdUseCase.Execute(countryId.Value);
-                    return Ok(citiesByCountry);
-                }
-                else
-                {
-                    var allCities = await _getCityListUseCase.Execute();
-                    return Ok(allCities);
-                }
+                var citiesByRegion = await _getCityByRegionIdUseCase.Execute(regionId.Value);
+                return Ok(citiesByRegion);
             }
-            catch (Exception exception) when (exception is CountryNotFoundException || exception is CityNotFoundException) { 
-                return NotFound(exception.Message);
+            else if (countryId.HasValue)
+            {
+                var citiesByCountry = await _getCityByCountryIdUseCase.Execute(countryId.Value);
+                return Ok(citiesByCountry);
+            }
+            else
+            {
+                var allCities = await _getCityListUseCase.Execute();
+                return Ok(allCities);
             }
         }
     }
