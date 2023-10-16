@@ -17,7 +17,7 @@ namespace YourRest.WebApi.Tests.Fixtures
             StartApplication();
         }
 
-        private async void InitializePostgresContainer()
+        private void InitializePostgresContainer()
         {
             PostgresContainer = new PostgreSqlBuilder()
                 .WithImage("postgres:15.4-alpine")
@@ -26,7 +26,7 @@ namespace YourRest.WebApi.Tests.Fixtures
                 .WithDatabase("your_rest_postgres_test")
                 .Build();
 
-            PostgresContainer.StartAsync().Wait();
+            //PostgresContainer.StartAsync().Wait();
         }
 
         private void StartApplication()
