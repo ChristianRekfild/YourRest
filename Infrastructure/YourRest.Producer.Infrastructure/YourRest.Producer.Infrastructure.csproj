@@ -20,7 +20,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\YourRest.Infrastructure.Core\YourRest.Infrastructure.Core.csproj" />
-    <ProjectReference Include="..\..\YourRest.Application\YourRest.Application.csproj" />
   </ItemGroup>
 
   <PropertyGroup>
