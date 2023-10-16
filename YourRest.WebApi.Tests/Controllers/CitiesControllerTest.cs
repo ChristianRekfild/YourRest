@@ -150,8 +150,8 @@ namespace YourRest.WebApi.Tests.Controllers
             var city1 = cities.FirstOrDefault(x => x.Name == "Moscow666");
             var city2 = cities.FirstOrDefault(x => x.Name == "TestCity666");
 
-            Assert.Equal(true, city1 != null);
-            Assert.Equal(true, city2 != null);
+            Assert.True(city1 != null);
+            Assert.True(city2 != null);
         }
 
         [Fact]
@@ -189,11 +189,11 @@ namespace YourRest.WebApi.Tests.Controllers
             };
             var cities = SystemJson.JsonSerializer.Deserialize<List<City>>(content, options);
 
-            var city1 = cities.FirstOrDefault(x => x.Name == "Moscow666");
-            var city2 = cities.FirstOrDefault(x => x.Name == "TestCity666");
+            var city1 = cities?.FirstOrDefault(x => x.Name == "Moscow666");
+            var city2 = cities?.FirstOrDefault(x => x.Name == "TestCity666");
 
-            Assert.Equal(true, city1 != null);
-            Assert.Equal(true, city2 != null);
+            Assert.True(city1 != null);
+            Assert.True(city2 != null);
         }
 
         [Fact]
@@ -205,6 +205,7 @@ namespace YourRest.WebApi.Tests.Controllers
 
             var content = await response.Content.ReadAsStringAsync();
             var cities = JsonConvert.DeserializeObject<IEnumerable<CityDTO>>(content);
+            Assert.NotNull(cities);
             Assert.Empty(cities);
         }
 

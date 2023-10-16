@@ -54,7 +54,7 @@ public class Program
             app.UseSwagger();
             app.UseSwaggerUI();
         }
-#pragma warning disable CS8604 // Code that generates warning CS8604 is written here and will be ignored by the compiler.
+#pragma warning restore CS8604 // Code that generates warning CS8604 is written here and will be ignored by the compiler.
         app.UseHttpsRedirection();
         app.UseRouting(); // This is necessary for the endpoints to work.
         app.UseAuthorization();
