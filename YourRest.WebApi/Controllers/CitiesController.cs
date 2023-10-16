@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using SharpGrip.FluentValidation.AutoValidation.Mvc.Attributes;
 using System;
 using YourRest.Application.Exceptions;
 using YourRest.Application.Interfaces;
@@ -8,6 +9,7 @@ namespace YourRest.WebApi.Controllers
 {
     [ApiController]
     //[Route("api/cities")]
+    [FluentValidationAutoValidation]
     public class CitiesController : ControllerBase
     {
         private readonly IGetCityListUseCase _getCityListUseCase;

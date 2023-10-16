@@ -1,6 +1,6 @@
-﻿using YourRest.Application.CustomErrors;
-using YourRest.Application.Dto.Mappers;
+﻿using YourRest.Application.Dto.Mappers;
 using YourRest.Application.Dto.Models;
+using YourRest.Application.Exceptions;
 using YourRest.Application.Interfaces.Room;
 using YourRest.Domain.Repositories;
 using RoomEntity = YourRest.Domain.Entities.Room;
@@ -19,11 +19,11 @@ namespace YourRest.Application.UseCases.Facility
         {
             if ((await roomRepository.GetWithIncludeAsync(room => room.Id == roomId, include => include.RoomFacilities)).SingleOrDefault() is not RoomEntity room)
             {
-                throw new RoomNotFoundExeption(roomId);
+                throw new EntityNotFoundException($"Room with id number {roomId} not found");
             }
             if (!room.RoomFacilities.Any())
             {
-                throw new RoomFacilityNotFoundException($"Not found RoomFacility in cuurent room (id : {roomId})");
+                throw new EntityNotFoundException($"Not found RoomFacility in cuurent room (id : {roomId})");
             }
             return room.RoomFacilities.ToViewModel();
         }

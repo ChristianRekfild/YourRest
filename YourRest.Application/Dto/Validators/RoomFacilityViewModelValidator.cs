@@ -8,7 +8,7 @@ namespace YourRest.Application.Dto.Validators
         public RoomFacilityViewModelValidator()
         {
             RuleFor(roomFacility => roomFacility.RoomId).NotNull().NotEmpty().GreaterThan(0);
-            RuleFor(roomFacility => roomFacility.Name).NotNull().NotEmpty();
+            RuleFor(roomFacility => roomFacility.Name).NotNull().NotEmpty().MaximumLength(50);
         }
     }
 }

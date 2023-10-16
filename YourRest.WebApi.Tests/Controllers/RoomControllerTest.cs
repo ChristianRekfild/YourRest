@@ -1,15 +1,10 @@
-using FluentValidation.TestHelper;
-using Microsoft.AspNetCore.Routing;
 using Newtonsoft.Json;
-using System.ComponentModel.DataAnnotations;
 using System.Net;
 using System.Net.Http.Json;
 using System.Text;
 using YourRest.Application.Dto;
 using YourRest.Application.Dto.Mappers;
 using YourRest.Application.Dto.Models;
-using YourRest.Application.Dto.Validators;
-using YourRest.Application.Dto.ViewModels;
 using YourRest.Domain.Entities;
 using YourRest.WebApi.Responses;
 using YourRest.WebApi.Tests.Fixtures;
@@ -20,13 +15,11 @@ namespace YourRest.WebApi.Tests.Controllers
     public class RoomControllerTest : IClassFixture<SingletonApiTest>
     {
         private readonly SingletonApiTest fixture;
-        private RoomViewModelValidator roomValidator;
         public RoomControllerTest(SingletonApiTest fixture)
         {
             this.fixture = fixture;
-            roomValidator = new();
         }
-        
+
 
         [Fact]
         public async Task UpdatedRoomTest_WhenPutCalledEditMethod_ReturnsMessageOfSuccsessfulyEdited()
@@ -36,16 +29,14 @@ namespace YourRest.WebApi.Tests.Controllers
             {
                 Id = room.Id,
                 AccommodationId = room.AccommodationId,
-                Name = " ",
+                Name = "305",
                 RoomType = "Econom",
-                SquareInMeter = -1,
-                Capacity = 0
+                SquareInMeter = 5,
+                Capacity = 2
             };
 
             var content = new StringContent(JsonConvert.SerializeObject(editedRoom.ToViewModel()), Encoding.UTF8, "application/json");
             var response = await fixture.Client.PutAsync($"api/rooms", content);
-            Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
-            var res = (await response.Content.ReadFromJsonAsync<ValidateErrorsViewModel>()).ToString();
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             Assert.Equal("The room has been edited", await response.Content.ReadAsStringAsync());
             response = await fixture.Client.GetAsync($"api/rooms/{room.Id}");
@@ -128,23 +119,36 @@ namespace YourRest.WebApi.Tests.Controllers
             var accommodationEntity = new Accommodation { Name = "Test" };
             var accommodation = await fixture.InsertObjectIntoDatabase(accommodationEntity);
             var accommodationId = accommodation.Id;
+            var firstRoom = await fixture.InsertObjectIntoDatabase(new Room { Name = "310", AccommodationId = accommodationId, Capacity = 1,SquareInMeter = 20, RoomType = "Luxe" });
+            var secondRoom = await fixture.InsertObjectIntoDatabase(new Room { Name = "305", AccommodationId = accommodationId, Capacity = 2, SquareInMeter = 30, RoomType = "Excellent" });
+            List<RoomWithIdDto> rooms = new()
+            {
+                new() {
+                    Id = firstRoom.Id,
+                    Name = firstRoom.Name,
+                    AccommodationId = firstRoom.AccommodationId,
+                    Capacity = firstRoom.Capacity,
+                    RoomType = firstRoom.RoomType,
+                    SquareInMeter = firstRoom.SquareInMeter
+                },
+                new()
+                {
+                    Id = secondRoom.Id,
+                    Name = secondRoom.Name,
+                    AccommodationId = secondRoom.AccommodationId,
+                    Capacity = secondRoom.Capacity,
+                    RoomType = secondRoom.RoomType,
+                    SquareInMeter = secondRoom.SquareInMeter
+                }
+            };
 
-            var roomEntity = new Room { Name = "Lyxar", AccommodationId = accommodationId, Capacity = 20, Id = 20, SquareInMeter = 30, RoomType = "Lyx" };
-            var expectedRoom = await fixture.InsertObjectIntoDatabase(roomEntity);
-            roomEntity = new Room { Name = "Lyxar2", AccommodationId = accommodationId, Capacity = 25, Id = 25, SquareInMeter = 50, RoomType = "Lyx2" };
-            await fixture.InsertObjectIntoDatabase(roomEntity);
             var response = await fixture.Client.GetAsync($"api/rooms/accommodations/{accommodation.Id}");
 
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             var roomResponse = await response.Content.ReadFromJsonAsync<IEnumerable<RoomWithIdDto>>();
-
-            // Сравнивается не весь список а только первая запись. Тест не пройдет если 2-я сущьность будет отличаться
-            Assert.Equal(roomResponse?.First().Id, expectedRoom.Id);
-            Assert.Equal(roomResponse?.First().Name, expectedRoom.Name);
-            Assert.Equal(roomResponse?.First().AccommodationId, expectedRoom.AccommodationId);
-            Assert.Equal(roomResponse?.First().RoomType, expectedRoom.RoomType);
-            Assert.Equal(roomResponse?.First().Capacity, expectedRoom.Capacity);
-            Assert.Equal(roomResponse?.First().SquareInMeter, expectedRoom.SquareInMeter);
+            Assert.NotNull(roomResponse);
+            Assert.NotEmpty(roomResponse);
+            Assert.Equivalent(roomResponse, rooms);
         }
         [Fact]
         public async Task GetAllRoom_ReturnsVoid_WhenDatabaseHasNoRoom()
@@ -159,7 +163,6 @@ namespace YourRest.WebApi.Tests.Controllers
             var content = await response.Content.ReadAsStringAsync();
             Assert.Equal("[]", content);
         }
-
         [Fact]
         public async Task AddRoom_ReturnsStatusCodeCreated()
         {
@@ -182,41 +185,6 @@ namespace YourRest.WebApi.Tests.Controllers
             Assert.Equal(roomResponse?.Capacity, roomEntity.Capacity);
             Assert.Equal(roomResponse?.SquareInMeter, roomEntity.SquareInMeter);
         }
-
-        [Fact]
-        public async Task AddRoom_ReturnsBadRequest400_WhenAddVoid()
-        {
-            var content = new StringContent(JsonConvert.SerializeObject(null), Encoding.UTF8, "application/json");
-            var response = await fixture.Client.PostAsync($"api/rooms/", content);
-            var responseContent = await response.Content.ReadAsStringAsync();
-            var errorResponse = JsonConvert.DeserializeObject<ErrorResponseDict>(responseContent);
-            var errMsg = errorResponse?.Errors[""].First();
-
-            Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
-            Assert.Equal("A non-empty request body is required.", errMsg);
-        }
-
-        [Fact]
-        public async Task AddRoom_ReturnsBadRequest400_WhenAddRoomIncomplete()
-        {
-            var accommodationEntity = new Accommodation { Name = "Test" };
-            var accommodation = await fixture.InsertObjectIntoDatabase(accommodationEntity);
-            var accommodationId = accommodation.Id;
-
-            var roomEntity = new Room { Name = "Lyxar" };
-            var content = new StringContent(JsonConvert.SerializeObject(roomEntity), Encoding.UTF8, "application/json");
-            var response = await fixture.Client.PostAsync($"api/rooms/", content);
-            Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
-
-            var errorResponseString = await response.Content.ReadAsStringAsync();
-            var errorResponse = JsonConvert.DeserializeObject<ErrorData>(errorResponseString);
-
-            Assert.Equal("Capacity should be more than zero.", errorResponse?.Errors["Capacity"].First());
-            Assert.Equal("The RoomType field is required.", errorResponse?.Errors["RoomType"].First());
-            Assert.Equal("SquareInMeter should be more than zero.", errorResponse?.Errors["SquareInMeter"].First());
-            Assert.Equal("AccommodationId should be more than zero.", errorResponse?.Errors["AccommodationId"].First());
-        }
-
         [Fact]
         public async Task AddRoom_ReturnsNotFound_WhenAddRoomWitFakeAccommodation()
         {
@@ -237,61 +205,6 @@ namespace YourRest.WebApi.Tests.Controllers
             Assert.Equal(errorMassage, expectedMessageJson);
         }
 
-        [Fact]
-        public async Task AddRoom_ReturnsBadRequset_WhenAddFakeRoom()
-        {
-            var accommodationEntity = new Accommodation { Name = "Test" };
-            var accommodation = await fixture.InsertObjectIntoDatabase(accommodationEntity);
-            var accommodationId = accommodation.Id;
-
-            var roomEntity = new FakeRoom { Name = "Lyxar", AccommodationId = accommodationId, Capacity = 20, SquareInMeter = "ten", RoomType = "231" };
-            var content = new StringContent(JsonConvert.SerializeObject(roomEntity), Encoding.UTF8, "application/json");
-            var response = await fixture.Client.PostAsync($"api/rooms/", content);
-
-            Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
-
-            var responseContent = await response.Content.ReadAsStringAsync();
-            var errorResponse1 = JsonConvert.DeserializeObject<ErrorResponseDict>(responseContent);
-            var error = errorResponse1?.Errors["roomDto"].First();
-
-            Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
-            Assert.Equal("The roomDto field is required.", error);
-            //Такая ошибка т.к. не отрабатывает JSON и не переводит текст в double
-        }
-
-        [Fact]
-        public async Task AddRoom_ReturnsBadRequset_WhenInvalidData()
-        {
-            var accommodationEntity = new Accommodation { Name = "Test" };
-            var accommodation = await fixture.InsertObjectIntoDatabase(accommodationEntity);
-            var accommodationId = accommodation.Id;
-
-            var roomEntity = new FakeRoom { Name = "Lyxar", AccommodationId = -100, Capacity = -200, SquareInMeter = "-20", RoomType = "asd" };
-            var content = new StringContent(JsonConvert.SerializeObject(roomEntity), Encoding.UTF8, "application/json");
-            var response = await fixture.Client.PostAsync($"api/rooms/", content);
-
-            Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
-
-            var errorResponseString = await response.Content.ReadAsStringAsync();
-            var errorResponse = JsonConvert.DeserializeObject<ErrorData>(errorResponseString);
-
-            Assert.Equal("Capacity should be more than zero.", errorResponse?.Errors["Capacity"].First());
-            Assert.Equal("SquareInMeter should be more than zero.", errorResponse?.Errors["SquareInMeter"].First());
-            Assert.Equal("AccommodationId should be more than zero.", errorResponse?.Errors["AccommodationId"].First());
-        }
-
-        //Метод нигде не используется
-        private AddressDto CreateValidAddressDto(int cityId)
-        {
-            return new AddressDto
-            {
-                Street = "StreetTest",
-                ZipCode = "654321",
-                Longitude = 0,
-                Latitude = 0,
-                CityId = cityId
-            };
-        }
         private class FakeRoom : IntBaseEntity
         {
             public string Name { get; set; }

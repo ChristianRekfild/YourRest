@@ -1,4 +1,4 @@
-﻿using YourRest.Application.CustomErrors;
+﻿using YourRest.Application.Exceptions;
 using YourRest.Application.Interfaces.Room;
 using YourRest.Domain.Repositories;
 using RoomEntity = YourRest.Domain.Entities.Room;
@@ -16,7 +16,7 @@ namespace YourRest.Application.UseCases.Room
         {
             if (await roomRepository.GetAsync(id) is not RoomEntity room)
             {
-                throw new RoomNotFoundExeption(id);
+                throw new EntityNotFoundException($"Room with Id:{id} not found");
             }
             await roomRepository.DeleteAsync(id);
         }
