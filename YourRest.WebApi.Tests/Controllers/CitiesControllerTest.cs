@@ -26,7 +26,7 @@ namespace YourRest.WebApi.Tests.Controllers
             Client = fixture.Client;
         }
 
-        [Fact(Skip = "Тест зависания")]
+        [Fact]
         public async Task GetAllCities_ReturnsExpectedCities_WhenDatabaseHasCities()
         {
             var expectedCountry = new Country()
@@ -65,7 +65,7 @@ namespace YourRest.WebApi.Tests.Controllers
             //    city => Assert.Equal("TestCity", city.Name));
         }
 
-        [Fact(Skip = "Тест зависания")]
+        [Fact]
         public async Task GetAllCities_ReturnsEmptyList_WhenDatabaseIsEmpty()
         {
             var count = _context.Cities.Count();
@@ -75,7 +75,7 @@ namespace YourRest.WebApi.Tests.Controllers
             Assert.Equal(count, resultCities.Count);
         }
 
-        [Fact(Skip = "Тест зависания")]
+        [Fact]
         public async Task GetCityById_ReturnsExpectedCity_WhenDatabaseHasCitiesByNeedId()
         {
             var countryEntity = new Country { Name = "Russia" };
@@ -100,7 +100,7 @@ namespace YourRest.WebApi.Tests.Controllers
             Assert.Equal("TestCity", expectedCity2.Name);
         }
 
-        [Fact(Skip = "Тест зависания")]
+        [Fact]
         public async Task GetCityById_ReturnsExpectedNull_WhenDatabaseHasNoCitiesByNeedId()
         {
             var maxId = 1000;
@@ -121,7 +121,7 @@ namespace YourRest.WebApi.Tests.Controllers
             Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
         }
 
-        [Fact(Skip = "Тест зависания")]
+        [Fact]
         public async Task GetCityByCountryId_ReturnsExpectedCityList_WhenDatabaseHasCitiesByNeedCountryId()
         {
             var countryEntity = new Country { Name = "Test" };
@@ -154,7 +154,7 @@ namespace YourRest.WebApi.Tests.Controllers
             Assert.Equal(true, city2 != null);
         }
 
-        [Fact(Skip = "Тест зависания")]
+        [Fact]
         public async Task GetCityByCountryId_Returns404_WhenDatabaseDoesntHaveCitiesByNeedCountryId()
         {
             int countryId = int.MaxValue;
@@ -163,7 +163,7 @@ namespace YourRest.WebApi.Tests.Controllers
             Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
         }
 
-        [Fact(Skip = "Тест зависания")]
+        [Fact]
         public async Task GetCityByRegionId_ReturnsExpectedCityList_WhenDatabaseHasCitiesByNeedRegionId()
         {
             var countryEntity = new Country { Name = "Test" };
@@ -196,7 +196,7 @@ namespace YourRest.WebApi.Tests.Controllers
             Assert.Equal(true, city2 != null);
         }
 
-        [Fact(Skip = "Тест зависания")]
+        [Fact]
         public async Task GetCityByRegionId_Returns200Ok_WhenDatabaseDoesntHaveCitiesByGivenRegionId()
         {
             var response = await Client.GetAsync($"/api/cities?regionId=200");
