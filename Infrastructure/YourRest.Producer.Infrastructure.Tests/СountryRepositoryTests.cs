@@ -26,7 +26,7 @@ namespace YourRest.Infrastructure.Tests
             }
         }
 
-        [Fact(Skip = "Тест зависания")]
+        [Fact]
         public async Task TestWithChangeProperty()
         {
             await _countryRepository.AddAsync(new Country { Name = "First Country" });
@@ -45,7 +45,7 @@ namespace YourRest.Infrastructure.Tests
             Assert.Equal(name, updatedCountry?.Name);
         }
 
-        [Fact(Skip = "Тест зависания")]
+        [Fact]
         public async Task TestWithReplaceEntity()
         {
             await _countryRepository.AddAsync(new Country { Name = "First Country" });
