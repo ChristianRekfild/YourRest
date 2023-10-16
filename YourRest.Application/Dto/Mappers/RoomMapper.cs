@@ -13,6 +13,8 @@ namespace YourRest.Application.Dto.Mappers
             .ForMember(target => target.AccommodationId, opt => opt.MapFrom(src => src.AccommodationId))
             .ForMember(target => target.Name, opt => opt.MapFrom(src => src.Name))
             .ForMember(target => target.RoomType, opt => opt.MapFrom(src => src.RoomType))
+            .ForMember(target => target.Capacity, opt => opt.MapFrom(src => src.Capacity))
+            .ForMember(target => target.SquareInMeter, opt => opt.MapFrom(src => src.SquareInMeter))
             .ForMember(target => target.RoomFacilities, opt => opt.MapFrom(src => src.RoomFacilities));
 
             cfg.CreateMap<RoomFacilityViewModel, RoomFacility>()
@@ -27,6 +29,8 @@ namespace YourRest.Application.Dto.Mappers
             .ForMember(target => target.AccommodationId, opt => opt.MapFrom(src => src.AccommodationId))
             .ForMember(target => target.Name, opt => opt.MapFrom(src => src.Name))
             .ForMember(target => target.RoomType, opt => opt.MapFrom(src => src.RoomType))
+            .ForMember(target => target.Capacity, opt => opt.MapFrom(src => src.Capacity))
+            .ForMember(target => target.SquareInMeter, opt => opt.MapFrom(src => src.SquareInMeter))
             .ForMember(target => target.RoomFacilities, opt => opt.MapFrom(src => src.RoomFacilities));
 
             cfg.CreateMap<RoomFacility, RoomFacilityViewModel>()

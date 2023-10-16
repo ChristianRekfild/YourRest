@@ -1,10 +1,18 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using FluentValidation;
+using SharpGrip.FluentValidation.AutoValidation.Mvc.Extensions;
+using Microsoft.Extensions.DependencyInjection;
+using YourRest.Application.Dto.Validators;
 using YourRest.Application.Interfaces;
 using YourRest.Application.Interfaces.Facility;
 using YourRest.Application.Interfaces.Room;
 using YourRest.Application.UseCases;
 using YourRest.Application.UseCases.Facility;
 using YourRest.Application.UseCases.Room;
+using SharpGrip.FluentValidation.AutoValidation.Mvc.Enums;
+using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.AspNetCore.Mvc;
+using SharpGrip.FluentValidation.AutoValidation.Mvc.Results;
+using YourRest.Application.Dto.ViewModels;
 
 namespace YourRest.Application
 {
@@ -32,8 +40,35 @@ namespace YourRest.Application
             services.AddScoped<IEditRoomFacilityUseCase, EditRoomFacilityUseCase>();
             services.AddScoped<IGetRoomFacilityByIdUseCase, GetRoomFacilityByIdUseCase>();
             services.AddScoped<IRemoveRoomFacilityUseCase, RemoveRoomFacilityUseCase>();
-
+            //Configure FluentValidation more information of configure here: https://github.com/SharpGrip/FluentValidation.AutoValidation
+            services.AddFluentValidationAutoValidation(cfg =>
+            {
+                // Disable the built-in .NET model (data annotations) validation.
+                cfg.DisableBuiltInModelValidation = true;
+                // Only validate controllers decorated with the `FluentValidationAutoValidation` attribute.
+                cfg.ValidationStrategy = ValidationStrategy.Annotations;
+                //[FromBody]
+                cfg.EnableBodyBindingSourceAutomaticValidation = true;
+                //[FromForm]
+                cfg.EnableFormBindingSourceAutomaticValidation = true;
+                //[FromQuery]
+                cfg.EnableQueryBindingSourceAutomaticValidation = true;
+                //[FromRoute]
+                cfg.EnablePathBindingSourceAutomaticValidation = true;
+                // Enable validation for parameters bound from 'BindingSource.Custom' binding sources.
+                cfg.EnableCustomBindingSourceAutomaticValidation = true;
+                // Replace the default result factory with a custom implementation.
+                cfg.OverrideDefaultResultFactoryWith<YouRestResultFactory>();
+            });
+            services.AddValidatorsFromAssemblyContaining<RoomViewModelValidator>();
             return services;
+        }
+    }
+    internal class YouRestResultFactory : IFluentValidationAutoValidationResultFactory
+    {
+        public IActionResult CreateActionResult(ActionExecutingContext context, ValidationProblemDetails? validationProblemDetails)
+        {
+            return new BadRequestObjectResult(new ValidateErrorsViewModel() { Title = "Validation errors", ValidationErrors = validationProblemDetails?.Errors });
         }
     }
 }

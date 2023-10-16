@@ -1,10 +1,15 @@
+using FluentValidation.TestHelper;
+using Microsoft.AspNetCore.Routing;
 using Newtonsoft.Json;
+using System.ComponentModel.DataAnnotations;
 using System.Net;
 using System.Net.Http.Json;
 using System.Text;
 using YourRest.Application.Dto;
 using YourRest.Application.Dto.Mappers;
 using YourRest.Application.Dto.Models;
+using YourRest.Application.Dto.Validators;
+using YourRest.Application.Dto.ViewModels;
 using YourRest.Domain.Entities;
 using YourRest.WebApi.Responses;
 using YourRest.WebApi.Tests.Fixtures;
@@ -15,10 +20,13 @@ namespace YourRest.WebApi.Tests.Controllers
     public class RoomControllerTest : IClassFixture<SingletonApiTest>
     {
         private readonly SingletonApiTest fixture;
+        private RoomViewModelValidator roomValidator;
         public RoomControllerTest(SingletonApiTest fixture)
         {
             this.fixture = fixture;
+            roomValidator = new();
         }
+        
 
         [Fact]
         public async Task UpdatedRoomTest_WhenPutCalledEditMethod_ReturnsMessageOfSuccsessfulyEdited()
@@ -28,15 +36,18 @@ namespace YourRest.WebApi.Tests.Controllers
             {
                 Id = room.Id,
                 AccommodationId = room.AccommodationId,
-                Name = "506",
-                RoomType= "Econom"
+                Name = " ",
+                RoomType = "Econom",
+                SquareInMeter = -1,
+                Capacity = 0
             };
 
             var content = new StringContent(JsonConvert.SerializeObject(editedRoom.ToViewModel()), Encoding.UTF8, "application/json");
             var response = await fixture.Client.PutAsync($"api/rooms", content);
+            Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+            var res = (await response.Content.ReadFromJsonAsync<ValidateErrorsViewModel>()).ToString();
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             Assert.Equal("The room has been edited", await response.Content.ReadAsStringAsync());
-
             response = await fixture.Client.GetAsync($"api/rooms/{room.Id}");
             var recivedRoom = await response.Content.ReadFromJsonAsync<RoomViewModel>();
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
@@ -105,7 +116,9 @@ namespace YourRest.WebApi.Tests.Controllers
             {
                 AccommodationId = accommodation.Id,
                 Name = "DeluxeRoom",
-                RoomType = "ZBS"
+                RoomType = "ZBS",
+                SquareInMeter = 1,
+                Capacity = 1
             };
         }
         // =====================------------------------===========================//

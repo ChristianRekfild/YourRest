@@ -9,6 +9,8 @@ namespace YourRest.Application.Dto.Models
         public int AccommodationId { get; set; }
         public string Name { get; set; }
         public string RoomType { get; set; }
+        public double SquareInMeter { get; set; }
+        public int Capacity { get; set; }
         public List<RoomFacilityViewModel> RoomFacilities { get; set; }
     }
 }

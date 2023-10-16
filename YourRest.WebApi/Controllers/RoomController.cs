@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using SharpGrip.FluentValidation.AutoValidation.Mvc.Attributes;
 using YourRest.Application.CustomErrors;
 using YourRest.Application.Dto;
 using YourRest.Application.Dto.Models;
+using YourRest.Application.Dto.ViewModels;
 using YourRest.Application.Interfaces;
 using YourRest.Application.Interfaces.Facility;
 using YourRest.Application.Interfaces.Room;
@@ -10,6 +12,7 @@ namespace YourRest.WebApi.Controllers
 {
     [ApiController]
     [Route("api/rooms")]
+    [FluentValidationAutoValidation]
     public class RoomController : ControllerBase
     {
         private readonly IEditRoomUseCase editRoomUseCase;
@@ -67,11 +70,11 @@ namespace YourRest.WebApi.Controllers
 
         [HttpGet]
         [Route("{id}")]
-        public async Task<IActionResult> GetRoomById(int id)
+        public async Task<IActionResult> GetRoomById([FromRoute] RouteViewModel route)
         {
             try
             {
-                return Ok(await getRoomByIdUseCase.ExecuteAsync(id));
+                return Ok(await getRoomByIdUseCase.ExecuteAsync(route.Id));
             }
             catch (RoomNotFoundExeption ex)
             {
@@ -95,11 +98,11 @@ namespace YourRest.WebApi.Controllers
         }
         [HttpDelete]
         [Route("{id}")]
-        public async Task<IActionResult> RemoveRoom(int id)
+        public async Task<IActionResult> RemoveRoom([FromRoute] RouteViewModel route)
         {
             try
             {
-                await removeRoomUseCase.ExecuteAsync(id);
+                await removeRoomUseCase.ExecuteAsync(route.Id);
                 return Ok("The room has been removed");
             }
             catch (RoomNotFoundExeption ex) { return Problem(detail: ex.Message, statusCode: 404); }
@@ -107,11 +110,11 @@ namespace YourRest.WebApi.Controllers
         }
         [HttpGet]
         [Route("{id}/facilities")]
-        public async Task<IActionResult> GetFacilitiesByRoomId([FromRoute] int id)
+        public async Task<IActionResult> GetFacilitiesByRoomId([FromRoute] RouteViewModel route)
         {
             try
             {
-                return Ok(await getFacilitiesByRoomIdUseCase.ExecuteAsync(id));
+                return Ok(await getFacilitiesByRoomIdUseCase.ExecuteAsync(route.Id));
             }
             catch (RoomNotFoundExeption ex) { return Problem(detail: ex.Message, statusCode: 404); }
             catch (RoomFacilityNotFoundException ex) { return Problem(detail: ex.Message, statusCode: 404); }
@@ -119,11 +122,11 @@ namespace YourRest.WebApi.Controllers
         }
         [HttpPost]
         [Route("{id}/facilities")]
-        public async Task<IActionResult> AddFacilityToRoom([FromRoute] int id, [FromBody] RoomFacilityViewModel roomFacility)
+        public async Task<IActionResult> AddFacilityToRoom([FromRoute] RouteViewModel route, [FromBody] RoomFacilityViewModel roomFacility)
         {
             try
             {
-                roomFacility.RoomId = id;
+                roomFacility.RoomId = route.Id;
                 await addRoomFacilityUseCase.ExecuteAsync(roomFacility);
                 return Ok("The room facility has been added to current room");
             }
