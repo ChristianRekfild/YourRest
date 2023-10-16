@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using YourRest.Infrastructure.Core.DbContexts;
@@ -11,9 +12,11 @@ using YourRest.Infrastructure.Core.DbContexts;
 namespace YourRest.Producer.Infrastructure.Migrations
 {
     [DbContext(typeof(SharedDbContext))]
-    partial class SharedDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231010213943_AddRooms")]
+    partial class AddRooms
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -360,26 +363,6 @@ namespace YourRest.Producer.Infrastructure.Migrations
             modelBuilder.Entity("YourRest.Domain.Entities.Accommodation", b =>
                 {
                     b.Navigation("Rooms");
-                });
-
-            modelBuilder.Entity("YourRest.Domain.Entities.Country", b =>
-                {
-                    b.Navigation("Regions");
-                });
-
-            modelBuilder.Entity("YourRest.Domain.Entities.Region", b =>
-                {
-                    b.Navigation("Cities");
-                });
-
-            modelBuilder.Entity("YourRest.Domain.Entities.Country", b =>
-                {
-                    b.Navigation("Regions");
-                });
-
-            modelBuilder.Entity("YourRest.Domain.Entities.Region", b =>
-                {
-                    b.Navigation("Cities");
                 });
 
             modelBuilder.Entity("YourRest.Domain.Entities.Country", b =>
