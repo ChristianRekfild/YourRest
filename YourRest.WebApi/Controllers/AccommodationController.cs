@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using YourRest.Application.Dto;
 using YourRest.Application.Interfaces;
-using YourRest.Application.CustomErrors;
+using YourRest.Application.Exceptions;
 using YourRest.WebApi.Responses;
 
 namespace YourRest.WebApi.Controllers
@@ -24,19 +24,9 @@ namespace YourRest.WebApi.Controllers
             {
                 return BadRequest(ModelState);
             }
-            try
-            {
-                var result = await _addAddressToAccommodationUseCase.Execute(accommodationId, addressDto);
+            var result = await _addAddressToAccommodationUseCase.Execute(accommodationId, addressDto);
 
-                return CreatedAtRoute(nameof(AddAddressToAccommodationAsync), result);
-            }
-            catch (Exception exception) when (exception is AccommodationNotFoundException || exception is CityNotFoundException)
-            {
-                return NotFound(new ErrorResponse{ Message = exception.Message});
-            } catch (AddressAlreadyExistsException exception)
-            {
-                return UnprocessableEntity(new ErrorResponse{ Message = exception.Message});
-            }
+            return CreatedAtRoute(nameof(AddAddressToAccommodationAsync), result);
         }
     }
 }

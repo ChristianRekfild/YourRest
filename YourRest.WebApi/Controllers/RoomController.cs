@@ -1,6 +1,6 @@
 using YourRest.Application.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using YourRest.Application.CustomErrors;
+using YourRest.Application.Exceptions;
 using YourRest.Application.Dto;
 using YourRest.Domain.Entities;
 using YourRest.Application.UseCases;
@@ -36,17 +36,9 @@ namespace YourRest.WebApi.Controllers
             {
                 return BadRequest(ModelState);
             }
-            try
-            {
-                var createdRoom = await _createtRoomUseCase.Execute(roomDto);
+            var createdRoom = await _createtRoomUseCase.Execute(roomDto);
 
-                return CreatedAtAction(nameof(Post), createdRoom);
-
-            }
-            catch (AccommodationNotFoundException exception)
-            {
-                return UnprocessableEntity(exception.Message);
-            }
+            return CreatedAtAction(nameof(Post), createdRoom);
         }
     }
 }

@@ -1,10 +1,6 @@
 using Newtonsoft.Json;
-using System.Collections.Generic;
 using System.Net;
-using System.Security.AccessControl;
 using System.Text;
-using System.Text.Json;
-using System.Xml.Linq;
 using YourRest.Application.Dto;
 using YourRest.Domain.Entities;
 using YourRest.WebApi.Responses;
@@ -128,9 +124,13 @@ namespace YourRest.WebApi.Tests.Controllers
             var content = new StringContent(JsonConvert.SerializeObject(roomEntity), Encoding.UTF8, "application/json");
             var response = await Client.PostAsync($"api/rooms/", content);
 
-            Assert.Equal(HttpStatusCode.UnprocessableEntity, response.StatusCode);
+            Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+
             var errorMassage = await response.Content.ReadAsStringAsync();
-            Assert.Equal($"Accommodation with id {accommodationId} not found", errorMassage);
+            var expectedMessage = new { message = $"Accommodation with id {accommodationId} not found" };
+            var expectedMessageJson = JsonConvert.SerializeObject(expectedMessage);
+
+            Assert.Equal(errorMassage, expectedMessageJson);
         }
 
         [Fact]
