@@ -150,8 +150,8 @@ namespace YourRest.WebApi.Tests.Controllers
             var city1 = cities?.FirstOrDefault(x => x.Name == "Moscow666");
             var city2 = cities?.FirstOrDefault(x => x.Name == "TestCity666");
 
-            Assert.True(city1 != null);
-            Assert.True(city2 != null);
+            Assert.NotNull(city1);
+            Assert.NotNull(city2);
         }
 
         [Fact]
@@ -192,8 +192,8 @@ namespace YourRest.WebApi.Tests.Controllers
             var city1 = cities?.FirstOrDefault(x => x.Name == "Moscow666");
             var city2 = cities?.FirstOrDefault(x => x.Name == "TestCity666");
 
-            Assert.True(city1 != null);
-            Assert.True(city2 != null);
+            Assert.NotNull(city1);
+            Assert.NotNull(city2);
         }
 
         [Fact]
