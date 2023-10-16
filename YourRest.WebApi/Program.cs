@@ -3,7 +3,7 @@ using Microsoft.OpenApi.Models;
 using YourRest.Application;
 using YourRest.Infrastructure.Core.DbContexts;
 using YourRest.Producer.Infrastructure;
-using YourRest.Producer.Infrastructure.Middlewares;
+using YourRest.Producer.Infrastructure.Middleware;
 
 public class Program
 {
