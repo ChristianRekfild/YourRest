@@ -1,6 +1,4 @@
 using Microsoft.AspNetCore.Http;
-using System;
-using System.Threading.Tasks;
 using System.Text.Json;
 using YourRest.Application.Exceptions;
 

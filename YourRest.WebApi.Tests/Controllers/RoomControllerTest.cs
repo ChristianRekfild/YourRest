@@ -1,10 +1,6 @@
 using Newtonsoft.Json;
-using System.Collections.Generic;
 using System.Net;
-using System.Security.AccessControl;
 using System.Text;
-using System.Text.Json;
-using System.Xml.Linq;
 using YourRest.Application.Dto;
 using YourRest.Domain.Entities;
 using YourRest.WebApi.Responses;

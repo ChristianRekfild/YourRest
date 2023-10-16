@@ -17,7 +17,7 @@ namespace YourRest.WebApi.Tests.Fixtures
             StartApplication();
         }
 
-        private async void InitializePostgresContainer()
+        private void InitializePostgresContainer()
         {
             PostgresContainer = new PostgreSqlBuilder()
                 .WithImage("postgres:15.4-alpine")
@@ -26,7 +26,7 @@ namespace YourRest.WebApi.Tests.Fixtures
                 .WithDatabase("your_rest_postgres_test")
                 .Build();
 
-            PostgresContainer.StartAsync().Wait();
+            Task.Run(async () => await PostgresContainer.StartAsync()).Wait();
         }
 
         private void StartApplication()
@@ -48,9 +48,9 @@ namespace YourRest.WebApi.Tests.Fixtures
             Server = new TestServer(builder);
         }
 
-        public async void Dispose()
+        public void Dispose()
         {
-            await PostgresContainer.StopAsync();
+            Task.Run(async () => await PostgresContainer.StopAsync()).Wait();
             Server?.Dispose();
         }
     }
