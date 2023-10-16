@@ -1,10 +1,6 @@
 using Newtonsoft.Json;
-using System.Collections.Generic;
 using System.Net;
-using System.Security.AccessControl;
 using System.Text;
-using System.Text.Json;
-using System.Xml.Linq;
 using YourRest.Application.Dto;
 using YourRest.Domain.Entities;
 using YourRest.WebApi.Responses;
@@ -18,7 +14,7 @@ namespace YourRest.WebApi.Tests.Controllers
         {
         }
 
-        [Fact(Skip = "Тест зависания")]
+        [Fact]
         public async Task GetAllRoom_ReturnsExpectedRoom_WhenDatabaseHasRoom()
         {
             var accommodationEntity = new Accommodation{Name = "Test"};
@@ -44,7 +40,7 @@ namespace YourRest.WebApi.Tests.Controllers
         }
 
 
-        [Fact(Skip = "Тест зависания")]
+        [Fact]
         public async Task GetAllRoom_ReturnsVoid_WhenDatabaseHasNoRoom()
         {
             var accommodationEntity = new Accommodation { Name = "Test" };
@@ -59,7 +55,7 @@ namespace YourRest.WebApi.Tests.Controllers
 
         }
 
-        [Fact(Skip = "Тест зависания")]
+        [Fact]
         public async Task AddRoom_ReturnsStatusCodeCreated()
         {
             var accommodationEntity = new Accommodation { Name = "Test" };
@@ -82,7 +78,7 @@ namespace YourRest.WebApi.Tests.Controllers
             Assert.Equal(roomResponse?.SquareInMeter, roomEntity.SquareInMeter);
         }
 
-        [Fact(Skip = "Тест зависания")]
+        [Fact]
         public async Task AddRoom_ReturnsBadRequest400_WhenAddVoid()
         {
             var content = new StringContent(JsonConvert.SerializeObject(null), Encoding.UTF8, "application/json");
@@ -95,7 +91,7 @@ namespace YourRest.WebApi.Tests.Controllers
             Assert.Equal("A non-empty request body is required.", errMsg);
         }
 
-        [Fact(Skip = "Тест зависания")]
+        [Fact]
         public async Task AddRoom_ReturnsBadRequest400_WhenAddRoomIncomplete()
         {
             var accommodationEntity = new Accommodation { Name = "Test" };
@@ -117,7 +113,7 @@ namespace YourRest.WebApi.Tests.Controllers
 
         }
 
-        [Fact(Skip = "Тест зависания")]
+        [Fact]
         public async Task AddRoom_ReturnsNotFound_WhenAddRoomWitFakeAccommodation()
         {
             var accommodationEntity = new Accommodation { Name = "Test" };
@@ -137,7 +133,7 @@ namespace YourRest.WebApi.Tests.Controllers
             Assert.Equal(errorMassage, expectedMessageJson);
         }
 
-        [Fact(Skip = "Тест зависания")]
+        [Fact]
         public async Task AddRoom_ReturnsBadRequset_WhenAddFakeRoom()
         {
             var accommodationEntity = new Accommodation { Name = "Test" };
@@ -159,7 +155,7 @@ namespace YourRest.WebApi.Tests.Controllers
             //Такая ошибка т.к. не отрабатывает JSON и не переводит текст в double
         }
 
-        [Fact(Skip = "Тест зависания")]
+        [Fact]
         public async Task AddRoom_ReturnsBadRequset_WhenInvalidData()
         {
             var accommodationEntity = new Accommodation { Name = "Test" };

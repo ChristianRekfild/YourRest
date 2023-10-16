@@ -16,7 +16,7 @@ namespace YourRest.WebApi.Tests.Controllers
             this.fixture = fixture;
         }
 
-        [Fact(Skip = "Тест зависания")]
+        [Fact]
         public async Task GetAllCountries_ReturnsExpectedCountries_WhenDatabaseHasCountries()
         {
             var expectedCountry1 = new Country { Name = "Russia" };
@@ -32,7 +32,7 @@ namespace YourRest.WebApi.Tests.Controllers
                 country => Assert.Equal("Test", country.Name));
         }
 
-        [Fact(Skip = "Тест зависания")]
+        [Fact]
         public async Task GetAllCountries_ReturnsEmptyList_WhenDatabaseIsEmpty()
         {
             fixture.DbContext.Countries.RemoveRange(fixture.DbContext.Countries);

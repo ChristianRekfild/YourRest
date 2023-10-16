@@ -15,7 +15,7 @@ namespace YourRest.WebApi.Tests.Controllers
         {
         }
 
-        [Fact(Skip = "Тест зависания")]
+        [Fact]
         public async Task GivenAccommodation_WhenApiMethodInvokedWithValidAddress_ThenReturns200Ok()
         {
             var accommodationEntity = new Accommodation
@@ -47,7 +47,7 @@ namespace YourRest.WebApi.Tests.Controllers
             Assert.True(createdAddress?.Id > 0);
         }
 
-        [Fact(Skip = "Тест зависания")]
+        [Fact]
         public async Task GivenAccommodationAndExistAddressInDB_WhenApiMethodInvokedWithTheSameAddress_ThenReturns200Ok()
         {
             var countryEntity = new Country { Name = "Russia" };
@@ -88,7 +88,7 @@ namespace YourRest.WebApi.Tests.Controllers
             Assert.True(createdAddress?.Id > 0);
         }
 
-        [Fact(Skip = "Тест зависания")]
+        [Fact]
         public async Task GivenNonexistentAccommodation_WhenAddAddressToAccommodationAsyncInvoked_ThenReturns404()
         {
             var countryEntity = new Country { Name = "Russia" };
@@ -113,7 +113,7 @@ namespace YourRest.WebApi.Tests.Controllers
             Assert.Equal(errorMassage, expectedMessageJson);
         }
 
-        [Fact(Skip = "Тест зависания")]
+        [Fact]
         public async Task GivenNonexistentCity_WhenAddAddressToAccommodationAsyncInvoked_ThenReturns400()
         {
             var accommodationEntity = new Accommodation
@@ -146,7 +146,7 @@ namespace YourRest.WebApi.Tests.Controllers
             Assert.Equal(errorResponseString, expectedMessageJson);
         }
 
-        [Fact(Skip = "Тест зависания")]
+        [Fact]
         public async Task GivenInvalidAddress_WhenAddAddressToAccommodationAsyncInvoked_ThenReturns404()
         {
             var accommodation = new Accommodation
@@ -178,7 +178,7 @@ namespace YourRest.WebApi.Tests.Controllers
             Assert.Equal("City Id should be more than zero.", errorData?.Errors["CityId"][0]);
         }
 
-        [Fact(Skip = "Тест зависания")]
+        [Fact]
         public async Task GivenAccommodationWithAddress_WhenAddAddressToAccommodationAsyncInvoked_ThenThrows422()
         {
             var countryEntity = new Country { Name = "Russia" };
