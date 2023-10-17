@@ -2,7 +2,7 @@
 
 namespace YourRest.Application.Dto.ViewModels
 {
-    public class ValidateErrorsViewModel
+    public class ErrorViewModel
     {
         private StringBuilder sb = new();
         public string Title { get; set; }

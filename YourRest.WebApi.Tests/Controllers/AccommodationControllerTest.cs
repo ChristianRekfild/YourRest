@@ -5,6 +5,8 @@ using YourRest.Domain.Entities;
 using YourRest.Application.Dto;
 using YourRest.WebApi.Tests.Fixtures;
 using YourRest.WebApi.Responses;
+using YourRest.Application.Dto.ViewModels;
+using System.Net.Http.Json;
 //using Docker.DotNet.Models;
 
 namespace YourRest.WebApi.Tests.Controllers
@@ -160,22 +162,23 @@ namespace YourRest.WebApi.Tests.Controllers
             {
                 Street = "",
                 ZipCode = "",
-                Longitude = 200,
-                Latitude = -200,
+                Longitude = 190,
+                Latitude = 190,
                 CityId = -1
             };
 
             var content = new StringContent(JsonConvert.SerializeObject(addressDto), Encoding.UTF8, "application/json");
             var response = await Client.PostAsync($"api/operator/accommodation/{id}/address", content);
-            var errorResponseString = await response.Content.ReadAsStringAsync();
-            var errorData = JsonConvert.DeserializeObject<ErrorData>(errorResponseString);
+            var errorData = await response.Content.ReadFromJsonAsync<ErrorViewModel>();
+           
 
             Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
-            Assert.Equal("The Street field is required.", errorData?.Errors["Street"][0]);
-            Assert.Equal("The ZipCode field is required.", errorData?.Errors["ZipCode"][0]);
-            Assert.Equal("The field Longitude must be between -180 and 180.", errorData?.Errors["Longitude"][0]);
-            Assert.Equal("The field Latitude must be between -90 and 90.", errorData?.Errors["Latitude"][0]);
-            Assert.Equal("City Id should be more than zero.", errorData?.Errors["CityId"][0]);
+            Assert.Equal("'Street' должно быть заполнено.", errorData?.ValidationErrors[nameof(addressDto.Street)][0]);
+            Assert.Equal("'Zip Code' должно быть заполнено.", errorData?.ValidationErrors[nameof(addressDto.ZipCode)][0]);
+            Assert.Equal("'Zip Code' имеет неверный формат.", errorData?.ValidationErrors[nameof(addressDto.ZipCode)][1]);
+            Assert.Equal("'Latitude' должно быть в диапазоне от -90 до 90. Введенное значение: 190.", errorData?.ValidationErrors[nameof(addressDto.Latitude)][0]);
+            Assert.Equal("'Longitude' должно быть в диапазоне от -180 до 180. Введенное значение: 190.", errorData?.ValidationErrors[nameof(addressDto.Longitude)][0]);
+            Assert.Equal("'City Id' должно быть больше '0'.", errorData?.ValidationErrors[nameof(addressDto.CityId)][0]);
         }
 
         [Fact]
