@@ -42,6 +42,10 @@ namespace YourRest.Application.Tests.UseCases
 
             //The thrown exception can be used for even more detailed assertions.
             Assert.Equal($"Accommodation with id {accommodationId} not found", exception.Message);
+
+            _accommodationRepositoryMock
+                .Verify(r => r.GetWithIncludeAsync(It.IsAny<Expression<Func<Accommodation, bool>>>(), It.IsAny<Expression<Func<Accommodation, object>>>()),
+                Times.Once);
         }
 
 
@@ -63,6 +67,10 @@ namespace YourRest.Application.Tests.UseCases
 
             //The thrown exception can be used for even more detailed assertions.
             Assert.Equal($"Address for accommodation with id {accommodationId} already exists", exception.Message);
+
+            _accommodationRepositoryMock
+                .Verify(r => r.GetWithIncludeAsync(It.IsAny<Expression<Func<Accommodation, bool>>>(), It.IsAny<Expression<Func<Accommodation, object>>>()),
+                Times.Once);
         }
 
         [Fact]
