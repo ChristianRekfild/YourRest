@@ -17,22 +17,27 @@ namespace YourRest.WebApi.Tests.Controllers
         [Fact]
         public async Task GetAllRoomTypes() 
         {
-            var roomLux = new RoomTypeDto{ Name = "Lux" };
-            var roomStandart = new RoomTypeDto { Name = "Standart" };
-            var roomApart = new RoomTypeDto { Name = "Apart" };
-
+            var roomLux = new RoomType{ Id = 1, Name = "Lux" };
+            var roomStandart = new RoomType { Id = 2, Name = "Standart" };
+            var roomApart = new RoomType { Id = 3, Name = "Apart" };
 
             var lux = await InsertObjectIntoDatabase(roomLux);
             var standart = await InsertObjectIntoDatabase(roomStandart);
             var apart = await InsertObjectIntoDatabase(roomApart);
 
-            var response = await Client.GetAsync($"api/rooms/roomTypes");
+            var response = await Client.GetAsync($"api/roomTypes");
             var content = await response.Content.ReadAsStringAsync();
             var types = JsonConvert.DeserializeObject<List<RoomTypeDto>>(content);
 
             Assert.Equal(types[0].Name, lux.Name);
+            Assert.Equal(types[0].Id, lux.Id);
+
             Assert.Equal(types[1].Name, standart.Name);
+            Assert.Equal(types[1].Id, standart.Id);
+
             Assert.Equal(types[2].Name, apart.Name);
+            Assert.Equal(types[2].Id, apart.Id);
+
         }
     }
 }

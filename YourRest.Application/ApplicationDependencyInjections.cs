@@ -18,6 +18,8 @@ namespace YourRest.Application
             services.AddScoped<IGetCityByCountryIdUseCase, GetCityByCountryIdUseCase>();
             services.AddScoped<IGetRoomListUseCase, GetRoomListUseCase>();
             services.AddScoped<ICreateRoomUseCase, CreateRoomUseCase>();
+            services.AddScoped<IGetRoomTypeListUseCase, GetRoomTypeListUseCase>();
+
 
             return services;
         }
