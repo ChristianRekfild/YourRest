@@ -1,9 +1,6 @@
 using Newtonsoft.Json;
-using System.Net;
-using System.Text;
 using YourRest.Application.Dto;
 using YourRest.Domain.Entities;
-using YourRest.WebApi.Responses;
 using YourRest.WebApi.Tests.Fixtures;
 
 namespace YourRest.WebApi.Tests.Controllers

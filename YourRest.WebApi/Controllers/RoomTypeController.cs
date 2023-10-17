@@ -1,9 +1,5 @@
 using YourRest.Application.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using YourRest.Application.Exceptions;
-using YourRest.Application.Dto;
-using YourRest.Domain.Entities;
-using YourRest.Application.UseCases;
 
 namespace YourRest.WebApi.Controllers
 {
