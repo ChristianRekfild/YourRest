@@ -7,14 +7,16 @@ using YourRest.WebApi.Tests.Fixtures;
 using YourRest.WebApi.Responses;
 using YourRest.Application.Dto.ViewModels;
 using System.Net.Http.Json;
-//using Docker.DotNet.Models;
 
 namespace YourRest.WebApi.Tests.Controllers
 {
-    public class AccommodationControllerTest : ApiTest
+
+    public class AccommodationControllerTest : IClassFixture<SingletonApiTest>
     {
-        public AccommodationControllerTest(ApiFixture fixture) : base(fixture)
+        private readonly SingletonApiTest fixture;
+        public AccommodationControllerTest(SingletonApiTest fixture)
         {
+            this.fixture = fixture;
         }
 
         [Fact]
@@ -25,21 +27,21 @@ namespace YourRest.WebApi.Tests.Controllers
                 Name = "Test",
             };
 
-            var accommodation = await InsertObjectIntoDatabase(accommodationEntity);
+            var accommodation = await fixture.InsertObjectIntoDatabase(accommodationEntity);
             var accommodationId = accommodation.Id;
 
             var countryEntity = new Country() { Name = "Russia" };
-            var country = await InsertObjectIntoDatabase(countryEntity);
+            var country = await fixture.InsertObjectIntoDatabase(countryEntity);
 
             var regionEntity = new Region() { Name = "Московская область", CountryId = country.Id };
-            var region = await InsertObjectIntoDatabase(regionEntity);
+            var region = await fixture.InsertObjectIntoDatabase(regionEntity);
 
             var cityEntity = new City { Name = "Moscow", RegionId = region.Id };
-            var city = await InsertObjectIntoDatabase(cityEntity);
+            var city = await fixture.InsertObjectIntoDatabase(cityEntity);
             var addressDto = CreateValidAddressDto(city.Id);
 
             var content = new StringContent(JsonConvert.SerializeObject(addressDto), Encoding.UTF8, "application/json");
-            var response = await Client.PostAsync($"api/operator/accommodation/{accommodationId}/address", content);
+            var response = await fixture.Client.PostAsync($"api/operator/accommodation/{accommodationId}/address", content);
 
             Assert.Equal(HttpStatusCode.Created, response.StatusCode);
 
@@ -52,40 +54,27 @@ namespace YourRest.WebApi.Tests.Controllers
         [Fact]
         public async Task GivenAccommodationAndExistAddressInDB_WhenApiMethodInvokedWithTheSameAddress_ThenReturns200Ok()
         {
-            var countryEntity = new Country { Name = "Russia" };
-            var country = await InsertObjectIntoDatabase(countryEntity);
-            var regionEntity = new Region { Name = "Московская область", CountryId = country.Id };
-            var region = await InsertObjectIntoDatabase(regionEntity);
 
-            var cityEntity = new City { Name = "Moscow", RegionId = region.Id };
-            var city = await InsertObjectIntoDatabase(cityEntity);
-
-            var addressDto = CreateValidAddressDto(city.Id);
-
-            var addressEntity = new Address
+            var country = await fixture.InsertObjectIntoDatabase(new Country { Name = "Russia" });
+            var region = await fixture.InsertObjectIntoDatabase(new Region { Name = "Московская область", CountryId = country.Id });
+            var city = await fixture.InsertObjectIntoDatabase(new City { Name = "Moscow", RegionId = region.Id });
+            var address = await fixture.InsertObjectIntoDatabase(new Address
             {
                 Street = "Тестовая улица",
                 CityId = city.Id,
                 ZipCode = "188644",
                 Longitude = 100,
-                Latitude = 100,
-            };
-            await InsertObjectIntoDatabase(addressEntity);
-
-            var accommodationEntity = new Accommodation
-            {
-                Name = "Test",
-            };
-            var accommodation = await InsertObjectIntoDatabase(accommodationEntity);
-            var accommodationId = accommodation.Id;
+                Latitude = 80,
+            });
+            var accommodation = await fixture.InsertObjectIntoDatabase(new Accommodation { Name = "Hotel" });
+            var addressDto = CreateValidAddressDto(city.Id);
 
             var content = new StringContent(JsonConvert.SerializeObject(addressDto), Encoding.UTF8, "application/json");
-            var response = await Client.PostAsync($"api/operator/accommodation/{accommodationId}/address", content);
-
+            var response = await fixture.Client.PostAsync($"api/operator/accommodation/{accommodation.Id}/address", content);
+            var error = await response.Content.ReadAsStringAsync();
             Assert.Equal(HttpStatusCode.Created, response.StatusCode);
 
-            var responseString = await response.Content.ReadAsStringAsync();
-            var createdAddress = JsonConvert.DeserializeObject<ResultDto>(responseString);
+            var createdAddress = await response.Content.ReadFromJsonAsync<ResultDto>();
 
             Assert.True(createdAddress?.Id > 0);
         }
@@ -94,18 +83,18 @@ namespace YourRest.WebApi.Tests.Controllers
         public async Task GivenNonexistentAccommodation_WhenAddAddressToAccommodationAsyncInvoked_ThenReturns404()
         {
             var countryEntity = new Country { Name = "Russia" };
-            var country = await InsertObjectIntoDatabase(countryEntity);
+            var country = await fixture.InsertObjectIntoDatabase(countryEntity);
             var regionEntity = new Region { Name = "Московская область", CountryId = country.Id };
-            var region = await InsertObjectIntoDatabase(regionEntity);
+            var region = await fixture.InsertObjectIntoDatabase(regionEntity);
 
             var accommodationId = -1;
-            var cityEntity = new City { Name = "Moscow" , RegionId = region.Id };
-            var city = await InsertObjectIntoDatabase(cityEntity);
+            var cityEntity = new City { Name = "Moscow", RegionId = region.Id };
+            var city = await fixture.InsertObjectIntoDatabase(cityEntity);
 
             var addressDto = CreateValidAddressDto(city.Id);
 
             var content = new StringContent(JsonConvert.SerializeObject(addressDto), Encoding.UTF8, "application/json");
-            var response = await Client.PostAsync($"api/operator/accommodation/{accommodationId}/address", content);
+            var response = await fixture.Client.PostAsync($"api/operator/accommodation/{accommodationId}/address", content);
             var errorResponseString = await response.Content.ReadAsStringAsync();
             var errorMassage = await response.Content.ReadAsStringAsync();
             var expectedMessage = new { message = $"Accommodation with id {accommodationId} not found" };
@@ -123,7 +112,7 @@ namespace YourRest.WebApi.Tests.Controllers
                 Name = "Test",
             };
 
-            var accommodation = await InsertObjectIntoDatabase(accommodationEntity);
+            var accommodation = await fixture.InsertObjectIntoDatabase(accommodationEntity);
             var accommodationId = accommodation.Id;
 
             var addressDto = new AddressDto
@@ -136,7 +125,7 @@ namespace YourRest.WebApi.Tests.Controllers
             };
 
             var content = new StringContent(JsonConvert.SerializeObject(addressDto), Encoding.UTF8, "application/json");
-            var response = await Client.PostAsync($"api/operator/accommodation/{accommodationId}/address", content);
+            var response = await fixture.Client.PostAsync($"api/operator/accommodation/{accommodationId}/address", content);
 
             Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
 
@@ -156,7 +145,7 @@ namespace YourRest.WebApi.Tests.Controllers
                 Name = "Test2",
             };
 
-            var entity = await InsertObjectIntoDatabase(accommodation);
+            var entity = await fixture.InsertObjectIntoDatabase(accommodation);
             var id = entity.Id;
             var addressDto = new AddressDto
             {
@@ -168,9 +157,9 @@ namespace YourRest.WebApi.Tests.Controllers
             };
 
             var content = new StringContent(JsonConvert.SerializeObject(addressDto), Encoding.UTF8, "application/json");
-            var response = await Client.PostAsync($"api/operator/accommodation/{id}/address", content);
+            var response = await fixture.Client.PostAsync($"api/operator/accommodation/{id}/address", content);
             var errorData = await response.Content.ReadFromJsonAsync<ErrorViewModel>();
-           
+
 
             Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
             Assert.Equal("'Street' должно быть заполнено.", errorData?.ValidationErrors[nameof(addressDto.Street)][0]);
@@ -185,41 +174,37 @@ namespace YourRest.WebApi.Tests.Controllers
         public async Task GivenAccommodationWithAddress_WhenAddAddressToAccommodationAsyncInvoked_ThenThrows422()
         {
             var countryEntity = new Country { Name = "Russia" };
-            var country = await InsertObjectIntoDatabase(countryEntity);
+            var country = await fixture.InsertObjectIntoDatabase(countryEntity);
             var regionEntity = new Region { Name = "Московская область", CountryId = country.Id };
-            var region = await InsertObjectIntoDatabase(regionEntity);
+            var region = await fixture.InsertObjectIntoDatabase(regionEntity);
 
             var cityEntity = new City { Name = "Moscow", RegionId = region.Id };
-            var city = await InsertObjectIntoDatabase(cityEntity);
-            var addressDto = CreateValidAddressDto(city.Id);
+            var city = await fixture.InsertObjectIntoDatabase(cityEntity);
 
-            var addressEntity = new Address
+            var addressEntity = await fixture.InsertObjectIntoDatabase(new Address
             {
                 Street = "Тестовая улица",
                 CityId = city.Id,
                 ZipCode = "188644",
                 Longitude = 100,
-                Latitude = 100,
-            };
-            await InsertObjectIntoDatabase(addressEntity);
-
-            var accommodationEntity = new Accommodation
+                Latitude = 90,
+            });
+            var accommodation = await fixture.InsertObjectIntoDatabase(new Accommodation
             {
                 Name = "Test",
                 AddressId = addressEntity.Id
-            };
-            var accommodation = await InsertObjectIntoDatabase(accommodationEntity);
-            var accommodationId = accommodation.Id;
+            });
+            var addressDto = CreateValidAddressDto(city.Id);
 
             var content = new StringContent(JsonConvert.SerializeObject(addressDto), Encoding.UTF8, "application/json");
-            var response = await Client.PostAsync($"api/operator/accommodation/{accommodationId}/address", content);
+            var response = await fixture.Client.PostAsync($"api/operator/accommodation/{accommodation.Id}/address", content);
 
             Assert.Equal(HttpStatusCode.UnprocessableEntity, response.StatusCode);
 
             var errorResponseString = await response.Content.ReadAsStringAsync();
             var errorResponse = JsonConvert.DeserializeObject<ErrorResponse>(errorResponseString);
 
-            Assert.Equal($"Address for accommodation with id {accommodationId} already exists", errorResponse?.Message);
+            Assert.Equal($"Address for accommodation with id {accommodation.Id} already exists", errorResponse?.Message);
         }
 
         private AddressDto CreateValidAddressDto(int cityId)
