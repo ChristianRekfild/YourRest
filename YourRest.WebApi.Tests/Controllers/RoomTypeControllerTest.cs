@@ -25,6 +25,8 @@ namespace YourRest.WebApi.Tests.Controllers
             var response = await Client.GetAsync($"api/roomTypes");
             var content = await response.Content.ReadAsStringAsync();
             var types = JsonConvert.DeserializeObject<List<RoomTypeDto>>(content);
+            Assert.NotNull(types);
+
             Assert.Equal(types[0].Name, lux.Name);
             Assert.Equal(types[0].Id, lux.Id);
 
