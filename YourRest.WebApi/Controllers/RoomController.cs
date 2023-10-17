@@ -13,13 +13,16 @@ namespace YourRest.WebApi.Controllers
     {
         private readonly IGetRoomListUseCase _getRoomListUseCase;
         private readonly ICreateRoomUseCase _createtRoomUseCase;
+        private readonly IGetRoomTypeListUseCase _getRoomTypeListUseCase;
 
 
-        public RoomController(IGetRoomListUseCase getRoomListUseCase, ICreateRoomUseCase createtRoomUseCase)
+
+        public RoomController(IGetRoomListUseCase getRoomListUseCase, ICreateRoomUseCase createtRoomUseCase, IGetRoomTypeListUseCase getRoomTypeListUseCase)
         {
             _getRoomListUseCase = getRoomListUseCase;
             _createtRoomUseCase = createtRoomUseCase;
-        }
+            _getRoomTypeListUseCase = getRoomTypeListUseCase;
+    }
 
         [HttpGet]
         [Route("api/rooms/{accommodationId}")]
@@ -39,6 +42,14 @@ namespace YourRest.WebApi.Controllers
             var createdRoom = await _createtRoomUseCase.Execute(roomDto);
 
             return CreatedAtAction(nameof(Post), createdRoom);
+        }
+
+        [HttpPost]
+        [Route("api/rooms/roomTypes")]
+        public async Task<IActionResult> GetAllRoomTypes()
+        {
+            var regions = await _getRoomTypeListUseCase.Execute();
+            return Ok(regions);
         }
     }
 }
