@@ -2,7 +2,6 @@
 using YourRest.Application.Dto.Models;
 using YourRest.Application.Exceptions;
 using YourRest.Application.Interfaces.Facility;
-using YourRest.Domain.Entities;
 using YourRest.Domain.Repositories;
 
 namespace YourRest.Application.UseCases.Facility
@@ -16,11 +15,12 @@ namespace YourRest.Application.UseCases.Facility
         }
         public async Task ExecuteAsync(RoomFacilityViewModel reviewDto)
         {
-            if (await roomFacilityRepository.GetAsync(reviewDto.Id) is not RoomFacility roomFacility)
+            var roomFacility = await roomFacilityRepository.GetAsync(reviewDto.Id);
+            if (roomFacility == null)
             {
                 throw new EntityNotFoundException($"RoomFacility with id number {reviewDto.Id} not found");
             }
-            if (roomFacilityRepository.FindAsync(rf => rf.RoomId == reviewDto.RoomId).Result.Select(f => f.Name).Contains(reviewDto.Name))
+            if ((await roomFacilityRepository.FindAsync(rf => rf.RoomId == reviewDto.RoomId)).Select(f => f.Name).Contains(reviewDto.Name))
             {
                 throw new EntityConflictException($"Room Facility \"{reviewDto.Name}\" has been in process");
             }

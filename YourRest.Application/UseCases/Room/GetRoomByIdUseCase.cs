@@ -3,7 +3,6 @@ using YourRest.Application.Dto.Models;
 using YourRest.Application.Exceptions;
 using YourRest.Application.Interfaces.Room;
 using YourRest.Domain.Repositories;
-using RoomEntity = YourRest.Domain.Entities.Room;
 
 namespace YourRest.Application.UseCases.Room
 {
@@ -16,11 +15,12 @@ namespace YourRest.Application.UseCases.Room
         }
         public async Task<RoomViewModel> ExecuteAsync(int id)
         {
-            if(await roomRepository.GetAsync(id) is RoomEntity room)
+            var room = await roomRepository.GetAsync(id)
+            if (room == null)
             {
-                return room.ToViewModel();
+                throw new EntityNotFoundException($"Room with Id:{id} not found");
             }
-            throw new EntityNotFoundException($"Room with Id:{id} not found");
+            return room.ToViewModel();
         }
     }
 }

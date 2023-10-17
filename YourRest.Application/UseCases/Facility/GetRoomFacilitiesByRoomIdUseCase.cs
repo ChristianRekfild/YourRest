@@ -17,13 +17,14 @@ namespace YourRest.Application.UseCases.Facility
 
         public async Task<IEnumerable<RoomFacilityViewModel>> ExecuteAsync(int roomId)
         {
-            if ((await roomRepository.GetWithIncludeAsync(room => room.Id == roomId, include => include.RoomFacilities)).SingleOrDefault() is not RoomEntity room)
+            var room = (await roomRepository.GetWithIncludeAsync(room => room.Id == roomId, include => include.RoomFacilities)).FirstOrDefault();
+            if (room == null)
             {
                 throw new EntityNotFoundException($"Room with id number {roomId} not found");
             }
             if (!room.RoomFacilities.Any())
             {
-                throw new EntityNotFoundException($"Not found RoomFacility in cuurent room (id : {roomId})");
+                throw new EntityNotFoundException($"Not found RoomFacility in current room (id : {roomId})");
             }
             return room.RoomFacilities.ToViewModel();
         }

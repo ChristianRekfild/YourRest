@@ -3,7 +3,6 @@ using YourRest.Application.Dto.Models;
 using YourRest.Application.Exceptions;
 using YourRest.Application.Interfaces.Room;
 using YourRest.Domain.Repositories;
-using RoomEntity = YourRest.Domain.Entities.Room;
 
 namespace YourRest.Application.UseCases.Room
 {
@@ -16,7 +15,8 @@ namespace YourRest.Application.UseCases.Room
         }
         public async Task ExecuteAsync(RoomViewModel reviewDto)
         {
-            if(await roomRepository.GetAsync(reviewDto.Id) is not RoomEntity room) 
+            var room = await roomRepository.GetAsync(reviewDto.Id);
+            if(room == null) 
             {
                 throw new EntityNotFoundException($"Room with Id:{reviewDto.Id} not found");
             }

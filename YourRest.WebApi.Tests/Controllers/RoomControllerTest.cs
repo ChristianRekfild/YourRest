@@ -6,7 +6,6 @@ using YourRest.Application.Dto;
 using YourRest.Application.Dto.Mappers;
 using YourRest.Application.Dto.Models;
 using YourRest.Domain.Entities;
-using YourRest.WebApi.Responses;
 using YourRest.WebApi.Tests.Fixtures;
 
 namespace YourRest.WebApi.Tests.Controllers
@@ -112,7 +111,6 @@ namespace YourRest.WebApi.Tests.Controllers
                 Capacity = 1
             };
         }
-        // =====================------------------------===========================//
         [Fact]
         public async Task GetAllRoom_ReturnsExpectedRoom_WhenDatabaseHasRoom()
         {

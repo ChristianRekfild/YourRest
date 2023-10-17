@@ -1,6 +1,5 @@
 ﻿using YourRest.Application.Exceptions;
 using YourRest.Application.Interfaces.Facility;
-using YourRest.Domain.Entities;
 using YourRest.Domain.Repositories;
 
 namespace YourRest.Application.UseCases.Facility
@@ -15,7 +14,8 @@ namespace YourRest.Application.UseCases.Facility
         }
         public async Task ExecuteAsync(int id)
         {
-            if (await roomFacilityRepository.GetAsync(id) is not RoomFacility roomFacility)
+            var roomFacility = await roomFacilityRepository.GetAsync(id);
+            if (roomFacility == null)
             {
                 throw new EntityNotFoundException($"RoomFacility with id number {id} not found");
             }
