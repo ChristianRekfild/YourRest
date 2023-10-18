@@ -16,8 +16,7 @@ namespace YourRest.WebApi.Tests.Fixtures
 
             using var scope = Fixture.Server.Host.Services.CreateScope();
             var context = scope.ServiceProvider.GetRequiredService<SharedDbContext>();
-            context.Database.EnsureCreated();
-            //context.Database.Migrate();
+            context.Database.Migrate();
         }
 
         protected async Task<T> InsertObjectIntoDatabase<T>(T entity) where T : class

@@ -6,5 +6,7 @@ namespace YourRest.Domain.Entities
 		public int CountryId { get; set; }
 
 		public virtual Country Country { get; set; }
+
+		public List<City> Cities { get; set; }
 	}
 }

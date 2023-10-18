@@ -1,10 +1,7 @@
-using YourRest.Application.Interfaces;
-using YourRest.Application.UseCases;
-using YourRest.Domain.Repositories;
-using YourRest.Infrastructure.Core;
+using YourRest.Application;
 using YourRest.Infrastructure.Core.DbContexts;
-using YourRest.Infrastructure.Repositories;
-using YourRest.Producer.Infrastructure.Repositories;
+using YourRest.Producer.Infrastructure;
+using YourRest.Producer.Infrastructure.Middleware;
 using YourRest.WebApi.Filters;
 using YourRest.Producer.Infrastructure.Middlewares;
 using Microsoft.EntityFrameworkCore;
@@ -24,7 +21,7 @@ public class Program
     {
         var builder = WebApplication.CreateBuilder(args);
         Configuration = builder.Configuration;
-        
+
         ConfigureServices(builder.Services);
 
         var app = builder.Build();
@@ -34,20 +31,24 @@ public class Program
     }
 
     public static void ConfigureServices(IServiceCollection services)
-    {  
-        string connectionString = Configuration.GetConnectionString("DefaultConnection");
+    {
+#pragma warning disable ASP0000 // Do not call 'IServiceCollection.BuildServiceProvider' in 'ConfigureServices'
+        var configuration = services.BuildServiceProvider().GetService<IConfiguration>();
+#pragma warning restore ASP0000 // Do not call 'IServiceCollection.BuildServiceProvider' in 'ConfigureServices'
+        string? connectionString;
 
-        services.AddDbContext<SharedDbContext>(options => options.UseNpgsql(connectionString));
+        connectionString = configuration?.GetConnectionString("DefaultConnection");
+        var migrationsAssembly = typeof(InfrastructureDependencyInjections).Assembly.GetName().Name;
 
-        services.AddSingleton<IDbContextFactory<SharedDbContext>>(serviceProvider =>
-        {
-            return new AppDbContextFactory(connectionString);
-        });
+        services.AddDbContext<SharedDbContext>(options => options.UseNpgsql(connectionString,
+            sql => sql.MigrationsAssembly(migrationsAssembly)));
+
         services.AddCors();
         services.AddControllers();
 
         // Swagger/OpenAPI configuration
         services.AddEndpointsApiExplorer();
+        //services.AddSwaggerGen();
         services.AddSwaggerGen(c =>
         {
             c.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" });
@@ -79,26 +80,13 @@ public class Program
             });
         });
 
-        services.AddScoped<IGetCountryListUseCase, GetCountryListUseCase>();
-        services.AddScoped<IGetCityByIdUseCase, GetCityByIdUseCase>();
-        services.AddScoped<IGetCityListUseCase, GetCityListUseCase>();
-        services.AddScoped<IGetRegionListUseCase, GetRegionListUseCase>();
-        services.AddScoped<ICreateReviewUseCase, CreateReviewUseCase>();
-        services.AddScoped<IAddAddressToAccommodationUseCase, AddAddressToAccommodationUseCase>();
-
-        services.AddScoped<IBookingRepository, BookingRepository>();
-        services.AddScoped<ICountryRepository, CountryRepository>();  
-        services.AddScoped<ICustomerRepository, CustomerRepository>();      
-        services.AddScoped<ICityRepository, CityRepository>();        
-        services.AddScoped<IRegionRepository, RegionRepository>();        
-        services.AddScoped<IReviewRepository, ReviewRepository>();
-        services.AddScoped<IAccommodationRepository, AccommodationRepository>();
-        services.AddScoped<IAddressRepository, AddressRepository>();
+        services.AddInfrastructure();
+        services.AddApplication();
         services.AddScoped<IUserRepository, UserRepository>();
-        
+
         if (Configuration == null) throw new Exception("Configuration is null");
         if (string.IsNullOrEmpty(Configuration["JwtSettings:Authority"])) throw new Exception("JwtSettings:Authority is missing");
-        
+
         services.AddAuthentication(options =>
         {
             options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -125,29 +113,26 @@ public class Program
 
     public static void Configure(IApplicationBuilder app)
     {
-//        bool useSwagger = configuration.GetValue<bool>("UseSwagger");
-//        if (env.IsDevelopment() || useSwagger)
-//        {
-//            app.UseSwagger();
-//            app.UseSwaggerUI();
-//        }
-
-        app.UseSwagger();
-        app.UseSwaggerUI();
+#pragma warning disable CS8604 // Code that generates warning CS8604 is written here and will be ignored by the compiler.
+        if (app.ApplicationServices.GetService<IWebHostEnvironment>().IsDevelopment())
+        {
+            app.UseSwagger();
+            app.UseSwaggerUI();
+        }
+#pragma warning disable CS8604 // Code that generates warning CS8604 is written here and will be ignored by the compiler.
 
         app.UseCors(builder => builder
-                .AllowAnyOrigin()  // Not for production
-                .AllowAnyMethod()
-                .AllowAnyHeader());
-
+            .AllowAnyOrigin()  // Not for production
+            .AllowAnyMethod()
+            .AllowAnyHeader());
         app.UseHttpsRedirection();
         app.UseRouting();
         app.UseAuthentication();
         app.UseMiddleware<UserSavingMiddleware>();
         app.UseAuthorization();
-        app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
+app.UseMiddleware<ErrorHandlingMiddleware>();        app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
     }
-    
+
     public static void SetConfiguration(IConfiguration configuration)
     {
         Configuration = configuration;

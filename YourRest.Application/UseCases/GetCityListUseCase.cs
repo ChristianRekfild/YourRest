@@ -17,6 +17,11 @@ namespace YourRest.Application.UseCases
         {
             var cities = await _cityRepository.GetAllAsync();
 
+            if (!cities.Any()) 
+            {
+                return new List<CityDTO>();
+            }
+
             return cities.Select(c => new CityDTO
             {
                 Id = c.Id,

@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using YourRest.Application.CustomErrors;
+using System;
+using YourRest.Application.Exceptions;
 using YourRest.Application.Interfaces;
+using YourRest.Application.UseCases;
 
 namespace YourRest.WebApi.Controllers
 {
@@ -10,37 +12,49 @@ namespace YourRest.WebApi.Controllers
     {
         private readonly IGetCityListUseCase _getCityListUseCase;
         private readonly IGetCityByIdUseCase _getCityByIdUseCase;
+        private readonly IGetCityByRegionIdUseCase _getCityByRegionIdUseCase;
+        private readonly IGetCityByCountryIdUseCase _getCityByCountryIdUseCase;
 
         public CitiesController(
             IGetCityListUseCase getCityListUseCase,
-            IGetCityByIdUseCase getCityByIdUseCase)
+            IGetCityByIdUseCase getCityByIdUseCase,
+            IGetCityByRegionIdUseCase getCityByRegionIdUseCase,
+            IGetCityByCountryIdUseCase getCityByCountryIdUseCase
+            )
         {
             _getCityListUseCase = getCityListUseCase;
             _getCityByIdUseCase = getCityByIdUseCase;
-        }
-        
-        [HttpGet]
-        [Route("api/cities")]
-        public async Task<IActionResult> GetAllCities()
-        {
-            var cities = await _getCityListUseCase.Execute();
-            return Ok(cities);
+            _getCityByRegionIdUseCase = getCityByRegionIdUseCase;
+            _getCityByCountryIdUseCase = getCityByCountryIdUseCase;
         }
 
         [HttpGet]
         [Route("api/cities/{id}")]
         public async Task<IActionResult> GetCityById(int id)
         {
-            try
-            {
-                var city = await _getCityByIdUseCase.Execute(id);
-                return Ok(city);
-            }
-            catch (CityNotFoundException exception) // город с таким Id не был найден
-            {
-                return NotFound(exception.Message);
-            }
+            var city = await _getCityByIdUseCase.Execute(id);
+            return Ok(city);
         }
 
+        [HttpGet]
+        [Route("api/cities")]
+        public async Task<IActionResult> GetCities([FromQuery] int? regionId = null, [FromQuery] int? countryId = null)
+        {
+            if (regionId.HasValue)
+            {
+                var citiesByRegion = await _getCityByRegionIdUseCase.Execute(regionId.Value);
+                return Ok(citiesByRegion);
+            }
+            else if (countryId.HasValue)
+            {
+                var citiesByCountry = await _getCityByCountryIdUseCase.Execute(countryId.Value);
+                return Ok(citiesByCountry);
+            }
+            else
+            {
+                var allCities = await _getCityListUseCase.Execute();
+                return Ok(allCities);
+            }
+        }
     }
 }

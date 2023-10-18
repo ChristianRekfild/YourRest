@@ -26,7 +26,7 @@ namespace YourRest.WebApi.Tests.Fixtures
                 .WithDatabase("your_rest_postgres_test")
                 .Build();
 
-            PostgresContainer.StartAsync().Wait();
+            Task.Run(async () => await PostgresContainer.StartAsync()).Wait();
         }
 
         private void StartApplication()
@@ -35,9 +35,9 @@ namespace YourRest.WebApi.Tests.Fixtures
                 .ConfigureAppConfiguration((context, configBuilder) =>
                 {
                     var testConfig = new ConfigurationBuilder()
-                        .AddInMemoryCollection(new[]
+                        .AddInMemoryCollection(new List<KeyValuePair<string, string?>>
                         {
-                            new KeyValuePair<string, string>("ConnectionStrings:DefaultConnection", ConnectionString)
+                            new KeyValuePair<string, string?>("ConnectionStrings:DefaultConnection", ConnectionString)
                         })
                         .Build();
 
@@ -50,7 +50,7 @@ namespace YourRest.WebApi.Tests.Fixtures
 
         public void Dispose()
         {
-            PostgresContainer.StopAsync().Wait();
+            Task.Run(async () => await PostgresContainer.StopAsync()).Wait();
             Server?.Dispose();
         }
     }

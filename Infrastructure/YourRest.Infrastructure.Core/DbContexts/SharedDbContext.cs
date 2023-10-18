@@ -13,6 +13,9 @@ namespace YourRest.Infrastructure.Core.DbContexts
         public DbSet<Review> Reviews { get; set; }
         public DbSet<Address> Addresses { get; set; }
         public DbSet<Accommodation> Accommodations { get; set; }
+        public DbSet<Room> Rooms { get; set; }
+        public DbSet<RoomType> RoomTypes { get; set; }
+
         public DbSet<User> Users { get; set; }
 
         static SharedDbContext()
@@ -23,7 +26,7 @@ namespace YourRest.Infrastructure.Core.DbContexts
         public SharedDbContext() : base() { }
 
         public SharedDbContext(DbContextOptions<SharedDbContext> options) : base(options) {
-            Database.EnsureCreated();
+            Database.Migrate();
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -31,7 +34,7 @@ namespace YourRest.Infrastructure.Core.DbContexts
             if (!optionsBuilder.IsConfigured)
             {
                 string conn = "Host=webapidb;Database=your_rest;Username=admin;Password=admin;Port=5432";
-                optionsBuilder.UseNpgsql(conn);
+                optionsBuilder.UseNpgsql(conn, sql => sql.MigrationsAssembly("YourRest.Producer.Infrastructure"));
             }
             base.OnConfiguring(optionsBuilder);
             
@@ -99,6 +102,8 @@ namespace YourRest.Infrastructure.Core.DbContexts
             Reviews.RemoveRange(Reviews);
             Accommodations.RemoveRange(Accommodations);
             Addresses.RemoveRange(Addresses);
+            Rooms.RemoveRange(Rooms);
+            RoomTypes.RemoveRange(RoomTypes);
             // Add other DbSet removals here
             // Example: 
             // Rooms.RemoveRange(Rooms);

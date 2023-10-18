@@ -33,6 +33,7 @@
     <!-- Project References -->
     <ProjectReference Include="..\Infrastructure\YourRest.Infrastructure.Core\YourRest.Infrastructure.Core.csproj" />
     <ProjectReference Include="..\Infrastructure\YourRest.Producer.Infrastructure\YourRest.Producer.Infrastructure.csproj" />
+    <ProjectReference Include="..\Infrastructure\YourRest.Producer.Infrastructure.Middleware\YourRest.Producer.Infrastructure.Middleware.csproj" />
     <ProjectReference Include="..\YourRest.Application\YourRest.Application.csproj" />
     <ProjectReference Include="..\YourRest.Domain\YourRest.Domain.csproj" />
   </ItemGroup>

@@ -1,42 +1,50 @@
 ﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.Configuration;
+using System.Text;
+using YourRest.Infrastructure.Core.DbContexts;
 
 namespace YourRest.WebApi.Tests.Fixtures
 {
-
-    public class SingletonApiTest : IAsyncLifetime
+    public class SingletonApiTest : IDisposable
     {
         public HttpClient Client { get; private set; }
         public TestServer Server { get; private set; }
+        public SharedDbContext DbContext { get; private set; }
 
-        public readonly DatabaseFixture dbFixture;
+        private readonly DatabaseFixture dbFixture;
+
         public SingletonApiTest()
         {
-            dbFixture = new DatabaseFixture();
-        }
+            dbFixture = DatabaseFixture.getInstance();
 
-        public async Task DisposeAsync()
-        {
-            await dbFixture.DisposeAsync();
-            Server?.Dispose();
-        }
-
-        public async Task InitializeAsync()
-        {
-            await dbFixture.InitializeAsync();
-            //dbFixture.DbContext.Database.Migrate();
-            
-            var testConfig = new ConfigurationBuilder()
-                .AddInMemoryCollection(new[]
+            StringBuilder sb = new StringBuilder();
+            foreach (var part in dbFixture.ConnectionString.Split(';'))
+            {
+                if (part.StartsWith("Database"))
                 {
-                    new KeyValuePair<string, string>("ConnectionStrings:DefaultConnection", dbFixture.ConnectionString),
+                    sb.Append(part + "_" + Guid.NewGuid().ToString().Replace("-", string.Empty));
+                }
+                else
+                {
+                    sb.Append(part);
+                }
+                sb.Append(";");
+            }
+            var connectionString = sb.ToString();
+
+            DbContext = dbFixture.GetDbContext(connectionString);
+
+            var testConfig = new ConfigurationBuilder()
+                .AddInMemoryCollection(new List<KeyValuePair<string, string?>>
+                {
+                    new KeyValuePair<string, string?>("ConnectionStrings:DefaultConnection", connectionString),
                     new KeyValuePair<string, string>("JwtSettings:Authority", "http://keycloak:8080/auth/realms/YourRest"),
                     new KeyValuePair<string, string>("JwtSettings:Audience", "your_rest_app"),
                     new KeyValuePair<string, string>("JwtSettings:SymmetricKey", "qBC5V3wc2AYKTcYN1CACo6REU9t1Inrf")
                 })
                 .Build();
-            
+
             Program.SetConfiguration(testConfig);
 
             var builder = new WebHostBuilder()
@@ -48,6 +56,27 @@ namespace YourRest.WebApi.Tests.Fixtures
 
             Server = new TestServer(builder);
             Client = Server.CreateClient();
+        }
+
+        public async Task<T> InsertObjectIntoDatabase<T>(T entity) where T : class
+        {
+            var item = await DbContext.AddAsync(entity);
+            await DbContext.SaveChangesAsync();
+            return item.Entity;
+        }
+
+        public void CleanDatabase()
+        {
+            DbContext.ClearAllTables();
+        }
+
+        public void Dispose()
+        {
+            Server?.Dispose();
+
+            //TODO: Подумать как останавливать контейнер
+            // и нужно ли это делать
+            //dbFixture.Dispose();
         }
     }
 }
