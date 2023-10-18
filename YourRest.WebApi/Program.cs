@@ -19,29 +19,29 @@ using Microsoft.IdentityModel.Logging;
 
 public class Program
 {
+    public static IConfiguration Configuration { get; set; }
     public static void Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
-
-        ConfigureServices(builder.Services, builder.Configuration);
+        Configuration = builder.Configuration;
+        
+        ConfigureServices(builder.Services);
 
         var app = builder.Build();
-
-        Configure(app, builder.Environment, builder.Configuration);
+        Configure(app);
 
         app.Run();
     }
 
-    public static void ConfigureServices(IServiceCollection services, IConfiguration configuration)
-    {
-        string connectionString = configuration.GetConnectionString("DefaultConnection");
+    public static void ConfigureServices(IServiceCollection services)
+    {  
+        string connectionString = Configuration.GetConnectionString("DefaultConnection");
 
         services.AddDbContext<SharedDbContext>(options => options.UseNpgsql(connectionString));
 
         services.AddSingleton<IDbContextFactory<SharedDbContext>>(serviceProvider =>
         {
-            var connString = configuration.GetConnectionString("DefaultConnection");
-            return new AppDbContextFactory(connString);
+            return new AppDbContextFactory(connectionString);
         });
         services.AddCors();
         services.AddControllers();
@@ -95,17 +95,19 @@ public class Program
         services.AddScoped<IAccommodationRepository, AccommodationRepository>();
         services.AddScoped<IAddressRepository, AddressRepository>();
         services.AddScoped<IUserRepository, UserRepository>();
-
+        
+        if (Configuration == null) throw new Exception("Configuration is null");
+        if (string.IsNullOrEmpty(Configuration["JwtSettings:Authority"])) throw new Exception("JwtSettings:Authority is missing");
+        
         services.AddAuthentication(options =>
         {
             options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
             options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
         })
-
         .AddJwtBearer(options =>
         {
-            options.Authority = configuration["JwtSettings:Authority"];
-            options.Audience = configuration["JwtSettings:Audience"];
+            options.Authority = Configuration["JwtSettings:Authority"];
+            options.Audience = Configuration["JwtSettings:Audience"];
             options.RequireHttpsMetadata = false;
 
             options.TokenValidationParameters = new TokenValidationParameters
@@ -114,14 +116,14 @@ public class Program
                 ValidateAudience = true,
                 ValidateLifetime = true,
                 ValidateIssuerSigningKey = true,
-                ValidIssuer = configuration["JwtSettings:Authority"],
-                ValidAudience = configuration["JwtSettings:Audience"],
-                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JwtSettings:SymmetricKey"])),
+                ValidIssuer = Configuration["JwtSettings:Authority"],
+                ValidAudience = Configuration["JwtSettings:Audience"],
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["JwtSettings:SymmetricKey"])),
             };
         });
     }
 
-    public static void Configure(IApplicationBuilder app, IWebHostEnvironment env, IConfiguration configuration)
+    public static void Configure(IApplicationBuilder app)
     {
 //        bool useSwagger = configuration.GetValue<bool>("UseSwagger");
 //        if (env.IsDevelopment() || useSwagger)
@@ -144,5 +146,10 @@ public class Program
         app.UseMiddleware<UserSavingMiddleware>();
         app.UseAuthorization();
         app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
+    }
+    
+    public static void SetConfiguration(IConfiguration configuration)
+    {
+        Configuration = configuration;
     }
 }
