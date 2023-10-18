@@ -61,6 +61,9 @@ namespace YourRest.Application
                 cfg.OverrideDefaultResultFactoryWith<YouRestResultFactory>();
             });
             services.AddValidatorsFromAssemblyContaining<RoomViewModelValidator>();
+            services.AddScoped<IGetRoomTypeListUseCase, GetRoomTypeListUseCase>();
+
+
             return services;
         }
     }

@@ -15,8 +15,8 @@ namespace YourRest.Application.UseCases
         public AddAddressToAccommodationUseCase(
             IAccommodationRepository accommodationRepository,
             IAddressRepository addressRepository,
-            ICityRepository cityRepository
-        ) {
+            ICityRepository cityRepository)
+        {
             _accommodationRepository = accommodationRepository;
             _addressRepository = addressRepository;
             _cityRepository = cityRepository;
@@ -44,13 +44,13 @@ namespace YourRest.Application.UseCases
             }
 
             var addresses = await _addressRepository.FindAsync(
-                a => a.Street == addressDto.Street 
-                && a.ZipCode == addressDto.ZipCode 
-                && a.Longitude == addressDto.Longitude 
+                a => a.Street == addressDto.Street
+                && a.ZipCode == addressDto.ZipCode
+                && a.Longitude == addressDto.Longitude
                 && a.Latitude == addressDto.Latitude
             );
             var address = addresses.FirstOrDefault();
-            
+
             if (address == null)
             {
                 address = new Address

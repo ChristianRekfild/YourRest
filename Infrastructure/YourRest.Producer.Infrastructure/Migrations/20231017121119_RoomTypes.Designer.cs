@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using YourRest.Infrastructure.Core.DbContexts;
@@ -11,9 +12,11 @@ using YourRest.Infrastructure.Core.DbContexts;
 namespace YourRest.Producer.Infrastructure.Migrations
 {
     [DbContext(typeof(SharedDbContext))]
-    partial class SharedDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231017121119_RoomTypes")]
+    partial class RoomTypes
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -262,28 +265,6 @@ namespace YourRest.Producer.Infrastructure.Migrations
                     b.ToTable("Rooms");
                 });
 
-            modelBuilder.Entity("YourRest.Domain.Entities.RoomFacility", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<int>("RoomId")
-                        .HasColumnType("integer");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("RoomId");
-
-                    b.ToTable("RoomFacilities");
-                });
-
             modelBuilder.Entity("YourRest.Domain.Entities.RoomType", b =>
                 {
                     b.Property<int>("Id")
@@ -396,17 +377,6 @@ namespace YourRest.Producer.Infrastructure.Migrations
                     b.Navigation("Accommodation");
                 });
 
-            modelBuilder.Entity("YourRest.Domain.Entities.RoomFacility", b =>
-                {
-                    b.HasOne("YourRest.Domain.Entities.Room", "Room")
-                        .WithMany("RoomFacilities")
-                        .HasForeignKey("RoomId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Room");
-                });
-
             modelBuilder.Entity("YourRest.Domain.Entities.Accommodation", b =>
                 {
                     b.Navigation("Rooms");
@@ -420,12 +390,6 @@ namespace YourRest.Producer.Infrastructure.Migrations
             modelBuilder.Entity("YourRest.Domain.Entities.Region", b =>
                 {
                     b.Navigation("Cities");
-                });
-
-            modelBuilder.Entity("YourRest.Domain.Entities.Room", b =>
-            modelBuilder.Entity("YourRest.Domain.Entities.Country", b =>
-                {
-                    b.Navigation("RoomFacilities");
                 });
 #pragma warning restore 612, 618
         }
