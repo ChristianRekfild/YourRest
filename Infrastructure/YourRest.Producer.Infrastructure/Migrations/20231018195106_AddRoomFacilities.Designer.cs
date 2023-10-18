@@ -12,8 +12,8 @@ using YourRest.Infrastructure.Core.DbContexts;
 namespace YourRest.Producer.Infrastructure.Migrations
 {
     [DbContext(typeof(SharedDbContext))]
-    [Migration("20231012214239_Room_And_RoomFacilities")]
-    partial class Room_And_RoomFacilities
+    [Migration("20231018195106_AddRoomFacilities")]
+    partial class AddRoomFacilities
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -285,6 +285,23 @@ namespace YourRest.Producer.Infrastructure.Migrations
                     b.HasIndex("RoomId");
 
                     b.ToTable("RoomFacilities");
+                });
+
+            modelBuilder.Entity("YourRest.Domain.Entities.RoomType", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("RoomTypes");
                 });
 
             modelBuilder.Entity("YourRest.Domain.Entities.Accommodation", b =>

@@ -6,7 +6,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace YourRest.Producer.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class Room_And_RoomFacilities : Migration
+    public partial class AddRoomFacilities : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
