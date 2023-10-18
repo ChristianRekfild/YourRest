@@ -3,8 +3,7 @@ using YourRest.Domain.Repositories;
 using Microsoft.AspNetCore.Http;
 using System.Security.Claims;
 
-namespace YourRest.Producer.Infrastructure.Middlewares;
-
+namespace YourRest.Producer.Infrastructure.Middleware;
 public class UserSavingMiddleware
 {
     private readonly RequestDelegate _next;

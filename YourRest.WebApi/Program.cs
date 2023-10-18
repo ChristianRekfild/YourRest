@@ -2,17 +2,13 @@ using YourRest.Application;
 using YourRest.Infrastructure.Core.DbContexts;
 using YourRest.Producer.Infrastructure;
 using YourRest.Producer.Infrastructure.Middleware;
-using YourRest.WebApi.Filters;
-using YourRest.Producer.Infrastructure.Middlewares;
 using Microsoft.EntityFrameworkCore;
 using Swashbuckle.AspNetCore.Swagger;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using Microsoft.OpenApi.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
-using IdentityModel;
 using System.Text;
-using Microsoft.IdentityModel.Logging;
 
 public class Program
 {
