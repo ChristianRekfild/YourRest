@@ -27,7 +27,7 @@ namespace YourRest.Application.UseCases
 
             if (user == null)
             {
-                throw new UserNotFoundException(userKeyCloakId);
+                throw new EntityNotFoundException(userKeyCloakId);
             }
 
             var booking = await _bookingRepository.GetAsync(reviewDto.BookingId);
@@ -41,7 +41,7 @@ namespace YourRest.Application.UseCases
 
             if (user.AccommodationId != booking.AccommodationId)
             {
-                throw new UserReviewCreationException(user.Id, booking.Id);
+                throw new ValidationException($"User with id {user.Id} cannot create a review for booking {booking.Id}.");
             }
 
             var review = new Review

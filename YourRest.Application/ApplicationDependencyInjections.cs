@@ -20,7 +20,6 @@ namespace YourRest.Application
             services.AddScoped<ICreateRoomUseCase, CreateRoomUseCase>();
             services.AddScoped<IGetRoomTypeListUseCase, GetRoomTypeListUseCase>();
 
-
             return services;
         }
     }

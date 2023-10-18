@@ -19,7 +19,7 @@ namespace YourRest.Producer.Infrastructure
             services.AddScoped<IAddressRepository, AddressRepository>();
             services.AddScoped<IRoomRepository, RoomRepository>();
             services.AddScoped<IRoomTypeRepository, RoomTypeRepository>();
-
+            services.AddScoped<IUserRepository, UserRepository>();
 
             return services;
         }

@@ -16,14 +16,10 @@ using Microsoft.IdentityModel.Logging;
 
 public class Program
 {
-    public static IConfiguration Configuration { get; set; }
     public static void Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
-        Configuration = builder.Configuration;
-
         ConfigureServices(builder.Services);
-
         var app = builder.Build();
         Configure(app);
 
@@ -82,10 +78,6 @@ public class Program
 
         services.AddInfrastructure();
         services.AddApplication();
-        services.AddScoped<IUserRepository, UserRepository>();
-
-        if (Configuration == null) throw new Exception("Configuration is null");
-        if (string.IsNullOrEmpty(Configuration["JwtSettings:Authority"])) throw new Exception("JwtSettings:Authority is missing");
 
         services.AddAuthentication(options =>
         {
@@ -94,8 +86,8 @@ public class Program
         })
         .AddJwtBearer(options =>
         {
-            options.Authority = Configuration["JwtSettings:Authority"];
-            options.Audience = Configuration["JwtSettings:Audience"];
+            options.Authority = configuration["JwtSettings:Authority"];
+            options.Audience = configuration["JwtSettings:Audience"];
             options.RequireHttpsMetadata = false;
 
             options.TokenValidationParameters = new TokenValidationParameters
@@ -104,9 +96,9 @@ public class Program
                 ValidateAudience = true,
                 ValidateLifetime = true,
                 ValidateIssuerSigningKey = true,
-                ValidIssuer = Configuration["JwtSettings:Authority"],
-                ValidAudience = Configuration["JwtSettings:Audience"],
-                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["JwtSettings:SymmetricKey"])),
+                ValidIssuer = configuration["JwtSettings:Authority"],
+                ValidAudience = configuration["JwtSettings:Audience"],
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JwtSettings:SymmetricKey"])),
             };
         });
     }
@@ -130,11 +122,7 @@ public class Program
         app.UseAuthentication();
         app.UseMiddleware<UserSavingMiddleware>();
         app.UseAuthorization();
-app.UseMiddleware<ErrorHandlingMiddleware>();        app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
-    }
-
-    public static void SetConfiguration(IConfiguration configuration)
-    {
-        Configuration = configuration;
+        app.UseMiddleware<ErrorHandlingMiddleware>();
+        app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
     }
 }
