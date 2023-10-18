@@ -14,7 +14,6 @@ namespace YourRest.WebApi.Controllers
         private readonly IGetRoomListUseCase _getRoomListUseCase;
         private readonly ICreateRoomUseCase _createtRoomUseCase;
 
-
         public RoomController(IGetRoomListUseCase getRoomListUseCase, ICreateRoomUseCase createtRoomUseCase)
         {
             _getRoomListUseCase = getRoomListUseCase;
