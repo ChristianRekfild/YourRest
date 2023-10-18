@@ -130,12 +130,12 @@ namespace YourRest.WebApi.Tests.Controllers
             var errorData = await response.Content.ReadFromJsonAsync<ErrorViewModel>();
 
             Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
-            Assert.Equal("'Street' должно быть заполнено.", errorData?.ValidationErrors[nameof(addressDto.Street)][0]);
-            Assert.Equal("'Zip Code' должно быть заполнено.", errorData?.ValidationErrors[nameof(addressDto.ZipCode)][0]);
-            Assert.Equal("'Zip Code' имеет неверный формат.", errorData?.ValidationErrors[nameof(addressDto.ZipCode)][1]);
-            Assert.Equal("'Latitude' должно быть в диапазоне от -90 до 90. Введенное значение: 190.", errorData?.ValidationErrors[nameof(addressDto.Latitude)][0]);
-            Assert.Equal("'Longitude' должно быть в диапазоне от -180 до 180. Введенное значение: 190.", errorData?.ValidationErrors[nameof(addressDto.Longitude)][0]);
-            Assert.Equal("'City Id' должно быть больше '0'.", errorData?.ValidationErrors[nameof(addressDto.CityId)][0]);
+            Assert.Equal("'Street' must not be empty.", errorData?.ValidationErrors[nameof(addressDto.Street)][0]);
+            Assert.Equal("'Zip Code' must not be empty.", errorData?.ValidationErrors[nameof(addressDto.ZipCode)][0]);
+            Assert.Equal("'Zip Code' is not in the correct format.", errorData?.ValidationErrors[nameof(addressDto.ZipCode)][1]);
+            Assert.Equal("'Latitude' must be between -90 and 90. You entered 190.", errorData?.ValidationErrors[nameof(addressDto.Latitude)][0]);
+            Assert.Equal("'Longitude' must be between -180 and 180. You entered 190.", errorData?.ValidationErrors[nameof(addressDto.Longitude)][0]);
+            Assert.Equal("'City Id' must be greater than '0'.", errorData?.ValidationErrors[nameof(addressDto.CityId)][0]);
         }
 
         [Fact]
