@@ -15,7 +15,7 @@ namespace YourRest.Application.UseCases.Room
         }
         public async Task<RoomViewModel> ExecuteAsync(int id)
         {
-            var room = await roomRepository.GetAsync(id)
+            var room = await roomRepository.GetAsync(id);
             if (room == null)
             {
                 throw new EntityNotFoundException($"Room with Id:{id} not found");
