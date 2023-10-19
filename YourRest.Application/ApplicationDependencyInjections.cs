@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc;
 using SharpGrip.FluentValidation.AutoValidation.Mvc.Results;
 using YourRest.Application.Dto.ViewModels;
+using System.Globalization;
 
 namespace YourRest.Application
 {
@@ -60,6 +61,7 @@ namespace YourRest.Application
                 // Replace the default result factory with a custom implementation.
                 cfg.OverrideDefaultResultFactoryWith<YouRestResultFactory>();
             });
+            ValidatorOptions.Global.LanguageManager.Culture = new CultureInfo("ru");
             services.AddValidatorsFromAssemblyContaining<RoomViewModelValidator>();
             services.AddScoped<IGetRoomTypeListUseCase, GetRoomTypeListUseCase>();
 
