@@ -11,6 +11,7 @@ WORKDIR /src
 COPY YourRest.WebApi/YourRest.WebApi.csproj YourRest.WebApi/
 COPY Infrastructure/YourRest.Infrastructure.Core/YourRest.Infrastructure.Core.csproj Infrastructure/YourRest.Infrastructure.Core/
 COPY Infrastructure/YourRest.Producer.Infrastructure/YourRest.Producer.Infrastructure.csproj Infrastructure/YourRest.Producer.Infrastructure/
+COPY Infrastructure/YourRest.Producer.Infrastructure.Middleware/YourRest.Producer.Infrastructure.Middleware.csproj Infrastructure/YourRest.Producer.Infrastructure.Middleware/
 COPY YourRest.Application/YourRest.Application.csproj YourRest.Application/
 COPY YourRest.Domain/YourRest.Domain.csproj YourRest.Domain/
 RUN dotnet restore "YourRest.WebApi/YourRest.WebApi.csproj"

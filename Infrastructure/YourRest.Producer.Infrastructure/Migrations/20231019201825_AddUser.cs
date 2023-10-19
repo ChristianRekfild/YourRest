@@ -6,7 +6,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace YourRest.Producer.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class AddUserAndUpdateReviewAndBooking : Migration
+    public partial class AddUser : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -64,10 +64,10 @@ namespace YourRest.Producer.Infrastructure.Migrations
                 column: "AccommodationId");
 
             migrationBuilder.AddForeignKey(
-                name: "FK_Bookings_Customers_AccommodationId",
+                name: "FK_Bookings_Accommodations_AccommodationId",
                 table: "Bookings",
                 column: "AccommodationId",
-                principalTable: "Customers",
+                principalTable: "Accommodations",
                 principalColumn: "Id",
                 onDelete: ReferentialAction.Cascade);
 
@@ -84,7 +84,7 @@ namespace YourRest.Producer.Infrastructure.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropForeignKey(
-                name: "FK_Bookings_Customers_AccommodationId",
+                name: "FK_Bookings_Accommodations_AccommodationId",
                 table: "Bookings");
 
             migrationBuilder.DropForeignKey(

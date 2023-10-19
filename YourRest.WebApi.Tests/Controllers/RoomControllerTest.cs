@@ -72,12 +72,10 @@ namespace YourRest.WebApi.Tests.Controllers
         public async Task GetFacilitiesByRoomIdTest_WhenGetCalledGetFacilitiesByRoomIdMethod_ReturnsIEnumerableOfRoomFacilitiyViewModels()
         {
             var room = await CreateRoomAsync();
-            room.RoomFacilities = new List<RoomFacility>
-            {
-                new RoomFacility(){ Name = "Air Conditioner" },
-                new RoomFacility(){ Name = "Minibar" },
-                new RoomFacility(){ Name = "Locker" }
-            };
+            room.RoomFacilities.Add(new RoomFacility() { Name = "Air Conditioner" });
+            room.RoomFacilities.Add(new RoomFacility() { Name = "Minibar" });
+            room.RoomFacilities.Add(new RoomFacility() { Name = "Locker" });
+            
             room = await fixture.InsertObjectIntoDatabase(room);
             var response = await fixture.Client.GetAsync($"api/rooms/{room.Id}/facilities");
             var recivedRoomFacilities = await response.Content.ReadFromJsonAsync<IEnumerable<RoomFacilityViewModel>>();
@@ -201,18 +199,6 @@ namespace YourRest.WebApi.Tests.Controllers
             var expectedMessageJson = JsonConvert.SerializeObject(expectedMessage);
 
             Assert.Equal(errorMassage, expectedMessageJson);
-        }
-
-        private class FakeRoom : IntBaseEntity
-        {
-            public string Name { get; set; }
-            public string SquareInMeter { get; set; }
-
-            public string RoomType { get; set; }
-
-            public int Capacity { get; set; }
-            public int AccommodationId { get; set; }
-            public virtual Accommodation Accommodation { get; set; }
         }
     }
 }
