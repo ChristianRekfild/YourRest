@@ -1,10 +1,12 @@
 ﻿using YourRest.Application.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using SharpGrip.FluentValidation.AutoValidation.Mvc.Attributes;
 
 namespace YourRest.WebApi.Controllers
 {
     [ApiController]
     [Route("api/countries")]
+    [FluentValidationAutoValidation]
     public class CountriesController : ControllerBase
     {
         private readonly IGetCountryListUseCase _getCountryListUseCase;

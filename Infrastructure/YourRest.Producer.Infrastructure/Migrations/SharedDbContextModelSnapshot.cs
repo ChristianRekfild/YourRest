@@ -306,6 +306,28 @@ namespace YourRest.Producer.Infrastructure.Migrations
                     b.ToTable("Rooms");
                 });
 
+            modelBuilder.Entity("YourRest.Domain.Entities.RoomFacility", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("RoomId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RoomId");
+
+                    b.ToTable("RoomFacilities");
+                });
+
             modelBuilder.Entity("YourRest.Domain.Entities.RoomType", b =>
                 {
                     b.Property<int>("Id")
@@ -445,6 +467,17 @@ namespace YourRest.Producer.Infrastructure.Migrations
                     b.Navigation("Accommodation");
                 });
 
+            modelBuilder.Entity("YourRest.Domain.Entities.RoomFacility", b =>
+                {
+                    b.HasOne("YourRest.Domain.Entities.Room", "Room")
+                        .WithMany("RoomFacilities")
+                        .HasForeignKey("RoomId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Room");
+                });
+
             modelBuilder.Entity("YourRest.Domain.Entities.Accommodation", b =>
                 {
                     b.Navigation("Rooms");
@@ -458,6 +491,11 @@ namespace YourRest.Producer.Infrastructure.Migrations
             modelBuilder.Entity("YourRest.Domain.Entities.Region", b =>
                 {
                     b.Navigation("Cities");
+                });
+
+            modelBuilder.Entity("YourRest.Domain.Entities.Room", b =>
+                {
+                    b.Navigation("RoomFacilities");
                 });
 #pragma warning restore 612, 618
         }

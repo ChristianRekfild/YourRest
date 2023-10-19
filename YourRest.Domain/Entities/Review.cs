@@ -8,6 +8,7 @@ namespace YourRest.Domain.Entities
         public User User { get; set; }
         public string Comment { get; set; }
         public RatingVO Rating { get; set; }
+
         public int BookingId { get; set; }
         public int UserId { get; set; }
     }

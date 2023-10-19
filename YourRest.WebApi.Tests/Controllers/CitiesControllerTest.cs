@@ -4,26 +4,18 @@ using System.Net;
 using System.Text;
 using YourRest.Application.Dto;
 using YourRest.Domain.Entities;
-using YourRest.Infrastructure.Core.DbContexts;
 using YourRest.WebApi.Tests.Fixtures;
 using SystemJson = System.Text.Json;
 
 namespace YourRest.WebApi.Tests.Controllers
 {
     [Collection(nameof(SingletonApiTest))]
-    public class CitiesControllerTest // : ApiTest
+    public class CitiesControllerTest : IClassFixture<SingletonApiTest>
     {
-        private SharedDbContext _context;
-        private HttpClient Client;
         private SingletonApiTest fixture;
-        //public CitiesControllerTest(ApiFixture fixture) : base(fixture)
-        //{
-        //}
         public CitiesControllerTest(SingletonApiTest fixture)
         {
             this.fixture = fixture;
-            _context = fixture.DbContext;
-            Client = fixture.Client;
         }
 
         [Fact]
@@ -34,8 +26,7 @@ namespace YourRest.WebApi.Tests.Controllers
                 Name = "TestCountry"
             };
 
-            expectedCountry = (await _context.Countries.AddAsync(expectedCountry)).Entity;
-            await _context.SaveChangesAsync();
+            expectedCountry = await fixture.InsertObjectIntoDatabase(expectedCountry);
 
             var expectedRegion = new Region()
             {
@@ -44,31 +35,25 @@ namespace YourRest.WebApi.Tests.Controllers
 
             };
 
-            expectedRegion = (await _context.Regions.AddAsync(expectedRegion)).Entity;
-            await _context.SaveChangesAsync();
+            expectedRegion = await fixture.InsertObjectIntoDatabase(expectedRegion);
 
             var expectedCity1 = new City { Name = "Moscow", RegionId = expectedRegion.Id /*, Id = 1*/ };
             var expectedCity2 = new City { Name = "TestCity", RegionId = expectedRegion.Id /*, Id = 2*/ };
-            //await _apiTest.InsertObjectIntoDatabase(expectedCity1);
-            //await _apiTest.InsertObjectIntoDatabase(expectedCity2);
-            expectedCity1 = (await _context.Cities.AddAsync(expectedCity1)).Entity;
-            expectedCity2 = (await _context.Cities.AddAsync(expectedCity2)).Entity;
-            await _context.SaveChangesAsync();
 
+
+            expectedCity1 = await fixture.InsertObjectIntoDatabase(expectedCity1);
+            expectedCity2 = await fixture.InsertObjectIntoDatabase(expectedCity2);
             var resultCities = await GetCitiesFromApi();
 
             Assert.NotNull(resultCities);
             Assert.Equal(expectedCity1.Name, resultCities.FirstOrDefault(c => c.Id == expectedCity1.Id)?.Name);
-            //Assert.Equal(expectedCity2.Name, resultCities.FirstOrDefault(c => c.Id == expectedCity2.Id)?.Name);
-            //Assert.Collection(resultCities,
-            //    city => Assert.Equal("Moscow", city.Name),
-            //    city => Assert.Equal("TestCity", city.Name));
+
         }
 
         [Fact]
         public async Task GetAllCities_ReturnsEmptyList_WhenDatabaseIsEmpty()
         {
-            var count = _context.Cities.Count();
+            var count = fixture.DbContext.Cities.Count();
             var resultCities = await GetCitiesFromApi();
 
             Assert.NotNull(resultCities);
@@ -104,9 +89,9 @@ namespace YourRest.WebApi.Tests.Controllers
         public async Task GetCityById_ReturnsExpectedNull_WhenDatabaseHasNoCitiesByNeedId()
         {
             var maxId = 1000;
-            if (await _context.Cities.AnyAsync())
+            if (await fixture.DbContext.Cities.AnyAsync())
             {
-                maxId += await _context.Cities.Select(c => c.Id).MaxAsync();
+                maxId += await fixture.DbContext.Cities.Select(c => c.Id).MaxAsync();
             }
 
             var invalidCity = new CityDTO
@@ -116,7 +101,7 @@ namespace YourRest.WebApi.Tests.Controllers
             };
 
             var content = new StringContent(JsonConvert.SerializeObject(invalidCity), Encoding.UTF8, "application/json");
-            var response = await Client.GetAsync($"/api/cities/{invalidCity.Id}");
+            var response = await fixture.Client.GetAsync($"/api/cities/{invalidCity.Id}");
 
             Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
         }
@@ -133,11 +118,11 @@ namespace YourRest.WebApi.Tests.Controllers
             var expectedCity1 = new City { Name = "Moscow666", RegionId = region.Id };
             var expectedCity2 = new City { Name = "TestCity666", RegionId = region.Id };
 
-            await _context.Cities.AddAsync(expectedCity1);
-            await _context.Cities.AddAsync(expectedCity2);
-            await _context.SaveChangesAsync();
+            await fixture.DbContext.Cities.AddAsync(expectedCity1);
+            await fixture.DbContext.Cities.AddAsync(expectedCity2);
+            await fixture.DbContext.SaveChangesAsync();
 
-            var response = await Client.GetAsync($"/api/cities?country_id={country.Id}");
+            var response = await fixture.Client.GetAsync($"/api/cities?country_id={country.Id}");
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
             var content = await response.Content.ReadAsStringAsync();
@@ -158,7 +143,7 @@ namespace YourRest.WebApi.Tests.Controllers
         public async Task GetCityByCountryId_Returns404_WhenDatabaseDoesntHaveCitiesByNeedCountryId()
         {
             int countryId = int.MaxValue;
-            var response = await Client.GetAsync($"/api/cities?countryId={countryId}");
+            var response = await fixture.Client.GetAsync($"/api/cities?countryId={countryId}");
 
             Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
         }
@@ -175,11 +160,11 @@ namespace YourRest.WebApi.Tests.Controllers
             var expectedCity1 = new City { Name = "Moscow666", RegionId = region.Id };
             var expectedCity2 = new City { Name = "TestCity666", RegionId = region.Id };
 
-            await _context.Cities.AddAsync(expectedCity1);
-            await _context.Cities.AddAsync(expectedCity2);
-            await _context.SaveChangesAsync();
+            await fixture.DbContext.Cities.AddAsync(expectedCity1);
+            await fixture.DbContext.Cities.AddAsync(expectedCity2);
+            await fixture.DbContext.SaveChangesAsync();
 
-            var response = await Client.GetAsync($"/api/cities?regionId={region.Id}");
+            var response = await fixture.Client.GetAsync($"/api/cities?regionId={region.Id}");
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
             var content = await response.Content.ReadAsStringAsync();
@@ -199,7 +184,7 @@ namespace YourRest.WebApi.Tests.Controllers
         [Fact]
         public async Task GetCityByRegionId_Returns200Ok_WhenDatabaseDoesntHaveCitiesByGivenRegionId()
         {
-            var response = await Client.GetAsync($"/api/cities?regionId=200");
+            var response = await fixture.Client.GetAsync($"/api/cities?regionId=200");
 
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
@@ -211,7 +196,7 @@ namespace YourRest.WebApi.Tests.Controllers
 
         private async Task<List<City>> GetCitiesFromApi()
         {
-            var response = await Client.GetAsync("/api/cities");
+            var response = await fixture.Client.GetAsync("/api/cities");
             response.EnsureSuccessStatusCode();
             var content = await response.Content.ReadAsStringAsync();
             var options = new SystemJson.JsonSerializerOptions
@@ -225,7 +210,7 @@ namespace YourRest.WebApi.Tests.Controllers
 
         private async Task<City> GetCityByIdFromApi(int id)
         {
-            var response = await Client.GetAsync($"/api/cities/{id}");
+            var response = await fixture.Client.GetAsync($"/api/cities/{id}");
 
             if (response.StatusCode == System.Net.HttpStatusCode.NotFound) return null;
 
@@ -242,7 +227,7 @@ namespace YourRest.WebApi.Tests.Controllers
 
         private async Task<List<City>> GetCitiesByRegionId(int regionId)
         {
-            var response = await Client.GetAsync($"/api/cities?regionId={regionId}");
+            var response = await fixture.Client.GetAsync($"/api/cities?regionId={regionId}");
 
             if (response.StatusCode == System.Net.HttpStatusCode.NotFound) return null;
 
@@ -259,7 +244,7 @@ namespace YourRest.WebApi.Tests.Controllers
 
         private async Task<List<City>> GetCitiesByCountryId(int countryId)
         {
-            var response = await Client.GetAsync($"/api/cities?countryId={countryId}");
+            var response = await fixture.Client.GetAsync($"/api/cities?countryId={countryId}");
 
             if (response.StatusCode == System.Net.HttpStatusCode.NotFound) return null;
 

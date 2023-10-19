@@ -1,9 +1,8 @@
 using YourRest.Application.Exceptions;
 using YourRest.Application.Dto;
 using YourRest.Application.Interfaces;
-using YourRest.Domain.Entities;
-using YourRest.Domain.ValueObjects.Reviews;
 using YourRest.Domain.Repositories;
+using RoomEntity = YourRest.Domain.Entities.Room;
 
 namespace YourRest.Application.UseCases
 {
@@ -27,7 +26,7 @@ namespace YourRest.Application.UseCases
                 throw new EntityNotFoundException($"Accommodation with id {roomDto.AccommodationId} not found");
             }
 
-            var room = new Room();
+            var room = new RoomEntity();
             room.SquareInMeter = roomDto.SquareInMeter;
             room.Name = roomDto.Name;
             room.AccommodationId = accommodation.Id;

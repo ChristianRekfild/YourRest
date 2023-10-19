@@ -5,10 +5,12 @@ using YourRest.WebApi.Tests.Fixtures;
 
 namespace YourRest.WebApi.Tests.Controllers
 {
-    public class RoomTypeControllerTest : ApiTest
+    public class RoomTypeControllerTest : IClassFixture<SingletonApiTest>
     {
-        public RoomTypeControllerTest(ApiFixture fixture) : base(fixture)
+        private readonly SingletonApiTest fixture;
+        public RoomTypeControllerTest(SingletonApiTest fixture)
         {
+            this.fixture = fixture;
         }
 
         [Fact]
@@ -18,11 +20,11 @@ namespace YourRest.WebApi.Tests.Controllers
             var roomStandart = new RoomType { Id = 2, Name = "Standart" };
             var roomApart = new RoomType { Id = 3, Name = "Apart" };
 
-            var lux = await InsertObjectIntoDatabase(roomLux);
-            var standart = await InsertObjectIntoDatabase(roomStandart);
-            var apart = await InsertObjectIntoDatabase(roomApart);
+            var lux = await fixture.InsertObjectIntoDatabase(roomLux);
+            var standart = await fixture.InsertObjectIntoDatabase(roomStandart);
+            var apart = await fixture.InsertObjectIntoDatabase(roomApart);
 
-            var response = await Client.GetAsync($"api/roomTypes");
+            var response = await fixture.Client.GetAsync($"api/roomTypes");
             var content = await response.Content.ReadAsStringAsync();
             var types = JsonConvert.DeserializeObject<List<RoomTypeDto>>(content);
             Assert.NotNull(types);

@@ -6,11 +6,13 @@ using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
 using YourRest.WebApi.Responses;
 using Microsoft.AspNetCore.Mvc;
+using SharpGrip.FluentValidation.AutoValidation.Mvc.Attributes;
 
 namespace YourRest.WebApi.Controllers
 {
     [ApiController]
     [Route("api/operator/review")]
+    [FluentValidationAutoValidation]
     public class ReviewsController : ControllerBase
     {
         private readonly ICreateReviewUseCase _useCase;
