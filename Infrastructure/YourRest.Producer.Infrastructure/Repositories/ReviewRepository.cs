@@ -3,11 +3,13 @@ using YourRest.Domain.Repositories;
 using YourRest.Infrastructure.Core.DbContexts;
 using YourRest.Infrastructure.Core.Repositories;
 
-namespace YourRest.Infrastructure.Repositories;
-
-public class ReviewRepository : PgRepository<Review, int>, IReviewRepository
+namespace YourRest.Producer.Infrastructure.Repositories 
 {
-    public ReviewRepository(SharedDbContext context) : base(context)
+    public class ReviewRepository : PgRepository<Review, int>, IReviewRepository
     {
+        public ReviewRepository(SharedDbContext context) : base(context)
+        {
+        }
     }
 }
+

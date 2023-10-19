@@ -2,11 +2,13 @@
 using YourRest.Application.Dto;
 using YourRest.Application.Interfaces;
 using YourRest.Application.Exceptions;
+using SharpGrip.FluentValidation.AutoValidation.Mvc.Attributes;
 
 namespace YourRest.WebApi.Controllers
 {
     [ApiController]
     [Route("api/operator/review")]
+    [FluentValidationAutoValidation]
     public class ReviewsController : ControllerBase
     {
         private readonly ICreateReviewUseCase _useCase;

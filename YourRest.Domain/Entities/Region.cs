@@ -7,6 +7,6 @@ namespace YourRest.Domain.Entities
 
 		public virtual Country Country { get; set; }
 
-		public List<City> Cities { get; set; }
+		public List<City> Cities { get; set; } = new List<City>();
 	}
 }
