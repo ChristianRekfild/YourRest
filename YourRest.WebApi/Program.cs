@@ -2,12 +2,14 @@ using YourRest.Application;
 using YourRest.Infrastructure.Core.DbContexts;
 using YourRest.Producer.Infrastructure;
 using YourRest.Producer.Infrastructure.Middleware;
+using YourRest.Producer.Infrastructure.Keycloak;
 using Microsoft.EntityFrameworkCore;
 using Swashbuckle.AspNetCore.Swagger;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using Microsoft.OpenApi.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using YourRest.Producer.Infrastructure.Keycloak.Http;
 using System.Text;
 
 public class Program
@@ -71,9 +73,13 @@ public class Program
                 }
             });
         });
-
+        
+        services.AddKeycloakInfrastructure();
         services.AddInfrastructure();
         services.AddApplication();
+        
+        services.AddHttpClient();
+        services.AddTransient<ICustomHttpClientFactory, CustomHttpClientFactory>();
 
         services.AddAuthentication(options =>
         {

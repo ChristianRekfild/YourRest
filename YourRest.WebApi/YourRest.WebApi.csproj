@@ -36,6 +36,7 @@
     <ProjectReference Include="..\Infrastructure\YourRest.Producer.Infrastructure.Middleware\YourRest.Producer.Infrastructure.Middleware.csproj" />
     <ProjectReference Include="..\YourRest.Application\YourRest.Application.csproj" />
     <ProjectReference Include="..\YourRest.Domain\YourRest.Domain.csproj" />
+    <ProjectReference Include="..\Infrastructure\YourRest.Producer.Infrastructure.Keycloak\YourRest.Producer.Infrastructure.Keycloak.csproj" />
   </ItemGroup>
 
 </Project>

@@ -5,6 +5,7 @@ using YourRest.Application.Dto.Validators;
 using YourRest.Application.Interfaces;
 using YourRest.Application.Interfaces.Facility;
 using YourRest.Application.Interfaces.Room;
+using YourRest.Application.Services;
 using YourRest.Application.UseCases;
 using YourRest.Application.UseCases.Facility;
 using YourRest.Application.UseCases.Room;
@@ -64,6 +65,8 @@ namespace YourRest.Application
             ValidatorOptions.Global.LanguageManager.Culture = new CultureInfo("ru");
             services.AddValidatorsFromAssemblyContaining<RoomViewModelValidator>();
             services.AddScoped<IGetRoomTypeListUseCase, GetRoomTypeListUseCase>();
+            
+            services.AddScoped<IAuthenticationService, AuthenticationService>();
 
             return services;
         }
