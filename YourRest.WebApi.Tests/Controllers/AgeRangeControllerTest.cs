@@ -57,7 +57,6 @@ namespace YourRest.WebApi.Tests.Controllers
             Assert.Equal(ageRange.AgeTo, ageRangeResponse.AgeTo);
         }
 
-
         [Fact]
         public async Task PutAgeRange_ReturnsBadRequest_WhenDbEmpty()
         {
