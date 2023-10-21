@@ -51,7 +51,7 @@ if (!app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-app.UseStaticFiles();
+app.UseStaticFiles(); //"outputPath": "dist/client-app",
 
 app.UseAuthentication();   // добавление middleware аутентификации 
 app.UseAuthorization();   // добавление middleware авторизации 
