@@ -20,6 +20,7 @@ namespace YourRest.Producer.Infrastructure
             services.AddScoped<IRoomFacilityRepository, RoomFacilityRepository>();
             
             services.AddScoped<IRoomTypeRepository, RoomTypeRepository>();
+            services.AddScoped<IAgeRangeRepository, AgeRangeRepository>();
 
 
             return services;
