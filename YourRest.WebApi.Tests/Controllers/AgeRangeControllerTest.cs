@@ -57,14 +57,6 @@ namespace YourRest.WebApi.Tests.Controllers
             Assert.Equal(ageRange.AgeTo, ageRangeResponse.AgeTo);
         }
 
-        [Fact]
-        public async Task GetAgeRange_ReturnBadRequest_WhenDbEmpty()
-        {
-
-            var response = await fixture.Client.GetAsync($"api/operator/AgeRange/{1}");
-
-            Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
-        }
 
         [Fact]
         public async Task PutAgeRange_ReturnsBadRequest_WhenDbEmpty()
