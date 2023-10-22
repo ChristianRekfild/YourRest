@@ -1,21 +1,33 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using YourRest.ClientIdentity.Infrastructure;
+using YourRest.ClientIdentity.Infrastructure.Contracts.Entities;
+using YourRest.Infrastructure.Core.DbContexts;
 
-// условная бд с пользователями
-var people = new List<Person>
- {
-    new Person("tom@gmail.com", "12345"),
-    new Person("bob@gmail.com", "55555")
-};
 
 var builder = WebApplication.CreateBuilder(args);
 
+#pragma warning disable ASP0000 // Do not call 'IServiceCollection.BuildServiceProvider' in 'ConfigureServices'
+var configuration = builder.Services.BuildServiceProvider().GetService<IConfiguration>();
+#pragma warning restore ASP0000 // Do not call 'IServiceCollection.BuildServiceProvider' in 'ConfigureServices'
+string? connectionString;
+
+connectionString = configuration?.GetConnectionString("IdentityConnection");
+var migrationsAssembly = typeof(ClientIdentityInfrastructureDependencyInjections).Assembly.GetName().Name;
+builder.Services.AddDbContext<ClientAppIdentityContext>(options => options.UseNpgsql(connectionString,
+            sql => sql.MigrationsAssembly(migrationsAssembly)));
+
+builder.Services.AddIdentity<User, Role>()
+    .AddEntityFrameworkStores<ClientAppIdentityContext>();
+
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
 // добавление сервисов аутентификации
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)  // схема аутентификации - с помощью jwt-токенов
     .AddJwtBearer(options =>      // подключение аутентификации с помощью jwt-токенов
@@ -105,4 +117,3 @@ public class AuthOptions
     public static SymmetricSecurityKey GetSymmetricSecurityKey() =>
         new SymmetricSecurityKey(Encoding.UTF8.GetBytes(KEY));
 }
-record class Person(string Email, string Password);

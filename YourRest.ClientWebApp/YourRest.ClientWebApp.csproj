@@ -8,7 +8,17 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="7.0.12" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.10">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="7.0.9" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Infrastructure\YourRest.ClientIdentity.Infrastructure.Contracts\YourRest.ClientIdentity.Infrastructure.Contracts.csproj" />
+    <ProjectReference Include="..\Infrastructure\YourRest.ClientIdentity.Infrastructure\YourRest.ClientIdentity.Infrastructure.csproj" />
+    <ProjectReference Include="..\Infrastructure\YourRest.Infrastructure.Core\YourRest.Infrastructure.Core.csproj" />
   </ItemGroup>
 
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
