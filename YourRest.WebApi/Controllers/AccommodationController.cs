@@ -11,10 +11,29 @@ namespace YourRest.WebApi.Controllers
     public class AccommodationController : ControllerBase
     {
         private readonly IAddAddressToAccommodationUseCase _addAddressToAccommodationUseCase;
+        private readonly IGetAccommodationByIdUseCase _getAccommodationByIdUseCase;
 
-        public AccommodationController(IAddAddressToAccommodationUseCase addAddressToAccommodationUseCase)
+        public AccommodationController(IGetAccommodationByIdUseCase getAccommodationByIdUseCase,
+            IAddAddressToAccommodationUseCase addAddressToAccommodationUseCase)
         {
+            _getAccommodationByIdUseCase = getAccommodationByIdUseCase;
             _addAddressToAccommodationUseCase = addAddressToAccommodationUseCase;
+        }
+
+        [HttpGet("{accommodationId}")]
+        public async Task<IActionResult> GetAccommodation(int accommodationId)
+        {
+            var accommodationDto = await _getAccommodationByIdUseCase.Execute(accommodationId);
+
+            try
+            {
+                return Ok(accommodationDto);
+            }
+            catch (AccommodationNotFoundException ex)
+            {
+                return NotFound();
+            }
+            
         }
 
         [HttpPost("{accommodationId}/address", Name = "AddAddressToAccommodationAsync")]
