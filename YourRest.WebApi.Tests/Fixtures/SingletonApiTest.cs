@@ -13,6 +13,7 @@ namespace YourRest.WebApi.Tests.Fixtures
         public SharedDbContext DbContext { get; private set; }
 
         private readonly DatabaseFixture dbFixture;
+        private readonly KeycloakFixture keycloakFixture;
 
         public SingletonApiTest()
         {
@@ -34,6 +35,13 @@ namespace YourRest.WebApi.Tests.Fixtures
             var connectionString = sb.ToString();
 
             DbContext = dbFixture.GetDbContext(connectionString);
+            
+            keycloakFixture = KeycloakFixture.GetInstanceAsync().Result; 
+            
+            Task.Run(async () => 
+            {
+                await keycloakFixture.InitializeAsync();
+            }).Wait();
 
             var builder = new WebHostBuilder()
                 .ConfigureAppConfiguration((context, configBuilder) =>
@@ -41,10 +49,10 @@ namespace YourRest.WebApi.Tests.Fixtures
                     var testConfig = new ConfigurationBuilder()
                         .AddInMemoryCollection(new List<KeyValuePair<string, string?>>
                         {
-                            new KeyValuePair<string, string?>("ConnectionStrings:DefaultConnection", connectionString),
-                            new KeyValuePair<string, string>("JwtSettings:Authority", "http://keycloak:8080/auth/realms/YourRest"),
-                            new KeyValuePair<string, string>("JwtSettings:Audience", "your_rest_app"),
-                            new KeyValuePair<string, string>("JwtSettings:SymmetricKey", "qBC5V3wc2AYKTcYN1CACo6REU9t1Inrf")
+                            new("ConnectionStrings:DefaultConnection", connectionString),
+                            new("Authority", keycloakFixture.GetTestRealmUrl()),
+                            new("ClientId", keycloakFixture.GetTestAudience()),
+                            new("ClientSecret", keycloakFixture.GetTestSymmetricKey())
                         })
                         .Build();
 
@@ -62,6 +70,16 @@ namespace YourRest.WebApi.Tests.Fixtures
             var item = await DbContext.AddAsync(entity);
             await DbContext.SaveChangesAsync();
             return item.Entity;
+        }
+        
+        public async Task CreateGroup(int accommodationId)
+        {
+            await keycloakFixture.CreateGroup(accommodationId);
+        }
+
+        public async Task<string> GetAccessTokenAsync()
+        {
+            return await keycloakFixture.GetAccessTokenAsync();
         }
 
         public void CleanDatabase()

@@ -1,5 +1,4 @@
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using System.Net;
 using System.Text;
 using YourRest.Application.Dto;
@@ -56,7 +55,8 @@ namespace YourRest.WebApi.Tests.Controllers
             };
             var content = new StringContent(JsonConvert.SerializeObject(review), Encoding.UTF8, "application/json");
             
-            var token = await GetAccessTokenAsync();
+            await fixture.CreateGroup(accommodationId);
+            var token = await fixture.GetAccessTokenAsync();
 
             fixture.Client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
@@ -81,7 +81,8 @@ namespace YourRest.WebApi.Tests.Controllers
             };
 
             await fixture.InsertObjectIntoDatabase(accommodation);
-            var token = await GetAccessTokenAsync();
+            await fixture.CreateGroup(accommodation.Id);
+            var token = await fixture.GetAccessTokenAsync();
 
             fixture.Client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
             
@@ -96,55 +97,16 @@ namespace YourRest.WebApi.Tests.Controllers
             var response = await fixture.Client.PostAsync("api/operator/review", content);
 
             Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
-            fixture.CleanDatabase();
         }
         
         [Fact]
         public async Task WhenPostCalledWithoutAuthCredentials_Returns401Unauthorised()
         {
-            var accommodation = new Accommodation
-            {
-                Name = "Test2"
-            };
-
-            await fixture.InsertObjectIntoDatabase(accommodation);
+            fixture.Client.DefaultRequestHeaders.Authorization = null;
             
-            var invalidReview = new ReviewDto {
-                BookingId = 3,
-                Comment = "test",
-                Rating = 1
-            };
-
-            var content = new StringContent(JsonConvert.SerializeObject(invalidReview), Encoding.UTF8, "application/json");
-
-            var response = await fixture.Client.PostAsync("api/operator/review", content);
+            var response = await fixture.Client.PostAsync("api/operator/review", null);
 
             Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
-            fixture.CleanDatabase();
         }
-        
-        private async Task<string> GetAccessTokenAsync()
-        {
-            var client = new HttpClient();
-            var request = new HttpRequestMessage(HttpMethod.Post, "http://keycloak:8080/auth/realms/YourRest/protocol/openid-connect/token");
-            request.Content = new FormUrlEncodedContent(new Dictionary<string, string>
-            {
-                ["grant_type"] = "password",
-                ["client_id"] = "your_rest_app",
-                ["client_secret"] = "qBC5V3wc2AYKTcYN1CACo6REU9t1Inrf",
-                ["username"] = "lilia.retsia",
-                ["password"] = "123456"
-            });
-
-            var response = await client.SendAsync(request);
-            if(response.IsSuccessStatusCode)
-            {
-                var responseContent = await response.Content.ReadAsStringAsync();
-                var tokenResponse = JsonConvert.DeserializeObject<JObject>(responseContent);
-                return tokenResponse["access_token"].ToString();
-            }
-            return null;
-        }
-
     }
 }

@@ -78,6 +78,11 @@ public class Program
         services.AddInfrastructure();
         services.AddApplication();
         
+        services.AddSingleton(_ => configuration.GetValue<string>("ClientId"));
+        services.AddSingleton(_ => configuration.GetValue<string>("ClientSecret"));
+        services.AddSingleton(_ => configuration.GetValue<string>("KeycloakUrl"));
+
+        
         services.AddHttpClient();
         services.AddTransient<ICustomHttpClientFactory, CustomHttpClientFactory>();
 
@@ -88,8 +93,8 @@ public class Program
         })
         .AddJwtBearer(options =>
         {
-            options.Authority = configuration["JwtSettings:Authority"];
-            options.Audience = configuration["JwtSettings:Audience"];
+            options.Authority = configuration.GetValue<string>("Authority");
+            options.Audience = configuration.GetValue<string>("ClientId");
             options.RequireHttpsMetadata = false;
 
             options.TokenValidationParameters = new TokenValidationParameters
@@ -98,9 +103,9 @@ public class Program
                 ValidateAudience = true,
                 ValidateLifetime = true,
                 ValidateIssuerSigningKey = true,
-                ValidIssuer = configuration["JwtSettings:Authority"],
-                ValidAudience = configuration["JwtSettings:Audience"],
-                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JwtSettings:SymmetricKey"])),
+                ValidIssuer = configuration.GetValue<string>("Authority"),
+                ValidAudience = configuration.GetValue<string>("ClientId"),
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration.GetValue<string>("ClientSecret"))),
             };
         });
     }
@@ -108,11 +113,6 @@ public class Program
     public static void Configure(IApplicationBuilder app)
     {
 #pragma warning disable CS8604 // Code that generates warning CS8604 is written here and will be ignored by the compiler.
-        // if (app.ApplicationServices.GetService<IWebHostEnvironment>().IsDevelopment())
-        // {
-        //     app.UseSwagger();
-        //     app.UseSwaggerUI();
-        // }
         app.UseSwagger();
         app.UseSwaggerUI();
 #pragma warning disable CS8604 // Code that generates warning CS8604 is written here and will be ignored by the compiler.

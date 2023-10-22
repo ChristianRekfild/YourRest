@@ -39,7 +39,7 @@ namespace YourRest.Application.UseCases
                 throw new EntityNotFoundException($"Booking {reviewDto.BookingId} not found");
             }
 
-            if (user.AccommodationId != booking.AccommodationId)
+            if (user.UserAccommodations.Any(ua => ua.AccommodationId != booking.AccommodationId))
             {
                 throw new ValidationException($"User with id {user.Id} cannot create a review for booking {booking.Id}.");
             }

@@ -18,6 +18,8 @@ namespace YourRest.Infrastructure.Core.DbContexts
         public DbSet<RoomType> RoomTypes { get; set; }
 
         public DbSet<User> Users { get; set; }
+        
+        public DbSet<UserAccommodation> UserAccommodations { get; set; }
 
         static SharedDbContext()
         {
@@ -91,6 +93,19 @@ namespace YourRest.Infrastructure.Core.DbContexts
                     .WithOne()
                     .HasForeignKey<Accommodation>(r => r.AddressId);
             }); 
+            
+            modelBuilder.Entity<UserAccommodation>()
+                .HasKey(ug => new { ug.UserId, ug.AccommodationId });
+
+            modelBuilder.Entity<UserAccommodation>()
+                .HasOne(ug => ug.User)
+                .WithMany(u => u.UserAccommodations)
+                .HasForeignKey(ug => ug.UserId);
+
+            modelBuilder.Entity<UserAccommodation>()
+                .HasOne(ug => ug.Accommodation)
+                .WithMany(g => g.UserAccommodations)
+                .HasForeignKey(ug => ug.AccommodationId);
         }
 
         public void ClearAllTables()

@@ -25,7 +25,9 @@ http://localhost:8080/auth/realms/YourRest/protocol/openid-connect/auth?client_i
 
 1.Groups. Создаем группу /accommodations/1
 2. Users ->Groups -> Join. Привязываем группу к пользователю
-3. Clients -> Mappers. Указываем, чтобы в токене приходила группа, фамилия, имя, email
+3. Clients -> Mappers. Указываем, чтобы в токене приходила группа, фамилия, имя, email, Audience, keyCloakId
+
+Add Group Mapper:
 
 Name: subMapper
 Mapper Type: User Property
@@ -45,6 +47,13 @@ Name: lastNameMapper
 Mapper Type: User Property
 Property: lastName
 Token Claim Name: family_name
+Add to ID token: ON
+Add to access token: ON
+
+Name: emailMapper
+Mapper Type: User Property
+Property: email
+Token Claim Name: email
 Add to ID token: ON
 Add to access token: ON
 
