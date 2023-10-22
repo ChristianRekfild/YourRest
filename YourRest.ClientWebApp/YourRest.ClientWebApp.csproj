@@ -22,7 +22,7 @@
   </ItemGroup>
 
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="REM npm run --prefix ClientApp build" />
+    <Exec Command="echo &quot;npm run --prefix ClientApp build&quot;" />
   </Target>
 
 </Project>
