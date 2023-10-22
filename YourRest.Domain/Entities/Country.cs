@@ -5,6 +5,6 @@
     {       
         public string Name { get; set; }
 
-        public List<Region> Regions { get; set; }
+        public List<Region> Regions { get; set; } = new List<Region>();
     }
 }

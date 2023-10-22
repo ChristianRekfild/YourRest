@@ -4,6 +4,7 @@ namespace YourRest.Domain.Entities
 {
     public class Accommodation : IntBaseEntity
     {
+        public Accommodation() => Rooms = new List<Room>(); 
         public string Name { get; set; }
 
         [MaxLength(255)]

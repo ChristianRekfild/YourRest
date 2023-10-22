@@ -1,12 +1,14 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using YourRest.Application.Dto;
 using YourRest.Application.Interfaces;
-using YourRest.Application.CustomErrors;
+using YourRest.Application.Exceptions;
+using SharpGrip.FluentValidation.AutoValidation.Mvc.Attributes;
 
 namespace YourRest.WebApi.Controllers
 {
     [ApiController]
     [Route("api/operator/review")]
+    [FluentValidationAutoValidation]
     public class ReviewsController : ControllerBase
     {
         private readonly ICreateReviewUseCase _useCase;
@@ -19,16 +21,9 @@ namespace YourRest.WebApi.Controllers
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] ReviewDto reviewDto)
         {
-            try
-            {
-                var createdReview = await _useCase.Execute(reviewDto);
+            var createdReview = await _useCase.Execute(reviewDto);
 
-                return CreatedAtAction(nameof(Post), createdReview);
-            }
-            catch (BookingNotFoundException exception)
-            {
-                return NotFound(exception.Message);
-            }
+            return CreatedAtAction(nameof(Post), createdReview);
         }
     }
 }

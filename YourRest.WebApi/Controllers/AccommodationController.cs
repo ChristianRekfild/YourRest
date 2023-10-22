@@ -1,13 +1,15 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using YourRest.Application.Dto;
 using YourRest.Application.Interfaces;
-using YourRest.Application.CustomErrors;
+using YourRest.Application.Exceptions;
 using YourRest.WebApi.Responses;
+using SharpGrip.FluentValidation.AutoValidation.Mvc.Attributes;
 
 namespace YourRest.WebApi.Controllers
 {
     [ApiController]
     [Route("api/operator/accommodation")]
+    [FluentValidationAutoValidation]
     public class AccommodationController : ControllerBase
     {
         private readonly IAddAddressToAccommodationUseCase _addAddressToAccommodationUseCase;
@@ -37,25 +39,15 @@ namespace YourRest.WebApi.Controllers
         }
 
         [HttpPost("{accommodationId}/address", Name = "AddAddressToAccommodationAsync")]
-        public async Task<IActionResult> AddAddressToAccommodationAsync(int accommodationId, [FromBody] AddressDto addressDto)
+        public async Task<IActionResult> AddAddressToAccommodationAsync([FromRoute] int accommodationId, [FromBody] AddressDto addressDto)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-            try
-            {
-                var result = await _addAddressToAccommodationUseCase.Execute(accommodationId, addressDto);
+            var result = await _addAddressToAccommodationUseCase.Execute(accommodationId, addressDto);
 
-                return CreatedAtRoute(nameof(AddAddressToAccommodationAsync), result);
-            }
-            catch (Exception exception) when (exception is AccommodationNotFoundException || exception is CityNotFoundException)
-            {
-                return NotFound(new ErrorResponse{ Message = exception.Message});
-            } catch (AddressAlreadyExistsException exception)
-            {
-                return UnprocessableEntity(new ErrorResponse{ Message = exception.Message});
-            }
+            return CreatedAtRoute(nameof(AddAddressToAccommodationAsync), result);
         }
     }
 }

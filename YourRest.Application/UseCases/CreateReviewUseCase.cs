@@ -1,4 +1,4 @@
-using YourRest.Application.CustomErrors;
+using YourRest.Application.Exceptions;
 using YourRest.Application.Dto;
 using YourRest.Application.Interfaces;
 using YourRest.Domain.Entities;
@@ -26,7 +26,7 @@ namespace YourRest.Application.UseCases
 
             if (booking == null)
             {
-                throw new BookingNotFoundException("Booking not found");
+                throw new EntityNotFoundException($"Booking {reviewDto.BookingId} not found");
             }
 
             var review = new Review

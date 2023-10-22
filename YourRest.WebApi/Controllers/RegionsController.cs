@@ -1,10 +1,12 @@
 using YourRest.Application.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using SharpGrip.FluentValidation.AutoValidation.Mvc.Attributes;
 
 namespace YourRest.WebApi.Controllers
 {
     [ApiController]
     [Route("api/regions")]
+    [FluentValidationAutoValidation]
     public class RegionController : ControllerBase
     {
         private readonly IGetRegionListUseCase _getRegionListUseCase;

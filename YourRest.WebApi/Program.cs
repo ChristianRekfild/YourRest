@@ -3,6 +3,7 @@ using Microsoft.OpenApi.Models;
 using YourRest.Application;
 using YourRest.Infrastructure.Core.DbContexts;
 using YourRest.Producer.Infrastructure;
+using YourRest.Producer.Infrastructure.Middleware;
 
 public class Program
 {
@@ -20,12 +21,9 @@ public class Program
 
     public static void ConfigureServices(IServiceCollection services)
     {
-        //TODO: �������� ��� ����� ���-�� ��������
 #pragma warning disable ASP0000 // Do not call 'IServiceCollection.BuildServiceProvider' in 'ConfigureServices'
         var configuration = services.BuildServiceProvider().GetService<IConfiguration>();
 #pragma warning restore ASP0000 // Do not call 'IServiceCollection.BuildServiceProvider' in 'ConfigureServices'
-                               //var environment = services.BuildServiceProvider().GetService<IWebHostEnvironment>();
-
         string? connectionString;
    
         connectionString = configuration?.GetConnectionString("DefaultConnection");
@@ -50,17 +48,18 @@ public class Program
 
     public static void Configure(IApplicationBuilder app)
     {
-#pragma warning disable CS8604 // ��������, ��������-������, ����������� �������� NULL.
+#pragma warning disable CS8604 // Code that generates warning CS8604 is written here and will be ignored by the compiler.
         if (app.ApplicationServices.GetService<IWebHostEnvironment>().IsDevelopment())
         {
             app.UseSwagger();
             app.UseSwaggerUI();
         }
-#pragma warning restore CS8604 // ��������, ��������-������, ����������� �������� NULL.
-
+#pragma warning disable CS8604 // Code that generates warning CS8604 is written here and will be ignored by the compiler.
         app.UseHttpsRedirection();
         app.UseRouting(); // This is necessary for the endpoints to work.
         app.UseAuthorization();
+
+        app.UseMiddleware<ErrorHandlingMiddleware>();
 
         app.UseEndpoints(endpoints =>
         {
