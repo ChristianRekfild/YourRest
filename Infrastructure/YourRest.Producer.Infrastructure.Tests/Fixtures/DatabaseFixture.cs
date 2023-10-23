@@ -27,7 +27,7 @@ namespace YourRest.Infrastructure.Tests.Fixtures
 
             var builder = new DbContextOptionsBuilder<SharedDbContext>();
             builder.UseNpgsql(_postgreSqlContainer.GetConnectionString(), 
-                sql => sql.MigrationsAssembly(typeof(InfrastructureDependencyInjections).Assembly.GetName().Name));
+                sql => sql.MigrationsAssembly(typeof(ProducerInfrastructureDependencyInjections).Assembly.GetName().Name));
             DbContext = new SharedDbContext(builder.Options);
             DbContext.Database.Migrate();
         }

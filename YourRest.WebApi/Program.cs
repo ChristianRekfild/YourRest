@@ -27,7 +27,7 @@ public class Program
         string? connectionString;
    
         connectionString = configuration?.GetConnectionString("DefaultConnection");
-        var migrationsAssembly = typeof(InfrastructureDependencyInjections).Assembly.GetName().Name;
+        var migrationsAssembly = typeof(ProducerInfrastructureDependencyInjections).Assembly.GetName().Name;
 
         services.AddDbContext<SharedDbContext>(options => options.UseNpgsql(connectionString,
             sql => sql.MigrationsAssembly(migrationsAssembly)));
