@@ -20,21 +20,18 @@ namespace YourRest.WebApi.Tests.Controllers
         [Fact]
         public async Task GetAllRegions_ReturnsExpectedRegions_WhenDatabaseHasRegions()
         {
+            var country1 = new Country { Name = "Russia" };
+            var expectedCountry1 = await fixture.InsertObjectIntoDatabase(country1);
             var expectedRegion1 = new Region();
             expectedRegion1.Name = "Region1";
-            expectedRegion1.CountryId = 1;
+            expectedRegion1.CountryId = expectedCountry1.Id;
+            await fixture.InsertObjectIntoDatabase(expectedRegion1);
+            
+            var country2 = new Country { Name = "Test" };
+            var expectedCountry2 = await fixture.InsertObjectIntoDatabase(country2);
             var expectedRegion2 = new Region();
             expectedRegion2.Name = "Region2";
-            expectedRegion2.CountryId = 2;
-
-            var expectedCountry1 = new Country { Name = "Russia" };
-            var expectedCountry2 = new Country { Name = "Test" };
-
-            await fixture.InsertObjectIntoDatabase(expectedCountry1);
-            await fixture.InsertObjectIntoDatabase(expectedCountry2);
-
-
-            await fixture.InsertObjectIntoDatabase(expectedRegion1);
+            expectedRegion2.CountryId = expectedCountry2.Id;
             await fixture.InsertObjectIntoDatabase(expectedRegion2);
 
             var resultRegions = await GetRegionFromApi();
