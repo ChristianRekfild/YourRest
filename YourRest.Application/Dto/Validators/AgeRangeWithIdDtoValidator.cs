@@ -8,7 +8,7 @@ namespace YourRest.Application.Dto.Validators
         {
             RuleFor(x => x.Id).NotNull().NotEmpty().GreaterThan(0);
             RuleFor(ageRange => ageRange.AgeFrom).NotNull().NotEmpty().GreaterThan(-1);
-            RuleFor(ageRange => ageRange.AgeTo).NotNull().NotEmpty().GreaterThan(-1);
+            RuleFor(ageRange => ageRange.AgeTo).NotNull().NotEmpty().GreaterThanOrEqualTo(ageRange => ageRange.AgeFrom);
         }
     }
 }
