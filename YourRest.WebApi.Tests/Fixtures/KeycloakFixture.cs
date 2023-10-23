@@ -18,7 +18,7 @@ public class KeycloakFixture : IDisposable
 
     private string _secret;
     private string _userId;
-    private string _url = "http://keycloak-test:8080";
+    private string _url = "http://keycloak-test:8081";
     private string _realm = "YourRestTest";
     private string _firstName = "test_name";
     private string _userName = "test_username";
@@ -27,7 +27,7 @@ public class KeycloakFixture : IDisposable
     private string _password = "test";
     private string _clientId = "your_rest_app_test";
     private string _clientName = "YourClientName";
-
+    private bool isInitialized = false;
     public string GetTestRealmUrl()
     {
         return $"{_url}/auth/realms/{_realm}";
@@ -37,7 +37,8 @@ public class KeycloakFixture : IDisposable
 
     private KeycloakFixture()
     {
-        EnsureContainerRemoved("keycloakdb-test");
+        RemoveContainer("keycloakdb-test");
+        CreateNetwork("yourrest_local-network");
 
         _keycloakDbContainer = new PostgreSqlBuilder()
             .WithImage("postgres:latest")
@@ -65,16 +66,13 @@ public class KeycloakFixture : IDisposable
 
         _tokenRepository = new TokenRepository(new TestHttpClientFactory(), null, null, null, _url);
     }
-    public void EnsureContainerRemoved(string containerName)
+    public void RemoveContainer(string containerName)
     {
-        // Stop the container if it's running
         Process.Start("docker", $"stop {containerName}")?.WaitForExit();
-
-        // Remove the container
         Process.Start("docker", $"rm {containerName}")?.WaitForExit();
     }
     
-    public static KeycloakFixture GetInstanceAsync()
+    public static async Task<KeycloakFixture> GetInstanceAsync()
     {
         if (instance == null)
         {
@@ -86,67 +84,75 @@ public class KeycloakFixture : IDisposable
                 }
             }
         }
+
+        await instance.InternalInitializeAsync();
         return instance;
     }
-    
-    public async Task InitializeAsync()
+
+    private async Task InternalInitializeAsync()
     {
-        await _keycloakDbContainer.StartAsync();
-        await _keycloakContainer.StartAsync();
-        
-        Token token = await _tokenRepository.GetAdminTokenAsync();
-        string adminToken = token.access_token;
-        try
+        if (!isInitialized)
         {
-            await _tokenRepository.CreateRealm(adminToken, _realm);
+            await _keycloakDbContainer.StartAsync();
+            await _keycloakContainer.StartAsync();
+            await Task.Delay(TimeSpan.FromSeconds(10));
+            
+            Token token = await _tokenRepository.GetAdminTokenAsync();
+            string adminToken = token.access_token;
+            try
+            {
+                await _tokenRepository.CreateRealm(adminToken, _realm);
+            }
+            catch { }
+            
+            try
+            {
+                await _tokenRepository.CreateClient(adminToken, _realm, _clientId, _clientName);
+            }
+            catch { }
+            
+            _secret = await _tokenRepository.RegenerateClientSecret(adminToken, _realm, _clientId);
+            
+            _tokenRepository.SetCredentials(_clientId, _secret, GetTestRealmUrl(), _url);
+             
+             try
+             {
+                 await _tokenRepository.AddClientAudienceMapper(adminToken, _realm, _clientId, "audience-mapper");
+             }
+             catch { }
+             
+             try
+             {
+                 await _tokenRepository.AddClientGroupMembershipMapper(adminToken, _realm, _clientId, "groupMapper", "groups");
+             }
+             catch { }
+             
+             try
+             {
+                 await _tokenRepository.AddClientProtocolMapper(adminToken, _realm, _clientId, "emailMapper", "email", "email");
+             }
+             catch { }
+             
+             try
+             {
+                 await _tokenRepository.AddClientProtocolMapper(adminToken, _realm, _clientId, "lastNameMapper", "lastName", "family_name");
+             }
+             catch { }
+             
+             try
+             {
+                 await _tokenRepository.AddClientProtocolMapper(adminToken, _realm, _clientId, "firstNameMapper", "firstName", "given_name");
+             }
+             catch { }
+             
+             try
+             {
+                 await _tokenRepository.AddClientProtocolMapper(adminToken, _realm, _clientId, "subMapper", "keyCloakId", "sub");
+             }
+             catch { }
+
+            isInitialized = true;
         }
-        catch { }
-        
-        try
-        {
-            await _tokenRepository.CreateClient(adminToken, _realm, _clientId, _clientName);
-        }
-        catch { }
-        
-        _secret = await _tokenRepository.RegenerateClientSecret(adminToken, _realm, _clientId);
-        
-        _tokenRepository.SetCredentials(_clientId, _secret, GetTestRealmUrl(), _url);
-         
-         try
-         {
-             await _tokenRepository.AddClientAudienceMapper(adminToken, _realm, _clientId, "audience-mapper");
-         }
-         catch { }
-         
-         try
-         {
-             await _tokenRepository.AddClientGroupMembershipMapper(adminToken, _realm, _clientId, "groupMapper", "groups");
-         }
-         catch { }
-         
-         try
-         {
-             await _tokenRepository.AddClientProtocolMapper(adminToken, _realm, _clientId, "emailMapper", "email", "email");
-         }
-         catch { }
-         
-         try
-         {
-             await _tokenRepository.AddClientProtocolMapper(adminToken, _realm, _clientId, "lastNameMapper", "lastName", "family_name");
-         }
-         catch { }
-         
-         try
-         {
-             await _tokenRepository.AddClientProtocolMapper(adminToken, _realm, _clientId, "firstNameMapper", "firstName", "given_name");
-         }
-         catch { }
-         
-         try
-         {
-             await _tokenRepository.AddClientProtocolMapper(adminToken, _realm, _clientId, "subMapper", "keyCloakId", "sub");
-         }
-         catch { }
     }
     public async Task CreateGroup(int accommodationId)
     {
@@ -177,13 +183,30 @@ public class KeycloakFixture : IDisposable
     {
         return (await _tokenRepository.GetTokenAsync(_userName, _password)).access_token;
     }
+    
+    public void CreateNetwork(string networkName)
+    {
+        var checkNetwork = Process.Start("docker", $"network inspect {networkName}");
+        checkNetwork.WaitForExit();
 
+        if (checkNetwork.ExitCode != 0)
+        {
+            Process.Start("docker", $"network create {networkName}")?.WaitForExit();
+        }
+    }
+    
+    public void RemoveNetwork(string networkName)
+    {
+        Process.Start("docker", $"network rm {networkName}")?.WaitForExit();
+    }
     public void Dispose()
     {
         Task.Run(async () => await _keycloakContainer.StopAsync()).Wait();
         Task.Run(async () => await _keycloakContainer.DisposeAsync()).Wait();
         Task.Run(async () => await _keycloakDbContainer.StopAsync()).Wait();
         Task.Run(async () => await _keycloakDbContainer.DisposeAsync()).Wait();
+        
+        RemoveNetwork("yourrest_local-network");
     }
 }
 

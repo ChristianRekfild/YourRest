@@ -24,8 +24,7 @@ namespace YourRest.WebApi.Tests.Fixtures
 
             DbContext = dbFixture.GetDbContext(connectionString);
         
-            keycloakFixture = KeycloakFixture.GetInstanceAsync();
-            await keycloakFixture.InitializeAsync();
+            keycloakFixture = await KeycloakFixture.GetInstanceAsync();
 
             InitializeWebHost(connectionString);
         }

@@ -60,8 +60,8 @@ namespace YourRest.Producer.Infrastructure.Keycloak.Repositories
             {
                 new KeyValuePair<string, string>("grant_type", "password"),
                 new KeyValuePair<string, string>("client_id", "admin-cli"),
-                new KeyValuePair<string, string>("username", "admin"),
-                new KeyValuePair<string, string>("password", "admin")
+                new KeyValuePair<string, string>("username", "admin-test"),
+                new KeyValuePair<string, string>("password", "admin-test")
             });
             var response = await httpClient.PostAsync($"{_url}/auth/realms/master/protocol/openid-connect/token", content);
             response.EnsureSuccessStatusCode();
