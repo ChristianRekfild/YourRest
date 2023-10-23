@@ -4,6 +4,7 @@ using YourRest.Application;
 using YourRest.Infrastructure.Core.DbContexts;
 using YourRest.Producer.Infrastructure;
 using YourRest.Producer.Infrastructure.Middleware;
+using YourRest.Producer.Infrastructure.Seeds;
 
 public class Program
 {
@@ -65,5 +66,10 @@ public class Program
         {
             endpoints.MapControllers();
         });
+        
+        using var serviceScope = app.ApplicationServices.CreateScope();
+        var context = serviceScope.ServiceProvider.GetService<SharedDbContext>();
+        var seeder = new DatabaseSeeder(context);
+        seeder.Seed();
     }
 }
