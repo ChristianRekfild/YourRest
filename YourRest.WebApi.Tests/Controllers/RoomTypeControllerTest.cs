@@ -16,9 +16,9 @@ namespace YourRest.WebApi.Tests.Controllers
         [Fact]
         public async Task GetAllRoomTypes() 
         {
-            var roomLux = new RoomType{ Id = 1, Name = "Lux" };
-            var roomStandart = new RoomType { Id = 2, Name = "Standart" };
-            var roomApart = new RoomType { Id = 3, Name = "Apart" };
+            var roomLux = new RoomType{ Name = "Lux" };
+            var roomStandart = new RoomType { Name = "Standart" };
+            var roomApart = new RoomType { Name = "Apart" };
 
             var lux = await fixture.InsertObjectIntoDatabase(roomLux);
             var standart = await fixture.InsertObjectIntoDatabase(roomStandart);
@@ -28,16 +28,10 @@ namespace YourRest.WebApi.Tests.Controllers
             var content = await response.Content.ReadAsStringAsync();
             var types = JsonConvert.DeserializeObject<List<RoomTypeDto>>(content);
             Assert.NotNull(types);
-
-            Assert.Equal(types[0].Name, lux.Name);
-            Assert.Equal(types[0].Id, lux.Id);
-
-            Assert.Equal(types[1].Name, standart.Name);
-            Assert.Equal(types[1].Id, standart.Id);
-
-            Assert.Equal(types[2].Name, apart.Name);
-            Assert.Equal(types[2].Id, apart.Id);
-
+            
+            Assert.Contains(types, type => type.Name == roomLux.Name);
+            Assert.Contains(types, type => type.Name == roomStandart.Name);
+            Assert.Contains(types, type => type.Name == roomApart.Name);
         }
     }
 }

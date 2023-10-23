@@ -16,20 +16,32 @@ public class CitySeeder
     {
         if (!_context.Cities.Any()) 
         {
+            var moscowRegionId = _context.Regions
+                .FirstOrDefault(c => c.Name == "Московская область")?.Id;
+            
+            var leningradRegionId = _context.Regions
+                .FirstOrDefault(c => c.Name == "Ленинградская область")?.Id;
+            
+            var sverdlovskRegionId = _context.Regions
+                .FirstOrDefault(c => c.Name == "Свердловская область")?.Id;
+            
+            var krasnodarRegionId = _context.Regions
+                .FirstOrDefault(c => c.Name == "Краснодарский край")?.Id;
+            
             _context.Cities.AddRange(
-                new City { Id = 1, RegionId = 1, Name = "Москва" },
-                new City { Id = 2, RegionId = 1, Name = "Зеленоград" },
-                new City { Id = 3, RegionId = 1, Name = "Подольск" },
+                new City { RegionId = moscowRegionId.Value, Name = "Москва" },
+                new City { RegionId = moscowRegionId.Value, Name = "Зеленоград" },
+                new City { RegionId = moscowRegionId.Value, Name = "Подольск" },
                 
-                new City { Id = 4, RegionId = 2, Name = "Санкт-Петербург" },
-                new City { Id = 5, RegionId = 2, Name = "Гатчина" },
+                new City { RegionId = leningradRegionId.Value, Name = "Всеволожск" },
+                new City { RegionId = leningradRegionId.Value, Name = "Гатчина" },
                 
-                new City { Id = 6, RegionId = 3, Name = "Екатеринбург" },
-                new City { Id = 7, RegionId = 3, Name = "Нижний Тагил" },
+                new City { RegionId = sverdlovskRegionId.Value, Name = "Екатеринбург" },
+                new City { RegionId = sverdlovskRegionId.Value, Name = "Нижний Тагил" },
                 
-                new City { Id = 8, RegionId = 4, Name = "Краснодар" },
-                new City { Id = 9, RegionId = 4, Name = "Сочи" },
-                new City { Id = 10, RegionId = 4, Name = "Анапа" }
+                new City { RegionId = krasnodarRegionId.Value, Name = "Краснодар" },
+                new City { RegionId = krasnodarRegionId.Value, Name = "Сочи" },
+                new City { RegionId = krasnodarRegionId.Value, Name = "Анапа" }
             );
             _context.SaveChanges();
         }

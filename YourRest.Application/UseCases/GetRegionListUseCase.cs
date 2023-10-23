@@ -15,9 +15,9 @@ namespace YourRest.Application.UseCases
 
         public async Task<IEnumerable<RegionDto>> Execute()
         {
-            var regions = await _regionRepository.GetAllAsync();
+            var regionsWithCountries = await _regionRepository.GetAllWithIncludeAsync(r => r.Country);
 
-            return regions.Select(r => new RegionDto
+            return regionsWithCountries.Select(r => new RegionDto
             {
                 Id = r.Id,
                 Name = r.Name,

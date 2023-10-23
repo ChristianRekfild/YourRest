@@ -17,16 +17,16 @@ public class RoomTypeSeeder
         if (!_context.RoomTypes.Any()) 
         {
             _context.RoomTypes.AddRange(
-                new RoomType { Id = 1, Name = "Одноместный" },
-                new RoomType { Id = 2, Name = "Двухместный" },
-                new RoomType { Id = 3, Name = "Двухместный с 2 кроватями" },
-                new RoomType { Id = 4, Name = "Люкс" },
-                new RoomType { Id = 5, Name = "Семейный" },
-                new RoomType { Id = 6, Name = "Студия" },
-                new RoomType { Id = 7, Name = "Апартаменты" },
-                new RoomType { Id = 8, Name = "Бунгало" },
-                new RoomType { Id = 9, Name = "Пентхаус" },
-                new RoomType { Id = 10, Name = "Делюкс" }
+                new RoomType { Name = "Одноместный" },
+                new RoomType { Name = "Двухместный" },
+                new RoomType { Name = "Двухместный с 2 кроватями" },
+                new RoomType { Name = "Люкс" },
+                new RoomType { Name = "Семейный" },
+                new RoomType { Name = "Студия" },
+                new RoomType { Name = "Апартаменты" },
+                new RoomType { Name = "Бунгало" },
+                new RoomType { Name = "Пентхаус" },
+                new RoomType { Name = "Делюкс" }
             );
             _context.SaveChanges();
         }

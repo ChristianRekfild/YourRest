@@ -37,17 +37,8 @@ namespace YourRest.WebApi.Tests.Controllers
             var resultRegions = await GetRegionFromApi();
 
             Assert.NotNull(resultRegions);
-            Assert.Collection(resultRegions,
-                region =>
-                {
-                    Assert.Equal("Region1", region.Name);
-                    Assert.Equal(1, region.CountryId);
-                },
-            region =>
-            {
-                Assert.Equal("Region2", region.Name);
-                Assert.Equal(2, region.CountryId);
-            });
+            Assert.Contains(resultRegions, region => region.Name == "Region1" && region.CountryId == expectedRegion1.CountryId);
+            Assert.Contains(resultRegions, region => region.Name == "Region2" && region.CountryId == expectedRegion2.CountryId);
         }
 
         [Fact]

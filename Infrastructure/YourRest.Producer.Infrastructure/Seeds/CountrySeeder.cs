@@ -17,7 +17,7 @@ public class CountrySeeder
         if (!_context.Countries.Any()) 
         {
             _context.Countries.AddRange(
-                new Country { Id = 1, Name = "Россия" }
+                new Country { Name = "Россия" }
             );
             _context.SaveChanges();
         }

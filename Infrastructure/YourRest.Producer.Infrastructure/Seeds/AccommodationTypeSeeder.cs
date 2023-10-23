@@ -16,16 +16,16 @@ public class AccommodationTypeSeeder
         if (!_context.AccommodationTypes.Any()) 
         {
             _context.AccommodationTypes.AddRange(
-                new AccommodationType { Id = 1, Name = "Гостиница" },
-                new AccommodationType { Id = 2, Name = "Апартаменты" },
-                new AccommodationType { Id = 3, Name = "Хостел" },
-                new AccommodationType { Id = 4, Name = "Бутик-отель" },
-                new AccommodationType { Id = 5, Name = "Мотель" },
-                new AccommodationType { Id = 6, Name = "Пансионат" },
-                new AccommodationType { Id = 7, Name = "Курортный отель" },
-                new AccommodationType { Id = 8, Name = "Бед & Брекфаст" },
-                new AccommodationType { Id = 9, Name = "Вилла" },
-                new AccommodationType { Id = 10, Name = "Кемпинг" }
+                new AccommodationType { Name = "Гостиница" },
+                new AccommodationType { Name = "Апартаменты" },
+                new AccommodationType { Name = "Хостел" },
+                new AccommodationType { Name = "Бутик-отель" },
+                new AccommodationType { Name = "Мотель" },
+                new AccommodationType { Name = "Пансионат" },
+                new AccommodationType { Name = "Курортный отель" },
+                new AccommodationType { Name = "Бед & Брекфаст" },
+                new AccommodationType { Name = "Вилла" },
+                new AccommodationType { Name = "Кемпинг" }
             );
             _context.SaveChanges();
         }

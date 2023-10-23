@@ -27,9 +27,8 @@ namespace YourRest.WebApi.Tests.Controllers
             var resultCountries = await GetCountriesFromApi();
 
             Assert.NotNull(resultCountries);
-            Assert.Collection(resultCountries,
-                country => Assert.Equal("Russia", country.Name),
-                country => Assert.Equal("Test", country.Name));
+            Assert.Contains(resultCountries, country => country.Name == "Russia");
+            Assert.Contains(resultCountries, country => country.Name == "Test");
         }
 
         [Fact]

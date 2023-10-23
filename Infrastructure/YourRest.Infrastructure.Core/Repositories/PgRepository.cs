@@ -54,6 +54,12 @@ namespace YourRest.Infrastructure.Core.Repositories
         {
             return await Include(includeProperties).Where(predicate).ToListAsync();
         }
+       
+       public async Task<IEnumerable<T>> GetAllWithIncludeAsync(Expression<Func<T, object>> includeProperty)
+       {
+           return await Include(includeProperty).ToListAsync();
+       }
+
         
         public async Task DeleteAsync(U id, bool saveChanges = true, CancellationToken cancellationToken = default)
         {

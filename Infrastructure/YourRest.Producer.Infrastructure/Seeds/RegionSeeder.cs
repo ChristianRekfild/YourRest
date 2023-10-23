@@ -16,11 +16,14 @@ public class RegionSeeder
     {
         if (!_context.Regions.Any()) 
         {
+            var russiaCountryId = _context.Countries
+                .FirstOrDefault(c => c.Name == "Россия")?.Id;
+            
             _context.Regions.AddRange(
-                new Region { Id = 1, CountryId = 1, Name = "Московская область" },
-                new Region { Id = 2, CountryId = 1, Name = "Ленинградская область" },
-                new Region { Id = 3, CountryId = 1, Name = "Свердловская область" },
-                new Region { Id = 4, CountryId = 1, Name = "Краснодарский край" }
+                new Region { CountryId = russiaCountryId.Value, Name = "Московская область" },
+                new Region { CountryId = russiaCountryId.Value, Name = "Ленинградская область" },
+                new Region { CountryId = russiaCountryId.Value, Name = "Свердловская область" },
+                new Region { CountryId = russiaCountryId.Value, Name = "Краснодарский край" }
             );
             _context.SaveChanges();
         }
