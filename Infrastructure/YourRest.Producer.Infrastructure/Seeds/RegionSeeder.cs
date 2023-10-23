@@ -18,14 +18,17 @@ public class RegionSeeder
         {
             var russiaCountryId = _context.Countries
                 .FirstOrDefault(c => c.Name == "Россия")?.Id;
-            
-            _context.Regions.AddRange(
-                new Region { CountryId = russiaCountryId.Value, Name = "Московская область" },
-                new Region { CountryId = russiaCountryId.Value, Name = "Ленинградская область" },
-                new Region { CountryId = russiaCountryId.Value, Name = "Свердловская область" },
-                new Region { CountryId = russiaCountryId.Value, Name = "Краснодарский край" }
-            );
-            _context.SaveChanges();
+
+            if (russiaCountryId.HasValue)
+            {
+                _context.Regions.AddRange(
+                    new Region { CountryId = russiaCountryId.Value, Name = "Московская область" },
+                    new Region { CountryId = russiaCountryId.Value, Name = "Ленинградская область" },
+                    new Region { CountryId = russiaCountryId.Value, Name = "Свердловская область" },
+                    new Region { CountryId = russiaCountryId.Value, Name = "Краснодарский край" }
+                );
+                _context.SaveChanges();
+            }
         }
     }
 }

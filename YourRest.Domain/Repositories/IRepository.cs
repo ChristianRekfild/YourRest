@@ -13,7 +13,7 @@ namespace YourRest.Domain.Repositories
 
         Task<IEnumerable<T>> GetAllAsync(CancellationToken cancellationToken = default);
 
-        Task<IEnumerable<T>> GetAllWithIncludeAsync(Expression<Func<T, object>> includeProperty);
+        Task<IEnumerable<T>> GetAllWithIncludeAsync(Expression<Func<T, object>> includeProperty, CancellationToken cancellationToken = default);
 
         Task<T?> GetAsync(U id, CancellationToken cancellationToken = default);
 
