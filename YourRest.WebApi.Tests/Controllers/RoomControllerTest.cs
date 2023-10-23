@@ -35,7 +35,7 @@ namespace YourRest.WebApi.Tests.Controllers
             };
 
             var content = new StringContent(JsonConvert.SerializeObject(editedRoom.ToViewModel()), Encoding.UTF8, "application/json");
-            var response = await fixture.Client.PutAsync($"api/rooms", content);
+            var response = await fixture.Client.PutAsync($"api/rooms/{editedRoom.Id}", content);
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             Assert.Equal("The room has been edited", await response.Content.ReadAsStringAsync());
             response = await fixture.Client.GetAsync($"api/rooms/{room.Id}");

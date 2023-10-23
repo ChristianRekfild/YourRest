@@ -65,8 +65,10 @@ namespace YourRest.WebApi.Controllers
             return Ok(await getRoomByIdUseCase.ExecuteAsync(route.Id));
         }
         [HttpPut]
-        public async Task<IActionResult> EditRoom([FromBody] RoomViewModel room)
+        [Route("{id}")]
+        public async Task<IActionResult> EditRoom([FromRoute] RouteViewModel route, [FromBody] RoomViewModel room)
         {
+            room.Id = route.Id;
             await editRoomUseCase.ExecuteAsync(room);
             return Ok("The room has been edited");
         }
