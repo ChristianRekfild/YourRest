@@ -4,7 +4,7 @@ using YourRest.Producer.Infrastructure.Repositories;
 
 namespace YourRest.Producer.Infrastructure
 {
-    public static class InfrastructureDependencyInjections
+    public static class ProducerInfrastructureDependencyInjections
     {
         public static IServiceCollection AddInfrastructure(this IServiceCollection services)
         {

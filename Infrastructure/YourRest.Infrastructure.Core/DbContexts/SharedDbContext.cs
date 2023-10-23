@@ -20,6 +20,7 @@ namespace YourRest.Infrastructure.Core.DbContexts
         public DbSet<User> Users { get; set; }
         
         public DbSet<UserAccommodation> UserAccommodations { get; set; }
+        public DbSet<AccommodationType> AccommodationTypes { get; set; }
 
         static SharedDbContext()
         {
@@ -121,6 +122,7 @@ namespace YourRest.Infrastructure.Core.DbContexts
             Rooms.RemoveRange(Rooms);
             RoomFacilities.RemoveRange(RoomFacilities);
             RoomTypes.RemoveRange(RoomTypes);
+            AccommodationTypes.RemoveRange(AccommodationTypes);
             // Add other DbSet removals here
             // Example: 
             // Rooms.RemoveRange(Rooms);

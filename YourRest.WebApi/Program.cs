@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using YourRest.Producer.Infrastructure.Keycloak.Http;
 using System.Text;
+using YourRest.Producer.Infrastructure.Seeds;
 
 public class Program
 {
@@ -32,7 +33,7 @@ public class Program
         string? connectionString;
 
         connectionString = configuration?.GetConnectionString("DefaultConnection");
-        var migrationsAssembly = typeof(InfrastructureDependencyInjections).Assembly.GetName().Name;
+        var migrationsAssembly = typeof(ProducerInfrastructureDependencyInjections).Assembly.GetName().Name;
 
         services.AddDbContext<SharedDbContext>(options => options.UseNpgsql(connectionString,
             sql => sql.MigrationsAssembly(migrationsAssembly)));
@@ -128,5 +129,10 @@ public class Program
         app.UseAuthorization();
         app.UseMiddleware<ErrorHandlingMiddleware>();
         app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
+        
+        using var serviceScope = app.ApplicationServices.CreateScope();
+        var context = serviceScope.ServiceProvider.GetService<SharedDbContext>();
+        var seeder = new DatabaseSeeder(context);
+        seeder.Seed();
     }
 }
