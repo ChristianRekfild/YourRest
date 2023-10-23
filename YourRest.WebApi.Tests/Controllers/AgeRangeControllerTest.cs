@@ -37,6 +37,16 @@ namespace YourRest.WebApi.Tests.Controllers
         }
 
         [Fact]
+        public async Task AddAgeRange_ReturnBadRequest_WhenAgeFromGreaterThanAgeTo()
+        {
+            var ageRange = new AgeRangeDto() { AgeFrom = 14, AgeTo = 6 };
+            var content = new StringContent(JsonConvert.SerializeObject(ageRange), Encoding.UTF8, "application/json");
+            var response = await fixture.Client.PostAsync($"api/operator/AgeRange", content);
+
+            Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        }
+
+        [Fact]
         public async Task GetAgeRange_ReturnStatusOK_WhenDbHasAgeRange()
         {
             var ageRangeEntity = new AgeRange() { AgeFrom = 6, AgeTo = 14 };
@@ -65,8 +75,7 @@ namespace YourRest.WebApi.Tests.Controllers
             var content = new StringContent(JsonConvert.SerializeObject(ageRangePut), Encoding.UTF8, "application/json");
             var response = await fixture.Client.PutAsync($"api/operator/AgeRange/", content);
 
-            Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
-
+            Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
         }
 
         [Fact]
@@ -85,5 +94,7 @@ namespace YourRest.WebApi.Tests.Controllers
 
             Assert.Equal("The AgeRange has been edited", responseContent);
         }
+
+
     }
 }

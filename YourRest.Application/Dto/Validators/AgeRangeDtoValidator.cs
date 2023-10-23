@@ -7,7 +7,7 @@ namespace YourRest.Application.Dto.Validators
         public AgeRangeDtoValidator()
         {
             RuleFor(ageRange => ageRange.AgeFrom).NotNull().GreaterThan(-1);
-            RuleFor(ageRange => ageRange.AgeTo).NotNull().GreaterThan(-1);
+            RuleFor(ageRange => ageRange.AgeTo).NotNull().GreaterThanOrEqualTo(ageRange => ageRange.AgeFrom);
 
         }
     }
