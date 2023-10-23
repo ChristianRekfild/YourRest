@@ -46,7 +46,8 @@ public class UserSavingMiddleware
                     }                        
                 }            
             }
-
+            
+            //ToDo: Allow user login without hotel group
             if (accommodationIds.Count == 0) 
             {
                 throw new Exception("No accommodations found from token groups");
