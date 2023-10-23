@@ -18,14 +18,13 @@ public class KeycloakFixture : IDisposable
 
     private string _secret;
     private string _userId;
-    private string _url = "http://keycloak:8080";
+    private string _url = "http://keycloak-test:8080";
     private string _realm = "YourRestTest";
     private string _firstName = "test_name";
     private string _userName = "test_username";
     private string _lastName = "test_lastname";
     private string _email = "test@test.ru";
     private string _password = "test";
-    private string _scopeName = "Test Scope";
     private string _clientId = "your_rest_app_test";
     private string _clientName = "YourClientName";
 
@@ -61,7 +60,7 @@ public class KeycloakFixture : IDisposable
             .WithEnvironment("DB_PASSWORD", "keycloakpassword")
             .WithEnvironment("KEYCLOAK_USER", "admin-test")
             .WithEnvironment("KEYCLOAK_PASSWORD", "admin-test")
-            .WithPortBinding(8081, 8082)
+            .WithPortBinding(8081, 8080)
             .Build();
 
         _tokenRepository = new TokenRepository(new TestHttpClientFactory(), null, null, null, _url);
