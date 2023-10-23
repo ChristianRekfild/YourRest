@@ -6,65 +6,29 @@ using YourRest.Infrastructure.Core.DbContexts;
 
 namespace YourRest.WebApi.Tests.Fixtures
 {
-    public class SingletonApiTest : IDisposable
+    public class SingletonApiTest : IDisposable, IAsyncLifetime
     {
         public HttpClient Client { get; private set; }
         public TestServer Server { get; private set; }
         public SharedDbContext DbContext { get; private set; }
 
-        private readonly DatabaseFixture dbFixture;
-        private readonly KeycloakFixture keycloakFixture;
+        private DatabaseFixture dbFixture;
+        private KeycloakFixture keycloakFixture;
 
-        public SingletonApiTest()
+        public SingletonApiTest() { }
+
+        public async Task InitializeAsync()
         {
             dbFixture = DatabaseFixture.getInstance();
-
-            StringBuilder sb = new StringBuilder();
-            foreach (var part in dbFixture.ConnectionString.Split(';'))
-            {
-                if (part.StartsWith("Database"))
-                {
-                    sb.Append(part + "_" + Guid.NewGuid().ToString().Replace("-", string.Empty));
-                }
-                else
-                {
-                    sb.Append(part);
-                }
-                sb.Append(";");
-            }
-            var connectionString = sb.ToString();
+            var connectionString = BuildConnectionString();
 
             DbContext = dbFixture.GetDbContext(connectionString);
-            
-            keycloakFixture = KeycloakFixture.GetInstanceAsync().Result; 
-            
-            Task.Run(async () => 
-            {
-                await keycloakFixture.InitializeAsync();
-            }).Wait();
+        
+            keycloakFixture = KeycloakFixture.GetInstanceAsync();
+            await keycloakFixture.InitializeAsync();
 
-            var builder = new WebHostBuilder()
-                .ConfigureAppConfiguration((context, configBuilder) =>
-                {
-                    var testConfig = new ConfigurationBuilder()
-                        .AddInMemoryCollection(new List<KeyValuePair<string, string?>>
-                        {
-                            new("ConnectionStrings:DefaultConnection", connectionString),
-                            new("Authority", keycloakFixture.GetTestRealmUrl()),
-                            new("ClientId", keycloakFixture.GetTestAudience()),
-                            new("ClientSecret", keycloakFixture.GetTestSymmetricKey())
-                        })
-                        .Build();
-
-                    configBuilder.AddConfiguration(testConfig);
-                })
-                .UseStartup<Program>();
-
-            Server = new TestServer(builder);
-
-            Client = Server.CreateClient();
+            InitializeWebHost(connectionString);
         }
-
         public async Task<T> InsertObjectIntoDatabase<T>(T entity) where T : class
         {
             var item = await DbContext.AddAsync(entity);
@@ -89,11 +53,55 @@ namespace YourRest.WebApi.Tests.Fixtures
 
         public void Dispose()
         {
-            Server?.Dispose();
-
-            //TODO: Подумать как останавливать контейнер
-            // и нужно ли это делать
-            //dbFixture.Dispose();
+            Server.Dispose();
         }
+        
+        public Task DisposeAsync()
+        {
+            Server.Dispose();
+            return Task.CompletedTask;
+        }
+        
+        private string BuildConnectionString()
+        {
+            StringBuilder sb = new StringBuilder();
+            foreach (var part in dbFixture.ConnectionString.Split(';'))
+            {
+                if (part.StartsWith("Database"))
+                {
+                    sb.Append(part + "_" + Guid.NewGuid().ToString().Replace("-", string.Empty));
+                }
+                else
+                {
+                    sb.Append(part);
+                }
+                sb.Append(";");
+            }
+            return sb.ToString();
+        }
+
+        private void InitializeWebHost(string connectionString)
+        {
+            var builder = new WebHostBuilder()
+                .ConfigureAppConfiguration((context, configBuilder) =>
+                {
+                    var testConfig = new ConfigurationBuilder()
+                        .AddInMemoryCollection(new List<KeyValuePair<string, string?>>
+                        {
+                            new("ConnectionStrings:DefaultConnection", connectionString),
+                            new("Authority", keycloakFixture.GetTestRealmUrl()),
+                            new("ClientId", keycloakFixture.GetTestAudience()),
+                            new("ClientSecret", keycloakFixture.GetTestSymmetricKey())
+                        })
+                        .Build();
+
+                    configBuilder.AddConfiguration(testConfig);
+                })
+                .UseStartup<Program>();
+
+            Server = new TestServer(builder);
+            Client = Server.CreateClient();
+        }
+
     }
 }

@@ -18,6 +18,7 @@ public class KeycloakFixture : IDisposable
 
     private string _secret;
     private string _userId;
+    private string _url = "http://keycloak:8080";
     private string _realm = "YourRestTest";
     private string _firstName = "test_name";
     private string _userName = "test_username";
@@ -30,7 +31,7 @@ public class KeycloakFixture : IDisposable
 
     public string GetTestRealmUrl()
     {
-        return $"http://keycloak:8080/auth/realms/{_realm}";
+        return $"{_url}/auth/realms/{_realm}";
     }
     public string GetTestAudience() => _clientId;
     public string GetTestSymmetricKey() => _secret;
@@ -63,7 +64,7 @@ public class KeycloakFixture : IDisposable
             .WithPortBinding(8082, 8081)
             .Build();
 
-        _tokenRepository = new TokenRepository(new TestHttpClientFactory(), null, null, null);
+        _tokenRepository = new TokenRepository(new TestHttpClientFactory(), null, null, null, _url);
     }
     public void EnsureContainerRemoved(string containerName)
     {
@@ -74,7 +75,7 @@ public class KeycloakFixture : IDisposable
         Process.Start("docker", $"rm {containerName}")?.WaitForExit();
     }
     
-    public static async Task<KeycloakFixture> GetInstanceAsync()
+    public static KeycloakFixture GetInstanceAsync()
     {
         if (instance == null)
         {
@@ -83,12 +84,12 @@ public class KeycloakFixture : IDisposable
                 if (instance == null)
                 {
                     instance = new KeycloakFixture();
-                    instance.InitializeAsync().Wait();
                 }
             }
         }
         return instance;
     }
+    
     public async Task InitializeAsync()
     {
         await _keycloakDbContainer.StartAsync();
@@ -110,7 +111,7 @@ public class KeycloakFixture : IDisposable
         
         _secret = await _tokenRepository.RegenerateClientSecret(adminToken, _realm, _clientId);
         
-        _tokenRepository.SetCredentials(_clientId, _secret, GetTestRealmUrl());
+        _tokenRepository.SetCredentials(_clientId, _secret, GetTestRealmUrl(), _url);
          
          try
          {

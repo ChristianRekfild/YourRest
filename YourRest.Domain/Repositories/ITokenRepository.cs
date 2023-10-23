@@ -14,7 +14,7 @@ public interface ITokenRepository
     Task AssignUserToGroup(string adminToken, string realmName, string userId, string groupId);
     Task<string> GetClientSecret(string adminToken, string realmName, string clientId);
     Task<string> GetClientIdByName(string adminToken, string realmName, string clientName);
-    void SetCredentials(string clientId, string clientSecret, string keycloakUrl);
+    void SetCredentials(string clientId, string clientSecret, string keycloakUrl, string url);
     Task<string> RegenerateClientSecret(string adminToken, string realmName, string clientId);
 
     Task AddClientProtocolMapper(string adminToken, string realmName, string clientId, string mapperName,

@@ -13,20 +13,23 @@ namespace YourRest.Producer.Infrastructure.Keycloak.Repositories
         private string? _clientId;
         private string? _clientSecret;
         private string? _keycloakUrl;
+        private string? _url;
 
-        public TokenRepository(ICustomHttpClientFactory httpClientFactory, string? clientId, string? clientSecret, string? keycloakUrl)
+        public TokenRepository(ICustomHttpClientFactory httpClientFactory, string? clientId, string? clientSecret, string? keycloakUrl, string? url = null)
         {
             _httpClientFactory = httpClientFactory;
             _clientId = clientId;
             _clientSecret = clientSecret;
             _keycloakUrl = keycloakUrl;
+            _url = url;
         }
 
-        public void SetCredentials(string clientId, string clientSecret, string keycloakUrl)
+        public void SetCredentials(string clientId, string clientSecret, string keycloakUrl, string url)
         {
             _clientId = clientId;
             _clientSecret = clientSecret;
             _keycloakUrl = keycloakUrl;
+            _url = url;
         }
 
         public async Task<Token> GetTokenAsync(string username, string password)
@@ -60,7 +63,7 @@ namespace YourRest.Producer.Infrastructure.Keycloak.Repositories
                 new KeyValuePair<string, string>("username", "admin"),
                 new KeyValuePair<string, string>("password", "admin")
             });
-            var response = await httpClient.PostAsync("http://keycloak:8080/auth/realms/master/protocol/openid-connect/token", content);
+            var response = await httpClient.PostAsync($"{_url}/auth/realms/master/protocol/openid-connect/token", content);
             response.EnsureSuccessStatusCode();
 
             var result = await response.Content.ReadAsStringAsync();
@@ -70,7 +73,7 @@ namespace YourRest.Producer.Infrastructure.Keycloak.Repositories
         public async Task CreateRealm(string adminToken, string realmName)
         {
             using var httpClient = GetConfiguredHttpClient(adminToken);
-            var url = "http://keycloak:8080/auth/admin/realms";
+            var url = $"{_url}/auth/admin/realms";
             var content = new StringContent(JsonConvert.SerializeObject(new { realm = realmName, enabled = true }), Encoding.UTF8, "application/json");
             var response = await httpClient.PostAsync(url, content);
             response.EnsureSuccessStatusCode();
@@ -78,7 +81,7 @@ namespace YourRest.Producer.Infrastructure.Keycloak.Repositories
         public async Task CreateClient(string adminToken, string realmName, string clientId, string clientName)
         {
             using var httpClient = GetConfiguredHttpClient(adminToken);
-            var url = $"http://keycloak:8080/auth/admin/realms/{realmName}/clients";
+            var url = $"{_url}/auth/admin/realms/{realmName}/clients";
             var payload = new
             {
                 clientId = clientId,
@@ -105,7 +108,7 @@ namespace YourRest.Producer.Infrastructure.Keycloak.Repositories
             using var httpClient = GetConfiguredHttpClient(adminToken);
     
             // Step 1: Create the user
-            var url = $"http://keycloak:8080/auth/admin/realms/{realmName}/users";
+            var url = $"{_url}/auth/admin/realms/{realmName}/users";
             var payload = new
             {
                 username = username,
@@ -152,7 +155,7 @@ namespace YourRest.Producer.Infrastructure.Keycloak.Repositories
         {
             using var httpClient = GetConfiguredHttpClient(adminToken);
     
-            var url = $"http://keycloak:8080/auth/admin/realms/{realmName}/groups";
+            var url = $"{_url}/auth/admin/realms/{realmName}/groups";
             var payload = new
             {
                 name = groupName
@@ -177,7 +180,7 @@ namespace YourRest.Producer.Infrastructure.Keycloak.Repositories
         public async Task AssignUserToGroup(string adminToken, string realmName, string userId, string groupId)
         {
             using var httpClient = GetConfiguredHttpClient(adminToken);
-            var url = $"http://keycloak:8080/auth/admin/realms/{realmName}/users/{userId}/groups/{groupId}";
+            var url = $"{_url}/auth/admin/realms/{realmName}/users/{userId}/groups/{groupId}";
             var response = await httpClient.PutAsync(url, null); // No content needed, just the PUT request
             response.EnsureSuccessStatusCode();
         }
@@ -196,7 +199,7 @@ namespace YourRest.Producer.Infrastructure.Keycloak.Repositories
                 throw new Exception($"Client with name {clientId} not found in realm {realmName}.");
             }
 
-            var secretUrl = $"http://keycloak:8080/auth/admin/realms/{realmName}/clients/{internalId}/client-secret";
+            var secretUrl = $"{_url}/auth/admin/realms/{realmName}/clients/{internalId}/client-secret";
             var secretResponse = await httpClient.PostAsync(secretUrl, null);
             secretResponse.EnsureSuccessStatusCode();
 
@@ -218,7 +221,7 @@ namespace YourRest.Producer.Infrastructure.Keycloak.Repositories
             }
 
             using var httpClient = GetConfiguredHttpClient(adminToken);
-            var url = $"http://keycloak:8080/auth/admin/realms/{realmName}/clients/{internalClientId}/client-secret";
+            var url = $"{_url}/auth/admin/realms/{realmName}/clients/{internalClientId}/client-secret";
 
             var response = await httpClient.GetAsync(url);
 
@@ -237,7 +240,7 @@ namespace YourRest.Producer.Infrastructure.Keycloak.Repositories
         public async Task<string> GetClientIdByName(string adminToken, string realmName, string clientName)
         {
             using var httpClient = GetConfiguredHttpClient(adminToken);
-            var url = $"http://keycloak:8080/auth/admin/realms/{realmName}/clients?clientId={clientName}";
+            var url = $"{_url}/auth/admin/realms/{realmName}/clients?clientId={clientName}";
 
             var response = await httpClient.GetAsync(url);
             response.EnsureSuccessStatusCode();
@@ -264,7 +267,7 @@ namespace YourRest.Producer.Infrastructure.Keycloak.Repositories
                 throw new Exception($"Client with name {clientId} not found in realm {realmName}.");
             }
             
-            var url = $"http://keycloak:8080/auth/admin/realms/{realmName}/clients/{internalClientId}/protocol-mappers/models";
+            var url = $"{_url}/auth/admin/realms/{realmName}/clients/{internalClientId}/protocol-mappers/models";
             var payload = new
             {
                 name = mapperName,
@@ -298,7 +301,7 @@ namespace YourRest.Producer.Infrastructure.Keycloak.Repositories
                 throw new Exception($"Client with name {clientId} not found in realm {realmName}.");
             }
             
-            var url = $"http://keycloak:8080/auth/admin/realms/{realmName}/clients/{internalClientId}/protocol-mappers/models";
+            var url = $"{_url}/auth/admin/realms/{realmName}/clients/{internalClientId}/protocol-mappers/models";
             var payload = new
             {
                 name = mapperName,
@@ -332,7 +335,7 @@ namespace YourRest.Producer.Infrastructure.Keycloak.Repositories
                 throw new Exception($"Client with name {clientId} not found in realm {realmName}.");
             }
             
-            var url = $"http://keycloak:8080/auth/admin/realms/{realmName}/clients/{internalClientId}/protocol-mappers/models";
+            var url = $"{_url}/auth/admin/realms/{realmName}/clients/{internalClientId}/protocol-mappers/models";
             var payload = new
             {
                 name = mapperName,
