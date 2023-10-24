@@ -18,7 +18,7 @@ public class KeycloakFixture : IDisposable
 
     private string _secret;
     private string _userId;
-    private string _url = "http://keycloak-test:8081";
+    private string _url = "http://localhost:8081";
     private string _realm = "YourRestTest";
     private string _firstName = "test_name";
     private string _userName = "test_username";
