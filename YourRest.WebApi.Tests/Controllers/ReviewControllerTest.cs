@@ -1,19 +1,25 @@
 using Newtonsoft.Json;
 using System.Net;
+using System.Net.Http.Headers;
 using System.Text;
 using YourRest.Application.Dto;
 using YourRest.Domain.Entities;
 using YourRest.WebApi.Tests.Fixtures;
-using System.Net.Http.Headers;
+using Microsoft.Extensions.DependencyInjection;
+using YourRest.Domain.Repositories;
 
 namespace YourRest.WebApi.Tests.Controllers
 {
     public class ReviewControllerTest : IClassFixture<SingletonApiTest>
     {
         private readonly SingletonApiTest fixture;
+        private readonly ITokenRepository _tokenRepository;
         public ReviewControllerTest(SingletonApiTest fixture)
         {
             this.fixture = fixture;
+            var scope = fixture.Server.Host.Services.CreateScope();
+
+            _tokenRepository = scope.ServiceProvider.GetRequiredService<ITokenRepository>();
         }
 
         [Fact]
@@ -54,9 +60,9 @@ namespace YourRest.WebApi.Tests.Controllers
                 Rating = 1
             };
             var content = new StringContent(JsonConvert.SerializeObject(review), Encoding.UTF8, "application/json");
-            
-            await fixture.CreateGroup(accommodationId);
-            var token = await fixture.GetAccessTokenAsync();
+
+            await CreateGroup(accommodationId);
+            var token = await GetAccessTokenAsync();
 
             fixture.Client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
@@ -81,8 +87,8 @@ namespace YourRest.WebApi.Tests.Controllers
             };
 
             await fixture.InsertObjectIntoDatabase(accommodation);
-            await fixture.CreateGroup(accommodation.Id);
-            var token = await fixture.GetAccessTokenAsync();
+            await CreateGroup(accommodation.Id);
+            var token = await GetAccessTokenAsync();
 
             fixture.Client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
             
@@ -107,6 +113,38 @@ namespace YourRest.WebApi.Tests.Controllers
             var response = await fixture.Client.PostAsync("api/operator/review", null);
 
             Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
+        }
+        
+        private async Task CreateGroup(int accommodationId)
+        {
+            string? groupId = null;
+            string? userId = null;
+            
+            string adminToken = (await _tokenRepository.GetAdminTokenAsync()).access_token;
+
+            try
+            {
+                userId = await _tokenRepository.CreateUser(adminToken,  "test", "test", "test", "test@test.ru", "test");
+            }
+            catch { }
+            try
+            {
+                groupId = await _tokenRepository.CreateGroup(adminToken, "/accommodations/" + accommodationId);
+            }
+            catch { }
+            try
+            {
+                if (groupId != null && userId != null)
+                {
+                    await _tokenRepository.AssignUserToGroup(adminToken, userId, groupId);
+                }
+            }
+            catch { }
+        }
+
+        public async Task<string> GetAccessTokenAsync()
+        {
+            return (await _tokenRepository.GetTokenAsync("test", "test")).access_token;
         }
     }
 }

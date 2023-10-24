@@ -14,7 +14,9 @@ services:
       - local-network
 
   keycloak:
-    image: jboss/keycloak:latest
+    build:
+      context: .
+      dockerfile: Infrastructure/YourRest.Producer.Infrastructure.Keycloak/Docker/Dockerfile
     environment:
       - DB_VENDOR=postgres
       - DB_ADDR=keycloakdb
@@ -23,6 +25,7 @@ services:
       - DB_PASSWORD=keycloakpassword
       - KEYCLOAK_USER=admin
       - KEYCLOAK_PASSWORD=admin
+      - KEYCLOAK_IMPORT=/opt/jboss/keycloak/realm-export.json
     ports:
       - 8080:8080
     depends_on:

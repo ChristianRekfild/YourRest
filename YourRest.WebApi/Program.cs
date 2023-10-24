@@ -12,7 +12,7 @@ using Microsoft.IdentityModel.Tokens;
 using YourRest.Producer.Infrastructure.Keycloak.Http;
 using System.Text;
 using YourRest.Producer.Infrastructure.Seeds;
-
+using YourRest.Producer.Infrastructure.Keycloak.Settings;
 public class Program
 {
     public static void Main(string[] args)
@@ -75,6 +75,7 @@ public class Program
             });
         });
         
+        services.Configure<KeycloakSetting>(configuration.GetSection("KeycloakSetting"));
         services.AddKeycloakInfrastructure();
         services.AddInfrastructure();
         services.AddApplication();
@@ -94,8 +95,8 @@ public class Program
         })
         .AddJwtBearer(options =>
         {
-            options.Authority = configuration.GetValue<string>("Authority");
-            options.Audience = configuration.GetValue<string>("ClientId");
+            options.Authority = configuration.GetValue<string>("KeycloakSetting:Authority");
+            options.Audience = configuration.GetValue<string>("KeycloakSetting:ClientId");
             options.RequireHttpsMetadata = false;
 
             options.TokenValidationParameters = new TokenValidationParameters
@@ -104,9 +105,9 @@ public class Program
                 ValidateAudience = true,
                 ValidateLifetime = true,
                 ValidateIssuerSigningKey = true,
-                ValidIssuer = configuration.GetValue<string>("Authority"),
-                ValidAudience = configuration.GetValue<string>("ClientId"),
-                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration.GetValue<string>("ClientSecret"))),
+                ValidIssuer = configuration.GetValue<string>("KeycloakSetting:Authority"),
+                ValidAudience = configuration.GetValue<string>("KeycloakSetting:ClientId"),
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration.GetValue<string>("KeycloakSetting:ClientSecret"))),
             };
         });
     }

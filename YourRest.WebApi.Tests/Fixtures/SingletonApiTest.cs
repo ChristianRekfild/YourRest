@@ -1,8 +1,12 @@
 ﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using System.Text;
 using YourRest.Infrastructure.Core.DbContexts;
+using YourRest.Domain.Repositories;
+using YourRest.Producer.Infrastructure.Keycloak.Http;
+using YourRest.Producer.Infrastructure.Keycloak.Repositories;
 
 namespace YourRest.WebApi.Tests.Fixtures
 {
@@ -21,12 +25,11 @@ namespace YourRest.WebApi.Tests.Fixtures
         {
             dbFixture = DatabaseFixture.getInstance();
             var connectionString = BuildConnectionString();
-
             DbContext = dbFixture.GetDbContext(connectionString);
         
             keycloakFixture = await KeycloakFixture.GetInstanceAsync();
-
             InitializeWebHost(connectionString);
+            await keycloakFixture.StartAsync();
         }
         public async Task<T> InsertObjectIntoDatabase<T>(T entity) where T : class
         {
@@ -34,17 +37,6 @@ namespace YourRest.WebApi.Tests.Fixtures
             await DbContext.SaveChangesAsync();
             return item.Entity;
         }
-        
-        public async Task CreateGroup(int accommodationId)
-        {
-            await keycloakFixture.CreateGroup(accommodationId);
-        }
-
-        public async Task<string> GetAccessTokenAsync()
-        {
-            return await keycloakFixture.GetAccessTokenAsync();
-        }
-
         public void CleanDatabase()
         {
             DbContext.ClearAllTables();
@@ -88,15 +80,24 @@ namespace YourRest.WebApi.Tests.Fixtures
                         .AddInMemoryCollection(new List<KeyValuePair<string, string?>>
                         {
                             new("ConnectionStrings:DefaultConnection", connectionString),
-                            new("Authority", keycloakFixture.GetTestRealmUrl()),
-                            new("ClientId", keycloakFixture.GetTestAudience()),
-                            new("ClientSecret", keycloakFixture.GetTestSymmetricKey())
+                            new("KeycloakSetting:Authority", "http://localhost:8081/auth/realms/YourRest"),
+                            new("KeycloakSetting:ClientId",  "your_rest_app"),
+                            new("KeycloakSetting:RealmName",  "YourRest"),
+                            new("KeycloakSetting:KeycloakUrl",  "http://localhost:8081"),
+                            new("KeycloakSetting:ClientSecret", "qBC5V3wc2AYKTcYN1CACo6REU9t1Inrf")
                         })
                         .Build();
 
                     configBuilder.AddConfiguration(testConfig);
                 })
                 .UseStartup<Program>();
+            builder.ConfigureServices(services =>
+            {
+                services.AddHttpClient();
+                services.AddScoped<ITokenRepository, TokenRepository>();
+                services.AddSingleton<ICustomHttpClientFactory, TestHttpClientFactory>();
+
+            });
 
             Server = new TestServer(builder);
             Client = Server.CreateClient();
