@@ -3,9 +3,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Net.Http.Json;
 using System.Text;
 using System.Threading.Tasks;
 using YourRest.Application.Dto;
+using YourRest.Application.Dto.ViewModels;
 using YourRest.Domain.Entities;
 using YourRest.WebApi.Tests.Fixtures;
 
@@ -44,6 +46,11 @@ namespace YourRest.WebApi.Tests.Controllers
             var response = await fixture.Client.PostAsync($"api/operator/AgeRange", content);
 
             Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+
+            var errorData = response.Content.ReadFromJsonAsync<ErrorViewModel>();
+            var errorDescription = errorData?.Result?.ValidationErrors["AgeTo"].FirstOrDefault();
+
+            Assert.Equal($"'Age To' должно быть больше или равно '{ageRange.AgeFrom}'.", errorDescription);
         }
 
         [Fact]
@@ -60,8 +67,6 @@ namespace YourRest.WebApi.Tests.Controllers
 
 
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-
-
             Assert.NotNull(ageRangeResponse);
             Assert.Equal(ageRange.AgeFrom, ageRangeResponse.AgeFrom);
             Assert.Equal(ageRange.AgeTo, ageRangeResponse.AgeTo);
@@ -94,7 +99,5 @@ namespace YourRest.WebApi.Tests.Controllers
 
             Assert.Equal("The AgeRange has been edited", responseContent);
         }
-
-
     }
 }

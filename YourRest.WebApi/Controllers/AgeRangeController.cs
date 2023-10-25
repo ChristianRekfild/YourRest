@@ -12,7 +12,6 @@ namespace YourRest.WebApi.Controllers
 
     [ApiController]
     [FluentValidationAutoValidation]
-
     public class AgeRangeController : ControllerBase
     {
         private readonly ICreateAgeRangeUseCase _createAgeRangeUseCase;
@@ -38,26 +37,16 @@ namespace YourRest.WebApi.Controllers
         [Route("api/operator/AgeRange/")]
         public async Task<IActionResult> PostAgeRange([FromBody] AgeRangeDto ageRangeDto)
         {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-
             var createdRoom = await _createAgeRangeUseCase.ExecuteAsync(ageRangeDto);
             return CreatedAtAction(nameof(PostAgeRange), createdRoom);
         }
 
         [HttpPut]
         [Route("api/operator/AgeRange/")]
-
         public async Task<IActionResult> EditAgeRange([FromBody] AgeRangeWithIdDto ageRangeWithId)
         {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-
             await _editAgeRangeUseCase.ExecuteAsync(ageRangeWithId);
             return Ok("The AgeRange has been edited");
-
         }
     }
-
-
 }

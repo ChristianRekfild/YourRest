@@ -26,7 +26,6 @@ namespace YourRest.Application.UseCases.AgeRangeUseCases
                 AgeTo = ageRangeDto.AgeTo 
             };
             var savedAgeRange = await _ageRangeRepository.AddAsync(ageRange);
-            await _ageRangeRepository.SaveChangesAsync();
 
             AgeRangeWithIdDto ageRangeWithId = new AgeRangeWithIdDto()
             {

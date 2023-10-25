@@ -10,6 +10,5 @@ namespace YourRest.Domain.Entities
     {
         public int AgeFrom { get; set; }
         public int AgeTo { get; set; }
-
     }
 }

@@ -14,6 +14,7 @@ namespace YourRest.Application.UseCases.AgeRangeUseCases
     public class EditAgeRangeUseCase : IEditAgeRangeUseCase
     {
         private readonly IAgeRangeRepository _ageRangeRepository;
+
         public EditAgeRangeUseCase(IAgeRangeRepository ageRangeRepository)
         {
             this._ageRangeRepository = ageRangeRepository;
@@ -35,9 +36,6 @@ namespace YourRest.Application.UseCases.AgeRangeUseCases
             };
 
             await _ageRangeRepository.UpdateAsync(ageRangeUpdate);
-
-
         }
-
     }
 }
