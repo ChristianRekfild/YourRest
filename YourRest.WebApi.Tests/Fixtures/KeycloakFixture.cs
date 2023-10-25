@@ -8,38 +8,49 @@ namespace YourRest.WebApi.Tests.Fixtures
     public class KeycloakFixture : IDisposable
     {
         private PostgreSqlContainer _keycloakDbContainer;
-        private IContainer _keycloakContainer;
-        private static KeycloakFixture? instance = null;
+        private IContainer _keycloakContainer; 
+        private readonly SemaphoreSlim _initializeLock = new SemaphoreSlim(1, 1);
+        private readonly SemaphoreSlim _disposeLock = new SemaphoreSlim(1, 1);
+
         private KeycloakFixture() { }
+        
         private async Task InitializeAsync()
         {
-            await RemoveContainerAsync("keycloakdb-test");
-            await CreateNetworkAsync("yourrest_local-network");
-            await BuildDockerImageAsync("../../../Dockerfile", "keycloak_test:latest");
+            await _initializeLock.WaitAsync();
+            try
+            {
+                await RemoveContainerAsync("keycloakdb-test");
+                await CreateNetworkAsync("yourrest_local-network");
+                await BuildDockerImageAsync("../../../Dockerfile", "keycloak_test:latest");
 
-            _keycloakDbContainer = new PostgreSqlBuilder()
-                .WithImage("postgres:latest")
-                .WithName("keycloakdb-test")
-                .WithNetwork("yourrest_local-network")
-                .WithUsername("keycloak")
-                .WithPassword("keycloakpassword")
-                .WithDatabase("keycloak-test")
-                .WithCleanUp(true)
-                .Build();
+                _keycloakDbContainer = new PostgreSqlBuilder()
+                    .WithImage("postgres:latest")
+                    .WithName("keycloakdb-test")
+                    .WithNetwork("yourrest_local-network")
+                    .WithUsername("keycloak")
+                    .WithPassword("keycloakpassword")
+                    .WithDatabase("keycloak-test")
+                    .WithCleanUp(true)
+                    .Build();
 
-            _keycloakContainer = new ContainerBuilder()
-                .WithImage("keycloak_test:latest")
-                .WithName("keycloak_test")
-                .WithNetwork("yourrest_local-network")
-                .WithEnvironment("DB_VENDOR", "postgres")
-                .WithEnvironment("DB_ADDR", "keycloakdb-test") 
-                .WithEnvironment("DB_DATABASE", "keycloak-test")
-                .WithEnvironment("DB_USER", "keycloak")
-                .WithEnvironment("DB_PASSWORD", "keycloakpassword")
-                .WithEnvironment("KEYCLOAK_USER", "admin")
-                .WithEnvironment("KEYCLOAK_PASSWORD", "admin")
-                .WithPortBinding(8081, 8080)
-                .Build();
+                _keycloakContainer = new ContainerBuilder()
+                    .WithImage("keycloak_test:latest")
+                    .WithName("keycloak_test")
+                    .WithNetwork("yourrest_local-network")
+                    .WithEnvironment("DB_VENDOR", "postgres")
+                    .WithEnvironment("DB_ADDR", "keycloakdb-test") 
+                    .WithEnvironment("DB_DATABASE", "keycloak-test")
+                    .WithEnvironment("DB_USER", "keycloak")
+                    .WithEnvironment("DB_PASSWORD", "keycloakpassword")
+                    .WithEnvironment("KEYCLOAK_USER", "admin")
+                    .WithEnvironment("KEYCLOAK_PASSWORD", "admin")
+                    .WithPortBinding(8081, 8080)
+                    .Build();
+            }
+            finally
+            {
+                _initializeLock.Release();
+            }
         }
 
         public static async Task BuildDockerImageAsync(string dockerfilePath, string tagName)
@@ -68,9 +79,9 @@ namespace YourRest.WebApi.Tests.Fixtures
             
             await Task.Run(() => process.WaitForExit());
         }
-
-        private static readonly Lazy<Task<KeycloakFixture>> lazyInstance = 
-            new Lazy<Task<KeycloakFixture>>(async () => 
+        
+        private static readonly Lazy<ValueTask<KeycloakFixture>> lazyInstance = 
+            new Lazy<ValueTask<KeycloakFixture>>(async () => 
             {
                 var fixture = new KeycloakFixture();
                 await fixture.InitializeAsync();
@@ -79,7 +90,7 @@ namespace YourRest.WebApi.Tests.Fixtures
         
         public static Task<KeycloakFixture> GetInstanceAsync()
         {
-            return lazyInstance.Value;
+            return lazyInstance.Value.AsTask();
         }
 
         public async Task StartAsync()
@@ -115,14 +126,21 @@ namespace YourRest.WebApi.Tests.Fixtures
             var removeContainer = Process.Start("docker", $"rm {containerName}");
             await Task.Run(() => removeContainer?.WaitForExit());
         }
-
         public async ValueTask DisposeAsync()
         {
-            await _keycloakContainer.StopAsync();
-            await _keycloakContainer.DisposeAsync();
-            await _keycloakDbContainer.StopAsync();
-            await _keycloakDbContainer.DisposeAsync();
-            await RemoveNetworkAsync("yourrest_local-network");
+            await _disposeLock.WaitAsync();
+            try
+            {
+                await _keycloakContainer.StopAsync();
+                await _keycloakContainer.DisposeAsync();
+                await _keycloakDbContainer.StopAsync();
+                await _keycloakDbContainer.DisposeAsync();
+                await RemoveNetworkAsync("yourrest_local-network");
+            }
+            finally
+            {
+                _disposeLock.Release();
+            }
         }
 
         public void Dispose()
