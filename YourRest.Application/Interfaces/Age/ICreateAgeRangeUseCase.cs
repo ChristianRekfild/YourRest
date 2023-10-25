@@ -5,6 +5,6 @@ namespace YourRest.Application.Interfaces.Age
 {
     public interface ICreateAgeRangeUseCase
     {
-        Task<AgeRangeWithIdDto> ExecuteAsync(AgeRangeDto ageRangeDto);
+        Task<AgeRangeWithIdDto> ExecuteAsync(AgeRangeDto ageRangeDto, CancellationToken token);
     }
 }
