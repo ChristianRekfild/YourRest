@@ -97,7 +97,8 @@ namespace YourRest.WebApi.Tests.Fixtures
         {
             await _keycloakDbContainer.StartAsync();
             await _keycloakContainer.StartAsync();
-            await Task.Delay(TimeSpan.FromSeconds(10));
+            
+            await Task.Delay(TimeSpan.FromSeconds(30));
         }
         
         public async Task CreateNetworkAsync(string networkName)
