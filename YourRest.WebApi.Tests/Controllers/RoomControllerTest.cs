@@ -10,8 +10,8 @@ using YourRest.WebApi.Tests.Fixtures;
 
 namespace YourRest.WebApi.Tests.Controllers
 {
-
-    public class RoomControllerTest : IClassFixture<SingletonApiTest>
+    [Collection(nameof(SingletonApiTest))]
+    public class RoomControllerTest
     {
         private readonly SingletonApiTest fixture;
         public RoomControllerTest(SingletonApiTest fixture)

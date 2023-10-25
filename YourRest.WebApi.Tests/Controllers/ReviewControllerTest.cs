@@ -10,7 +10,8 @@ using YourRest.Domain.Repositories;
 
 namespace YourRest.WebApi.Tests.Controllers
 {
-    public class ReviewControllerTest : IClassFixture<SingletonApiTest>
+    [Collection(nameof(SingletonApiTest))]
+    public class ReviewControllerTest
     {
         private readonly SingletonApiTest fixture;
         private readonly ITokenRepository _tokenRepository;

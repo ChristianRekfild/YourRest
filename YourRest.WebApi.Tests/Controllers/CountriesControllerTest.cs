@@ -5,11 +5,9 @@ using YourRest.WebApi.Tests.Fixtures;
 
 namespace YourRest.WebApi.Tests.Controllers
 {
-    public class CountriesControllerTest : IClassFixture<SingletonApiTest> //ApiTest
+    [Collection(nameof(SingletonApiTest))]
+    public class CountriesControllerTest
     {
-        //public CountriesControllerTest(ApiFixture fixture) : base(fixture)
-        //{
-        //}
         private readonly SingletonApiTest fixture;
         public CountriesControllerTest(SingletonApiTest fixture)
         {
@@ -29,12 +27,13 @@ namespace YourRest.WebApi.Tests.Controllers
             Assert.NotNull(resultCountries);
             Assert.Contains(resultCountries, country => country.Name == "Russia");
             Assert.Contains(resultCountries, country => country.Name == "Test");
+            fixture.CleanDatabase();
         }
 
         [Fact]
         public async Task GetAllCountries_ReturnsEmptyList_WhenDatabaseIsEmpty()
         {
-            fixture.DbContext.Countries.RemoveRange(fixture.DbContext.Countries);
+            //fixture.DbContext.Countries.RemoveRange(fixture.DbContext.Countries);
             await fixture.DbContext.SaveChangesAsync();
             var resultCountries = await GetCountriesFromApi();
 
