@@ -18,7 +18,6 @@ namespace YourRest.WebApi.Controllers
         private readonly ICreateAgeRangeUseCase _createAgeRangeUseCase;
         private readonly IGetAgeRangeByIdUseCase _getAgeRangeByIdUseCase;
         private readonly IEditAgeRangeUseCase _editAgeRangeUseCase;
-        private CancellationToken token = new CancellationToken ();
 
         public AgeRangeController(ICreateAgeRangeUseCase createAgeRangeUseCase, IGetAgeRangeByIdUseCase getAgeRangeByIdUseCase, IEditAgeRangeUseCase editAgeRangeUseCase)
         {
@@ -31,7 +30,7 @@ namespace YourRest.WebApi.Controllers
         [Route("api/operator/AgeRange/{id}")]
         public async Task<IActionResult> GetAgeRange(int id)
         {
-            var ageRangeResponse = await _getAgeRangeByIdUseCase.ExecuteAsync(id, token);
+            var ageRangeResponse = await _getAgeRangeByIdUseCase.ExecuteAsync(id, HttpContext.RequestAborted);
             return Ok(ageRangeResponse);
         }
 
@@ -39,7 +38,7 @@ namespace YourRest.WebApi.Controllers
         [Route("api/operator/AgeRange/")]
         public async Task<IActionResult> PostAgeRange([FromBody] AgeRangeDto ageRangeDto)
         {
-            var createdRoom = await _createAgeRangeUseCase.ExecuteAsync(ageRangeDto, token);
+            var createdRoom = await _createAgeRangeUseCase.ExecuteAsync(ageRangeDto, HttpContext.RequestAborted);
             return CreatedAtAction(nameof(PostAgeRange), createdRoom);
         }
 
@@ -47,7 +46,7 @@ namespace YourRest.WebApi.Controllers
         [Route("api/operator/AgeRange/")]
         public async Task<IActionResult> EditAgeRange([FromBody] AgeRangeWithIdDto ageRangeWithId)
         {
-            await _editAgeRangeUseCase.ExecuteAsync(ageRangeWithId, token);
+            await _editAgeRangeUseCase.ExecuteAsync(ageRangeWithId, HttpContext.RequestAborted);
             return Ok("The AgeRange has been edited");
         }
     }

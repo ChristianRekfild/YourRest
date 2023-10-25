@@ -18,9 +18,9 @@ namespace YourRest.Application.UseCases.AgeRangeUseCases
         {
             this.ageRangeRepository = ageRangeRepository;
         }
-        public async Task<AgeRangeWithIdDto> ExecuteAsync(int ageRangeId, CancellationToken token)
+        public async Task<AgeRangeWithIdDto> ExecuteAsync(int ageRangeId, CancellationToken token = default)
         {
-            var ageRange = await ageRangeRepository.GetAsync(ageRangeId);
+            var ageRange = await ageRangeRepository.GetAsync(ageRangeId, token);
 
             if (ageRange == null)
             {

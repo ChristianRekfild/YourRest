@@ -9,6 +9,6 @@ namespace YourRest.Application.Interfaces.Age
 {
     public interface IGetAgeRangeByIdUseCase
     {
-        Task<AgeRangeWithIdDto> ExecuteAsync(int id, CancellationToken token);
+        Task<AgeRangeWithIdDto> ExecuteAsync(int id, CancellationToken token = default);
     }
 }

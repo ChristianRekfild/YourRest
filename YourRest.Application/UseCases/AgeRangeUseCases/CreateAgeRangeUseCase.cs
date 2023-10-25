@@ -18,14 +18,14 @@ namespace YourRest.Application.UseCases.AgeRangeUseCases
             this._ageRangeRepository = ageRangeRepository;
         }
 
-        public async Task<AgeRangeWithIdDto> ExecuteAsync(AgeRangeDto ageRangeDto, CancellationToken token) 
+        public async Task<AgeRangeWithIdDto> ExecuteAsync(AgeRangeDto ageRangeDto, CancellationToken token = default) 
         {
             var ageRange = new AgeRange()
             { 
                 AgeFrom = ageRangeDto.AgeFrom,  
                 AgeTo = ageRangeDto.AgeTo 
             };
-            var savedAgeRange = await _ageRangeRepository.AddAsync(ageRange);
+            var savedAgeRange = await _ageRangeRepository.AddAsync(ageRange , true,  token);
 
             AgeRangeWithIdDto ageRangeWithId = new AgeRangeWithIdDto()
             {
