@@ -46,7 +46,7 @@ dotnet ef migrations add AddRoomAccommodationLink -s ../YourRest.WebApi/YourRest
 dotnet ef database update -s ../YourRest.WebApi/YourRest.WebApi.csproj -p YourRest.Producer.Infrastructure/YourRest.Producer.Infrastructure.csproj -c SharedDbContext -v
 dotnet ef migrations remove -s ../YourRest.WebApi/YourRest.WebApi.csproj -c SharedDbContext -p YourRest.Producer.Infrastructure/YourRest.Producer.Infrastructure.csproj -v
 
-## Запуск проекта
+## Запуск проекта в докере
 Из папки YourRest:
 docker compose up --build*
 docker compose up -d
