@@ -10,10 +10,7 @@ namespace YourRest.WebApi.Tests.Fixtures
         private PostgreSqlContainer _keycloakDbContainer;
         private IContainer _keycloakContainer;
         private static KeycloakFixture? instance = null;
-        private static readonly object syncObj = new object();
-
         private KeycloakFixture() { }
-
         private async Task InitializeAsync()
         {
             await RemoveContainerAsync("keycloakdb-test");
@@ -72,21 +69,17 @@ namespace YourRest.WebApi.Tests.Fixtures
             await Task.Run(() => process.WaitForExit());
         }
 
-        public static async Task<KeycloakFixture> GetInstanceAsync()
-        {
-            if (instance == null)
+        private static readonly Lazy<Task<KeycloakFixture>> lazyInstance = 
+            new Lazy<Task<KeycloakFixture>>(async () => 
             {
-                lock (syncObj)
-                {
-                    if (instance == null)
-                    {
-                        instance = new KeycloakFixture();
-                        Task.Run(async () => await instance.InitializeAsync()).Wait();
-                    }
-                }
-            }
-
-            return instance;
+                var fixture = new KeycloakFixture();
+                await fixture.InitializeAsync();
+                return fixture;
+            });
+        
+        public static Task<KeycloakFixture> GetInstanceAsync()
+        {
+            return lazyInstance.Value;
         }
 
         public async Task StartAsync()
