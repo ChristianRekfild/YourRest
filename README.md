@@ -39,10 +39,13 @@ docker compose up -d
 ## Если выполнять из директории YourRest\Infrastructure:
 ## Это для SharedDbContext
 Windows:
-dotnet ef migrations add InitialCreate -s ..\YourRest.WebApi\YourRest.WebApi.csproj -c SharedDbContext -p YourRest.Producer.Infrastructure\YourRest.Producer.Infrastructure.csproj -v
-
-dotnet ef database update -s ..\YourRest.WebApi\YourRest.WebApi.csproj -p YourRest.Producer.Infrastructure\YourRest.Producer.Infrastructure.csproj -c SharedDbContext -v
-
+	Producer:
+		dotnet ef migrations add InitialCreate -s ..\YourRest.WebApi\YourRest.WebApi.csproj -c SharedDbContext -p YourRest.Producer.Infrastructure\YourRest.Producer.Infrastructure.csproj -v
+		dotnet ef database update -s ..\YourRest.WebApi\YourRest.WebApi.csproj -p YourRest.Producer.Infrastructure\YourRest.Producer.Infrastructure.csproj -c SharedDbContext -v		
+	ClientIdentity:
+		dotnet ef migrations add InitialCreate -s ..\YourRest.ClientWebApp\YourRest.ClientWebApp.csproj -c ClientAppIdentityContext -p YourRest.ClientIdentity.Infrastructure\YourRest.ClientIdentity.Infrastructure.csproj -v
+		dotnet ef database update -s ..\YourRest.ClientWebApp\YourRest.ClientWebApp.csproj -p YourRest.ClientIdentity.Infrastructure\YourRest.ClientIdentity.Infrastructure.csproj -c ClientAppIdentityContext -v		
+	
 Linux:
-dotnet ef migrations add AddRoomFacilities -s ../YourRest.WebApi/YourRest.WebApi.csproj -c SharedDbContext -p YourRest.Producer.Infrastructure/YourRest.Producer.Infrastructure.csproj -v
+dotnet ef migrations add AddAccommodationType -s ../YourRest.WebApi/YourRest.WebApi.csproj -c SharedDbContext -p YourRest.Producer.Infrastructure/YourRest.Producer.Infrastructure.csproj -v
 dotnet ef database update -s ../YourRest.WebApi/YourRest.WebApi.csproj -p YourRest.Producer.Infrastructure/YourRest.Producer.Infrastructure.csproj -c SharedDbContext -v
