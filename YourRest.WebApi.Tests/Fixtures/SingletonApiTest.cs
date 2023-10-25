@@ -23,14 +23,34 @@ namespace YourRest.WebApi.Tests.Fixtures
 
         public async Task InitializeAsync()
         {
-            dbFixture = DatabaseFixture.getInstance();
-            var connectionString = BuildConnectionString();
+            dbFixture = DatabaseFixture.GetInstance();
+            var connectionString = await BuildConnectionStringAsync();
             DbContext = dbFixture.GetDbContext(connectionString);
-        
+    
             keycloakFixture = await KeycloakFixture.GetInstanceAsync();
             InitializeWebHost(connectionString);
             await keycloakFixture.StartAsync();
         }
+
+        private async Task<string> BuildConnectionStringAsync()
+        {
+            var originalConnectionString = await dbFixture.GetConnectionStringAsync();
+            StringBuilder sb = new StringBuilder();
+            foreach (var part in originalConnectionString.Split(';'))
+            {
+                if (part.StartsWith("Database"))
+                {
+                    sb.Append(part + "_" + Guid.NewGuid().ToString().Replace("-", string.Empty));
+                }
+                else
+                {
+                    sb.Append(part);
+                }
+                sb.Append(";");
+            }
+            return sb.ToString();
+        }
+
         public async Task<T> InsertObjectIntoDatabase<T>(T entity) where T : class
         {
             var item = await DbContext.AddAsync(entity);
@@ -52,25 +72,6 @@ namespace YourRest.WebApi.Tests.Fixtures
             Server.Dispose();
             return Task.CompletedTask;
         }
-        
-        private string BuildConnectionString()
-        {
-            StringBuilder sb = new StringBuilder();
-            foreach (var part in dbFixture.ConnectionString.Split(';'))
-            {
-                if (part.StartsWith("Database"))
-                {
-                    sb.Append(part + "_" + Guid.NewGuid().ToString().Replace("-", string.Empty));
-                }
-                else
-                {
-                    sb.Append(part);
-                }
-                sb.Append(";");
-            }
-            return sb.ToString();
-        }
-
         private void InitializeWebHost(string connectionString)
         {
             var builder = new WebHostBuilder()
