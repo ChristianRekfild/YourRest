@@ -93,7 +93,7 @@ public class KeycloakFixture : IDisposable
         await _keycloakDbContainer.StartAsync();
         await _keycloakContainer.StartAsync();
         
-        await Task.Delay(TimeSpan.FromSeconds(5));
+        await Task.Delay(TimeSpan.FromSeconds(10));
     }
     public void CreateNetwork(string networkName)
     {

@@ -1,17 +1,17 @@
 version: '3.8'
 
 services:
-  webapi:
-    build:
-      context: .
-      dockerfile: YourRest.WebApi/Dockerfile
-    ports:
-      - "5000:80"
-    depends_on:
-      - keycloak
-      - webapidb
-    networks:
-      - local-network
+#  webapi:
+#    build:
+#      context: .
+#      dockerfile: YourRest.WebApi/Dockerfile
+#    ports:
+#      - "5000:80"
+#    depends_on:
+#      - keycloak
+#      - webapidb
+#    networks:
+#      - local-network
 
   keycloak:
     build:
