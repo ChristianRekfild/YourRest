@@ -47,29 +47,29 @@ namespace YourRest.WebApi.Tests.Fixtures
 
         public static async Task BuildDockerImageAsync(string dockerfilePath, string tagName)
         {
-        string dockerfileDirectory = Path.GetDirectoryName(dockerfilePath);
-        
-        var process = new Process
-        {
-        StartInfo = new ProcessStartInfo
-        {
-        FileName = "docker",
-        Arguments = $"build -t {tagName} -f {dockerfilePath} {dockerfileDirectory}",
-        RedirectStandardOutput = true,
-        RedirectStandardError = true,
-        UseShellExecute = false,
-        CreateNoWindow = true
-        }
-        };
-        
-        process.OutputDataReceived += (sender, data) => Console.WriteLine(data.Data);
-        process.ErrorDataReceived += (sender, data) => Console.WriteLine("Error: " + data.Data);
-        
-        process.Start();
-        process.BeginOutputReadLine();
-        process.BeginErrorReadLine();
-        
-        await Task.Run(() => process.WaitForExit());
+            string dockerfileDirectory = Path.GetDirectoryName(dockerfilePath);
+            
+            var process = new Process
+            {
+                StartInfo = new ProcessStartInfo
+                {
+                    FileName = "docker",
+                    Arguments = $"build -t {tagName} -f {dockerfilePath} {dockerfileDirectory}",
+                    RedirectStandardOutput = true,
+                    RedirectStandardError = true,
+                    UseShellExecute = false,
+                    CreateNoWindow = true
+                }
+            };
+            
+            process.OutputDataReceived += (sender, data) => Console.WriteLine(data.Data);
+            process.ErrorDataReceived += (sender, data) => Console.WriteLine("Error: " + data.Data);
+            
+            process.Start();
+            process.BeginOutputReadLine();
+            process.BeginErrorReadLine();
+            
+            await Task.Run(() => process.WaitForExit());
         }
 
         public static async Task<KeycloakFixture> GetInstanceAsync()
@@ -81,7 +81,7 @@ namespace YourRest.WebApi.Tests.Fixtures
                     if (instance == null)
                     {
                         instance = new KeycloakFixture();
-                        instance.InitializeAsync().Wait();
+                        Task.Run(async () => await instance.InitializeAsync()).Wait();
                     }
                 }
             }
