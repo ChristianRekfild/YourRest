@@ -25,18 +25,18 @@ namespace YourRest.WebApi.Tests.Controllers
         public async Task UpdatedRoomFacilityTest_WhenPutCalledEditMethod_ReturnsMessageOfSuccsessfulyEdited()
         {
             var roomFacility = await fixture.InsertObjectIntoDatabase(await CreateRoomFacilityAsync());
-            var editedRoom = new RoomFacility
+            var editedRoomFacility = new RoomFacility
             {
                 Id = roomFacility.Id,
                 RoomId = RoomId,
                 Name = "Minibar"
             };
-            var content = new StringContent(JsonConvert.SerializeObject(editedRoom.ToViewModel()), Encoding.UTF8, "application/json");
-            var response = await fixture.Client.PutAsync($"api/facilities", content);
+            var content = new StringContent(JsonConvert.SerializeObject(editedRoomFacility.ToViewModel()), Encoding.UTF8, "application/json");
+            var response = await fixture.Client.PutAsync($"api/facilities/{editedRoomFacility.Id}", content);
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             Assert.Equal($"RoomFacility id:{roomFacility.Id} has been successfully changed in the current issue", await response.Content.ReadAsStringAsync());
             var recivedRoomFacility = await GetByIdAsync(roomFacility.Id);
-            Assert.Equal(editedRoom.Name, recivedRoomFacility.Name);
+            Assert.Equal(editedRoomFacility.Name, recivedRoomFacility.Name);
         }
         [Fact]
         public async Task DeleteRoomFacilityTest_WhenPostCalledRemoveMethod_ReturnsMessageOfSuccsessfulyRemoved()
