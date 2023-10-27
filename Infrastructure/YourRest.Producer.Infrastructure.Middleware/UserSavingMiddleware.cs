@@ -1,9 +1,7 @@
-using YourRest.Domain.Entities;
-using YourRest.Domain.Repositories;
 using Microsoft.AspNetCore.Http;
 using System.Security.Claims;
-using Microsoft.EntityFrameworkCore;
-using Npgsql;
+using YourRest.Domain.Entities;
+using YourRest.Domain.Repositories;
 
 namespace YourRest.Producer.Infrastructure.Middleware;
 public class UserSavingMiddleware
@@ -18,10 +16,16 @@ public class UserSavingMiddleware
     public async Task Invoke(HttpContext httpContext, IUserRepository userRepository, IAccommodationRepository accommodationRepository)
     {
         var identity = httpContext.User.Identity as ClaimsIdentity;
-        var sub = identity?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-        var firstName = identity?.FindFirst(ClaimTypes.GivenName)?.Value;
-        var lastName = identity?.FindFirst(ClaimTypes.Surname)?.Value;
-        var email = identity?.FindFirst(ClaimTypes.Email)?.Value;
+
+        if(identity == null)
+        {
+            throw new Exception("User not found.");
+        }
+
+        var sub = identity.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        var firstName = identity.FindFirst(ClaimTypes.GivenName)?.Value;
+        var lastName = identity.FindFirst(ClaimTypes.Surname)?.Value;
+        var email = identity.FindFirst(ClaimTypes.Email)?.Value;
 
         // group related to accommodation is in the format: /accommodations/{accommodationId}
         var allClaims = identity?.Claims;

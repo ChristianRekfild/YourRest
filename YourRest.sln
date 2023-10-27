@@ -17,15 +17,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "YourRest.WebApi.Tests", "Yo
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "YourRest.Infrastructure.Core", "Infrastructure\YourRest.Infrastructure.Core\YourRest.Infrastructure.Core.csproj", "{53828C4D-418F-4A93-B5DC-60D700E86501}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastructure", "{AB1D9707-7CCA-428C-964C-67EA9E5228EB}"
-	ProjectSection(SolutionItems) = preProject
-		Infrastructure\YourRest.Producer.Infrastructure.Keycloak\obj\project.nuget.cache = Infrastructure\YourRest.Producer.Infrastructure.Keycloak\obj\project.nuget.cache
-		Infrastructure\YourRest.Producer.Infrastructure.Keycloak\obj\YourRest.Producer.Infrastructure.Keycloak.csproj.nuget.dgspec.json = Infrastructure\YourRest.Producer.Infrastructure.Keycloak\obj\YourRest.Producer.Infrastructure.Keycloak.csproj.nuget.dgspec.json
-		Infrastructure\YourRest.Producer.Infrastructure.Keycloak\obj\YourRest.Producer.Infrastructure.Keycloak.csproj.nuget.g.props = Infrastructure\YourRest.Producer.Infrastructure.Keycloak\obj\YourRest.Producer.Infrastructure.Keycloak.csproj.nuget.g.props
-		Infrastructure\YourRest.Producer.Infrastructure.Keycloak\obj\project.assets.json = Infrastructure\YourRest.Producer.Infrastructure.Keycloak\obj\project.assets.json
-		Infrastructure\YourRest.Producer.Infrastructure.Keycloak\obj\YourRest.Producer.Infrastructure.Keycloak.csproj.nuget.g.targets = Infrastructure\YourRest.Producer.Infrastructure.Keycloak\obj\YourRest.Producer.Infrastructure.Keycloak.csproj.nuget.g.targets
-		Infrastructure\YourRest.Producer.Infrastructure.Keycloak\YourRest.Producer.Infrastructure.Keycloak.csproj = Infrastructure\YourRest.Producer.Infrastructure.Keycloak\YourRest.Producer.Infrastructure.Keycloak.csproj
-	EndProjectSection
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastructure", "{AB1D9707-7CCA-428C-964C-67EA9E5228EB}"	
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "YourRest.Domain", "YourRest.Domain\YourRest.Domain.csproj", "{ECCB80B2-83A4-4976-B5C3-0351704D6A56}"
 EndProject
