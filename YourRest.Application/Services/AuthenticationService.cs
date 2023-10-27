@@ -22,7 +22,7 @@ public class AuthenticationService : IAuthenticationService
         }
         catch (Exception ex)
         {
-            throw new ValidationException("Invalid credentials");
+            throw new ValidationException($"Invalid credentials ({ex.Message})");
         }
     }
 }

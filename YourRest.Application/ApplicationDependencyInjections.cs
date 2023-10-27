@@ -83,7 +83,7 @@ namespace YourRest.Application
     {
         public IActionResult CreateActionResult(ActionExecutingContext context, ValidationProblemDetails? validationProblemDetails)
         {
-            return new BadRequestObjectResult(new ErrorViewModel() { Title = "Validation errors", ValidationErrors = validationProblemDetails?.Errors });
+            return new BadRequestObjectResult(new ErrorViewModel() { Title = "Validation errors", ValidationErrors = validationProblemDetails?.Errors ?? new Dictionary<string, string[]>() });
         }
     }
 }
