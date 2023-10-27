@@ -29,6 +29,11 @@ public class Program
     {
 #pragma warning disable ASP0000 // Do not call 'IServiceCollection.BuildServiceProvider' in 'ConfigureServices'
         var configuration = services.BuildServiceProvider().GetService<IConfiguration>();
+        
+        if (configuration == null)
+        {
+            throw new Exception("Not fountproget onfiguration.");
+        }
 #pragma warning restore ASP0000 // Do not call 'IServiceCollection.BuildServiceProvider' in 'ConfigureServices'
         string? connectionString;
 
@@ -74,17 +79,12 @@ public class Program
                 }
             });
         });
-        
+                
         services.Configure<KeycloakSetting>(configuration.GetSection("KeycloakSetting"));
         services.AddKeycloakInfrastructure();
         services.AddInfrastructure();
         services.AddApplication();
-        
-        services.AddSingleton(_ => configuration.GetValue<string>("ClientId"));
-        services.AddSingleton(_ => configuration.GetValue<string>("ClientSecret"));
-        services.AddSingleton(_ => configuration.GetValue<string>("KeycloakUrl"));
-
-        
+               
         services.AddHttpClient();
         services.AddTransient<ICustomHttpClientFactory, CustomHttpClientFactory>();
 
@@ -114,10 +114,8 @@ public class Program
 
     public static void Configure(IApplicationBuilder app)
     {
-#pragma warning disable CS8604 // Code that generates warning CS8604 is written here and will be ignored by the compiler.
         app.UseSwagger();
         app.UseSwaggerUI();
-#pragma warning disable CS8604 // Code that generates warning CS8604 is written here and will be ignored by the compiler.
 
         app.UseCors(builder => builder
             .AllowAnyOrigin()  // Not for production
@@ -133,7 +131,10 @@ public class Program
         
         using var serviceScope = app.ApplicationServices.CreateScope();
         var context = serviceScope.ServiceProvider.GetService<SharedDbContext>();
-        var seeder = new DatabaseSeeder(context);
-        seeder.Seed();
+        if (context != null)
+        {
+            var seeder = new DatabaseSeeder(context);
+            seeder.Seed();
+        }
     }
 }
