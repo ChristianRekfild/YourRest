@@ -121,7 +121,8 @@ namespace YourRest.Producer.Infrastructure.Keycloak.Repositories
             searchResponse.EnsureSuccessStatusCode();
 
             var users = JsonConvert.DeserializeObject<List<User>>(await searchResponse.Content.ReadAsStringAsync());
-            if (users.Count == 0)
+            
+            if (users == null || users.Count == 0)
             {
                 throw new Exception("Unable to find the newly created user.");
             }
@@ -163,7 +164,8 @@ namespace YourRest.Producer.Infrastructure.Keycloak.Repositories
             searchResponse.EnsureSuccessStatusCode();
 
             var groups = JsonConvert.DeserializeObject<List<Group>>(await searchResponse.Content.ReadAsStringAsync());
-            if (groups.Count == 0)
+            
+            if (groups == null || groups.Count == 0)
             {
                 throw new Exception("Unable to find the newly created group.");
             }
@@ -198,7 +200,7 @@ namespace YourRest.Producer.Infrastructure.Keycloak.Repositories
 
             var secretData = JsonConvert.DeserializeObject<dynamic>(await secretResponse.Content.ReadAsStringAsync());
 
-            return secretData.value;
+            return secretData?.value;
         }
         
         public async Task<string> GetClientSecret(string adminToken, string clientId)
@@ -227,7 +229,8 @@ namespace YourRest.Producer.Infrastructure.Keycloak.Repositories
 
             var jsonResponse = await response.Content.ReadAsStringAsync();
             var secretObject = JsonConvert.DeserializeObject<dynamic>(jsonResponse);
-            return secretObject.value;
+            
+            return secretObject?.value;
         }
         
         public async Task<string> GetClientIdByName(string adminToken, string clientName)
@@ -346,7 +349,7 @@ namespace YourRest.Producer.Infrastructure.Keycloak.Repositories
             var response = await httpClient.PostAsync(url, content);
             response.EnsureSuccessStatusCode();
         }
-        private HttpClient GetConfiguredHttpClient(string token = null)
+        private HttpClient GetConfiguredHttpClient(string token = "")
         {
             var httpClient = _httpClientFactory.CreateClient();
             if (!string.IsNullOrEmpty(token))
