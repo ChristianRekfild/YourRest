@@ -21,6 +21,8 @@ namespace YourRest.Producer.Infrastructure
             
             services.AddScoped<IRoomTypeRepository, RoomTypeRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IAgeRangeRepository, AgeRangeRepository>();
+
 
             return services;
         }

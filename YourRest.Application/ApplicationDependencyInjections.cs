@@ -15,6 +15,8 @@ using Microsoft.AspNetCore.Mvc;
 using SharpGrip.FluentValidation.AutoValidation.Mvc.Results;
 using YourRest.Application.Dto.ViewModels;
 using System.Globalization;
+using YourRest.Application.UseCases.AgeRangeUseCases;
+using YourRest.Application.Interfaces.Age;
 
 namespace YourRest.Application
 {
@@ -65,8 +67,14 @@ namespace YourRest.Application
             ValidatorOptions.Global.LanguageManager.Culture = new CultureInfo("ru");
             services.AddValidatorsFromAssemblyContaining<RoomViewModelValidator>();
             services.AddScoped<IGetRoomTypeListUseCase, GetRoomTypeListUseCase>();
-            
+
             services.AddScoped<IAuthenticationService, AuthenticationService>();
+            //AgeRange
+            services.AddScoped<ICreateAgeRangeUseCase, CreateAgeRangeUseCase>();
+            services.AddScoped<IEditAgeRangeUseCase, EditAgeRangeUseCase>();
+            services.AddScoped<IGetAgeRangeByIdUseCase, GetAgeRangeByIdUseCase>();
+
+
 
             return services;
         }
