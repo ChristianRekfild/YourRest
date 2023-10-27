@@ -69,8 +69,11 @@ namespace YourRest.WebApi.Tests.Fixtures
 
         public void Dispose()
         {
-            Task.Run(async () => await _postgreSqlContainer.StopAsync()).Wait();
-            Task.Run(async () => await _postgreSqlContainer.DisposeAsync()).Wait();
+            Task.Run(async () =>
+            {
+                await _postgreSqlContainer.StopAsync();
+                await _postgreSqlContainer.DisposeAsync();
+            }).Wait();
         }
     }
 }

@@ -10,7 +10,7 @@ using YourRest.Producer.Infrastructure.Keycloak.Repositories;
 
 namespace YourRest.WebApi.Tests.Fixtures
 {
-    public class SingletonApiTest : IDisposable, IAsyncLifetime
+    public class SingletonApiTest : IDisposable
     {
         public HttpClient Client { get; private set; }
         public TestServer Server { get; private set; }
@@ -19,10 +19,7 @@ namespace YourRest.WebApi.Tests.Fixtures
         private DatabaseFixture dbFixture;
         private KeycloakFixture keycloakFixture;
 
-        public SingletonApiTest() { }
-
-        public async Task InitializeAsync()
-        {
+        public SingletonApiTest() { 
             dbFixture = DatabaseFixture.getInstance();
             Console.WriteLine($"dbFixture is {(dbFixture == null ? "null" : "not null")}");
 
@@ -32,11 +29,11 @@ namespace YourRest.WebApi.Tests.Fixtures
             DbContext = dbFixture.GetDbContext(connectionString);
             Console.WriteLine($"DbContext is {(DbContext == null ? "null" : "not null")}");
 
-            keycloakFixture = KeycloakFixture.Instance;
+            keycloakFixture = KeycloakFixture.Instance();
             Console.WriteLine($"keycloakFixture is {(keycloakFixture == null ? "null" : "not null")}");
             
-            await keycloakFixture.EnsureInitializedAsync();
-            await keycloakFixture.StartAsync();
+            //keycloakFixture.EnsureInitialized();
+            //keycloakFixture.Start();
             
             InitializeWebHost(connectionString);
         }
@@ -75,13 +72,8 @@ namespace YourRest.WebApi.Tests.Fixtures
         public void Dispose()
         {
             Server.Dispose();
-        }
-        
-        public Task DisposeAsync()
-        {
-            Server.Dispose();
-            return Task.CompletedTask;
-        }
+        }        
+       
         private void InitializeWebHost(string connectionString)
         {
             var builder = new WebHostBuilder()
@@ -100,8 +92,8 @@ namespace YourRest.WebApi.Tests.Fixtures
                         .Build();
 
                     configBuilder.AddConfiguration(testConfig);
-                })
-                .UseStartup<Program>();
+                }).UseStartup<Program>();
+
             builder.ConfigureServices(services =>
             {
                 services.AddHttpClient();

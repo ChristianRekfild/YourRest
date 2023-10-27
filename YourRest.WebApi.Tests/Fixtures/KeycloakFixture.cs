@@ -9,29 +9,43 @@ namespace YourRest.WebApi.Tests.Fixtures
     {
         private PostgreSqlContainer _keycloakDbContainer;
         private IContainer _keycloakContainer;
-        
-        public async Task EnsureInitializedAsync()
-        {
-            if (!_initialized)
-            {
-                await InitializeAsync();
-                _initialized = true;
-            }
-        }
 
-        private bool _initialized = false;
-        public static KeycloakFixture Instance => _instance.Value;
-        private KeycloakFixture()
+        private static KeycloakFixture? instance = null;
+        private static readonly object syncObj = new object();
+
+        //public void EnsureInitialized()
+        //{
+        //    if (!_initialized)
+        //    {
+        //        Initialize();
+        //        _initialized = true;
+        //    }
+        //}
+
+        //private bool _initialized = false;
+
+
+        public static KeycloakFixture Instance()
         {
+            if (instance == null)
+            {
+                lock (syncObj)
+                {
+                    if (instance == null)
+                    {
+                        instance = new KeycloakFixture();
+                        instance.Start();
+                    }
+                }
+            }
+            return instance;
         }
         
-        private static readonly Lazy<KeycloakFixture> _instance = 
-            new Lazy<KeycloakFixture>(() => new KeycloakFixture());
-        private async Task InitializeAsync()
-        {
-            await RemoveContainerAsync("keycloakdb-test");
-            await CreateNetworkAsync("yourrest_local-network");
-            await BuildDockerImageAsync("../../../Dockerfile", "keycloak_test:latest");
+        private KeycloakFixture()
+        {        
+            RemoveContainer("keycloakdb-test");
+            CreateNetwork("yourrest_local-network");
+            BuildDockerImage("../../../Dockerfile", "keycloak_test:latest");
 
             _keycloakDbContainer = new PostgreSqlBuilder()
                 .WithImage("postgres:latest")
@@ -55,10 +69,12 @@ namespace YourRest.WebApi.Tests.Fixtures
                 .WithEnvironment("KEYCLOAK_USER", "admin")
                 .WithEnvironment("KEYCLOAK_PASSWORD", "admin")
                 .WithPortBinding(8081, 8080)
+                .WithWaitStrategy(Wait.ForUnixContainer().UntilPortIsAvailable(8080/*WeatherForecastImage.HttpsPort*/))
+                //.WithWaitStrategy(Wait.ForUnixContainer().UntilContainerIsHealthy())
                 .Build();
         }
 
-        public static async Task BuildDockerImageAsync(string dockerfilePath, string tagName)
+        public static void BuildDockerImage(string dockerfilePath, string tagName)
         {
             string dockerfileDirectory = Path.GetDirectoryName(dockerfilePath);
 
@@ -82,51 +98,56 @@ namespace YourRest.WebApi.Tests.Fixtures
             process.BeginOutputReadLine();
             process.BeginErrorReadLine();
 
-            await Task.Run(() => process.WaitForExit());
+            process.WaitForExit();
+            //await Task.Run(() => process.WaitForExit());
         }
-        public async Task StartAsync()
+        public void Start()
         {
-            await _keycloakDbContainer.StartAsync();
-            await _keycloakContainer.StartAsync();
-            await Task.Delay(TimeSpan.FromSeconds(30));
+            Task.Run(async () =>
+            {
+                await _keycloakDbContainer.StartAsync();
+                await _keycloakContainer.StartAsync();
+                //await Task.Delay(TimeSpan.FromSeconds(30));
+            }).Wait();
         }
-        public async Task CreateNetworkAsync(string networkName)
+        public void CreateNetwork(string networkName)
         {
             var checkNetwork = Process.Start("docker", $"network inspect {networkName}");
-            await Task.Run(() => checkNetwork.WaitForExit());
+            checkNetwork.WaitForExit();
 
             if (checkNetwork.ExitCode != 0)
             {
                 var createNetwork = Process.Start("docker", $"network create {networkName}");
-                await Task.Run(() => createNetwork?.WaitForExit());
+                createNetwork?.WaitForExit();
             }
         }
-        public async Task RemoveNetworkAsync(string networkName)
+        public void RemoveNetwork(string networkName)
         {
             var removeNetwork = Process.Start("docker", $"network rm {networkName}");
-            await Task.Run(() => removeNetwork?.WaitForExit());
+            removeNetwork?.WaitForExit();
         }
-        public async Task RemoveContainerAsync(string containerName)
+        public void RemoveContainer(string containerName)
         {
             var stopContainer = Process.Start("docker", $"stop {containerName}");
-            await Task.Run(() => stopContainer?.WaitForExit());
+            stopContainer?.WaitForExit();
 
             var removeContainer = Process.Start("docker", $"rm {containerName}");
-            await Task.Run(() => removeContainer?.WaitForExit());
-        }
-
-        public async ValueTask DisposeAsync()
-        {
-            await _keycloakContainer.StopAsync();
-            await _keycloakContainer.DisposeAsync();
-            await _keycloakDbContainer.StopAsync();
-            await _keycloakDbContainer.DisposeAsync();
-            await RemoveNetworkAsync("yourrest_local-network");
+            removeContainer?.WaitForExit();
         }
 
         public void Dispose()
         {
-            DisposeAsync().AsTask().Wait();
+            Task.Run(async () =>
+            {
+                await _keycloakContainer.StopAsync();
+                await _keycloakContainer.DisposeAsync();
+            }).Wait();
+            Task.Run(async () =>
+            {
+                await _keycloakDbContainer.StopAsync();
+                await _keycloakDbContainer.DisposeAsync();
+            }).Wait();
+            RemoveNetwork("yourrest_local-network");
         }
     }
 }
