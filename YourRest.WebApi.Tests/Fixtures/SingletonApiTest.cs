@@ -23,18 +23,28 @@ namespace YourRest.WebApi.Tests.Fixtures
 
         public async Task InitializeAsync()
         {
-            dbFixture = DatabaseFixture.GetInstance();
-            var connectionString = await BuildConnectionStringAsync();
+            dbFixture = DatabaseFixture.getInstance();
+            Console.WriteLine($"dbFixture is {(dbFixture == null ? "null" : "not null")}");
+
+            var connectionString = BuildConnectionString();
+            Console.WriteLine($"connectionString is {(connectionString == null ? "null" : "not null")}");
+
             DbContext = dbFixture.GetDbContext(connectionString);
-    
-            keycloakFixture = await KeycloakFixture.GetInstanceAsync();
-            InitializeWebHost(connectionString);
+            Console.WriteLine($"DbContext is {(DbContext == null ? "null" : "not null")}");
+
+            keycloakFixture = KeycloakFixture.Instance;
+            Console.WriteLine($"keycloakFixture is {(keycloakFixture == null ? "null" : "not null")}");
+            
+            await keycloakFixture.EnsureInitializedAsync();
             await keycloakFixture.StartAsync();
+            
+            InitializeWebHost(connectionString);
         }
 
-        private async Task<string> BuildConnectionStringAsync()
+
+        private string BuildConnectionString()
         {
-            var originalConnectionString = await dbFixture.GetConnectionStringAsync();
+            var originalConnectionString = dbFixture.ConnectionString;
             StringBuilder sb = new StringBuilder();
             foreach (var part in originalConnectionString.Split(';'))
             {

@@ -2,54 +2,60 @@
 using Testcontainers.PostgreSql;
 using YourRest.Infrastructure.Core.DbContexts;
 using YourRest.Producer.Infrastructure;
-using System.Threading.Tasks;
-using System.Threading;
 
 namespace YourRest.WebApi.Tests.Fixtures
 {
     public class DatabaseFixture : IDisposable
     {
         private static DatabaseFixture? instance = null;
-        private static readonly SemaphoreSlim semaphore = new SemaphoreSlim(1, 1);
-        private static readonly Lazy<DatabaseFixture> lazyInstance = new Lazy<DatabaseFixture>(() => new DatabaseFixture());
+        private static readonly object syncObj = new object();
 
-        public static DatabaseFixture Instance => lazyInstance.Value;
-
-        public async Task<string> GetConnectionStringAsync()
+        public string ConnectionString
         {
-            if (_postgreSqlContainer.State != DotNet.Testcontainers.Containers.TestcontainersStates.Running)
+            get
             {
-                await semaphore.WaitAsync();
-
-                try
+                if (_postgreSqlContainer.State != DotNet.Testcontainers.Containers.TestcontainersStates.Running)
                 {
-                    if (_postgreSqlContainer.State != DotNet.Testcontainers.Containers.TestcontainersStates.Running)
+                    lock (syncObj)
                     {
-                        await _postgreSqlContainer.StartAsync().ConfigureAwait(false);
+                        if (_postgreSqlContainer.State != DotNet.Testcontainers.Containers.TestcontainersStates.Running)
+                        {
+                            _postgreSqlContainer.ConfigureAwait(false);
+                            Task.Run(() =>  _postgreSqlContainer.StartAsync()).GetAwaiter().GetResult();
+                        }
                     }
                 }
-                finally
-                {
-                    semaphore.Release();
-                }
+                return _postgreSqlContainer.GetConnectionString();
             }
-            return _postgreSqlContainer.GetConnectionString();
         }
 
-        private readonly PostgreSqlContainer _postgreSqlContainer;
-
+        private PostgreSqlContainer _postgreSqlContainer { get; }
         private DatabaseFixture()
         {
             _postgreSqlContainer = new PostgreSqlBuilder()
-                .WithImage("postgres:15.4-alpine")
-                .WithUsername("postgres")
-                .WithPassword("postgres")
-                //.WithPortBinding("5433") // For viewing in PgAdmin
-                .WithDatabase("postgres")
-                .WithCleanUp(true)
-                .Build();
+            .WithImage("postgres:15.4-alpine")
+            .WithUsername("postgres")
+            .WithPassword("postgres")
+            //.WithPortBinding("5433") // Для просмотра в PgAdmin
+            .WithDatabase("postgres")
+            .WithCleanUp(true)
+            .Build();
         }
-        public static DatabaseFixture GetInstance() => Instance;
+
+        public static DatabaseFixture getInstance()
+        {
+            if (instance == null)
+            {
+                lock (syncObj)
+                {
+                    if (instance == null)
+                    {
+                        instance = new DatabaseFixture();
+                    }
+                }
+            }
+            return instance;
+        }
 
         public SharedDbContext GetDbContext(string connectionString)
         {
@@ -63,13 +69,8 @@ namespace YourRest.WebApi.Tests.Fixtures
 
         public void Dispose()
         {
-            DisposeAsync().Wait();
-        }
-
-        public async Task DisposeAsync()
-        {
-            await _postgreSqlContainer.StopAsync().ConfigureAwait(false);
-            await _postgreSqlContainer.DisposeAsync().ConfigureAwait(false);
+            Task.Run(async () => await _postgreSqlContainer.StopAsync()).Wait();
+            Task.Run(async () => await _postgreSqlContainer.DisposeAsync()).Wait();
         }
     }
 }
