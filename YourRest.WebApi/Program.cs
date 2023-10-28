@@ -1,19 +1,24 @@
-using Microsoft.EntityFrameworkCore;
-using Microsoft.OpenApi.Models;
 using YourRest.Application;
 using YourRest.Infrastructure.Core.DbContexts;
 using YourRest.Producer.Infrastructure;
 using YourRest.Producer.Infrastructure.Middleware;
+using YourRest.Producer.Infrastructure.Keycloak;
+using Microsoft.EntityFrameworkCore;
+using Swashbuckle.AspNetCore.Swagger;
+using Swashbuckle.AspNetCore.SwaggerGen;
+using Microsoft.OpenApi.Models;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using YourRest.Producer.Infrastructure.Keycloak.Http;
+using System.Text;
 using YourRest.Producer.Infrastructure.Seeds;
-
+using YourRest.Producer.Infrastructure.Keycloak.Settings;
 public class Program
 {
     public static void Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
-
         ConfigureServices(builder.Services);
-
         var app = builder.Build();
         Configure(app);
 
@@ -24,15 +29,21 @@ public class Program
     {
 #pragma warning disable ASP0000 // Do not call 'IServiceCollection.BuildServiceProvider' in 'ConfigureServices'
         var configuration = services.BuildServiceProvider().GetService<IConfiguration>();
+        
+        if (configuration == null)
+        {
+            throw new Exception("Not fountproget onfiguration.");
+        }
 #pragma warning restore ASP0000 // Do not call 'IServiceCollection.BuildServiceProvider' in 'ConfigureServices'
         string? connectionString;
-   
+
         connectionString = configuration?.GetConnectionString("DefaultConnection");
         var migrationsAssembly = typeof(ProducerInfrastructureDependencyInjections).Assembly.GetName().Name;
 
         services.AddDbContext<SharedDbContext>(options => options.UseNpgsql(connectionString,
             sql => sql.MigrationsAssembly(migrationsAssembly)));
 
+        services.AddCors();
         services.AddControllers();
 
         // Swagger/OpenAPI configuration
@@ -41,35 +52,89 @@ public class Program
         services.AddSwaggerGen(c =>
         {
             c.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" });
-        });
 
+            c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+            {
+                Description = "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
+                Name = "Authorization",
+                In = ParameterLocation.Header,
+                Type = SecuritySchemeType.ApiKey,
+                Scheme = "Bearer"
+            });
+
+            //c.OperationFilter<AuthorizeCheckOperationFilter>();
+
+            c.AddSecurityRequirement(new OpenApiSecurityRequirement
+            {
+                {
+                    new OpenApiSecurityScheme
+                    {
+                        Reference = new OpenApiReference
+                        {
+                            Type = ReferenceType.SecurityScheme,
+                            Id = "Bearer"
+                        }
+                    },
+                    new string[] {}
+                }
+            });
+        });
+                
+        services.Configure<KeycloakSetting>(configuration.GetSection("KeycloakSetting"));
+        services.AddKeycloakInfrastructure();
         services.AddInfrastructure();
         services.AddApplication();
+               
+        services.AddHttpClient();
+        services.AddTransient<ICustomHttpClientFactory, CustomHttpClientFactory>();
+
+        services.AddAuthentication(options =>
+        {
+            options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+            options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+        })
+        .AddJwtBearer(options =>
+        {
+            options.Authority = configuration.GetValue<string>("KeycloakSetting:Authority");
+            options.Audience = configuration.GetValue<string>("KeycloakSetting:ClientId");
+            options.RequireHttpsMetadata = false;
+
+            options.TokenValidationParameters = new TokenValidationParameters
+            {
+                ValidateIssuer = true,
+                ValidateAudience = true,
+                ValidateLifetime = true,
+                ValidateIssuerSigningKey = true,
+                ValidIssuer = configuration.GetValue<string>("KeycloakSetting:Authority"),
+                ValidAudience = configuration.GetValue<string>("KeycloakSetting:ClientId"),
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration.GetValue<string>("KeycloakSetting:ClientSecret"))),
+            };
+        });
     }
 
     public static void Configure(IApplicationBuilder app)
     {
-#pragma warning disable CS8604 // Code that generates warning CS8604 is written here and will be ignored by the compiler.
-        if (app.ApplicationServices.GetService<IWebHostEnvironment>().IsDevelopment())
-        {
-            app.UseSwagger();
-            app.UseSwaggerUI();
-        }
-#pragma warning disable CS8604 // Code that generates warning CS8604 is written here and will be ignored by the compiler.
+        app.UseSwagger();
+        app.UseSwaggerUI();
+
+        app.UseCors(builder => builder
+            .AllowAnyOrigin()  // Not for production
+            .AllowAnyMethod()
+            .AllowAnyHeader());
         app.UseHttpsRedirection();
-        app.UseRouting(); // This is necessary for the endpoints to work.
+        app.UseRouting();
+        app.UseAuthentication();
+        app.UseMiddleware<UserSavingMiddleware>();
         app.UseAuthorization();
-
         app.UseMiddleware<ErrorHandlingMiddleware>();
-
-        app.UseEndpoints(endpoints =>
-        {
-            endpoints.MapControllers();
-        });
+        app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
         
         using var serviceScope = app.ApplicationServices.CreateScope();
         var context = serviceScope.ServiceProvider.GetService<SharedDbContext>();
-        var seeder = new DatabaseSeeder(context);
-        seeder.Seed();
+        if (context != null)
+        {
+            var seeder = new DatabaseSeeder(context);
+            seeder.Seed();
+        }
     }
 }

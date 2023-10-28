@@ -11,8 +11,8 @@ using System.Xml.Linq;
 
 namespace YourRest.WebApi.Tests.Controllers
 {
-
-    public class AccommodationControllerTest : IClassFixture<SingletonApiTest>
+    [Collection(nameof(SingletonApiTest))]
+    public class AccommodationControllerTest
     {
         private readonly SingletonApiTest fixture;
         public AccommodationControllerTest(SingletonApiTest fixture)
@@ -37,6 +37,7 @@ namespace YourRest.WebApi.Tests.Controllers
             var createdAddress = JsonConvert.DeserializeObject<ResultDto>(responseString);
             
             Assert.True(createdAddress?.Id > 0);
+            fixture.CleanDatabase();
         }
 
         [Fact]
@@ -64,6 +65,7 @@ namespace YourRest.WebApi.Tests.Controllers
             var createdAddress = await response.Content.ReadFromJsonAsync<ResultDto>();
 
             Assert.True(createdAddress?.Id > 0);
+            fixture.CleanDatabase();
         }
 
         [Fact]
@@ -85,6 +87,7 @@ namespace YourRest.WebApi.Tests.Controllers
 
             Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
             Assert.Equal(errorMassage, expectedMessageJson);
+            fixture.CleanDatabase();
         }
 
         [Fact]
@@ -111,6 +114,7 @@ namespace YourRest.WebApi.Tests.Controllers
 
             Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
             Assert.Equal(errorResponseString, expectedMessageJson);
+            fixture.CleanDatabase();
         }
 
         [Fact]
@@ -136,6 +140,7 @@ namespace YourRest.WebApi.Tests.Controllers
             Assert.Equal("'Latitude' должно быть в диапазоне от -90 до 90. Введенное значение: 190.", errorData?.ValidationErrors[nameof(addressDto.Latitude)][0]);
             Assert.Equal("'Longitude' должно быть в диапазоне от -180 до 180. Введенное значение: 190.", errorData?.ValidationErrors[nameof(addressDto.Longitude)][0]);
             Assert.Equal("'City Id' должно быть больше '0'.", errorData?.ValidationErrors[nameof(addressDto.CityId)][0]);
+            fixture.CleanDatabase();
         }
 
         [Fact]
@@ -169,6 +174,7 @@ namespace YourRest.WebApi.Tests.Controllers
             var errorResponse = JsonConvert.DeserializeObject<ErrorResponse>(errorResponseString);
 
             Assert.Equal($"Address for accommodation with id {accommodation.Id} already exists", errorResponse?.Message);
+            fixture.CleanDatabase();
         }
 
         private AddressDto CreateValidAddressDto(int cityId)

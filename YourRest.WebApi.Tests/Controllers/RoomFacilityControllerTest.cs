@@ -9,7 +9,8 @@ using YourRest.WebApi.Tests.Fixtures;
 
 namespace YourRest.WebApi.Tests.Controllers
 {
-    public class RoomFacilityControllerTest : IClassFixture<SingletonApiTest>
+    [Collection(nameof(SingletonApiTest))]
+    public class RoomFacilityControllerTest
     {
         private readonly SingletonApiTest fixture;
         private int CityId { get; set; }

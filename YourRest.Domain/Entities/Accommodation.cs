@@ -8,5 +8,7 @@
         public Address? Address { get; set; }
         public int? AddressId { get; set; }
         public ICollection<Room> Rooms { get; set; }
+        
+        public ICollection<UserAccommodation> UserAccommodations { get; set; } = new List<UserAccommodation>();
     }
 }

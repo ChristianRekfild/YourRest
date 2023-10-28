@@ -5,7 +5,8 @@ using YourRest.WebApi.Tests.Fixtures;
 
 namespace YourRest.WebApi.Tests.Controllers
 {
-    public class RoomTypeControllerTest : IClassFixture<SingletonApiTest>
+    [Collection(nameof(SingletonApiTest))]
+    public class RoomTypeControllerTest
     {
         private readonly SingletonApiTest fixture;
         public RoomTypeControllerTest(SingletonApiTest fixture)

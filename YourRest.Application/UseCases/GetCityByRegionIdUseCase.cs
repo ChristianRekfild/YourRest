@@ -1,5 +1,4 @@
-﻿using YourRest.Application.Exceptions;
-using YourRest.Application.Dto;
+﻿using YourRest.Application.Dto;
 using YourRest.Application.Interfaces;
 using YourRest.Domain.Repositories;
 
@@ -13,8 +12,7 @@ namespace YourRest.Application.UseCases
         {
             _cityRepository = cityRepository;
         }
-
-
+        
         public async Task<IEnumerable<CityDTO>> Execute(int regionId)
         {
             var cities = await _cityRepository.FindAsync(x => x.RegionId == regionId);

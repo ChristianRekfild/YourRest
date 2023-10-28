@@ -5,7 +5,8 @@ using YourRest.WebApi.Tests.Fixtures;
 
 namespace YourRest.WebApi.Tests.Controllers
 {
-    public class RegionsControllerTest : IClassFixture<SingletonApiTest> //ApiTest
+    [Collection(nameof(SingletonApiTest))]
+    public class RegionsControllerTest
     {
         //public RegionsControllerTest(ApiFixture fixture) : base(fixture)
         //{
