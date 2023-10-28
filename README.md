@@ -53,6 +53,13 @@ docker compose up -d
 
 *Если надо перезапустить только основной проект, то docker compose up --build webapi
 
-Пользовательский интерфейс Keycloak - http://localhost:8080/auth/
+Пользовательский интерфейс Keycloak для регистрации - http://localhost:8080/auth/realms/YourRest/protocol/openid-connect/auth?client_id=your_rest_app&redirect_uri=http://localhost:5000&response_type=code&scope=openid
 Keycloak Admin Console - http://localhost:8080/auth/admin/
+
+Для запросов с Bearer token нужно:
+У метода контроллера добавить [Authorize]
+Нужно создать юзера, группу в формате /accommodations/1, и связать юзера с группой.
+Затем можно получить токен в свагере по /api/token.
+Добавлем заголовок к запросу Bearer {token}
+
 
