@@ -44,7 +44,7 @@ namespace YourRest.Application.Tests.UseCases
             Assert.Equal($"Accommodation with id {accommodationId} not found", exception.Message);
 
             _accommodationRepositoryMock
-                .Verify(r => r.GetWithIncludeAsync(It.IsAny<Expression<Func<Accommodation, bool>>>(), It.IsAny<Expression<Func<Accommodation, object>>>()),
+                .Verify(r => r.GetWithIncludeAsync(It.IsAny<Expression<Func<Accommodation, bool>>>(), It.IsAny<CancellationToken>(), It.IsAny<Expression<Func<Accommodation, object>>>()),
                 Times.Once);
         }
 
@@ -54,7 +54,7 @@ namespace YourRest.Application.Tests.UseCases
         {
             //Arrange
             _accommodationRepositoryMock
-                .Setup(r => r.GetWithIncludeAsync(It.IsAny<Expression<Func<Accommodation, bool>>>(), It.IsAny<Expression<Func<Accommodation, object>>>()))
+                .Setup(r => r.GetWithIncludeAsync(It.IsAny<Expression<Func<Accommodation, bool>>>(), It.IsAny<CancellationToken>(), It.IsAny<Expression<Func<Accommodation, object>>>()))
                 .ReturnsAsync(new[] { new Accommodation() { Address = new Address() } });
 
             int accommodationId = 1;
@@ -69,7 +69,7 @@ namespace YourRest.Application.Tests.UseCases
             Assert.Equal($"Address for accommodation with id {accommodationId} already exists", exception.Message);
 
             _accommodationRepositoryMock
-                .Verify(r => r.GetWithIncludeAsync(It.IsAny<Expression<Func<Accommodation, bool>>>(), It.IsAny<Expression<Func<Accommodation, object>>>()),
+                .Verify(r => r.GetWithIncludeAsync(It.IsAny<Expression<Func<Accommodation, bool>>>(), It.IsAny<CancellationToken>(), It.IsAny<Expression<Func<Accommodation, object>>>()),
                 Times.Once);
         }
 
@@ -78,7 +78,7 @@ namespace YourRest.Application.Tests.UseCases
         {
             //Arrange
             _accommodationRepositoryMock
-                .Setup(r => r.GetWithIncludeAsync(It.IsAny<Expression<Func<Accommodation, bool>>>(), It.IsAny<Expression<Func<Accommodation, object>>>()))
+                .Setup(r => r.GetWithIncludeAsync(It.IsAny<Expression<Func<Accommodation, bool>>>(), It.IsAny<CancellationToken>(), It.IsAny<Expression<Func<Accommodation, object>>>()))
                 .ReturnsAsync(new[] { new Accommodation() });
 
             int accommodationId = 1;
@@ -99,7 +99,7 @@ namespace YourRest.Application.Tests.UseCases
         {
             //Arrange
             _accommodationRepositoryMock
-                .Setup(r => r.GetWithIncludeAsync(It.IsAny<Expression<Func<Accommodation, bool>>>(), It.IsAny<Expression<Func<Accommodation, object>>>()))
+                .Setup(r => r.GetWithIncludeAsync(It.IsAny<Expression<Func<Accommodation, bool>>>(), It.IsAny<CancellationToken>(), It.IsAny<Expression<Func<Accommodation, object>>>()))
                 .ReturnsAsync(new[] { new Accommodation() });
             
             var addressDto = new AddressDto

@@ -42,7 +42,7 @@ Windows:
 		dotnet ef database update -s ..\YourRest.ClientWebApp\YourRest.ClientWebApp.csproj -p YourRest.ClientIdentity.Infrastructure\YourRest.ClientIdentity.Infrastructure.csproj -c ClientAppIdentityContext -v		
 	
 Linux:
-dotnet ef migrations add AddUserAccommodation -s ../YourRest.WebApi/YourRest.WebApi.csproj -c SharedDbContext -p YourRest.Producer.Infrastructure/YourRest.Producer.Infrastructure.csproj -v
+dotnet ef migrations add UpdateAccommodation -s ../YourRest.WebApi/YourRest.WebApi.csproj -c SharedDbContext -p YourRest.Producer.Infrastructure/YourRest.Producer.Infrastructure.csproj -v
 dotnet ef database update -s ../YourRest.WebApi/YourRest.WebApi.csproj -p YourRest.Producer.Infrastructure/YourRest.Producer.Infrastructure.csproj -c SharedDbContext -v
 dotnet ef migrations remove -s ../YourRest.WebApi/YourRest.WebApi.csproj -c SharedDbContext -p YourRest.Producer.Infrastructure/YourRest.Producer.Infrastructure.csproj -v
 

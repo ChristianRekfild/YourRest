@@ -17,13 +17,13 @@ namespace YourRest.Application.UseCases
             _accommodationRepository = accommodationRepository;
         }
 
-        public async Task<RoomWithIdDto> Execute(RoomDto roomDto)
+        public async Task<RoomWithIdDto> Execute(RoomDto roomDto, int accommodationId)
         {
-            var accommodation = await _accommodationRepository.GetAsync(roomDto.AccommodationId);
+            var accommodation = await _accommodationRepository.GetAsync(accommodationId);
 
             if (accommodation == null)
             {
-                throw new EntityNotFoundException($"Accommodation with id {roomDto.AccommodationId} not found");
+                throw new EntityNotFoundException($"Accommodation with id {accommodationId} not found");
             }
 
             var room = new RoomEntity();
@@ -40,7 +40,6 @@ namespace YourRest.Application.UseCases
                 Id = savedRoom.Id,
                 SquareInMeter = savedRoom.SquareInMeter,
                 Name = savedRoom.Name,
-                AccommodationId = savedRoom.AccommodationId,
                 Capacity = savedRoom.Capacity,
                 RoomType = savedRoom.RoomType
             };
