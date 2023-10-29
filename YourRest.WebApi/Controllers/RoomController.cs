@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using SharpGrip.FluentValidation.AutoValidation.Mvc.Attributes;
 using YourRest.Application.Dto.Models;
 using YourRest.Application.Dto.Models.Room;
@@ -14,6 +15,7 @@ namespace YourRest.WebApi.Controllers
     [FluentValidationAutoValidation]
     public class RoomController : ControllerBase
     {
+        private readonly IMapper mapper;
         private readonly IEditRoomUseCase editRoomUseCase;
         private readonly IGetRoomByIdUseCase getRoomByIdUseCase;
         private readonly IRemoveRoomUseCase removeRoomUseCase;
@@ -23,6 +25,7 @@ namespace YourRest.WebApi.Controllers
         private readonly ICreateRoomUseCase _createtRoomUseCase;
 
         public RoomController(
+            IMapper mapper,
             IEditRoomUseCase editRoomUseCase,
             IGetRoomByIdUseCase getRoomByIdUseCase,
             IRemoveRoomUseCase removeRoomUseCase,
@@ -31,6 +34,7 @@ namespace YourRest.WebApi.Controllers
             IGetRoomListUseCase getRoomListUseCase,
             ICreateRoomUseCase createtRoomUseCase)
         {
+            this.mapper = mapper;
             this.editRoomUseCase = editRoomUseCase;
             this.getRoomByIdUseCase = getRoomByIdUseCase;
             this.removeRoomUseCase = removeRoomUseCase;
@@ -66,10 +70,11 @@ namespace YourRest.WebApi.Controllers
         }
         [HttpPut]
         [Route("{id}")]
-        public async Task<IActionResult> EditRoom([FromRoute] RouteViewModel route, [FromBody] RoomWithIdDto room)
+        public async Task<IActionResult> EditRoom([FromRoute] RouteViewModel route, [FromBody] RoomDto room)
         {
-            room.Id = route.Id;
-            await editRoomUseCase.ExecuteAsync(room);
+            var roomWithId = mapper.Map<RoomWithIdDto>(room);
+            roomWithId.Id = route.Id;
+            await editRoomUseCase.ExecuteAsync(roomWithId);
             return Ok("The room has been edited");
         }
         [HttpDelete]

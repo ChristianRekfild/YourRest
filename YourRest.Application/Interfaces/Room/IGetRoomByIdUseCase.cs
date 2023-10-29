@@ -4,6 +4,6 @@ namespace YourRest.Application.Interfaces.Room
 {
     public interface IGetRoomByIdUseCase
     {
-        Task<RoomWithIdDto> ExecuteAsync(int id);
+        Task<RoomExtendedDto> ExecuteAsync(int id);
     }
 }

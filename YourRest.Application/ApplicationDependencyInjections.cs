@@ -6,6 +6,7 @@ using SharpGrip.FluentValidation.AutoValidation.Mvc.Enums;
 using SharpGrip.FluentValidation.AutoValidation.Mvc.Extensions;
 using SharpGrip.FluentValidation.AutoValidation.Mvc.Results;
 using System.Globalization;
+using System.Reflection;
 using YourRest.Application.Dto.Validators;
 using YourRest.Application.Dto.ViewModels;
 using YourRest.Application.Interfaces;
@@ -21,26 +22,7 @@ namespace YourRest.Application
     {
         public static IServiceCollection AddApplication(this IServiceCollection services)
         {
-            services.AddScoped<IGetCountryListUseCase, GetCountryListUseCase>();
-            services.AddScoped<IGetCityByIdUseCase, GetCityByIdUseCase>();
-            services.AddScoped<IGetCityListUseCase, GetCityListUseCase>();
-            services.AddScoped<IGetRegionListUseCase, GetRegionListUseCase>();
-            services.AddScoped<ICreateReviewUseCase, CreateReviewUseCase>();
-            services.AddScoped<IAddAddressToAccommodationUseCase, AddAddressToAccommodationUseCase>();
-            services.AddScoped<IGetCityByRegionIdUseCase, GetCityByRegionIdUseCase>();
-            services.AddScoped<IGetCityByCountryIdUseCase, GetCityByCountryIdUseCase>();
-            services.AddScoped<IGetRoomListUseCase, GetRoomListUseCase>();
-            services.AddScoped<ICreateRoomUseCase, CreateRoomUseCase>();
-            //Room
-            services.AddScoped<IEditRoomUseCase, EditRoomUseCase>();
-            services.AddScoped<IGetRoomByIdUseCase, GetRoomByIdUseCase>();
-            services.AddScoped<IRemoveRoomUseCase, RemoveRoomUseCase>();
-            services.AddScoped<IGetFacilitiesByRoomIdUseCase, GetRoomFacilitiesByRoomIdUseCase>();
-            services.AddScoped<IAddRoomFacilityUseCase, AddRoomFacilityUseCase>();
-            //RoomFacility
-            services.AddScoped<IEditRoomFacilityUseCase, EditRoomFacilityUseCase>();
-            services.AddScoped<IGetRoomFacilityByIdUseCase, GetRoomFacilityByIdUseCase>();
-            services.AddScoped<IRemoveRoomFacilityUseCase, RemoveRoomFacilityUseCase>();
+            services.AddAutoMapper(Assembly.GetExecutingAssembly());
             //Configure FluentValidation more information of configure here: https://github.com/SharpGrip/FluentValidation.AutoValidation
             services.AddFluentValidationAutoValidation(cfg =>
             {
@@ -63,6 +45,27 @@ namespace YourRest.Application
             });
             ValidatorOptions.Global.LanguageManager.Culture = new CultureInfo("ru");
             services.AddValidatorsFromAssemblyContaining<RoomDtoValidator>();
+
+            services.AddScoped<IGetCountryListUseCase, GetCountryListUseCase>();
+            services.AddScoped<IGetCityByIdUseCase, GetCityByIdUseCase>();
+            services.AddScoped<IGetCityListUseCase, GetCityListUseCase>();
+            services.AddScoped<IGetRegionListUseCase, GetRegionListUseCase>();
+            services.AddScoped<ICreateReviewUseCase, CreateReviewUseCase>();
+            services.AddScoped<IAddAddressToAccommodationUseCase, AddAddressToAccommodationUseCase>();
+            services.AddScoped<IGetCityByRegionIdUseCase, GetCityByRegionIdUseCase>();
+            services.AddScoped<IGetCityByCountryIdUseCase, GetCityByCountryIdUseCase>();
+            services.AddScoped<IGetRoomListUseCase, GetRoomListUseCase>();
+            services.AddScoped<ICreateRoomUseCase, CreateRoomUseCase>();
+            //Room
+            services.AddScoped<IEditRoomUseCase, EditRoomUseCase>();
+            services.AddScoped<IGetRoomByIdUseCase, GetRoomByIdUseCase>();
+            services.AddScoped<IRemoveRoomUseCase, RemoveRoomUseCase>();
+            services.AddScoped<IGetFacilitiesByRoomIdUseCase, GetRoomFacilitiesByRoomIdUseCase>();
+            services.AddScoped<IAddRoomFacilityUseCase, AddRoomFacilityUseCase>();
+            //RoomFacility
+            services.AddScoped<IEditRoomFacilityUseCase, EditRoomFacilityUseCase>();
+            services.AddScoped<IGetRoomFacilityByIdUseCase, GetRoomFacilityByIdUseCase>();
+            services.AddScoped<IRemoveRoomFacilityUseCase, RemoveRoomFacilityUseCase>();
             services.AddScoped<IGetRoomTypeListUseCase, GetRoomTypeListUseCase>();
 
 

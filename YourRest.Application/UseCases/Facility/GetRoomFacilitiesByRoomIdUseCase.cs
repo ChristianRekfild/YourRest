@@ -1,4 +1,5 @@
-﻿using YourRest.Application.Dto.Mappers;
+﻿using AutoMapper;
+using YourRest.Application.Dto.Mappers;
 using YourRest.Application.Dto.Models;
 using YourRest.Application.Exceptions;
 using YourRest.Application.Interfaces.Room;
@@ -10,9 +11,12 @@ namespace YourRest.Application.UseCases.Facility
     public class GetRoomFacilitiesByRoomIdUseCase : IGetFacilitiesByRoomIdUseCase
     {
         private readonly IRoomRepository roomRepository;
-        public GetRoomFacilitiesByRoomIdUseCase(IRoomRepository roomRepository)
+        private readonly IMapper mapper;
+
+        public GetRoomFacilitiesByRoomIdUseCase(IRoomRepository roomRepository, IMapper mapper)
         {
             this.roomRepository = roomRepository;
+            this.mapper = mapper;
         }
 
         public async Task<IEnumerable<RoomFacilityDto>> ExecuteAsync(int roomId)
@@ -26,7 +30,7 @@ namespace YourRest.Application.UseCases.Facility
             {
                 throw new EntityNotFoundException($"Not found RoomFacility in current room (id : {roomId})");
             }
-            return room.RoomFacilities.ToViewModel();
+            return mapper.Map<IEnumerable<RoomFacilityDto>>(room.RoomFacilities);
         }
     }
 }

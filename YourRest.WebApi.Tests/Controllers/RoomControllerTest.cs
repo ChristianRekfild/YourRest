@@ -1,9 +1,9 @@
+using AutoMapper;
 using Newtonsoft.Json;
 using System.Net;
 using System.Net.Http.Json;
 using System.Text;
-using YourRest.Application.Dto;
-using YourRest.Application.Dto.Mappers;
+using YourRest.Application.Dto.Mappers.Profiles;
 using YourRest.Application.Dto.Models;
 using YourRest.Application.Dto.Models.Room;
 using YourRest.Domain.Entities;
@@ -15,6 +15,7 @@ namespace YourRest.WebApi.Tests.Controllers
     public class RoomControllerTest : IClassFixture<SingletonApiTest>
     {
         private readonly SingletonApiTest fixture;
+
         public RoomControllerTest(SingletonApiTest fixture)
         {
             this.fixture = fixture;
@@ -24,23 +25,28 @@ namespace YourRest.WebApi.Tests.Controllers
         [Fact]
         public async Task UpdatedRoomTest_WhenPutCalledEditMethod_ReturnsMessageOfSuccsessfulyEdited()
         {
+            
             var room = await fixture.InsertObjectIntoDatabase(await CreateRoomAsync());
             var editedRoom = new Room
             {
-                Id = room.Id,
                 AccommodationId = room.AccommodationId,
                 Name = "305",
                 RoomType = "Econom",
                 SquareInMeter = 5,
                 Capacity = 2
             };
+            var mockMapper = new MapperConfiguration(cfg =>
+            {
+                cfg.AddProfile(new RoomDtoProfile());
+            });
+            var mapper = mockMapper.CreateMapper();
 
-            var content = new StringContent(JsonConvert.SerializeObject(editedRoom.ToViewModel()), Encoding.UTF8, "application/json");
-            var response = await fixture.Client.PutAsync($"api/rooms/{editedRoom.Id}", content);
+            var content = new StringContent(JsonConvert.SerializeObject(mapper.Map<RoomDto>(editedRoom)), Encoding.UTF8, "application/json");
+            var response = await fixture.Client.PutAsync($"api/rooms/{room.Id}", content);
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             Assert.Equal("The room has been edited", await response.Content.ReadAsStringAsync());
             response = await fixture.Client.GetAsync($"api/rooms/{room.Id}");
-            var recivedRoom = await response.Content.ReadFromJsonAsync<Application.Dto.Models.Room.RoomWithIdDto>();
+            var recivedRoom = await response.Content.ReadFromJsonAsync<RoomWithIdDto>();
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             Assert.NotNull(recivedRoom);
             Assert.Equal(editedRoom.Name, recivedRoom.Name);
@@ -62,7 +68,7 @@ namespace YourRest.WebApi.Tests.Controllers
         {
             var room = await fixture.InsertObjectIntoDatabase(await CreateRoomAsync());
             var response = await fixture.Client.GetAsync($"api/rooms/{room.Id}");
-            var recivedRoom = await response.Content.ReadFromJsonAsync<Application.Dto.Models.Room.RoomWithIdDto>();
+            var recivedRoom = await response.Content.ReadFromJsonAsync<RoomExtendedDto>();
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             Assert.NotNull(recivedRoom);
             Assert.Equal(room.Id, recivedRoom.Id);
@@ -79,6 +85,11 @@ namespace YourRest.WebApi.Tests.Controllers
                 new RoomFacility(){ Name = "Minibar" },
                 new RoomFacility(){ Name = "Locker" }
             };
+            var mockMapper = new MapperConfiguration(cfg =>
+            {
+                cfg.AddProfile(new RoomFacilityDtoProfile());
+            });
+            var mapper = mockMapper.CreateMapper();
             room = await fixture.InsertObjectIntoDatabase(room);
             var response = await fixture.Client.GetAsync($"api/rooms/{room.Id}/facilities");
             var recivedRoomFacilities = await response.Content.ReadFromJsonAsync<IEnumerable<RoomFacilityDto>>();
@@ -86,7 +97,7 @@ namespace YourRest.WebApi.Tests.Controllers
             Assert.NotNull(recivedRoomFacilities);
             Assert.NotEmpty(recivedRoomFacilities);
             Assert.Equal(3, recivedRoomFacilities.Count());
-            Assert.Equivalent(room.RoomFacilities.ToViewModel(), recivedRoomFacilities);
+            Assert.Equivalent(mapper.Map<IEnumerable<RoomFacilityDto>>(room.RoomFacilities), recivedRoomFacilities);
 
         }
         private async Task<Room> CreateRoomAsync()

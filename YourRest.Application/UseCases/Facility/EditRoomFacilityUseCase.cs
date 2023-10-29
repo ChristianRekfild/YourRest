@@ -1,7 +1,9 @@
-﻿using YourRest.Application.Dto.Mappers;
+﻿using AutoMapper;
+using YourRest.Application.Dto.Mappers;
 using YourRest.Application.Dto.Models;
 using YourRest.Application.Exceptions;
 using YourRest.Application.Interfaces.Facility;
+using YourRest.Domain.Entities;
 using YourRest.Domain.Repositories;
 
 namespace YourRest.Application.UseCases.Facility
@@ -9,9 +11,12 @@ namespace YourRest.Application.UseCases.Facility
     public class EditRoomFacilityUseCase : IEditRoomFacilityUseCase
     {
         private readonly IRoomFacilityRepository roomFacilityRepository;
-        public EditRoomFacilityUseCase(IRoomFacilityRepository roomFacilityRepository)
+        private readonly IMapper mapper;
+
+        public EditRoomFacilityUseCase(IRoomFacilityRepository roomFacilityRepository, IMapper mapper)
         {
             this.roomFacilityRepository = roomFacilityRepository;
+            this.mapper = mapper;
         }
         public async Task ExecuteAsync(RoomFacilityDto reviewDto)
         {
@@ -24,7 +29,7 @@ namespace YourRest.Application.UseCases.Facility
             {
                 throw new EntityConflictException($"Room Facility \"{reviewDto.Name}\" has been in process");
             }
-            await roomFacilityRepository.UpdateAsync(reviewDto.ToEntity());
+            await roomFacilityRepository.UpdateAsync(mapper.Map<RoomFacility>(reviewDto));
         }
     }
 }
