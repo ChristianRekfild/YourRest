@@ -1,19 +1,19 @@
 ﻿using FluentValidation;
-using SharpGrip.FluentValidation.AutoValidation.Mvc.Extensions;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.DependencyInjection;
+using SharpGrip.FluentValidation.AutoValidation.Mvc.Enums;
+using SharpGrip.FluentValidation.AutoValidation.Mvc.Extensions;
+using SharpGrip.FluentValidation.AutoValidation.Mvc.Results;
+using System.Globalization;
 using YourRest.Application.Dto.Validators;
+using YourRest.Application.Dto.ViewModels;
 using YourRest.Application.Interfaces;
 using YourRest.Application.Interfaces.Facility;
 using YourRest.Application.Interfaces.Room;
 using YourRest.Application.UseCases;
 using YourRest.Application.UseCases.Facility;
 using YourRest.Application.UseCases.Room;
-using SharpGrip.FluentValidation.AutoValidation.Mvc.Enums;
-using Microsoft.AspNetCore.Mvc.Filters;
-using Microsoft.AspNetCore.Mvc;
-using SharpGrip.FluentValidation.AutoValidation.Mvc.Results;
-using YourRest.Application.Dto.ViewModels;
-using System.Globalization;
 
 namespace YourRest.Application
 {
@@ -62,7 +62,7 @@ namespace YourRest.Application
                 cfg.OverrideDefaultResultFactoryWith<YouRestResultFactory>();
             });
             ValidatorOptions.Global.LanguageManager.Culture = new CultureInfo("ru");
-            services.AddValidatorsFromAssemblyContaining<RoomViewModelValidator>();
+            services.AddValidatorsFromAssemblyContaining<RoomDtoValidator>();
             services.AddScoped<IGetRoomTypeListUseCase, GetRoomTypeListUseCase>();
 
 

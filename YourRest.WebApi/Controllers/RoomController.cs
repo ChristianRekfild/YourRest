@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SharpGrip.FluentValidation.AutoValidation.Mvc.Attributes;
-using YourRest.Application.Dto;
 using YourRest.Application.Dto.Models;
+using YourRest.Application.Dto.Models.Room;
 using YourRest.Application.Dto.ViewModels;
 using YourRest.Application.Interfaces;
 using YourRest.Application.Interfaces.Facility;
@@ -66,7 +66,7 @@ namespace YourRest.WebApi.Controllers
         }
         [HttpPut]
         [Route("{id}")]
-        public async Task<IActionResult> EditRoom([FromRoute] RouteViewModel route, [FromBody] RoomViewModel room)
+        public async Task<IActionResult> EditRoom([FromRoute] RouteViewModel route, [FromBody] RoomWithIdDto room)
         {
             room.Id = route.Id;
             await editRoomUseCase.ExecuteAsync(room);
@@ -87,7 +87,7 @@ namespace YourRest.WebApi.Controllers
         }
         [HttpPost]
         [Route("{id}/facilities")]
-        public async Task<IActionResult> AddFacilityToRoom([FromRoute] RouteViewModel route, [FromBody] RoomFacilityViewModel roomFacility)
+        public async Task<IActionResult> AddFacilityToRoom([FromRoute] RouteViewModel route, [FromBody] RoomFacilityDto roomFacility)
         {
             roomFacility.RoomId = route.Id;
             await addRoomFacilityUseCase.ExecuteAsync(roomFacility);

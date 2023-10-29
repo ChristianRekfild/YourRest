@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using YourRest.Application.Dto;
 using YourRest.Application.Interfaces;
 using YourRest.Application.Exceptions;
 using SharpGrip.FluentValidation.AutoValidation.Mvc.Attributes;
+using YourRest.Application.Dto.Models;
 
 namespace YourRest.WebApi.Controllers
 {

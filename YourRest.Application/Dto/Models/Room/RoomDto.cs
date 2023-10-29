@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace YourRest.Application.Dto
+namespace YourRest.Application.Dto.Models.Room
 {
     public class RoomDto
     {

@@ -1,5 +1,5 @@
 using System.Text.Json;
-using YourRest.Application.Dto;
+using YourRest.Application.Dto.Models;
 using YourRest.Domain.Entities;
 using YourRest.WebApi.Tests.Fixtures;
 

@@ -87,10 +87,10 @@ namespace YourRest.WebApi.Tests.Controllers
                 Name = "Air Conditioner"
             };
         }
-        private async Task<RoomFacilityViewModel> GetByIdAsync(int id)
+        private async Task<RoomFacilityDto> GetByIdAsync(int id)
         {
             var response = await fixture.Client.GetAsync($"api/facilities/{id}");
-            var recivedRoomFacility = await response.Content.ReadFromJsonAsync<RoomFacilityViewModel>();
+            var recivedRoomFacility = await response.Content.ReadFromJsonAsync<RoomFacilityDto>();
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             Assert.NotNull(recivedRoomFacility);
             return recivedRoomFacility;

@@ -5,6 +5,7 @@ using System.Text;
 using YourRest.Application.Dto;
 using YourRest.Application.Dto.Mappers;
 using YourRest.Application.Dto.Models;
+using YourRest.Application.Dto.Models.Room;
 using YourRest.Domain.Entities;
 using YourRest.WebApi.Tests.Fixtures;
 
@@ -39,7 +40,7 @@ namespace YourRest.WebApi.Tests.Controllers
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             Assert.Equal("The room has been edited", await response.Content.ReadAsStringAsync());
             response = await fixture.Client.GetAsync($"api/rooms/{room.Id}");
-            var recivedRoom = await response.Content.ReadFromJsonAsync<RoomViewModel>();
+            var recivedRoom = await response.Content.ReadFromJsonAsync<Application.Dto.Models.Room.RoomWithIdDto>();
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             Assert.NotNull(recivedRoom);
             Assert.Equal(editedRoom.Name, recivedRoom.Name);
@@ -61,7 +62,7 @@ namespace YourRest.WebApi.Tests.Controllers
         {
             var room = await fixture.InsertObjectIntoDatabase(await CreateRoomAsync());
             var response = await fixture.Client.GetAsync($"api/rooms/{room.Id}");
-            var recivedRoom = await response.Content.ReadFromJsonAsync<RoomViewModel>();
+            var recivedRoom = await response.Content.ReadFromJsonAsync<Application.Dto.Models.Room.RoomWithIdDto>();
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             Assert.NotNull(recivedRoom);
             Assert.Equal(room.Id, recivedRoom.Id);
@@ -80,7 +81,7 @@ namespace YourRest.WebApi.Tests.Controllers
             };
             room = await fixture.InsertObjectIntoDatabase(room);
             var response = await fixture.Client.GetAsync($"api/rooms/{room.Id}/facilities");
-            var recivedRoomFacilities = await response.Content.ReadFromJsonAsync<IEnumerable<RoomFacilityViewModel>>();
+            var recivedRoomFacilities = await response.Content.ReadFromJsonAsync<IEnumerable<RoomFacilityDto>>();
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             Assert.NotNull(recivedRoomFacilities);
             Assert.NotEmpty(recivedRoomFacilities);

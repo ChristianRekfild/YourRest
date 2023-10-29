@@ -1,5 +1,5 @@
 ﻿using FluentValidation.TestHelper;
-using YourRest.Application.Dto;
+using YourRest.Application.Dto.Models;
 using YourRest.Application.Dto.Validators;
 
 namespace YourRest.WebApi.Tests.UnitTests

@@ -15,7 +15,7 @@ namespace YourRest.Application.UseCases.Facility
             this.roomRepository = roomRepository;
         }
 
-        public async Task<IEnumerable<RoomFacilityViewModel>> ExecuteAsync(int roomId)
+        public async Task<IEnumerable<RoomFacilityDto>> ExecuteAsync(int roomId)
         {
             var room = (await roomRepository.GetWithIncludeAsync(room => room.Id == roomId, include => include.RoomFacilities)).FirstOrDefault();
             if (room == null)

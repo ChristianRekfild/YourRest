@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace YourRest.Application.Dto
+namespace YourRest.Application.Dto.Models
 {
     public class RoomTypeDto
     {

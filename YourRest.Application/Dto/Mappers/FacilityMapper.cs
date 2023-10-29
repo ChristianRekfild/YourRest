@@ -9,28 +9,28 @@ namespace YourRest.Application.Dto.Mappers
     {
         private static MapperConfiguration EntityMap() => new MapperConfiguration(cfg =>
             {
-                cfg.CreateMap<RoomFacilityViewModel, RoomFacility>()
+                cfg.CreateMap<RoomFacilityDto, RoomFacility>()
                 .ForMember(target => target.Id, opt => opt.MapFrom(src => src.Id))
                 .ForMember(target => target.RoomId, opt => opt.MapFrom(src => src.RoomId))
                 .ForMember(target => target.Name, opt => opt.MapFrom(src => src.Name));
             });
         private static MapperConfiguration ViewModelMap() => new MapperConfiguration(cfg =>
         {
-            cfg.CreateMap<RoomFacility, RoomFacilityViewModel>()
+            cfg.CreateMap<RoomFacility, RoomFacilityDto>()
             .ForMember(target => target.Id, opt => opt.MapFrom(src => src.Id))
             .ForMember(target => target.RoomId, opt => opt.MapFrom(src => src.RoomId))
             .ForMember(target => target.Name, opt => opt.MapFrom(src => src.Name));
         });
 
-        public static RoomFacility ToEntity(this RoomFacilityViewModel source) =>
-            new Mapper(EntityMap()).Map<RoomFacilityViewModel, RoomFacility>(source);
-        public static IEnumerable<RoomFacility> ToEntity(this IEnumerable<RoomFacilityViewModel> source) =>
-           new Mapper(EntityMap()).Map<IEnumerable<RoomFacilityViewModel>, IEnumerable<RoomFacility>>(source);
+        public static RoomFacility ToEntity(this RoomFacilityDto source) =>
+            new Mapper(EntityMap()).Map<RoomFacilityDto, RoomFacility>(source);
+        public static IEnumerable<RoomFacility> ToEntity(this IEnumerable<RoomFacilityDto> source) =>
+           new Mapper(EntityMap()).Map<IEnumerable<RoomFacilityDto>, IEnumerable<RoomFacility>>(source);
 
-        public static RoomFacilityViewModel ToViewModel(this RoomFacility source) =>
-            new Mapper(ViewModelMap()).Map<RoomFacility, RoomFacilityViewModel>(source);
-        public static IEnumerable<RoomFacilityViewModel> ToViewModel(this IEnumerable<RoomFacility> source) =>
-           new Mapper(ViewModelMap()).Map<IEnumerable<RoomFacility>, IEnumerable<RoomFacilityViewModel>>(source);
+        public static RoomFacilityDto ToViewModel(this RoomFacility source) =>
+            new Mapper(ViewModelMap()).Map<RoomFacility, RoomFacilityDto>(source);
+        public static IEnumerable<RoomFacilityDto> ToViewModel(this IEnumerable<RoomFacility> source) =>
+           new Mapper(ViewModelMap()).Map<IEnumerable<RoomFacility>, IEnumerable<RoomFacilityDto>>(source);
     }
 }
 

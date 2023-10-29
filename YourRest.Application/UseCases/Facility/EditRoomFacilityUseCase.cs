@@ -13,7 +13,7 @@ namespace YourRest.Application.UseCases.Facility
         {
             this.roomFacilityRepository = roomFacilityRepository;
         }
-        public async Task ExecuteAsync(RoomFacilityViewModel reviewDto)
+        public async Task ExecuteAsync(RoomFacilityDto reviewDto)
         {
             var roomFacility = await roomFacilityRepository.GetAsync(reviewDto.Id);
             if (roomFacility == null)

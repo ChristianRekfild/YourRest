@@ -1,5 +1,5 @@
 ﻿using YourRest.Application.Dto.Mappers;
-using YourRest.Application.Dto.Models;
+using YourRest.Application.Dto.Models.Room;
 using YourRest.Application.Exceptions;
 using YourRest.Application.Interfaces.Room;
 using YourRest.Domain.Repositories;
@@ -13,7 +13,7 @@ namespace YourRest.Application.UseCases.Room
         {
             this.roomRepository = roomRepository;
         }
-        public async Task ExecuteAsync(RoomViewModel reviewDto)
+        public async Task ExecuteAsync(RoomWithIdDto reviewDto)
         {
             var room = await roomRepository.GetAsync(reviewDto.Id);
             if(room == null) 

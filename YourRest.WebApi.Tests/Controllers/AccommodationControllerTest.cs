@@ -1,13 +1,12 @@
 using Newtonsoft.Json;
 using System.Net;
-using System.Text;
-using YourRest.Domain.Entities;
-using YourRest.Application.Dto;
-using YourRest.WebApi.Tests.Fixtures;
-using YourRest.WebApi.Responses;
-using YourRest.Application.Dto.ViewModels;
 using System.Net.Http.Json;
-using System.Xml.Linq;
+using System.Text;
+using YourRest.Application.Dto.Models;
+using YourRest.Application.Dto.ViewModels;
+using YourRest.Domain.Entities;
+using YourRest.WebApi.Responses;
+using YourRest.WebApi.Tests.Fixtures;
 
 namespace YourRest.WebApi.Tests.Controllers
 {

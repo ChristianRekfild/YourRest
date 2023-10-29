@@ -1,4 +1,5 @@
 using YourRest.Application.Dto;
+using YourRest.Application.Dto.Models.Room;
 using YourRest.Application.Interfaces;
 using YourRest.Domain.Repositories;
 
