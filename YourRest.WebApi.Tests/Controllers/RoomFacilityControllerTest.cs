@@ -4,7 +4,7 @@ using System.Net;
 using System.Net.Http.Json;
 using System.Text;
 using YourRest.Application.Dto.Mappers.Profiles;
-using YourRest.Application.Dto.Models;
+using YourRest.Application.Dto.Models.RoomFacility;
 using YourRest.Domain.Entities;
 using YourRest.WebApi.Tests.Fixtures;
 
@@ -18,6 +18,7 @@ namespace YourRest.WebApi.Tests.Controllers
         private int AddressId { get; set; }
         private int AccommodationId { get; set; }
         private int RoomId { get; set; }
+        private Room Room { get; set; }
         public RoomFacilityControllerTest(SingletonApiTest fixture)
         {
             this.fixture = fixture;
@@ -28,7 +29,6 @@ namespace YourRest.WebApi.Tests.Controllers
             var roomFacility = await fixture.InsertObjectIntoDatabase(await CreateRoomFacilityAsync());
             var editedRoomFacility = new RoomFacility
             {
-                RoomId = RoomId,
                 Name = "Minibar"
             };
             var mockMapper = new MapperConfiguration(cfg =>
@@ -38,7 +38,7 @@ namespace YourRest.WebApi.Tests.Controllers
             var mapper = mockMapper.CreateMapper();
 
             var content = new StringContent(JsonConvert.SerializeObject(mapper.Map<RoomFacilityDto>(editedRoomFacility)), Encoding.UTF8, "application/json");
-            var response = await fixture.Client.PutAsync($"api/facilities/{roomFacility.Id}", content);
+            var response = await fixture.Client.PutAsync($"api/roomfacilities/{roomFacility.Id}", content);
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             Assert.Equal($"RoomFacility id:{roomFacility.Id} has been successfully changed in the current issue", await response.Content.ReadAsStringAsync());
             var recivedRoomFacility = await GetByIdAsync(roomFacility.Id);
@@ -48,10 +48,10 @@ namespace YourRest.WebApi.Tests.Controllers
         public async Task DeleteRoomFacilityTest_WhenPostCalledRemoveMethod_ReturnsMessageOfSuccsessfulyRemoved()
         {
             var roomFacility = await fixture.InsertObjectIntoDatabase(await CreateRoomFacilityAsync());
-            var response = await fixture.Client.DeleteAsync($"api/facilities/{roomFacility.Id}");
+            var response = await fixture.Client.DeleteAsync($"api/roomfacilities/{roomFacility.Id}");
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             Assert.Equal($"RoomFacility id:{roomFacility.Id} has been removed from the current room", await response.Content.ReadAsStringAsync());
-            response = await fixture.Client.GetAsync($"api/facilities/{roomFacility.Id}");
+            response = await fixture.Client.GetAsync($"api/roomfacilities/{roomFacility.Id}");
             Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
         }
         [Fact]
@@ -61,6 +61,27 @@ namespace YourRest.WebApi.Tests.Controllers
             var recivedRoomFacility = await GetByIdAsync(roomFacility.Id);
             Assert.Equal(roomFacility.Id, recivedRoomFacility.Id);
             Assert.Equal(roomFacility.Name, recivedRoomFacility.Name);
+        }
+
+        [Fact]
+        public async Task GetAllRoomFacilitiesTest_WhenGetCalledGetAllRoomFacilitiesMethod_ReturnsListOfRoomFacilityDto()
+        {
+            var roomFacility = await fixture.InsertObjectIntoDatabase(await CreateRoomFacilityAsync());
+            Room.RoomFacilities.Add(new RoomFacility { Name = "Ironing station" });
+            Room.RoomFacilities.Add(new RoomFacility { Name = "Locker" });
+            await fixture.DbContext.SaveChangesAsync();
+            List<RoomFacility> roomFacilities = new(Room.RoomFacilities);
+
+            var mockMapper = new MapperConfiguration(cfg =>
+            {
+                cfg.AddProfile(new RoomFacilityDtoProfile());
+                cfg.AddProfile(new RoomFacilityWithIdProfile());
+            });
+            var mapper = mockMapper.CreateMapper();
+
+            var response = await fixture.Client.GetAsync($"api/roomfacilities");
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            Assert.Equivalent(mapper.Map< IEnumerable<RoomFacilityDto>>(roomFacilities), await response.Content.ReadFromJsonAsync<IEnumerable<RoomFacilityDto>>());
         }
 
         private async Task<RoomFacility> CreateRoomFacilityAsync()
@@ -88,16 +109,16 @@ namespace YourRest.WebApi.Tests.Controllers
             AddressId = address.Id;
             AccommodationId = accommodation.Id;
             RoomId = room.Id;
+            Room = room;
             return new RoomFacility
             {
-                RoomId = room.Id,
                 Name = "Air Conditioner"
             };
         }
-        private async Task<RoomFacilityDto> GetByIdAsync(int id)
+        private async Task<RoomFacilityWithIdDto> GetByIdAsync(int id)
         {
-            var response = await fixture.Client.GetAsync($"api/facilities/{id}");
-            var recivedRoomFacility = await response.Content.ReadFromJsonAsync<RoomFacilityDto>();
+            var response = await fixture.Client.GetAsync($"api/roomfacilities/{id}");
+            var recivedRoomFacility = await response.Content.ReadFromJsonAsync<RoomFacilityWithIdDto>();
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             Assert.NotNull(recivedRoomFacility);
             return recivedRoomFacility;

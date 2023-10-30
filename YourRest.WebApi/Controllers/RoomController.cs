@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using SharpGrip.FluentValidation.AutoValidation.Mvc.Attributes;
-using YourRest.Application.Dto.Models;
 using YourRest.Application.Dto.Models.Room;
+using YourRest.Application.Dto.Models.RoomFacility;
 using YourRest.Application.Dto.ViewModels;
 using YourRest.Application.Interfaces;
 using YourRest.Application.Interfaces.Facility;
@@ -51,6 +51,7 @@ namespace YourRest.WebApi.Controllers
             var regions = await _getRoomListUseCase.Execute(accommodationId);
             return Ok(regions);
         }
+
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] RoomDto roomDto)
         {
@@ -68,6 +69,7 @@ namespace YourRest.WebApi.Controllers
         {
             return Ok(await getRoomByIdUseCase.ExecuteAsync(route.Id));
         }
+
         [HttpPut]
         [Route("{id}")]
         public async Task<IActionResult> EditRoom([FromRoute] RouteViewModel route, [FromBody] RoomDto room)
@@ -77,6 +79,7 @@ namespace YourRest.WebApi.Controllers
             await editRoomUseCase.ExecuteAsync(roomWithId);
             return Ok("The room has been edited");
         }
+
         [HttpDelete]
         [Route("{id}")]
         public async Task<IActionResult> RemoveRoom([FromRoute] RouteViewModel route)
@@ -84,18 +87,19 @@ namespace YourRest.WebApi.Controllers
             await removeRoomUseCase.ExecuteAsync(route.Id);
             return Ok("The room has been removed");
         }
+
         [HttpGet]
         [Route("{id}/facilities")]
         public async Task<IActionResult> GetFacilitiesByRoomId([FromRoute] RouteViewModel route)
         {
             return Ok(await getFacilitiesByRoomIdUseCase.ExecuteAsync(route.Id));
         }
+
         [HttpPost]
         [Route("{id}/facilities")]
-        public async Task<IActionResult> AddFacilityToRoom([FromRoute] RouteViewModel route, [FromBody] RoomFacilityDto roomFacility)
+        public async Task<IActionResult> AddFacilityToRoom([FromRoute] RouteViewModel route, [FromBody] IEnumerable<RoomFacilityDto> roomFacility)
         {
-            roomFacility.RoomId = route.Id;
-            await addRoomFacilityUseCase.ExecuteAsync(roomFacility);
+            await addRoomFacilityUseCase.ExecuteAsync(route.Id, roomFacility);
             return Ok("The room facility has been added to current room");
 
         }

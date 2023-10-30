@@ -2,8 +2,8 @@
 
 namespace YourRest.Application.Interfaces.Facility
 {
-    public interface IEditRoomFacilityUseCase
+    public interface IGetAllRoomFacilitiesUseCase
     {
-        Task ExecuteAsync(int roomFacilityId, RoomFacilityDto reviewDto);
+        Task<IEnumerable<RoomFacilityDto>> ExecuteAsync();
     }
 }

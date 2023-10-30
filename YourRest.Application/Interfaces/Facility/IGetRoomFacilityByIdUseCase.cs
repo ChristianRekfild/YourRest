@@ -1,9 +1,9 @@
-﻿using YourRest.Application.Dto.Models;
+﻿using YourRest.Application.Dto.Models.RoomFacility;
 
 namespace YourRest.Application.Interfaces.Facility
 {
     public interface IGetRoomFacilityByIdUseCase
     {
-        Task<RoomFacilityDto> ExecuteAsync(int id);
+        Task<RoomFacilityWithIdDto> ExecuteAsync(int id);
     }
 }

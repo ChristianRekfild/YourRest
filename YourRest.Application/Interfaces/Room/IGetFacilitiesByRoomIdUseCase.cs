@@ -1,4 +1,4 @@
-﻿using YourRest.Application.Dto.Models;
+﻿using YourRest.Application.Dto.Models.RoomFacility;
 
 namespace YourRest.Application.Interfaces.Room
 {

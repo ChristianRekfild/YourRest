@@ -1,5 +1,5 @@
 ﻿using FluentValidation.TestHelper;
-using YourRest.Application.Dto.Models;
+using YourRest.Application.Dto.Models.RoomFacility;
 using YourRest.Application.Dto.Validators;
 
 namespace YourRest.WebApi.Tests.UnitTests
@@ -14,9 +14,7 @@ namespace YourRest.WebApi.Tests.UnitTests
         {
             var model = CreateRoomFacilityViewModel();
             model.Name = null;
-            model.RoomId = -1;
             roomFacilityValidator.TestValidate(model).ShouldHaveValidationErrorFor(person => person.Name);
-            roomFacilityValidator.TestValidate(model).ShouldHaveValidationErrorFor(person => person.RoomId);
         }
 
         [Fact]
@@ -35,20 +33,9 @@ namespace YourRest.WebApi.Tests.UnitTests
             model.Name = string.Join("", Enumerable.Range(1, 51));
             roomFacilityValidator.TestValidate(model).ShouldHaveValidationErrorFor(person => person.Name);
         }
-        [Fact]
-        public void Should_have_error_when_RoomId_is_less_or_equal_Zero()
-        {
-            var model = CreateRoomFacilityViewModel();
-            model.RoomId = -1;
-            roomFacilityValidator.TestValidate(model).ShouldHaveValidationErrorFor(person => person.RoomId);
-            model.RoomId = 0;
-            roomFacilityValidator.TestValidate(model).ShouldHaveValidationErrorFor(person => person.RoomId);
-        }
 
         private RoomFacilityDto CreateRoomFacilityViewModel() => new()
         {
-            Id = 0,
-            RoomId = 1,
             Name = "Air Conditioner"
         };
 
