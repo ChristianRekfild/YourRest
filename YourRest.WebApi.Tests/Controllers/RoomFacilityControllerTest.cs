@@ -28,7 +28,6 @@ namespace YourRest.WebApi.Tests.Controllers
             var roomFacility = await fixture.InsertObjectIntoDatabase(await CreateRoomFacilityAsync());
             var editedRoomFacility = new RoomFacility
             {
-                Id = roomFacility.Id,
                 RoomId = RoomId,
                 Name = "Minibar"
             };
@@ -38,8 +37,8 @@ namespace YourRest.WebApi.Tests.Controllers
             });
             var mapper = mockMapper.CreateMapper();
 
-            var content = new StringContent(JsonConvert.SerializeObject(mapper.Map<RoomFacilityDto>(editedRoom)), Encoding.UTF8, "application/json");
-            var response = await fixture.Client.PutAsync($"api/facilities", content);
+            var content = new StringContent(JsonConvert.SerializeObject(mapper.Map<RoomFacilityDto>(editedRoomFacility)), Encoding.UTF8, "application/json");
+            var response = await fixture.Client.PutAsync($"api/facilities/{roomFacility.Id}", content);
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             Assert.Equal($"RoomFacility id:{roomFacility.Id} has been successfully changed in the current issue", await response.Content.ReadAsStringAsync());
             var recivedRoomFacility = await GetByIdAsync(roomFacility.Id);

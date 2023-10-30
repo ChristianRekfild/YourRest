@@ -10,10 +10,12 @@ using System.Reflection;
 using YourRest.Application.Dto.Validators;
 using YourRest.Application.Dto.ViewModels;
 using YourRest.Application.Interfaces;
+using YourRest.Application.Interfaces.Age;
 using YourRest.Application.Interfaces.Facility;
 using YourRest.Application.Interfaces.Room;
 using YourRest.Application.Services;
 using YourRest.Application.UseCases;
+using YourRest.Application.UseCases.AgeRangeUseCases;
 using YourRest.Application.UseCases.Facility;
 using YourRest.Application.UseCases.Room;
 
