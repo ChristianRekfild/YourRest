@@ -1,6 +1,7 @@
-﻿using YourRest.Application.Dto;
+﻿using YourRest.Application.Exceptions;
 using YourRest.Application.Interfaces;
 using YourRest.Domain.Repositories;
+using YourRest.Application.Dto.Models;
 
 namespace YourRest.Application.UseCases
 {

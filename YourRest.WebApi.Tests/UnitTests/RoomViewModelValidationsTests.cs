@@ -1,12 +1,12 @@
 ﻿using FluentValidation.TestHelper;
-using YourRest.Application.Dto.Models;
+using YourRest.Application.Dto.Models.Room;
 using YourRest.Application.Dto.Validators;
 
 namespace YourRest.WebApi.Tests.UnitTests
 {
     public class RoomViewModelValidationsTests
     {
-        private RoomViewModelValidator roomValidator;
+        private RoomDtoValidator roomValidator;
         public RoomViewModelValidationsTests() => roomValidator = new();
 
         [Fact]
@@ -19,10 +19,10 @@ namespace YourRest.WebApi.Tests.UnitTests
             roomValidator.TestValidate(model).ShouldHaveValidationErrorFor(person => person.Name);
         }
         [Fact]
-        public void Should_have_error_when_NameLength_is_more_50_symbols()
+        public void Should_have_error_when_NameLength_is_more_100_symbols()
         {
             var model = CreateRoomViewModel();
-            model.Name = string.Join("", Enumerable.Range(1,51));
+            model.Name = string.Join("", Enumerable.Range(1,101));
             roomValidator.TestValidate(model).ShouldHaveValidationErrorFor(person => person.Name);
         }
         [Fact]
@@ -78,7 +78,7 @@ namespace YourRest.WebApi.Tests.UnitTests
             roomValidator.TestValidate(model).ShouldHaveValidationErrorFor(person => person.Capacity);
             roomValidator.TestValidate(model).ShouldHaveValidationErrorFor(person => person.SquareInMeter);
         }
-        private static RoomViewModel CreateRoomViewModel() => new RoomViewModel
+        private static RoomWithIdDto CreateRoomViewModel() => new RoomWithIdDto
         {
             Id = 0,
             Name = "305",

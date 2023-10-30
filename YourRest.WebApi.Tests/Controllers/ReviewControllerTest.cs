@@ -2,7 +2,7 @@ using Newtonsoft.Json;
 using System.Net;
 using System.Net.Http.Headers;
 using System.Text;
-using YourRest.Application.Dto;
+using YourRest.Application.Dto.Models;
 using YourRest.Domain.Entities;
 using YourRest.WebApi.Tests.Fixtures;
 using Microsoft.Extensions.DependencyInjection;

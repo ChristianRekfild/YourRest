@@ -1,8 +1,9 @@
-﻿using Newtonsoft.Json;
+﻿using AutoMapper;
+using Newtonsoft.Json;
 using System.Net;
 using System.Net.Http.Json;
 using System.Text;
-using YourRest.Application.Dto.Mappers;
+using YourRest.Application.Dto.Mappers.Profiles;
 using YourRest.Application.Dto.Models;
 using YourRest.Domain.Entities;
 using YourRest.WebApi.Tests.Fixtures;
@@ -27,12 +28,17 @@ namespace YourRest.WebApi.Tests.Controllers
             var roomFacility = await fixture.InsertObjectIntoDatabase(await CreateRoomFacilityAsync());
             var editedRoomFacility = new RoomFacility
             {
-                Id = roomFacility.Id,
                 RoomId = RoomId,
                 Name = "Minibar"
             };
-            var content = new StringContent(JsonConvert.SerializeObject(editedRoomFacility.ToViewModel()), Encoding.UTF8, "application/json");
-            var response = await fixture.Client.PutAsync($"api/facilities/{editedRoomFacility.Id}", content);
+            var mockMapper = new MapperConfiguration(cfg =>
+            {
+                cfg.AddProfile(new RoomFacilityDtoProfile());
+            });
+            var mapper = mockMapper.CreateMapper();
+
+            var content = new StringContent(JsonConvert.SerializeObject(mapper.Map<RoomFacilityDto>(editedRoomFacility)), Encoding.UTF8, "application/json");
+            var response = await fixture.Client.PutAsync($"api/facilities/{roomFacility.Id}", content);
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             Assert.Equal($"RoomFacility id:{roomFacility.Id} has been successfully changed in the current issue", await response.Content.ReadAsStringAsync());
             var recivedRoomFacility = await GetByIdAsync(roomFacility.Id);
@@ -88,10 +94,10 @@ namespace YourRest.WebApi.Tests.Controllers
                 Name = "Air Conditioner"
             };
         }
-        private async Task<RoomFacilityViewModel> GetByIdAsync(int id)
+        private async Task<RoomFacilityDto> GetByIdAsync(int id)
         {
             var response = await fixture.Client.GetAsync($"api/facilities/{id}");
-            var recivedRoomFacility = await response.Content.ReadFromJsonAsync<RoomFacilityViewModel>();
+            var recivedRoomFacility = await response.Content.ReadFromJsonAsync<RoomFacilityDto>();
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             Assert.NotNull(recivedRoomFacility);
             return recivedRoomFacility;
