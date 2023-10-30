@@ -1,4 +1,4 @@
-namespace YourRest.Application.Dto
+namespace YourRest.Application.Dto.Models
 {
     public class SavedReviewDto
     {

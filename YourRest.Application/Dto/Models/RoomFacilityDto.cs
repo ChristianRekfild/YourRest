@@ -1,6 +1,6 @@
 ﻿namespace YourRest.Application.Dto.Models
 {
-    public class RoomFacilityViewModel
+    public class RoomFacilityDto
     {
         public int Id { get; set; }
         public int RoomId { get; set; }

@@ -1,6 +1,6 @@
 using Moq;
 using System.Linq.Expressions;
-using YourRest.Application.Dto;
+using YourRest.Application.Dto.Models;
 using YourRest.Application.Exceptions;
 using YourRest.Application.UseCases;
 using YourRest.Domain.Entities;

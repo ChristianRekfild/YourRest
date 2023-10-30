@@ -38,7 +38,7 @@ namespace YourRest.WebApi.Controllers
         }
         [HttpPut]
         [Route("{id}")]
-        public async Task<IActionResult> EditRoomFacility([FromRoute] RouteViewModel route, [FromBody] RoomFacilityViewModel roomFacility)
+        public async Task<IActionResult> EditRoomFacility([FromRoute] RouteViewModel route, [FromBody] RoomFacilityDto roomFacility)
         {
             roomFacility.Id = route.Id;
             await editRoomFacilityUseCase.ExecuteAsync(roomFacility);

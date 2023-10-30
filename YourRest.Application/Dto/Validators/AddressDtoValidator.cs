@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using YourRest.Application.Dto.Models;
 
 namespace YourRest.Application.Dto.Validators
 {

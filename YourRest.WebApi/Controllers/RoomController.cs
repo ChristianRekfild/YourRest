@@ -1,7 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using SharpGrip.FluentValidation.AutoValidation.Mvc.Attributes;
-using YourRest.Application.Dto;
 using YourRest.Application.Dto.Models;
+using YourRest.Application.Dto.Models.Room;
 using YourRest.Application.Dto.ViewModels;
 using YourRest.Application.Interfaces;
 using YourRest.Application.Interfaces.Facility;
@@ -13,6 +14,7 @@ namespace YourRest.WebApi.Controllers
     [FluentValidationAutoValidation]
     public class RoomController : ControllerBase
     {
+        private readonly IMapper mapper;
         private readonly IEditRoomUseCase editRoomUseCase;
         private readonly IGetRoomByIdUseCase getRoomByIdUseCase;
         private readonly IRemoveRoomUseCase removeRoomUseCase;
@@ -22,6 +24,7 @@ namespace YourRest.WebApi.Controllers
         private readonly ICreateRoomUseCase _createtRoomUseCase;
 
         public RoomController(
+            IMapper mapper,
             IEditRoomUseCase editRoomUseCase,
             IGetRoomByIdUseCase getRoomByIdUseCase,
             IRemoveRoomUseCase removeRoomUseCase,
@@ -30,6 +33,7 @@ namespace YourRest.WebApi.Controllers
             IGetRoomListUseCase getRoomListUseCase,
             ICreateRoomUseCase createtRoomUseCase)
         {
+            this.mapper = mapper;
             this.editRoomUseCase = editRoomUseCase;
             this.getRoomByIdUseCase = getRoomByIdUseCase;
             this.removeRoomUseCase = removeRoomUseCase;
@@ -65,10 +69,12 @@ namespace YourRest.WebApi.Controllers
             return Ok(await getRoomByIdUseCase.ExecuteAsync(route.Id));
         }
         [HttpPut]
-        [Route("api/rooms")]
-        public async Task<IActionResult> EditRoom([FromBody] RoomViewModel room)
+        [Route("{id}")]
+        public async Task<IActionResult> EditRoom([FromRoute] RouteViewModel route, [FromBody] RoomDto room)
         {
-            await editRoomUseCase.ExecuteAsync(room);
+            var roomWithId = mapper.Map<RoomWithIdDto>(room);
+            roomWithId.Id = route.Id;
+            await editRoomUseCase.ExecuteAsync(roomWithId);
             return Ok("The room has been edited");
         }
         [HttpDelete]
@@ -86,7 +92,7 @@ namespace YourRest.WebApi.Controllers
         }
         [HttpPost]
         [Route("api/rooms/{id}/facilities")]
-        public async Task<IActionResult> AddFacilityToRoom([FromRoute] RouteViewModel route, [FromBody] RoomFacilityViewModel roomFacility)
+        public async Task<IActionResult> AddFacilityToRoom([FromRoute] RouteViewModel route, [FromBody] RoomFacilityDto roomFacility)
         {
             roomFacility.RoomId = route.Id;
             await addRoomFacilityUseCase.ExecuteAsync(roomFacility);
