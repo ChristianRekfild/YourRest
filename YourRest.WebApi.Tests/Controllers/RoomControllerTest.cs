@@ -11,8 +11,8 @@ using YourRest.WebApi.Tests.Fixtures;
 
 namespace YourRest.WebApi.Tests.Controllers
 {
-
-    public class RoomControllerTest : IClassFixture<SingletonApiTest>
+    [Collection(nameof(SingletonApiTest))]
+    public class RoomControllerTest
     {
         private readonly SingletonApiTest fixture;
 
@@ -213,18 +213,6 @@ namespace YourRest.WebApi.Tests.Controllers
             var expectedMessageJson = JsonConvert.SerializeObject(expectedMessage);
 
             Assert.Equal(errorMassage, expectedMessageJson);
-        }
-
-        private class FakeRoom : IntBaseEntity
-        {
-            public string Name { get; set; }
-            public string SquareInMeter { get; set; }
-
-            public string RoomType { get; set; }
-
-            public int Capacity { get; set; }
-            public int AccommodationId { get; set; }
-            public virtual Accommodation Accommodation { get; set; }
         }
     }
 }

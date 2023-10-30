@@ -10,7 +10,8 @@ using YourRest.WebApi.Tests.Fixtures;
 
 namespace YourRest.WebApi.Tests.Controllers
 {
-    public class RoomFacilityControllerTest : IClassFixture<SingletonApiTest>
+    [Collection(nameof(SingletonApiTest))]
+    public class RoomFacilityControllerTest
     {
         private readonly SingletonApiTest fixture;
         private int CityId { get; set; }
@@ -25,7 +26,7 @@ namespace YourRest.WebApi.Tests.Controllers
         public async Task UpdatedRoomFacilityTest_WhenPutCalledEditMethod_ReturnsMessageOfSuccsessfulyEdited()
         {
             var roomFacility = await fixture.InsertObjectIntoDatabase(await CreateRoomFacilityAsync());
-            var editedRoom = new RoomFacility
+            var editedRoomFacility = new RoomFacility
             {
                 Id = roomFacility.Id,
                 RoomId = RoomId,
@@ -42,7 +43,7 @@ namespace YourRest.WebApi.Tests.Controllers
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             Assert.Equal($"RoomFacility id:{roomFacility.Id} has been successfully changed in the current issue", await response.Content.ReadAsStringAsync());
             var recivedRoomFacility = await GetByIdAsync(roomFacility.Id);
-            Assert.Equal(editedRoom.Name, recivedRoomFacility.Name);
+            Assert.Equal(editedRoomFacility.Name, recivedRoomFacility.Name);
         }
         [Fact]
         public async Task DeleteRoomFacilityTest_WhenPostCalledRemoveMethod_ReturnsMessageOfSuccsessfulyRemoved()

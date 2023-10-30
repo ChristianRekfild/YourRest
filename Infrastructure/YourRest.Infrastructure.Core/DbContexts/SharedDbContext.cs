@@ -16,7 +16,13 @@ namespace YourRest.Infrastructure.Core.DbContexts
         public DbSet<Room> Rooms { get; set; }
         public DbSet<RoomFacility> RoomFacilities { get; set; }
         public DbSet<RoomType> RoomTypes { get; set; }
+
+        public DbSet<User> Users { get; set; }
+        
+        public DbSet<UserAccommodation> UserAccommodations { get; set; }
         public DbSet<AccommodationType> AccommodationTypes { get; set; }
+        public DbSet<AgeRange> AgeRanges { get; set; }
+
 
         static SharedDbContext()
         {
@@ -90,6 +96,19 @@ namespace YourRest.Infrastructure.Core.DbContexts
                     .WithOne()
                     .HasForeignKey<Accommodation>(r => r.AddressId);
             }); 
+            
+            modelBuilder.Entity<UserAccommodation>()
+                .HasKey(ug => new { ug.UserId, ug.AccommodationId });
+
+            modelBuilder.Entity<UserAccommodation>()
+                .HasOne(ug => ug.User)
+                .WithMany(u => u.UserAccommodations)
+                .HasForeignKey(ug => ug.UserId);
+
+            modelBuilder.Entity<UserAccommodation>()
+                .HasOne(ug => ug.Accommodation)
+                .WithMany(g => g.UserAccommodations)
+                .HasForeignKey(ug => ug.AccommodationId);
         }
 
         public void ClearAllTables()
@@ -106,6 +125,8 @@ namespace YourRest.Infrastructure.Core.DbContexts
             RoomFacilities.RemoveRange(RoomFacilities);
             RoomTypes.RemoveRange(RoomTypes);
             AccommodationTypes.RemoveRange(AccommodationTypes);
+            AgeRanges.RemoveRange(AgeRanges);
+
             // Add other DbSet removals here
             // Example: 
             // Rooms.RemoveRange(Rooms);

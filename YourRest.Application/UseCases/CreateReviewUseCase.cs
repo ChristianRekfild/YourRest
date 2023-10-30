@@ -11,15 +11,25 @@ namespace YourRest.Application.UseCases
     {
         private readonly IReviewRepository _reviewRepository;
         private readonly IBookingRepository _bookingRepository;
+        private readonly IUserRepository _userRepository;
 
-        public CreateReviewUseCase(IReviewRepository reviewRepository, IBookingRepository bookingRepository)
+        public CreateReviewUseCase(IReviewRepository reviewRepository, IBookingRepository bookingRepository, IUserRepository userRepository)
         {
             _reviewRepository = reviewRepository;
             _bookingRepository = bookingRepository;
+            _userRepository = userRepository;
         }
 
-        public async Task<SavedReviewDto> Execute(ReviewDto reviewDto)
+        public async Task<SavedReviewDto> Execute(ReviewDto reviewDto, string userKeyCloakId)
         {
+            var users = await _userRepository.FindAsync(a => a.KeyCloakId == userKeyCloakId);
+            var user = users.FirstOrDefault();
+
+            if (user == null)
+            {
+                throw new EntityNotFoundException(userKeyCloakId);
+            }
+
             var booking = await _bookingRepository.GetAsync(reviewDto.BookingId);
             var comment = reviewDto.Comment;
             var rating = RatingVO.Create(reviewDto.Rating);
@@ -29,11 +39,17 @@ namespace YourRest.Application.UseCases
                 throw new EntityNotFoundException($"Booking {reviewDto.BookingId} not found");
             }
 
+            if (user.UserAccommodations.Any(ua => ua.AccommodationId != booking.AccommodationId))
+            {
+                throw new ValidationException($"User with id {user.Id} cannot create a review for booking {booking.Id}.");
+            }
+
             var review = new Review
             {
                 Booking = booking,
                 Rating = rating,
-                Comment = comment
+                Comment = comment,
+                User = user
             };
 
             var savedReview = await _reviewRepository.AddAsync(review, false);

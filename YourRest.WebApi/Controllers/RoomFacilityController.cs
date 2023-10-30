@@ -37,8 +37,10 @@ namespace YourRest.WebApi.Controllers
             return Ok($"RoomFacility id:{route.Id} has been removed from the current room");
         }
         [HttpPut]
-        public async Task<IActionResult> EditRoomFacility([FromBody] RoomFacilityDto roomFacility)
+        [Route("{id}")]
+        public async Task<IActionResult> EditRoomFacility([FromRoute] RouteViewModel route, [FromBody] RoomFacilityDto roomFacility)
         {
+            roomFacility.Id = route.Id;
             await editRoomFacilityUseCase.ExecuteAsync(roomFacility);
             return Ok($"RoomFacility id:{roomFacility.Id} has been successfully changed in the current issue");
         }

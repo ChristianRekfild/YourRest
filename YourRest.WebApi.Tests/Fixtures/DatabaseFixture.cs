@@ -21,7 +21,7 @@ namespace YourRest.WebApi.Tests.Fixtures
                         if (_postgreSqlContainer.State != DotNet.Testcontainers.Containers.TestcontainersStates.Running)
                         {
                             _postgreSqlContainer.ConfigureAwait(false);
-                            Task.Run(async () => await _postgreSqlContainer.StartAsync()).Wait();
+                            Task.Run(() =>  _postgreSqlContainer.StartAsync()).GetAwaiter().GetResult();
                         }
                     }
                 }
@@ -69,8 +69,11 @@ namespace YourRest.WebApi.Tests.Fixtures
 
         public void Dispose()
         {
-            Task.Run(async () => await _postgreSqlContainer.StopAsync()).Wait();
-            Task.Run(async () => await _postgreSqlContainer.DisposeAsync()).Wait();
+            Task.Run(async () =>
+            {
+                await _postgreSqlContainer.StopAsync();
+                await _postgreSqlContainer.DisposeAsync();
+            }).Wait();
         }
     }
 }

@@ -13,8 +13,7 @@ namespace YourRest.Application.UseCases
         {
             _cityRepository = cityRepository;
         }
-
-
+        
         public async Task<IEnumerable<CityDTO>> Execute(int regionId)
         {
             var cities = await _cityRepository.FindAsync(x => x.RegionId == regionId);

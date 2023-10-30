@@ -12,6 +12,7 @@ using YourRest.Application.Dto.ViewModels;
 using YourRest.Application.Interfaces;
 using YourRest.Application.Interfaces.Facility;
 using YourRest.Application.Interfaces.Room;
+using YourRest.Application.Services;
 using YourRest.Application.UseCases;
 using YourRest.Application.UseCases.Facility;
 using YourRest.Application.UseCases.Room;
@@ -67,7 +68,14 @@ namespace YourRest.Application
             services.AddScoped<IGetRoomFacilityByIdUseCase, GetRoomFacilityByIdUseCase>();
             services.AddScoped<IRemoveRoomFacilityUseCase, RemoveRoomFacilityUseCase>();
             services.AddScoped<IGetRoomTypeListUseCase, GetRoomTypeListUseCase>();
+            //AgeRange
+            services.AddScoped<ICreateAgeRangeUseCase, CreateAgeRangeUseCase>();
+            services.AddScoped<IEditAgeRangeUseCase, EditAgeRangeUseCase>();
+            services.AddScoped<IGetAgeRangeByIdUseCase, GetAgeRangeByIdUseCase>();
 
+
+            
+            services.AddScoped<IAuthenticationService, AuthenticationService>();
 
             return services;
         }
@@ -76,7 +84,7 @@ namespace YourRest.Application
     {
         public IActionResult CreateActionResult(ActionExecutingContext context, ValidationProblemDetails? validationProblemDetails)
         {
-            return new BadRequestObjectResult(new ErrorViewModel() { Title = "Validation errors", ValidationErrors = validationProblemDetails?.Errors });
+            return new BadRequestObjectResult(new ErrorViewModel() { Title = "Validation errors", ValidationErrors = validationProblemDetails?.Errors ?? new Dictionary<string, string[]>() });
         }
     }
 }

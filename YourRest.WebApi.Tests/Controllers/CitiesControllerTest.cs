@@ -10,7 +10,7 @@ using SystemJson = System.Text.Json;
 namespace YourRest.WebApi.Tests.Controllers
 {
     [Collection(nameof(SingletonApiTest))]
-    public class CitiesControllerTest : IClassFixture<SingletonApiTest>
+    public class CitiesControllerTest
     {
         private SingletonApiTest fixture;
         public CitiesControllerTest(SingletonApiTest fixture)
@@ -47,7 +47,7 @@ namespace YourRest.WebApi.Tests.Controllers
 
             Assert.NotNull(resultCities);
             Assert.Equal(expectedCity1.Name, resultCities.FirstOrDefault(c => c.Id == expectedCity1.Id)?.Name);
-
+            fixture.CleanDatabase();
         }
 
         [Fact]
@@ -75,8 +75,8 @@ namespace YourRest.WebApi.Tests.Controllers
             expectedCity1 = await fixture.InsertObjectIntoDatabase(expectedCity1);
             expectedCity2 = await fixture.InsertObjectIntoDatabase(expectedCity2);
 
-            var resultCity1 = await GetCityByIdFromApi(1);
-            var resultCity2 = await GetCityByIdFromApi(2);
+            var resultCity1 = await GetCityByIdFromApi(expectedCity1.Id);
+            var resultCity2 = await GetCityByIdFromApi(expectedCity2.Id);
 
             Assert.NotNull(resultCity1);
             Assert.NotNull(resultCity2);
@@ -137,6 +137,7 @@ namespace YourRest.WebApi.Tests.Controllers
 
             Assert.NotNull(city1);
             Assert.NotNull(city2);
+            fixture.CleanDatabase();
         }
 
         [Fact]
@@ -179,6 +180,7 @@ namespace YourRest.WebApi.Tests.Controllers
 
             Assert.NotNull(city1);
             Assert.NotNull(city2);
+            fixture.CleanDatabase();
         }
 
         [Fact]

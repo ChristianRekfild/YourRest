@@ -4,6 +4,6 @@ namespace YourRest.Application.Interfaces
 {
     public interface ICreateReviewUseCase
     {
-        Task<SavedReviewDto> Execute(ReviewDto reviewDto);
+        Task<SavedReviewDto> Execute(ReviewDto reviewDto, string userKeyCloakId);
     }
 }
