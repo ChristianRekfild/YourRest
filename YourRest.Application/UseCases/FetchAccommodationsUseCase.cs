@@ -1,4 +1,6 @@
 using YourRest.Application.Dto;
+using YourRest.Application.Dto.Models.Room;
+using YourRest.Application.Dto.Models;
 using YourRest.Application.Dto.Mappers;
 using YourRest.Application.Dto.ViewModels;
 using YourRest.Application.Interfaces;

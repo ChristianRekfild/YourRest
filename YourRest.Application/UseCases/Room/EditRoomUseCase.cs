@@ -17,14 +17,18 @@ namespace YourRest.Application.UseCases.Room
             this.roomRepository = roomRepository;
             this.mapper = mapper;
         }
-        public async Task ExecuteAsync(RoomWithIdDto reviewDto)
+        public async Task ExecuteAsync(RoomWithIdDto reviewDto, int accommodationId)
         {
             var room = await roomRepository.GetAsync(reviewDto.Id);
             if(room == null) 
             {
                 throw new EntityNotFoundException($"Room with Id:{reviewDto.Id} not found");
             }
-            await roomRepository.UpdateAsync(mapper.Map<RoomEntity>(reviewDto));
+
+            var roomEntity = mapper.Map<RoomEntity>(reviewDto);
+            roomEntity.AccommodationId = accommodationId;
+            
+            await roomRepository.UpdateAsync(roomEntity);
         }
     }
 }

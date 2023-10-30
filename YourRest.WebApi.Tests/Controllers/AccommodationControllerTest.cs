@@ -2,6 +2,7 @@ using Newtonsoft.Json;
 using System.Net;
 using System.Net.Http.Json;
 using System.Text;
+using YourRest.Application.Dto;
 using YourRest.Application.Dto.Models;
 using YourRest.Application.Dto.ViewModels;
 using YourRest.Domain.Entities;

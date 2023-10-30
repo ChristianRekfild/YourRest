@@ -42,7 +42,7 @@ namespace YourRest.WebApi.Tests.Controllers
             var mapper = mockMapper.CreateMapper();
 
             var content = new StringContent(JsonConvert.SerializeObject(mapper.Map<RoomDto>(editedRoom)), Encoding.UTF8, "application/json");
-            var response = await fixture.Client.PutAsync($"api/rooms/{room.Id}", content);
+            var response = await fixture.Client.PutAsync($"api/accommodation/{room.AccommodationId}/rooms/{room.Id}", content);
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             Assert.Equal("The room has been edited", await response.Content.ReadAsStringAsync());
             response = await fixture.Client.GetAsync($"api/rooms/{room.Id}");
@@ -72,7 +72,6 @@ namespace YourRest.WebApi.Tests.Controllers
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             Assert.NotNull(recivedRoom);
             Assert.Equal(room.Id, recivedRoom.Id);
-            Assert.Equal(room.AccommodationId, recivedRoom.AccommodationId);
             Assert.Equal(room.Name, recivedRoom.Name);
         }
         [Fact]

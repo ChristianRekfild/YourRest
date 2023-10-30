@@ -69,12 +69,12 @@ namespace YourRest.WebApi.Controllers
             return Ok(await getRoomByIdUseCase.ExecuteAsync(route.Id));
         }
         [HttpPut]
-        [Route("{id}")]
-        public async Task<IActionResult> EditRoom([FromRoute] RouteViewModel route, [FromBody] RoomDto room)
+        [Route("api/accommodation/{accommodationId}/rooms/{id}")]
+        public async Task<IActionResult> EditRoom([FromRoute] int accommodationId, [FromRoute] RouteViewModel route, [FromBody] RoomDto room)
         {
             var roomWithId = mapper.Map<RoomWithIdDto>(room);
             roomWithId.Id = route.Id;
-            await editRoomUseCase.ExecuteAsync(roomWithId);
+            await editRoomUseCase.ExecuteAsync(roomWithId, accommodationId);
             return Ok("The room has been edited");
         }
         [HttpDelete]
