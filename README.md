@@ -3,9 +3,10 @@
 ## Архитектура (./_docs/architecture.md)
 
 Проект основан на паттерне **Порты и Адаптеры**.
-Состоит из двух основных частей:
-1. **YourRest.HotelManagementWebApi** - серверная часть системы отельеров.
-2. **YourRest.WebApi** - серверная часть системы путешественников.
+Состоит из нескольких проектов:
+1. **YourRest.WebApi** - серверная часть системы отельеров.
+2. **TravelSystem.WebApi** - серверная часть системы путешественников. (будет добавлена)
+3. **Keycloak** - сервис аутентификации и авторизации, реализованный на основе Keycloak. Этот сервис обеспечивает возможность единого входа (Single Sign-On, SSO) для двух систем. Позволяет входить в обе системы под одним и тем же логином и паролем.
 
 ## Запуск тестов
 
@@ -26,12 +27,6 @@ dotnet run
 
 Доступ к документации по API: [Swagger](http://localhost:5201/swagger/index.html)
 
-## База данных
-
-База данных запускается в Docker контейнере с помощью команды:
-
-```
-docker compose up -d
 ```
 В интеграционных тестах используется отдельная тестовая база, которая очищается после каждого выполненного теста. При добавлении новых сущностей необходимо обновить метод `ClearAllTables()` в `SharedDbContext`, чтобы очищать соответствующую таблицу. Если одна таблица ссылается на другую, следите за порядком удаления, учитывая foreign key.
 
@@ -47,5 +42,24 @@ Windows:
 		dotnet ef database update -s ..\YourRest.ClientWebApp\YourRest.ClientWebApp.csproj -p YourRest.ClientIdentity.Infrastructure\YourRest.ClientIdentity.Infrastructure.csproj -c ClientAppIdentityContext -v		
 	
 Linux:
-dotnet ef migrations add AddAccommodationType -s ../YourRest.WebApi/YourRest.WebApi.csproj -c SharedDbContext -p YourRest.Producer.Infrastructure/YourRest.Producer.Infrastructure.csproj -v
+dotnet ef migrations add AddUserAccommodation -s ../YourRest.WebApi/YourRest.WebApi.csproj -c SharedDbContext -p YourRest.Producer.Infrastructure/YourRest.Producer.Infrastructure.csproj -v
 dotnet ef database update -s ../YourRest.WebApi/YourRest.WebApi.csproj -p YourRest.Producer.Infrastructure/YourRest.Producer.Infrastructure.csproj -c SharedDbContext -v
+dotnet ef migrations remove -s ../YourRest.WebApi/YourRest.WebApi.csproj -c SharedDbContext -p YourRest.Producer.Infrastructure/YourRest.Producer.Infrastructure.csproj -v
+
+## Запуск проекта в докере
+Из папки YourRest:
+docker compose up --build*
+docker compose up -d
+
+*Если надо перезапустить только основной проект, то docker compose up --build webapi
+
+Пользовательский интерфейс Keycloak для регистрации - http://localhost:8080/auth/realms/YourRest/protocol/openid-connect/auth?client_id=your_rest_app&redirect_uri=http://localhost:5000&response_type=code&scope=openid
+Keycloak Admin Console - http://localhost:8080/auth/admin/
+
+Для запросов с Bearer token нужно:
+У метода контроллера добавить [Authorize]
+Нужно создать юзера, группу в формате /accommodations/1, и связать юзера с группой.
+Затем можно получить токен в свагере по /api/token.
+Добавлем заголовок к запросу Bearer {token}
+
+

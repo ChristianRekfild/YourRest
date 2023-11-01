@@ -1,0 +1,63 @@
+version: '3.8'
+
+services:
+#  webapi:
+#    build:
+#      context: .
+#      dockerfile: YourRest.WebApi/Dockerfile
+#    ports:
+#      - "5000:80"
+#    depends_on:
+#      - keycloak
+#      - webapidb
+#    networks:
+#      - local-network
+
+  keycloak:
+    build:
+      context: .
+      dockerfile: Infrastructure/YourRest.Producer.Infrastructure.Keycloak/Docker/Dockerfile
+    environment:
+      - DB_VENDOR=postgres
+      - DB_ADDR=keycloakdb
+      - DB_DATABASE=keycloak
+      - DB_USER=keycloak
+      - DB_PASSWORD=keycloakpassword
+      - KEYCLOAK_USER=admin
+      - KEYCLOAK_PASSWORD=admin
+      - KEYCLOAK_IMPORT=/opt/jboss/keycloak/realm-export.json
+    ports:
+      - 8080:8080
+    depends_on:
+      - keycloakdb
+    networks:
+      - local-network
+
+  keycloakdb:
+    image: postgres:latest
+    environment:
+      - POSTGRES_DB=keycloak
+      - POSTGRES_USER=keycloak
+      - POSTGRES_PASSWORD=keycloakpassword
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    networks:
+      - local-network
+
+  webapidb:
+    image: postgres
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: your_rest
+    ports:
+      - "5433:5432"
+    networks:
+      - local-network
+
+volumes:
+  pgdata:
+
+networks:
+  local-network:
+    driver: bridge

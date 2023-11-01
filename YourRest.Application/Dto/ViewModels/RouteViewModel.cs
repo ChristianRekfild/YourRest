@@ -4,7 +4,7 @@ namespace YourRest.Application.Dto.ViewModels
 {
     public class RouteViewModel
     {
-        [FromRoute(Name ="id")]
+        [FromRoute(Name = "id")]
         public int Id { get; set; }
     }
 }

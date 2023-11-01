@@ -1,5 +1,4 @@
 ﻿using FluentValidation.TestHelper;
-using Microsoft.AspNetCore.Identity;
 using YourRest.Application.Dto.Models;
 using YourRest.Application.Dto.Validators;
 
@@ -7,7 +6,7 @@ namespace YourRest.WebApi.Tests.UnitTests
 {
     public class RoomFacilityViewModelValidationsTests
     {
-        private readonly RoomFacilityViewModelValidator roomFacilityValidator;
+        private readonly RoomFacilityDtoValidator roomFacilityValidator;
         public RoomFacilityViewModelValidationsTests() => roomFacilityValidator = new();
 
         [Fact]
@@ -46,7 +45,7 @@ namespace YourRest.WebApi.Tests.UnitTests
             roomFacilityValidator.TestValidate(model).ShouldHaveValidationErrorFor(person => person.RoomId);
         }
 
-        private RoomFacilityViewModel CreateRoomFacilityViewModel() => new()
+        private RoomFacilityDto CreateRoomFacilityViewModel() => new()
         {
             Id = 0,
             RoomId = 1,
