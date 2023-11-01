@@ -33,7 +33,12 @@ public class UserSavingMiddleware
         
         if (!string.IsNullOrEmpty(sub))
         {
-            var users = await userRepository.GetWithIncludeAsync(a => a.KeyCloakId == sub, a => a.UserAccommodations);
+            var users = await userRepository.GetWithIncludeAsync(
+                a => a.KeyCloakId == sub, 
+                cancellationToken: default,
+                a => a.UserAccommodations
+            );
+
             var user = users.FirstOrDefault();
 
             List<int> accommodationIds = new List<int>();

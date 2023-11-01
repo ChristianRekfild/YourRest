@@ -11,7 +11,6 @@ using YourRest.Application.Interfaces.Room;
 namespace YourRest.WebApi.Controllers
 {
     [ApiController]
-    [Route("api/rooms")]
     [FluentValidationAutoValidation]
     public class RoomController : ControllerBase
     {
@@ -45,53 +44,54 @@ namespace YourRest.WebApi.Controllers
         }
 
         [HttpGet]
-        [Route("accommodations/{accommodationId}")]
+        [Route("api/accommodation/{accommodationId}/rooms")]
         public async Task<IActionResult> GetAllRooms(int accommodationId)
         {
             var regions = await _getRoomListUseCase.Execute(accommodationId);
             return Ok(regions);
         }
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody] RoomDto roomDto)
+        [Route("api/accommodation/{accommodationId}/rooms")]
+        public async Task<IActionResult> Post([FromRoute] int accommodationId, [FromBody] RoomDto roomDto)
         {
 
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var createdRoom = await _createtRoomUseCase.Execute(roomDto);
+            var createdRoom = await _createtRoomUseCase.Execute(roomDto, accommodationId);
             return CreatedAtAction(nameof(Post), createdRoom);
         }
 
         [HttpGet]
-        [Route("{id}")]
+        [Route("api/rooms/{id}")]
         public async Task<IActionResult> GetRoomById([FromRoute] RouteViewModel route)
         {
             return Ok(await getRoomByIdUseCase.ExecuteAsync(route.Id));
         }
         [HttpPut]
-        [Route("{id}")]
-        public async Task<IActionResult> EditRoom([FromRoute] RouteViewModel route, [FromBody] RoomDto room)
+        [Route("api/accommodation/{accommodationId}/rooms/{id}")]
+        public async Task<IActionResult> EditRoom([FromRoute] int accommodationId, [FromRoute] RouteViewModel route, [FromBody] RoomDto room)
         {
             var roomWithId = mapper.Map<RoomWithIdDto>(room);
             roomWithId.Id = route.Id;
-            await editRoomUseCase.ExecuteAsync(roomWithId);
+            await editRoomUseCase.ExecuteAsync(roomWithId, accommodationId);
             return Ok("The room has been edited");
         }
         [HttpDelete]
-        [Route("{id}")]
+        [Route("api/rooms/{id}")]
         public async Task<IActionResult> RemoveRoom([FromRoute] RouteViewModel route)
         {
             await removeRoomUseCase.ExecuteAsync(route.Id);
             return Ok("The room has been removed");
         }
         [HttpGet]
-        [Route("{id}/facilities")]
+        [Route("api/rooms/{id}/facilities")]
         public async Task<IActionResult> GetFacilitiesByRoomId([FromRoute] RouteViewModel route)
         {
             return Ok(await getFacilitiesByRoomIdUseCase.ExecuteAsync(route.Id));
         }
         [HttpPost]
-        [Route("{id}/facilities")]
+        [Route("api/rooms/{id}/facilities")]
         public async Task<IActionResult> AddFacilityToRoom([FromRoute] RouteViewModel route, [FromBody] RoomFacilityDto roomFacility)
         {
             roomFacility.RoomId = route.Id;

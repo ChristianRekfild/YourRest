@@ -13,7 +13,8 @@ namespace YourRest.Domain.Repositories
 
         Task<IEnumerable<T>> GetAllAsync(CancellationToken cancellationToken = default);
 
-        Task<IEnumerable<T>> GetAllWithIncludeAsync(Expression<Func<T, object>> includeProperty, CancellationToken cancellationToken = default);
+        Task<IEnumerable<T>> GetAllWithIncludeAsync(Expression<Func<T, object>> includeProperty,
+            CancellationToken cancellationToken = default);
 
         Task<T?> GetAsync(U id, CancellationToken cancellationToken = default);
 
@@ -23,6 +24,7 @@ namespace YourRest.Domain.Repositories
 
         Task SaveChangesAsync(CancellationToken cancellationToken = default);
 
-        Task<IEnumerable<T>> GetWithIncludeAsync(Expression<Func<T, bool>> predicate, params Expression<Func<T, object>>[] includeProperties);
+        Task<IEnumerable<T>> GetWithIncludeAsync(Expression<Func<T, bool>> predicate,
+            CancellationToken cancellationToken = default, params Expression<Func<T, object>>[] includeProperties);
     }
 }

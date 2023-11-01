@@ -50,9 +50,9 @@ namespace YourRest.Infrastructure.Core.Repositories
             return await _dataContext.Set<T>().FirstOrDefaultAsync(x => x.Id.Equals(id), cancellationToken);
         }
 
-       public async Task<IEnumerable<T>> GetWithIncludeAsync(Expression<Func<T, bool>> predicate, params Expression<Func<T, object>>[] includeProperties)
+        public async Task<IEnumerable<T>> GetWithIncludeAsync(Expression<Func<T, bool>> predicate, CancellationToken cancellationToken = default, params Expression<Func<T, object>>[] includeProperties)
         {
-            return await Include(includeProperties).Where(predicate).ToListAsync();
+            return await Include(includeProperties).Where(predicate).ToListAsync(cancellationToken);
         }
        
        public async Task<IEnumerable<T>> GetAllWithIncludeAsync(Expression<Func<T, object>> includeProperty, CancellationToken cancellationToken = default)

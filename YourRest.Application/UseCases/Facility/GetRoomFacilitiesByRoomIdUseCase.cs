@@ -21,7 +21,12 @@ namespace YourRest.Application.UseCases.Facility
 
         public async Task<IEnumerable<RoomFacilityDto>> ExecuteAsync(int roomId)
         {
-            var room = (await roomRepository.GetWithIncludeAsync(room => room.Id == roomId, include => include.RoomFacilities)).FirstOrDefault();
+            var room = (await roomRepository.GetWithIncludeAsync(
+                room => room.Id == roomId,
+                cancellationToken: default,
+                include => include.RoomFacilities
+                )
+            ).FirstOrDefault();
             if (room == null)
             {
                 throw new EntityNotFoundException($"Room with id number {roomId} not found");
