@@ -36,10 +36,14 @@ namespace YourRest.WebApi.Tests.Controllers
                     Password = "qwerty"
                 };
             var customerId = (await fixture.InsertObjectIntoDatabase(customer)).Id;
-
+            var accommodationType = new AccommodationType
+            {
+                Name = "Test Type"
+            };
             var accommodation = new Accommodation
             {
-                Name = "Test2"
+                Name = "Test2",
+                AccommodationType = accommodationType
             };
 
             var accommodationId = (await fixture.InsertObjectIntoDatabase(accommodation)).Id;
@@ -82,9 +86,14 @@ namespace YourRest.WebApi.Tests.Controllers
         [Fact]
         public async Task GivenReviewDataWithoutExistBooking_WhenPostCalled_ReturnsNotFound()
         {
+            var accommodationType = new AccommodationType
+            {
+                Name = "Test Type"
+            };
             var accommodation = new Accommodation
             {
-                Name = "Test2"
+                Name = "Test2",
+                AccommodationType = accommodationType
             };
 
             await fixture.InsertObjectIntoDatabase(accommodation);

@@ -43,7 +43,7 @@ namespace YourRest.WebApi.Tests.Controllers
             var mapper = mockMapper.CreateMapper();
 
             var content = new StringContent(JsonConvert.SerializeObject(mapper.Map<RoomDto>(editedRoom)), Encoding.UTF8, "application/json");
-            var response = await fixture.Client.PutAsync($"api/rooms/{room.Id}", content);
+            var response = await fixture.Client.PutAsync($"api/accommodation/{room.AccommodationId}/rooms/{room.Id}", content);
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             Assert.Equal("The room has been edited", await response.Content.ReadAsStringAsync());
             response = await fixture.Client.GetAsync($"api/rooms/{room.Id}");
@@ -73,7 +73,6 @@ namespace YourRest.WebApi.Tests.Controllers
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             Assert.NotNull(recivedRoom);
             Assert.Equal(room.Id, recivedRoom.Id);
-            Assert.Equal(room.AccommodationId, recivedRoom.AccommodationId);
             Assert.Equal(room.Name, recivedRoom.Name);
         }
         [Fact]
@@ -114,7 +113,17 @@ namespace YourRest.WebApi.Tests.Controllers
                 Longitude = 100,
                 Latitude = 500
             });
-            var accommodation = await fixture.InsertObjectIntoDatabase(new Accommodation { Name = "MyHotel" });
+            var accommodationType = new AccommodationType
+            {
+                Name = "Test Type"
+            };
+            var accommodation = await fixture.InsertObjectIntoDatabase(
+                new Accommodation
+                {
+                    Name = "MyHotel",
+                    AccommodationType = accommodationType
+                }
+                );
             return new Room
             {
                 AccommodationId = accommodation.Id,
@@ -127,7 +136,15 @@ namespace YourRest.WebApi.Tests.Controllers
         [Fact]
         public async Task GetAllRoom_ReturnsExpectedRoom_WhenDatabaseHasRoom()
         {
-            var accommodationEntity = new Accommodation { Name = "Test" };
+            var accommodationType = new AccommodationType
+            {
+                Name = "Test Type"
+            };
+            var accommodationEntity = new Accommodation
+            {
+                Name = "Test",
+                AccommodationType = accommodationType
+            };
             var accommodation = await fixture.InsertObjectIntoDatabase(accommodationEntity);
             var accommodationId = accommodation.Id;
             var firstRoom = await fixture.InsertObjectIntoDatabase(new Room { Name = "310", AccommodationId = accommodationId, Capacity = 1,SquareInMeter = 20, RoomType = "Luxe" });
@@ -137,7 +154,6 @@ namespace YourRest.WebApi.Tests.Controllers
                 new() {
                     Id = firstRoom.Id,
                     Name = firstRoom.Name,
-                    AccommodationId = firstRoom.AccommodationId,
                     Capacity = firstRoom.Capacity,
                     RoomType = firstRoom.RoomType,
                     SquareInMeter = firstRoom.SquareInMeter
@@ -146,14 +162,13 @@ namespace YourRest.WebApi.Tests.Controllers
                 {
                     Id = secondRoom.Id,
                     Name = secondRoom.Name,
-                    AccommodationId = secondRoom.AccommodationId,
                     Capacity = secondRoom.Capacity,
                     RoomType = secondRoom.RoomType,
                     SquareInMeter = secondRoom.SquareInMeter
                 }
             };
 
-            var response = await fixture.Client.GetAsync($"api/rooms/accommodations/{accommodation.Id}");
+            var response = await fixture.Client.GetAsync($"api/accommodation/{accommodation.Id}/rooms");
 
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             var roomResponse = await response.Content.ReadFromJsonAsync<IEnumerable<RoomWithIdDto>>();
@@ -164,11 +179,15 @@ namespace YourRest.WebApi.Tests.Controllers
         [Fact]
         public async Task GetAllRoom_ReturnsVoid_WhenDatabaseHasNoRoom()
         {
-            var accommodationEntity = new Accommodation { Name = "Test" };
+            var accommodationType = new AccommodationType
+            {
+                Name = "Test Type"
+            };
+            var accommodationEntity = new Accommodation { Name = "Test", AccommodationType = accommodationType};
             var accommodation = await fixture.InsertObjectIntoDatabase(accommodationEntity);
             var accommodationId = accommodation.Id;
 
-            var response = await fixture.Client.GetAsync($"api/rooms/accommodations/{accommodationId}");
+            var response = await fixture.Client.GetAsync($"api/accommodation/{accommodation.Id}/rooms");
 
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             var content = await response.Content.ReadAsStringAsync();
@@ -177,13 +196,17 @@ namespace YourRest.WebApi.Tests.Controllers
         [Fact]
         public async Task AddRoom_ReturnsStatusCodeCreated()
         {
-            var accommodationEntity = new Accommodation { Name = "Test" };
+            var accommodationType = new AccommodationType
+            {
+                Name = "Test Type"
+            };
+            var accommodationEntity = new Accommodation { Name = "Test", AccommodationType = accommodationType};
             var accommodation = await fixture.InsertObjectIntoDatabase(accommodationEntity);
             var accommodationId = accommodation.Id;
 
             var roomEntity = new Room { Name = "Lyxar1", AccommodationId = accommodationId, Capacity = 20, SquareInMeter = 30, RoomType = "Lyx" };
             var content = new StringContent(JsonConvert.SerializeObject(roomEntity), Encoding.UTF8, "application/json");
-            var response = await fixture.Client.PostAsync($"api/rooms/", content);
+            var response = await fixture.Client.PostAsync($"api/accommodation/{accommodation.Id}/rooms", content);
 
             Assert.Equal(HttpStatusCode.Created, response.StatusCode);
 
@@ -191,7 +214,6 @@ namespace YourRest.WebApi.Tests.Controllers
             var roomResponse = JsonConvert.DeserializeObject<RoomWithIdDto>(responseContent);
 
             Assert.Equal(roomResponse?.Name, roomEntity.Name);
-            Assert.Equal(roomResponse?.AccommodationId, roomEntity.AccommodationId);
             Assert.Equal(roomResponse?.RoomType, roomEntity.RoomType);
             Assert.Equal(roomResponse?.Capacity, roomEntity.Capacity);
             Assert.Equal(roomResponse?.SquareInMeter, roomEntity.SquareInMeter);
@@ -199,13 +221,17 @@ namespace YourRest.WebApi.Tests.Controllers
         [Fact]
         public async Task AddRoom_ReturnsNotFound_WhenAddRoomWitFakeAccommodation()
         {
-            var accommodationEntity = new Accommodation { Name = "Test" };
+            var accommodationType = new AccommodationType
+            {
+                Name = "Test Type"
+            };
+            var accommodationEntity = new Accommodation { Name = "Test", AccommodationType = accommodationType};
             var accommodation = await fixture.InsertObjectIntoDatabase(accommodationEntity);
             var accommodationId = accommodation.Id + 100;
 
-            var roomEntity = new Room { Name = "Lyxar", AccommodationId = accommodationId, Capacity = 20, SquareInMeter = 30, RoomType = "Lyx" };
+            var roomEntity = new Room { Name = "Lyxar", Capacity = 20, SquareInMeter = 30, RoomType = "Lyx" };
             var content = new StringContent(JsonConvert.SerializeObject(roomEntity), Encoding.UTF8, "application/json");
-            var response = await fixture.Client.PostAsync($"api/rooms/", content);
+            var response = await fixture.Client.PostAsync($"api/accommodation/{accommodationId}/rooms", content);
 
             Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
 

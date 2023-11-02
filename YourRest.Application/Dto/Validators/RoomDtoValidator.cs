@@ -7,7 +7,6 @@ namespace YourRest.Application.Dto.Validators
     {
         public RoomDtoValidator()
         {
-            RuleFor(room => room.AccommodationId).NotNull().NotEmpty().GreaterThan(0);
             RuleFor(room => room.Name).NotNull().NotEmpty().MaximumLength(100);
             RuleFor(room => room.SquareInMeter).NotNull().NotEmpty().GreaterThan(0);
             RuleFor(room => room.RoomType).NotNull().NotEmpty();

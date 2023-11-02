@@ -53,27 +53,16 @@ namespace YourRest.WebApi.Tests.UnitTests
             model.SquareInMeter = 0;
             roomValidator.TestValidate(model).ShouldHaveValidationErrorFor(person => person.SquareInMeter);
         }
-        [Fact]
-        public void Should_have_error_when_AccommodationId_is_less_or_equal_Zero()
-        {
-            var model = CreateRoomViewModel();
-            model.AccommodationId = -1;
-            roomValidator.TestValidate(model).ShouldHaveValidationErrorFor(person => person.AccommodationId);
-            model.SquareInMeter = 0;
-            roomValidator.TestValidate(model).ShouldHaveValidationErrorFor(person => person.AccommodationId);
-        }
 
         [Fact]
         public void Should_have_error_when_All_fields_of_roomViewModel_is_not_valid()
         {
             var model = CreateRoomViewModel();
             model.Name = null;
-            model.AccommodationId = -1;
             model.Capacity = 0;
             model.SquareInMeter = 0;
             model.RoomType = null;
             roomValidator.TestValidate(model).ShouldHaveValidationErrorFor(person => person.Name);
-            roomValidator.TestValidate(model).ShouldHaveValidationErrorFor(person => person.AccommodationId);
             roomValidator.TestValidate(model).ShouldHaveValidationErrorFor(person => person.RoomType);
             roomValidator.TestValidate(model).ShouldHaveValidationErrorFor(person => person.Capacity);
             roomValidator.TestValidate(model).ShouldHaveValidationErrorFor(person => person.SquareInMeter);
@@ -82,7 +71,6 @@ namespace YourRest.WebApi.Tests.UnitTests
         {
             Id = 0,
             Name = "305",
-            AccommodationId = 1,
             Capacity = 10,
             SquareInMeter = 11,
             RoomType = "Exclusive"

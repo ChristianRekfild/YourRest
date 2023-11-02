@@ -4,6 +4,6 @@ namespace YourRest.Application.Interfaces.Room
 {
     public interface IEditRoomUseCase
     {
-        Task ExecuteAsync(RoomWithIdDto reviewDto);
+        Task ExecuteAsync(RoomWithIdDto reviewDto, int accommodationId);
     }
 }

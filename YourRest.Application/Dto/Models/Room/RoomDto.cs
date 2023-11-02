@@ -13,10 +13,6 @@ namespace YourRest.Application.Dto.Models.Room
         public double SquareInMeter { get; set; }
 
         [Required]
-        [RegularExpression(@"^[1-9]\d*$", ErrorMessage = "AccommodationId should be more than zero.")]
-        public int AccommodationId { get; set; }
-
-        [Required]
         public string RoomType { get; set; }
 
         [Required]

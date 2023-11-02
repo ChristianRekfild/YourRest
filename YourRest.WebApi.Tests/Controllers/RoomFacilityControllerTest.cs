@@ -97,7 +97,17 @@ namespace YourRest.WebApi.Tests.Controllers
                 Longitude = 100,
                 Latitude = 500
             });
-            var accommodation = await fixture.InsertObjectIntoDatabase(new Accommodation { Name = "MyHotel" });
+            var accommodationType = new AccommodationType
+            {
+                Name = "Test Type"
+            };
+            var accommodation = await fixture.InsertObjectIntoDatabase(
+                new Accommodation
+                {
+                    Name = "MyHotel",
+                    AccommodationType = accommodationType
+                }
+                );
             var room = await fixture.InsertObjectIntoDatabase(new Room
             {
                 AccommodationId = accommodation.Id,
