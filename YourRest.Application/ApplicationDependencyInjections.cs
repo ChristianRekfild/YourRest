@@ -79,6 +79,7 @@ namespace YourRest.Application
             services.AddScoped<IGetRoomFacilityByIdUseCase, GetRoomFacilityByIdUseCase>();
             services.AddScoped<IRemoveRoomFacilityUseCase, RemoveRoomFacilityUseCase>();
             services.AddScoped<IGetRoomTypeListUseCase, GetRoomTypeListUseCase>();
+            services.AddScoped<IGetAllRoomFacilitiesUseCase, GetAllRoomFacilitiesUseCase>();
             //AgeRange
             services.AddScoped<ICreateAgeRangeUseCase, CreateAgeRangeUseCase>();
             services.AddScoped<IEditAgeRangeUseCase, EditAgeRangeUseCase>();

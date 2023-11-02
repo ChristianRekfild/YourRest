@@ -17,7 +17,7 @@ namespace YourRest.Application.UseCases.Room
             this.roomRepository = roomRepository;
             this.mapper = mapper;
         }
-        public async Task ExecuteAsync(RoomWithIdDto reviewDto, int accommodationId)
+        public async Task ExecuteAsync(RoomWithIdDto reviewDto, int accommodationId, CancellationToken cancellationToken)
         {
             var room = await roomRepository.GetAsync(reviewDto.Id);
             if(room == null) 
@@ -28,7 +28,7 @@ namespace YourRest.Application.UseCases.Room
             var roomEntity = mapper.Map<RoomEntity>(reviewDto);
             roomEntity.AccommodationId = accommodationId;
             
-            await roomRepository.UpdateAsync(roomEntity);
+            await roomRepository.UpdateAsync(roomEntity, cancellationToken: cancellationToken);
         }
     }
 }

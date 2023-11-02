@@ -1,5 +1,6 @@
 using YourRest.Application.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using YourRest.Application.Dto.Models;
 
 namespace YourRest.WebApi.Controllers
 {
@@ -21,7 +22,7 @@ namespace YourRest.WebApi.Controllers
         [Route("api/roomTypes")]
         public async Task<IActionResult> GetAllRoomTypes()
         {
-            var types = await _getRoomTypeListUseCase.Execute();
+            IEnumerable<RoomTypeDto> types = await _getRoomTypeListUseCase.Execute();
             return Ok(types);
         }
     }

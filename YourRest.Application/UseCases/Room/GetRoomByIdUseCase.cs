@@ -17,9 +17,9 @@ namespace YourRest.Application.UseCases.Room
             this.roomRepository = roomRepository;
             this.mapper = mapper;
         }
-        public async Task<RoomExtendedDto> ExecuteAsync(int id)
+        public async Task<RoomExtendedDto> ExecuteAsync(int id, CancellationToken cancellationToken)
         {
-            var room = await roomRepository.GetAsync(id);
+            var room = await roomRepository.GetAsync(id, cancellationToken: cancellationToken);
             if (room == null)
             {
                 throw new EntityNotFoundException($"Room with Id:{id} not found");

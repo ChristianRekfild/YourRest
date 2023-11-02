@@ -6,6 +6,7 @@ using System.Text;
 using YourRest.Application.Dto.Mappers.Profiles;
 using YourRest.Application.Dto.Models;
 using YourRest.Application.Dto.Models.Room;
+using YourRest.Application.Dto.Models.RoomFacility;
 using YourRest.Domain.Entities;
 using YourRest.WebApi.Tests.Fixtures;
 

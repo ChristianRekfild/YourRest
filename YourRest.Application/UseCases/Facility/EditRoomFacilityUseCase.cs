@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
-using YourRest.Application.Dto.Mappers;
-using YourRest.Application.Dto.Models;
+using YourRest.Application.Dto.Models.RoomFacility;
 using YourRest.Application.Exceptions;
 using YourRest.Application.Interfaces.Facility;
 using YourRest.Domain.Entities;
@@ -18,18 +17,16 @@ namespace YourRest.Application.UseCases.Facility
             this.roomFacilityRepository = roomFacilityRepository;
             this.mapper = mapper;
         }
-        public async Task ExecuteAsync(RoomFacilityDto reviewDto)
+        public async Task ExecuteAsync(int roomFacilityId, RoomFacilityDto reviewDto, CancellationToken cancellationToken)
         {
-            var roomFacility = await roomFacilityRepository.GetAsync(reviewDto.Id);
+            var roomFacilityWithDto = mapper.Map<RoomFacilityWithIdDto>(reviewDto);
+            roomFacilityWithDto.Id = roomFacilityId;
+            var roomFacility = await roomFacilityRepository.GetAsync(roomFacilityId, cancellationToken);
             if (roomFacility == null)
             {
-                throw new EntityNotFoundException($"RoomFacility with id number {reviewDto.Id} not found");
+                throw new EntityNotFoundException($"RoomFacility with id number {roomFacilityId} not found");
             }
-            if ((await roomFacilityRepository.FindAsync(rf => rf.RoomId == reviewDto.RoomId)).Select(f => f.Name).Contains(reviewDto.Name))
-            {
-                throw new EntityConflictException($"Room Facility \"{reviewDto.Name}\" has been in process");
-            }
-            await roomFacilityRepository.UpdateAsync(mapper.Map<RoomFacility>(reviewDto));
+            await roomFacilityRepository.UpdateAsync(mapper.Map<RoomFacility>(roomFacilityWithDto), cancellationToken: cancellationToken);
         }
     }
 }

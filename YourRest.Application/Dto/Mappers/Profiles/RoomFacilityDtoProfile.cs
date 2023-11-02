@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
-using YourRest.Application.Dto.Models;
+using Microsoft.AspNetCore.Routing.Constraints;
+using YourRest.Application.Dto.Models.RoomFacility;
 using YourRest.Domain.Entities;
 
 namespace YourRest.Application.Dto.Mappers.Profiles
@@ -9,7 +10,11 @@ namespace YourRest.Application.Dto.Mappers.Profiles
         public RoomFacilityDtoProfile()
         {
             CreateMap<RoomFacility, RoomFacilityDto>()
-             .ReverseMap();
+                .ForMember(destination => destination.Name, opt => opt.MapFrom(src => src.Name))
+                .ReverseMap();
+            CreateMap<RoomFacilityDto, RoomFacility>()
+                .ForMember(destination => destination.Id, opt => opt.Ignore())
+                .ReverseMap();
         }
     }
 }
