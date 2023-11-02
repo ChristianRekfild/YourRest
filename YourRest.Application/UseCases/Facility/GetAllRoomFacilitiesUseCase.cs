@@ -17,9 +17,9 @@ namespace YourRest.Application.UseCases.Facility
             this.mapper = mapper;
         }
 
-        public async Task<IEnumerable<RoomFacilityDto>> ExecuteAsync()
+        public async Task<IEnumerable<RoomFacilityDto>> ExecuteAsync(CancellationToken cancellationToken)
         {
-            var roomFacilities = await roomFacilityRepository.GetAllAsync();
+            var roomFacilities = await roomFacilityRepository.GetAllAsync(cancellationToken);
             if (!roomFacilities.Any())
             {
                 throw new EntityNotFoundException("Not found any RoomFacility");

@@ -1,9 +1,8 @@
+using YourRest.Application.Dto.Models.Room;
 using YourRest.Application.Exceptions;
-using YourRest.Application.Dto;
 using YourRest.Application.Interfaces;
 using YourRest.Domain.Repositories;
 using RoomEntity = YourRest.Domain.Entities.Room;
-using YourRest.Application.Dto.Models.Room;
 
 namespace YourRest.Application.UseCases
 {
@@ -18,9 +17,9 @@ namespace YourRest.Application.UseCases
             _accommodationRepository = accommodationRepository;
         }
 
-        public async Task<RoomWithIdDto> Execute(RoomDto roomDto, int accommodationId)
+        public async Task<RoomWithIdDto> Execute(RoomDto roomDto, int accommodationId, CancellationToken cancellationToken)
         {
-            var accommodation = await _accommodationRepository.GetAsync(accommodationId);
+            var accommodation = await _accommodationRepository.GetAsync(accommodationId, cancellationToken);
 
             if (accommodation == null)
             {
@@ -34,7 +33,7 @@ namespace YourRest.Application.UseCases
             room.Capacity = roomDto.Capacity;
             room.RoomType = roomDto.RoomType;
 
-            var savedRoom = await _roomRepository.AddAsync(room);
+            var savedRoom = await _roomRepository.AddAsync(room, cancellationToken:cancellationToken);
 
             var savedRoomDto = new RoomWithIdDto
             {

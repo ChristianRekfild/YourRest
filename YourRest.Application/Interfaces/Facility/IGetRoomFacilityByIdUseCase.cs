@@ -4,6 +4,6 @@ namespace YourRest.Application.Interfaces.Facility
 {
     public interface IGetRoomFacilityByIdUseCase
     {
-        Task<RoomFacilityWithIdDto> ExecuteAsync(int id);
+        Task<RoomFacilityWithIdDto> ExecuteAsync(int id, CancellationToken cancellationToken);
     }
 }

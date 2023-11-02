@@ -1,4 +1,3 @@
-using YourRest.Application.Dto;
 using YourRest.Application.Dto.Models.Room;
 using YourRest.Application.Interfaces;
 using YourRest.Domain.Repositories;
@@ -14,9 +13,9 @@ namespace YourRest.Application.UseCases
             _roomRepository = roomRepository;
         }
 
-        public async Task<IEnumerable<RoomWithIdDto>> Execute(int accommodationId)
+        public async Task<IEnumerable<RoomWithIdDto>> Execute(int accommodationId, CancellationToken cancellationToken)
         {
-            var rooms = await _roomRepository.FindAsync(t => t.AccommodationId == accommodationId);
+            var rooms = await _roomRepository.FindAsync(t => t.AccommodationId == accommodationId, cancellationToken);
 
             return rooms.Select(r => new RoomWithIdDto   
             {

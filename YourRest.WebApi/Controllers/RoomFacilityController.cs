@@ -30,21 +30,21 @@ namespace YourRest.WebApi.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAllRoomFacilities()
         {
-            return Ok(await getAllRoomFacilitiesUseCase.ExecuteAsync());
+            return Ok(await getAllRoomFacilitiesUseCase.ExecuteAsync(HttpContext.RequestAborted));
         }
 
         [HttpGet]
         [Route("{id}")]
         public async Task<IActionResult> GetRoomFacilityById([FromRoute] RouteViewModel route)
         {
-            return Ok(await getRoomFacilityByIdUseCase.ExecuteAsync(route.Id));
+            return Ok(await getRoomFacilityByIdUseCase.ExecuteAsync(route.Id, HttpContext.RequestAborted));
         }
 
         [HttpDelete]
         [Route("{id}")]
         public async Task<IActionResult> RemoveRoomFacilityById([FromRoute] RouteViewModel route)
         {
-            await removeRoomFacilityUseCase.ExecuteAsync(route.Id);
+            await removeRoomFacilityUseCase.ExecuteAsync(route.Id, HttpContext.RequestAborted);
             return Ok($"RoomFacility id:{route.Id} has been removed from the current room");
         }
 
@@ -52,7 +52,7 @@ namespace YourRest.WebApi.Controllers
         [Route("{id}")]
         public async Task<IActionResult> EditRoomFacility([FromRoute] RouteViewModel route, [FromBody] RoomFacilityDto roomFacility)
         {
-            await editRoomFacilityUseCase.ExecuteAsync(route.Id, roomFacility);
+            await editRoomFacilityUseCase.ExecuteAsync(route.Id, roomFacility, HttpContext.RequestAborted);
             return Ok($"RoomFacility id:{route.Id} has been successfully changed in the current issue");
         }
     }

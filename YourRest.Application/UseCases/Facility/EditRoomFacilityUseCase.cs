@@ -17,16 +17,16 @@ namespace YourRest.Application.UseCases.Facility
             this.roomFacilityRepository = roomFacilityRepository;
             this.mapper = mapper;
         }
-        public async Task ExecuteAsync(int roomFacilityId, RoomFacilityDto reviewDto)
+        public async Task ExecuteAsync(int roomFacilityId, RoomFacilityDto reviewDto, CancellationToken cancellationToken)
         {
             var roomFacilityWithDto = mapper.Map<RoomFacilityWithIdDto>(reviewDto);
             roomFacilityWithDto.Id = roomFacilityId;
-            var roomFacility = await roomFacilityRepository.GetAsync(roomFacilityId);
+            var roomFacility = await roomFacilityRepository.GetAsync(roomFacilityId, cancellationToken);
             if (roomFacility == null)
             {
                 throw new EntityNotFoundException($"RoomFacility with id number {roomFacilityId} not found");
             }
-            await roomFacilityRepository.UpdateAsync(mapper.Map<RoomFacility>(roomFacilityWithDto));
+            await roomFacilityRepository.UpdateAsync(mapper.Map<RoomFacility>(roomFacilityWithDto), cancellationToken: cancellationToken);
         }
     }
 }

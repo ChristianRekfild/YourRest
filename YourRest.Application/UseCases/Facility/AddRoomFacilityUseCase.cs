@@ -22,9 +22,9 @@ namespace YourRest.Application.UseCases.Facility
             this.roomFacilityRepository = roomFacilityRepository;
             this.roomRepository = roomRepository;
         }
-        public async Task ExecuteAsync(int roomId, IEnumerable<RoomFacilityDto> roomFacilities)
+        public async Task ExecuteAsync(int roomId, IEnumerable<RoomFacilityDto> roomFacilities, CancellationToken cancellationToken)
         {
-            var room = (await roomRepository.GetWithIncludeAsync(room => room.Id == roomId, include => include.RoomFacilities)).FirstOrDefault();
+            var room = (await roomRepository.GetWithIncludeAsync(room => room.Id == roomId, cancellationToken, include => include.RoomFacilities)).FirstOrDefault();
             if (room == null)
             {
                 throw new EntityNotFoundException($"Room with id number {roomId} not found");
@@ -37,7 +37,7 @@ namespace YourRest.Application.UseCases.Facility
                 }
                 room.RoomFacilities.Add(mapper.Map<RoomFacility>(roomFacilities));
             }
-            await roomFacilityRepository.SaveChangesAsync();
+            await roomFacilityRepository.SaveChangesAsync(cancellationToken);
         }
     }
 }

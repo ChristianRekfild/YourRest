@@ -19,11 +19,11 @@ namespace YourRest.Application.UseCases.Facility
             this.mapper = mapper;
         }
 
-        public async Task<IEnumerable<RoomFacilityDto>> ExecuteAsync(int roomId)
+        public async Task<IEnumerable<RoomFacilityDto>> ExecuteAsync(int roomId, CancellationToken cancellationToken)
         {
             var room = (await roomRepository.GetWithIncludeAsync(
                 room => room.Id == roomId,
-                cancellationToken: default,
+                cancellationToken: cancellationToken,
                 include => include.RoomFacilities
                 )
             ).FirstOrDefault();

@@ -4,6 +4,6 @@ namespace YourRest.Application.Interfaces.Facility
 {
     public interface IGetAllRoomFacilitiesUseCase
     {
-        Task<IEnumerable<RoomFacilityDto>> ExecuteAsync();
+        Task<IEnumerable<RoomFacilityDto>> ExecuteAsync(CancellationToken cancellationToken);
     }
 }

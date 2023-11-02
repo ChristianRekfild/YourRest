@@ -5,6 +5,6 @@ namespace YourRest.Application.Interfaces
 {
     public interface IGetRoomListUseCase
     {
-        Task<IEnumerable<RoomWithIdDto>> Execute(int accommodationId);
+        Task<IEnumerable<RoomWithIdDto>> Execute(int accommodationId, CancellationToken cancellationToken);
     }
 }
