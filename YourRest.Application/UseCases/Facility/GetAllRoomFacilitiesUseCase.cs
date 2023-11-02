@@ -17,8 +17,6 @@ namespace YourRest.Application.UseCases.Facility
             this.mapper = mapper;
         }
 
-
-
         public async Task<IEnumerable<RoomFacilityDto>> ExecuteAsync()
         {
             var roomFacilities = await roomFacilityRepository.GetAllAsync();
