@@ -1,9 +1,8 @@
+using YourRest.Application.Dto.Models.Room;
 using YourRest.Application.Exceptions;
-using YourRest.Application.Dto;
 using YourRest.Application.Interfaces;
 using YourRest.Domain.Repositories;
 using RoomEntity = YourRest.Domain.Entities.Room;
-using YourRest.Application.Dto.Models.Room;
 
 namespace YourRest.Application.UseCases
 {
@@ -18,13 +17,13 @@ namespace YourRest.Application.UseCases
             _accommodationRepository = accommodationRepository;
         }
 
-        public async Task<RoomWithIdDto> Execute(RoomDto roomDto)
+        public async Task<RoomWithIdDto> Execute(RoomDto roomDto, int accommodationId, CancellationToken cancellationToken)
         {
-            var accommodation = await _accommodationRepository.GetAsync(roomDto.AccommodationId);
+            var accommodation = await _accommodationRepository.GetAsync(accommodationId, cancellationToken);
 
             if (accommodation == null)
             {
-                throw new EntityNotFoundException($"Accommodation with id {roomDto.AccommodationId} not found");
+                throw new EntityNotFoundException($"Accommodation with id {accommodationId} not found");
             }
 
             var room = new RoomEntity();
@@ -34,14 +33,13 @@ namespace YourRest.Application.UseCases
             room.Capacity = roomDto.Capacity;
             room.RoomType = roomDto.RoomType;
 
-            var savedRoom = await _roomRepository.AddAsync(room);
+            var savedRoom = await _roomRepository.AddAsync(room, cancellationToken:cancellationToken);
 
             var savedRoomDto = new RoomWithIdDto
             {
                 Id = savedRoom.Id,
                 SquareInMeter = savedRoom.SquareInMeter,
                 Name = savedRoom.Name,
-                AccommodationId = savedRoom.AccommodationId,
                 Capacity = savedRoom.Capacity,
                 RoomType = savedRoom.RoomType
             };

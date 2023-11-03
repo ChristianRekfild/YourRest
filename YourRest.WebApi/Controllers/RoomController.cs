@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using SharpGrip.FluentValidation.AutoValidation.Mvc.Attributes;
-using YourRest.Application.Dto.Models;
 using YourRest.Application.Dto.Models.Room;
+using YourRest.Application.Dto.Models.RoomFacility;
 using YourRest.Application.Dto.ViewModels;
 using YourRest.Application.Interfaces;
 using YourRest.Application.Interfaces.Facility;
@@ -11,7 +11,6 @@ using YourRest.Application.Interfaces.Room;
 namespace YourRest.WebApi.Controllers
 {
     [ApiController]
-    [Route("api/rooms")]
     [FluentValidationAutoValidation]
     public class RoomController : ControllerBase
     {
@@ -45,59 +44,63 @@ namespace YourRest.WebApi.Controllers
         }
 
         [HttpGet]
-        [Route("accommodations/{accommodationId}")]
+        [Route("api/accommodation/{accommodationId}/rooms")]
         public async Task<IActionResult> GetAllRooms(int accommodationId)
         {
-            var regions = await _getRoomListUseCase.Execute(accommodationId);
+            var regions = await _getRoomListUseCase.Execute(accommodationId, HttpContext.RequestAborted);
             return Ok(regions);
         }
+
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody] RoomDto roomDto)
+        [Route("api/accommodation/{accommodationId}/rooms")]
+        public async Task<IActionResult> Post([FromRoute] int accommodationId, [FromBody] RoomDto roomDto)
         {
 
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var createdRoom = await _createtRoomUseCase.Execute(roomDto);
+            var createdRoom = await _createtRoomUseCase.Execute(roomDto, accommodationId, HttpContext.RequestAborted);
             return CreatedAtAction(nameof(Post), createdRoom);
         }
 
         [HttpGet]
-        [Route("{id}")]
+        [Route("api/rooms/{id}")]
         public async Task<IActionResult> GetRoomById([FromRoute] RouteViewModel route)
         {
-            return Ok(await getRoomByIdUseCase.ExecuteAsync(route.Id));
+            return Ok(await getRoomByIdUseCase.ExecuteAsync(route.Id, HttpContext.RequestAborted));
         }
+
         [HttpPut]
-        [Route("{id}")]
-        public async Task<IActionResult> EditRoom([FromRoute] RouteViewModel route, [FromBody] RoomDto room)
+        [Route("api/accommodation/{accommodationId}/rooms/{id}")]
+        public async Task<IActionResult> EditRoom([FromRoute] int accommodationId, [FromRoute] RouteViewModel route, [FromBody] RoomDto room)
         {
             var roomWithId = mapper.Map<RoomWithIdDto>(room);
             roomWithId.Id = route.Id;
-            await editRoomUseCase.ExecuteAsync(roomWithId);
+            await editRoomUseCase.ExecuteAsync(roomWithId, accommodationId, HttpContext.RequestAborted);
             return Ok("The room has been edited");
         }
+
         [HttpDelete]
-        [Route("{id}")]
+        [Route("api/rooms/{id}")]
         public async Task<IActionResult> RemoveRoom([FromRoute] RouteViewModel route)
         {
-            await removeRoomUseCase.ExecuteAsync(route.Id);
+            await removeRoomUseCase.ExecuteAsync(route.Id, HttpContext.RequestAborted);
             return Ok("The room has been removed");
         }
+
         [HttpGet]
-        [Route("{id}/facilities")]
+        [Route("api/rooms/{id}/facilities")]
         public async Task<IActionResult> GetFacilitiesByRoomId([FromRoute] RouteViewModel route)
         {
-            return Ok(await getFacilitiesByRoomIdUseCase.ExecuteAsync(route.Id));
+            return Ok(await getFacilitiesByRoomIdUseCase.ExecuteAsync(route.Id, HttpContext.RequestAborted));
         }
-        [HttpPost]
-        [Route("{id}/facilities")]
-        public async Task<IActionResult> AddFacilityToRoom([FromRoute] RouteViewModel route, [FromBody] RoomFacilityDto roomFacility)
-        {
-            roomFacility.RoomId = route.Id;
-            await addRoomFacilityUseCase.ExecuteAsync(roomFacility);
-            return Ok("The room facility has been added to current room");
 
+        [HttpPost]
+        [Route("api/rooms/{id}/facilities")]
+        public async Task<IActionResult> AddFacilityToRoom([FromRoute] RouteViewModel route, [FromBody] IEnumerable<RoomFacilityDto> roomFacility)
+        {
+            await addRoomFacilityUseCase.ExecuteAsync(route.Id, roomFacility, HttpContext.RequestAborted);
+            return Ok("The room facility has been added to current room");
         }
     }
 }

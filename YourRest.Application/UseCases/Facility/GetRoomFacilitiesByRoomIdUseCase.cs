@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using YourRest.Application.Dto.Mappers;
-using YourRest.Application.Dto.Models;
+using YourRest.Application.Dto.Models.RoomFacility;
 using YourRest.Application.Exceptions;
 using YourRest.Application.Interfaces.Room;
 using YourRest.Domain.Repositories;
@@ -19,9 +19,14 @@ namespace YourRest.Application.UseCases.Facility
             this.mapper = mapper;
         }
 
-        public async Task<IEnumerable<RoomFacilityDto>> ExecuteAsync(int roomId)
+        public async Task<IEnumerable<RoomFacilityDto>> ExecuteAsync(int roomId, CancellationToken cancellationToken)
         {
-            var room = (await roomRepository.GetWithIncludeAsync(room => room.Id == roomId, include => include.RoomFacilities)).FirstOrDefault();
+            var room = (await roomRepository.GetWithIncludeAsync(
+                room => room.Id == roomId,
+                cancellationToken: cancellationToken,
+                include => include.RoomFacilities
+                )
+            ).FirstOrDefault();
             if (room == null)
             {
                 throw new EntityNotFoundException($"Room with id number {roomId} not found");

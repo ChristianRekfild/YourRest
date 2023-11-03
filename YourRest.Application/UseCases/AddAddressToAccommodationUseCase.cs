@@ -24,7 +24,11 @@ namespace YourRest.Application.UseCases
 
         public async Task<ResultDto> Execute(int accommodationId, AddressDto addressDto)
         {
-            var accommodations = await _accommodationRepository.GetWithIncludeAsync(a => a.Id == accommodationId, a => a.Address);
+            var accommodations = await _accommodationRepository.GetWithIncludeAsync(
+                a => a.Id == accommodationId,
+                cancellationToken: default,
+                a => a.Address
+            );
             var accommodation = accommodations.FirstOrDefault();
 
             if (accommodation == null)

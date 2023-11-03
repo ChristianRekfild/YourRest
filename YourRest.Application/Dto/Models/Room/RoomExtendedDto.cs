@@ -1,4 +1,6 @@
-﻿namespace YourRest.Application.Dto.Models.Room
+﻿using YourRest.Application.Dto.Models.RoomFacility;
+
+namespace YourRest.Application.Dto.Models.Room
 {
     public class RoomExtendedDto : RoomWithIdDto
     {

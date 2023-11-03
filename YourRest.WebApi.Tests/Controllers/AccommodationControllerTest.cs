@@ -2,6 +2,7 @@ using Newtonsoft.Json;
 using System.Net;
 using System.Net.Http.Json;
 using System.Text;
+using YourRest.Application.Dto;
 using YourRest.Application.Dto.Models;
 using YourRest.Application.Dto.ViewModels;
 using YourRest.Domain.Entities;
@@ -22,10 +23,14 @@ namespace YourRest.WebApi.Tests.Controllers
         [Fact]
         public async Task GivenAccommodation_WhenApiMethodInvokedWithValidAddress_ThenReturns200Ok()
         {
+            var accommodationType = new AccommodationType
+            {
+                Name = "Test Type"
+            };
             var country = await fixture.InsertObjectIntoDatabase(new Country() { Name = "Russia" });
             var region = await fixture.InsertObjectIntoDatabase(new Region() { Name = "Московская область", CountryId = country.Id });
             var city = await fixture.InsertObjectIntoDatabase(new City { Name = "Moscow", RegionId = region.Id });
-            var accommodation = await fixture.InsertObjectIntoDatabase(new Accommodation { Name = "FirstHotel" });
+            var accommodation = await fixture.InsertObjectIntoDatabase(new Accommodation { Name = "FirstHotel", AccommodationType = accommodationType });
             var addressDto = CreateValidAddressDto(city.Id);
             
             var content = new StringContent(JsonConvert.SerializeObject(addressDto), Encoding.UTF8, "application/json");
@@ -54,7 +59,11 @@ namespace YourRest.WebApi.Tests.Controllers
                 Longitude = 100,
                 Latitude = 80,
             });
-            var accommodation = await fixture.InsertObjectIntoDatabase(new Accommodation { Name = "SecondHotel" });
+            var accommodationType = new AccommodationType
+            {
+                Name = "Test Type"
+            };
+            var accommodation = await fixture.InsertObjectIntoDatabase(new Accommodation { Name = "SecondHotel", AccommodationType = accommodationType });
             var addressDto = CreateValidAddressDto(city.Id);
             addressDto.Street = "Second street";
             var content = new StringContent(JsonConvert.SerializeObject(addressDto), Encoding.UTF8, "application/json");
@@ -92,7 +101,11 @@ namespace YourRest.WebApi.Tests.Controllers
         [Fact]
         public async Task GivenNonexistentCity_WhenAddAddressToAccommodationAsyncInvoked_ThenReturns400()
         {
-            var accommodation = await fixture.InsertObjectIntoDatabase(new Accommodation  { Name = "ThirdHotel" });
+            var accommodationType = new AccommodationType
+            {
+                Name = "Test Type"
+            };
+            var accommodation = await fixture.InsertObjectIntoDatabase(new Accommodation  { Name = "ThirdHotel", AccommodationType = accommodationType });
             var addressDto = new AddressDto
             {
                 Street = "Fourth Street",
@@ -119,7 +132,11 @@ namespace YourRest.WebApi.Tests.Controllers
         [Fact]
         public async Task GivenInvalidAddress_WhenAddAddressToAccommodationAsyncInvoked_ThenReturns404()
         {
-            var accommodation = await fixture.InsertObjectIntoDatabase(new Accommodation { Name = "FourthHotel" });
+            var accommodationType = new AccommodationType
+            {
+                Name = "Test Type"
+            };
+            var accommodation = await fixture.InsertObjectIntoDatabase(new Accommodation { Name = "FourthHotel", AccommodationType = accommodationType });
             var addressDto = new AddressDto
             {
                 Street = "",
@@ -156,10 +173,15 @@ namespace YourRest.WebApi.Tests.Controllers
                 Longitude = 100,
                 Latitude = 90,
             });
+            var accommodationType = new AccommodationType
+            {
+                Name = "Test Type"
+            };
             var accommodation = await fixture.InsertObjectIntoDatabase(new Accommodation
             {
                 Name = "FifthHotel",
-                AddressId = addressEntity.Id
+                AddressId = addressEntity.Id,
+                AccommodationType = accommodationType
             });
             var addressDto = CreateValidAddressDto(city.Id);
             addressDto.Street = "Fifth street";
@@ -174,6 +196,76 @@ namespace YourRest.WebApi.Tests.Controllers
 
             Assert.Equal($"Address for accommodation with id {accommodation.Id} already exists", errorResponse?.Message);
             fixture.CleanDatabase();
+        }
+        
+        [Fact]
+        public async Task GivenAccommodations_WhenApiInvoked_ThenShouldReturnListOfAccommodations()
+        {
+            var country = await fixture.InsertObjectIntoDatabase(new Country { Name = "Russia" });
+            var region = await fixture.InsertObjectIntoDatabase(new Region { Name = "Moscow region", CountryId = country.Id });
+            var city = await fixture.InsertObjectIntoDatabase(new City { Name = "Moscow", RegionId = region.Id });
+            var addressEntity = await fixture.InsertObjectIntoDatabase(new Address
+            {
+                Street = "Test Street",
+                CityId = city.Id,
+                ZipCode = "94105",
+                Longitude = 120,
+                Latitude = 75,
+            });
+            var accommodationType = new AccommodationType
+            {
+                Name = "Luxury"
+            };
+            await fixture.InsertObjectIntoDatabase(new Accommodation
+            {
+                Name = "GoldenHotel",
+                AddressId = addressEntity.Id,
+                AccommodationType = accommodationType
+            });
+            var fetchHotelsViewModel = new FetchAccommodationsViewModel
+            {
+                DateFrom = DateTime.Now.AddDays(1),
+                DateTo = DateTime.Now.AddDays(7),
+                Adults = 2,
+                Children = 1,
+                CityIds = new List<int> { city.Id },
+                AccommodationTypesIds = new List<int> { accommodationType.Id }
+            };
+    
+            var content = new StringContent(JsonConvert.SerializeObject(fetchHotelsViewModel), Encoding.UTF8, "application/json");
+
+            var response = await fixture.Client.PostAsync("api/accommodations", content);
+    
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+
+            var responseString = await response.Content.ReadAsStringAsync();
+            var accommodations = JsonConvert.DeserializeObject<List<AccommodationDto>>(responseString);
+            
+            Assert.True(accommodations.Count > 0);
+            Assert.Contains(accommodations, dto => dto.Name == "GoldenHotel");
+           
+            fixture.CleanDatabase();
+        }
+        
+        [Fact]
+        public async Task GivenIncompleteRequestData_WhenFetchingApiMethodInvoked_ThenShouldReturnBadRequest()
+        {
+            var incompleteFetchHotelsViewModel = new FetchAccommodationsViewModel
+            {
+                CountryIds = new List<int> { 1, 2, 3 },
+                CityIds = new List<int> { 10, 11, 12 },
+                AccommodationTypesIds = new List<int> { 100, 101, 102 }
+            };
+    
+            var content = new StringContent(JsonConvert.SerializeObject(incompleteFetchHotelsViewModel), Encoding.UTF8, "application/json");
+
+            var response = await fixture.Client.PostAsync("api/accommodations", content);
+    
+            Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+
+            var errorResponseString = await response.Content.ReadAsStringAsync();
+    
+            Assert.Equal("date_from, date_to, and adults are required fields.", errorResponseString);
         }
 
         private AddressDto CreateValidAddressDto(int cityId)

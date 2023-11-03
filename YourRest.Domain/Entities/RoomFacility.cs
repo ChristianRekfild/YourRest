@@ -3,8 +3,8 @@
     public class RoomFacility: IntBaseEntity
     {
         public string Name { get; set; }
+        public ICollection<Room> Rooms { get; set; }
 
-        public int RoomId { get; set; }
-        public Room Room { get; set; }
+        public RoomFacility() => Rooms = new List<Room>();
     }
 }

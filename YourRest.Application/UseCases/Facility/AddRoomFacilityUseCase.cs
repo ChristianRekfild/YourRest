@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using YourRest.Application.Dto.Models;
+using YourRest.Application.Dto.Models.RoomFacility;
 using YourRest.Application.Exceptions;
 using YourRest.Application.Interfaces.Facility;
 using YourRest.Domain.Entities;
@@ -15,26 +15,29 @@ namespace YourRest.Application.UseCases.Facility
 
         public AddRoomFacilityUseCase(
             IMapper mapper,
-            IRoomFacilityRepository roomFacilityRepository, 
+            IRoomFacilityRepository roomFacilityRepository,
             IRoomRepository roomRepository)
         {
             this.mapper = mapper;
             this.roomFacilityRepository = roomFacilityRepository;
             this.roomRepository = roomRepository;
         }
-        public async Task ExecuteAsync(RoomFacilityDto reviewDto)
+        public async Task ExecuteAsync(int roomId, IEnumerable<RoomFacilityDto> roomFacilities, CancellationToken cancellationToken)
         {
-            var room = await roomRepository.GetAsync(reviewDto.RoomId);
+            var room = (await roomRepository.GetWithIncludeAsync(room => room.Id == roomId, cancellationToken, include => include.RoomFacilities)).FirstOrDefault();
             if (room == null)
             {
-                throw new EntityNotFoundException($"Room with id number {reviewDto.RoomId} not found");
+                throw new EntityNotFoundException($"Room with id number {roomId} not found");
             }
-
-            if ((await roomFacilityRepository.FindAsync(rf => rf.RoomId == reviewDto.RoomId)).Select(rf => rf.Name).Contains(reviewDto.Name))
+            foreach (var roomFacility in roomFacilities)
             {
-                throw new EntityConflictException($"Room Facility \"{reviewDto.Name}\" has been in process");
+                if (room.RoomFacilities.Select(rf => rf.Name).Contains(roomFacility.Name))
+                {
+                    throw new EntityConflictException($"Room Facility \"{roomFacility.Name}\" has been in process");
+                }
+                room.RoomFacilities.Add(mapper.Map<RoomFacility>(roomFacilities));
             }
-            await roomFacilityRepository.AddAsync(mapper.Map<RoomFacility>(reviewDto));
+            await roomFacilityRepository.SaveChangesAsync(cancellationToken);
         }
     }
 }

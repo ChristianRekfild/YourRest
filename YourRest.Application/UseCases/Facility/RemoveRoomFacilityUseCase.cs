@@ -12,14 +12,14 @@ namespace YourRest.Application.UseCases.Facility
         {
             this.roomFacilityRepository = roomFacilityRepository;
         }
-        public async Task ExecuteAsync(int id)
+        public async Task ExecuteAsync(int id, CancellationToken cancellationToken)
         {
-            var roomFacility = await roomFacilityRepository.GetAsync(id);
+            var roomFacility = await roomFacilityRepository.GetAsync(id, cancellationToken);
             if (roomFacility == null)
             {
                 throw new EntityNotFoundException($"RoomFacility with id number {id} not found");
             }
-            await roomFacilityRepository.DeleteAsync(id);
+            await roomFacilityRepository.DeleteAsync(id, cancellationToken: cancellationToken);
         }
     }
 }

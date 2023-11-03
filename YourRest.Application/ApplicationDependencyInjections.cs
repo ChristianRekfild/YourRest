@@ -18,6 +18,15 @@ using YourRest.Application.UseCases;
 using YourRest.Application.UseCases.AgeRangeUseCases;
 using YourRest.Application.UseCases.Facility;
 using YourRest.Application.UseCases.Room;
+using SharpGrip.FluentValidation.AutoValidation.Mvc.Enums;
+using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.AspNetCore.Mvc;
+using SharpGrip.FluentValidation.AutoValidation.Mvc.Results;
+using YourRest.Application.Dto.ViewModels;
+using YourRest.Application.Dto.Mappers;
+using System.Globalization;
+using YourRest.Application.UseCases.AgeRangeUseCases;
+using YourRest.Application.Interfaces.Age;
 
 namespace YourRest.Application
 {
@@ -70,13 +79,14 @@ namespace YourRest.Application
             services.AddScoped<IGetRoomFacilityByIdUseCase, GetRoomFacilityByIdUseCase>();
             services.AddScoped<IRemoveRoomFacilityUseCase, RemoveRoomFacilityUseCase>();
             services.AddScoped<IGetRoomTypeListUseCase, GetRoomTypeListUseCase>();
+            services.AddScoped<IGetAllRoomFacilitiesUseCase, GetAllRoomFacilitiesUseCase>();
             //AgeRange
             services.AddScoped<ICreateAgeRangeUseCase, CreateAgeRangeUseCase>();
             services.AddScoped<IEditAgeRangeUseCase, EditAgeRangeUseCase>();
             services.AddScoped<IGetAgeRangeByIdUseCase, GetAgeRangeByIdUseCase>();
-
-
             
+            services.AddScoped<IAccommodationMapper, AccommodationMapper>();
+            services.AddScoped<IFetchAccommodationsUseCase, FetchAccommodationsUseCase>();
             services.AddScoped<IAuthenticationService, AuthenticationService>();
 
             return services;
