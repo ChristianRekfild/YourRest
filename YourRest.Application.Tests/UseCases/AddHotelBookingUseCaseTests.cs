@@ -8,24 +8,18 @@ using YourRest.Domain.Repositories;
 
 namespace YourRest.Application.Tests.UseCases
 {
-    public class AddAddressToAccommodationUseCaseTests
+    public class AddHotelBookingUseCaseTests
     {
-        private readonly Mock<IAccommodationRepository> _accommodationRepositoryMock;
-        private readonly Mock<IAddressRepository> _addressRepositoryMock;
-        private readonly Mock<ICityRepository> _cityRepositoryMock;
+        private readonly Mock<IHotelBookingRepository> _hotelBookingRepositoryMock;
 
-        private readonly AddAddressToAccommodationUseCase addAddressToAccommodationUseCase;
+        private readonly AddHotelBookingUseCase addHotelBookingUseCase;
 
-        public AddAddressToAccommodationUseCaseTests()
+        public AddHotelBookingUseCaseTests()
         {
-            _accommodationRepositoryMock = new Mock<IAccommodationRepository>();
-            _addressRepositoryMock = new Mock<IAddressRepository>();
-            _cityRepositoryMock = new Mock<ICityRepository>();
+            _hotelBookingRepositoryMock = new Mock<IHotelBookingRepository>();
 
-            addAddressToAccommodationUseCase = new AddAddressToAccommodationUseCase(
-                _accommodationRepositoryMock.Object,
-                _addressRepositoryMock.Object,
-                _cityRepositoryMock.Object);
+            addHotelBookingUseCase = new AddHotelBookingUseCase(
+                _hotelBookingRepositoryMock.Object);
         }
 
         [Fact]
