@@ -19,29 +19,29 @@ namespace YourRest.WebApi.Tests.Controllers
         [Fact]
         public async Task AddHotelBooking_ReturnsStatusCodeCreated()
         {
-            var country = await fixture.InsertObjectIntoDatabase(new Country { Name = "Russia" });
-            var region = await fixture.InsertObjectIntoDatabase(new Region { Name = "Moscow region", CountryId = country.Id });
-            var city = await fixture.InsertObjectIntoDatabase(new City { Name = "Moscow", RegionId = region.Id });
-            var addressEntity = await fixture.InsertObjectIntoDatabase(new Address
-            {
-                Street = "Test Street",
-                CityId = city.Id,
-                ZipCode = "94105",
-                Longitude = 120,
-                Latitude = 75,
-            });
-            var accommodationType = new AccommodationType
-            {
-                Name = "Luxury"
-            };
-            var accomodation = await fixture.InsertObjectIntoDatabase(new Accommodation
-            {
-                Name = "GoldenHotel",
-                AddressId = addressEntity.Id,
-                AccommodationType = accommodationType
-            });
+            //var country = await fixture.InsertObjectIntoDatabase(new Country { Name = "Russia" });
+            //var region = await fixture.InsertObjectIntoDatabase(new Region { Name = "Moscow region", CountryId = country.Id });
+            //var city = await fixture.InsertObjectIntoDatabase(new City { Name = "Moscow", RegionId = region.Id });
+            //var addressEntity = await fixture.InsertObjectIntoDatabase(new Address
+            //{
+            //    Street = "Test Street",
+            //    CityId = city.Id,
+            //    ZipCode = "94105",
+            //    Longitude = 120,
+            //    Latitude = 75,
+            //});
+            //var accommodationType = new AccommodationType
+            //{
+            //    Name = "Luxury"
+            //};
+            //var accomodation = await fixture.InsertObjectIntoDatabase(new Accommodation
+            //{
+            //    Name = "GoldenHotel",
+            //    AddressId = addressEntity.Id,
+            //    AccommodationType = accommodationType
+            //});
             var hotelBooking = new HotelBookingDto {
-                AccommodationId = accomodation.Id, 
+                AccommodationId = 1, 
                 DateFrom = new DateTime(2023, 10, 5),  
                 DateTo = new DateTime(2023, 10, 15),
                 RoomId = 1,
@@ -51,7 +51,7 @@ namespace YourRest.WebApi.Tests.Controllers
             };
 
             var content = new StringContent(JsonConvert.SerializeObject(hotelBooking), Encoding.UTF8, "application/json");
-            var response = await fixture.Client.PostAsync($"api/hotelBooking", content);
+            var response = await fixture.Client.PostAsync($"api/hotelbooking/", content);
 
             Assert.Equal(HttpStatusCode.Created, response.StatusCode);
 

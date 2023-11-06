@@ -9,7 +9,6 @@ using YourRest.Domain.Entities;
 namespace YourRest.WebApi.Controllers
 {
     [ApiController]
-    [Route("api/hotelbooking")]
     [FluentValidationAutoValidation]
     public class HotelBookingController : Controller
     {
@@ -21,6 +20,7 @@ namespace YourRest.WebApi.Controllers
         }
 
         [HttpPost]
+        [Route("api/hotelbooking/")]
         public async Task<IActionResult> PostHotelBookingAsync([FromBody] HotelBookingDto createHotelBookingUseCase)
         {
             var createdHotelBooking = await _createHotelBookingUseCase.ExecuteAsync(createHotelBookingUseCase, HttpContext.RequestAborted);

@@ -13,11 +13,11 @@ namespace YourRest.Application.UseCases.HotelBookingUseCase
 {
     public class CreateHotelBookingUseCase : ICreateHotelBookingUseCase
     { 
-        private readonly IHotelBookingRepository hotelBookingRepository;
+        private readonly IHotelBookingRepository _hotelBookingRepository;
 
         public CreateHotelBookingUseCase(IHotelBookingRepository hotelBookingRepository)
         {
-            this.hotelBookingRepository = hotelBookingRepository;
+            this._hotelBookingRepository = hotelBookingRepository;
         }
 
         public async Task<HotelBookingWithIdDto> ExecuteAsync(HotelBookingDto hotelBookingDto, CancellationToken token = default)
@@ -33,7 +33,7 @@ namespace YourRest.Application.UseCases.HotelBookingUseCase
                 ChildrenNr = hotelBookingDto.ChildrenNr
             };
 
-            var savedHotelBooking = await hotelBookingRepository.AddAsync(hotelBooking, true, token);
+            var savedHotelBooking = await _hotelBookingRepository.AddAsync(hotelBooking, true, token);
 
             HotelBookingWithIdDto hotelBookingWithIdDto = new HotelBookingWithIdDto()
             {
