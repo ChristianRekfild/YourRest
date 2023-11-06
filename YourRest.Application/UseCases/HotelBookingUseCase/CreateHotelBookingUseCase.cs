@@ -24,7 +24,7 @@ namespace YourRest.Application.UseCases.HotelBookingUseCase
         {
             HotelBooking hotelBooking = new HotelBooking()
             {
-                HotelId = hotelBookingDto.HotelId,
+                AccommodationId = hotelBookingDto.AccommodationId,
                 DateFrom = hotelBookingDto.DateFrom,
                 DateTo = hotelBookingDto.DateTo,
                 RoomId = hotelBookingDto.RoomId,
@@ -38,7 +38,7 @@ namespace YourRest.Application.UseCases.HotelBookingUseCase
             HotelBookingWithIdDto hotelBookingWithIdDto = new HotelBookingWithIdDto()
             {
                 Id = savedHotelBooking.Id,
-                HotelId = savedHotelBooking.HotelId,
+                AccommodationId = savedHotelBooking.AccommodationId,
                 DateFrom = savedHotelBooking.DateFrom,
                 DateTo = savedHotelBooking.DateTo,
                 RoomId = savedHotelBooking.RoomId,

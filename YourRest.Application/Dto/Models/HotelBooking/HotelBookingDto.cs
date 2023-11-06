@@ -8,7 +8,7 @@ namespace YourRest.Application.Dto.Models.HotelBooking
 {
     public class HotelBookingDto
     {
-        public int HotelId { get; set; }
+        public int AccommodationId { get; set; }
         public DateTime DateFrom { get; set; }
         public DateTime DateTo { get; set; }
         public int RoomId { get; set; }

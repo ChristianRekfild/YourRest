@@ -258,6 +258,9 @@ namespace YourRest.Producer.Infrastructure.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
+                    b.Property<int>("AccommodationId")
+                        .HasColumnType("integer");
+
                     b.Property<int>("AdultNr")
                         .HasColumnType("integer");
 
@@ -270,9 +273,6 @@ namespace YourRest.Producer.Infrastructure.Migrations
                     b.Property<DateTime>("DateTo")
                         .HasColumnType("timestamp without time zone");
 
-                    b.Property<int>("HotelId")
-                        .HasColumnType("integer");
-
                     b.Property<int>("RoomId")
                         .HasColumnType("integer");
 
@@ -280,6 +280,8 @@ namespace YourRest.Producer.Infrastructure.Migrations
                         .HasColumnType("numeric");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("AccommodationId");
 
                     b.ToTable("HotelBookings");
                 });
@@ -517,6 +519,17 @@ namespace YourRest.Producer.Infrastructure.Migrations
                         .IsRequired();
 
                     b.Navigation("Region");
+                });
+
+            modelBuilder.Entity("YourRest.Domain.Entities.HotelBooking", b =>
+                {
+                    b.HasOne("YourRest.Domain.Entities.Accommodation", "Accommodation")
+                        .WithMany()
+                        .HasForeignKey("AccommodationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Accommodation");
                 });
 
             modelBuilder.Entity("YourRest.Domain.Entities.Region", b =>

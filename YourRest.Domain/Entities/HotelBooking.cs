@@ -8,7 +8,8 @@ namespace YourRest.Domain.Entities
 {
     public class HotelBooking : IntBaseEntity 
     {
-        public int HotelId { get; set; }
+        public Accommodation Accommodation { get; set; }
+        public int AccommodationId { get; set; }
         public DateTime DateFrom { get; set; }
         public DateTime DateTo { get; set; }
         public int RoomId { get; set; }
