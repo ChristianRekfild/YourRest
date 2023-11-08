@@ -42,7 +42,7 @@ namespace YourRest.Application.UseCases.HotelBookingUseCase
                 //t.DateFrom >= hotelBookingDto.DateFrom &&
                 //t.DateFrom < hotelBookingDto.DateTo;
             var AlreadyHaveBooking = RoomIdBooking.Select(x => x)
-                .Where(x => x.DateFrom <= hotelBookingDto.DateFrom && x.DateFrom < hotelBookingDto.DateTo).ToList();
+                .Where(x => x.DateFrom <= hotelBookingDto.DateFrom && x.DateTo < hotelBookingDto.DateFrom).ToList();
 
             if (AlreadyHaveBooking.Any())
             {
