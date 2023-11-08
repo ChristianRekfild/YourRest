@@ -32,11 +32,13 @@ namespace YourRest.Application.UseCases.HotelBookingUseCase
                 AdultNr = hotelBookingDto.AdultNr,
                 ChildrenNr = hotelBookingDto.ChildrenNr
             };
-            var BookingAfterDate = await _hotelBookingRepository.
-                GetAllWithIncludeAsync(t => t.DateFrom >= hotelBookingDto.DateFrom,
+            var AlreadyHaveBooking = await _hotelBookingRepository.
+                GetAllWithIncludeAsync(t =>
+                t.RoomId == hotelBookingDto.RoomId &&
+                t.DateFrom >= hotelBookingDto.DateFrom &&
+                t.DateFrom < hotelBookingDto.DateTo,
                 token);
-            var AlreadyHaveBooking = BookingAfterDate.Select(x => x).Where(t => t.DateTo <= hotelBookingDto.DateTo);
-            if (AlreadyHaveBooking != null)
+            if (AlreadyHaveBooking.Any())
             {
                 throw new Exception();
             }
