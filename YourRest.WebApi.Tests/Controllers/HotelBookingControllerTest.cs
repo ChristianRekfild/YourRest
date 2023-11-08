@@ -19,28 +19,6 @@ namespace YourRest.WebApi.Tests.Controllers
         [Fact]
         public async Task AddHotelBooking_ReturnsStatusCodeCreated()
         {
-            //var country = await fixture.InsertObjectIntoDatabase(new Country { Name = "Russia" });
-            //var region = await fixture.InsertObjectIntoDatabase(new Region { Name = "Moscow region", CountryId = country.Id });
-            //var city = await fixture.InsertObjectIntoDatabase(new City { Name = "Moscow", RegionId = region.Id });
-            //var addressEntity = await fixture.InsertObjectIntoDatabase(new Address
-            //{
-            //    Street = "Test Street",
-            //    CityId = city.Id,
-            //    ZipCode = "94105",
-            //    Longitude = 120,
-            //    Latitude = 75,
-            //});
-            //var accommodationType = new AccommodationType
-            //{
-            //    Name = "Luxury"
-            //};
-            //var accomodation = await fixture.InsertObjectIntoDatabase(new Accommodation
-            //{
-            //    Name = "GoldenHotel",
-            //    AddressId = addressEntity.Id,
-            //    AccommodationType = accommodationType
-            //});
-
             var accommodationType = new AccommodationType
             {
                 Name = "Test Type"
