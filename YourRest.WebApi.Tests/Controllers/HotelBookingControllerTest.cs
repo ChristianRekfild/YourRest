@@ -40,10 +40,25 @@ namespace YourRest.WebApi.Tests.Controllers
             //    AddressId = addressEntity.Id,
             //    AccommodationType = accommodationType
             //});
+
+            var accommodationType = new AccommodationType
+            {
+                Name = "Test Type"
+            };
+            var accommodationEntity = new Accommodation
+            {
+                Name = "Test",
+                AccommodationType = accommodationType
+            };
+            var accommodation = await fixture.InsertObjectIntoDatabase(accommodationEntity);
+            var accommodationId = accommodation.Id;
+            var firstRoom = await fixture.InsertObjectIntoDatabase(new Room { Name = "310", AccommodationId = accommodationId, Capacity = 1, SquareInMeter = 20, RoomType = "Luxe" });
+
+
             var hotelBooking = new HotelBookingDto {
-                AccommodationId = 1, 
-                DateFrom = new DateTime(2023, 10, 5),  
-                DateTo = new DateTime(2023, 10, 15),
+                AccommodationId = accommodationId, 
+                DateFrom = new DateTime(2025, 10, 5),  
+                DateTo = new DateTime(2025, 10, 15),
                 RoomId = 1,
                 TotalAmount = 5000.0m,
                 AdultNr = 2,
