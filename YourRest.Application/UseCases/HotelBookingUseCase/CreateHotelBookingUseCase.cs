@@ -32,6 +32,14 @@ namespace YourRest.Application.UseCases.HotelBookingUseCase
                 AdultNr = hotelBookingDto.AdultNr,
                 ChildrenNr = hotelBookingDto.ChildrenNr
             };
+            var BookingAfterDate = await _hotelBookingRepository.
+                GetAllWithIncludeAsync(t => t.DateFrom >= hotelBookingDto.DateFrom,
+                token);
+            var AlreadyHaveBooking = BookingAfterDate.Select(x => x).Where(t => t.DateTo <= hotelBookingDto.DateTo);
+            if (AlreadyHaveBooking != null)
+            {
+                throw new Exception();
+            }
 
             var savedHotelBooking = await _hotelBookingRepository.AddAsync(hotelBooking, true, token);
 
