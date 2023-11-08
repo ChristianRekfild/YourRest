@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using YourRest.Application.Dto;
 using YourRest.Application.Dto.Models.HotelBooking;
+using YourRest.Application.Exceptions;
 using YourRest.Application.Interfaces.HotelBooking;
 using YourRest.Domain.Entities;
 using YourRest.Domain.Repositories;
@@ -32,15 +33,20 @@ namespace YourRest.Application.UseCases.HotelBookingUseCase
                 AdultNr = hotelBookingDto.AdultNr,
                 ChildrenNr = hotelBookingDto.ChildrenNr
             };
-            var AlreadyHaveBooking = await _hotelBookingRepository.
-                GetAllWithIncludeAsync(t =>
-                t.RoomId == hotelBookingDto.RoomId &&
-                t.DateFrom >= hotelBookingDto.DateFrom &&
-                t.DateFrom < hotelBookingDto.DateTo,
-                token);
+
+            var RoomIdBooking = await _hotelBookingRepository.
+                FindAsync(t => t.RoomId == hotelBookingDto.RoomId, token);
+
+                //  Exception: не может выбрать ниже описанное
+                //&&
+                //t.DateFrom >= hotelBookingDto.DateFrom &&
+                //t.DateFrom < hotelBookingDto.DateTo;
+            var AlreadyHaveBooking = RoomIdBooking.Select(x => x)
+                .Where(x => x.DateFrom <= hotelBookingDto.DateFrom && x.DateFrom < hotelBookingDto.DateTo).ToList();
+
             if (AlreadyHaveBooking.Any())
             {
-                throw new Exception();
+                throw new InvalidParameterException("Бронирование на выбранные даты невозможно. Комната занята.");
             }
 
             var savedHotelBooking = await _hotelBookingRepository.AddAsync(hotelBooking, true, token);
