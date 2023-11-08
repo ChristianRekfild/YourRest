@@ -1,18 +1,19 @@
+using MassTransit;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
+using System.Text;
+using YouRest.Orchestrator;
 using YourRest.Application;
 using YourRest.Infrastructure.Core.DbContexts;
 using YourRest.Producer.Infrastructure;
-using YourRest.Producer.Infrastructure.Middleware;
 using YourRest.Producer.Infrastructure.Keycloak;
-using Microsoft.EntityFrameworkCore;
-using Swashbuckle.AspNetCore.Swagger;
-using Swashbuckle.AspNetCore.SwaggerGen;
-using Microsoft.OpenApi.Models;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
 using YourRest.Producer.Infrastructure.Keycloak.Http;
-using System.Text;
-using YourRest.Producer.Infrastructure.Seeds;
 using YourRest.Producer.Infrastructure.Keycloak.Settings;
+using YourRest.Producer.Infrastructure.Middleware;
+using YourRest.Producer.Infrastructure.Seeds;
+
 public class Program
 {
     public static void Main(string[] args)
@@ -84,7 +85,8 @@ public class Program
         services.AddKeycloakInfrastructure();
         services.AddInfrastructure();
         services.AddApplication();
-               
+        services.AddOrchestrator();
+
         services.AddHttpClient();
         services.AddTransient<ICustomHttpClientFactory, CustomHttpClientFactory>();
 
