@@ -24,7 +24,7 @@ namespace YourRest.WebApi.Controllers
         public async Task<IActionResult> PostHotelBookingAsync([FromBody] HotelBookingDto createHotelBookingUseCase)
         {
             var createdHotelBooking = await _createHotelBookingUseCase.ExecuteAsync(createHotelBookingUseCase, HttpContext.RequestAborted);
-            return CreatedAtAction(nameof(PostHotelBookingAsync), createdHotelBooking);
+            return Created(nameof(PostHotelBookingAsync), createdHotelBooking);
         }
     }
 }

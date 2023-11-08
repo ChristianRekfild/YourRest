@@ -14,8 +14,8 @@ namespace YourRest.Application.Dto.Validators
         {
             RuleFor(HotelBookingDto => HotelBookingDto.Id).NotNull().NotEmpty().GreaterThan(0);
             RuleFor(HotelBookingDto => HotelBookingDto.AccommodationId).NotNull().NotEmpty().GreaterThan(0);
-            RuleFor(HotelBookingDto => HotelBookingDto.DateTo).NotNull().NotEmpty().GreaterThan(DateTime.Now);
-            RuleFor(HotelBookingDto => HotelBookingDto.DateFrom).NotNull().NotEmpty().GreaterThan(DateTime.Now);
+            RuleFor(HotelBookingDto => HotelBookingDto.DateFrom).NotNull().NotEmpty().GreaterThanOrEqualTo(DateTime.Today);
+            RuleFor(HotelBookingDto => HotelBookingDto.DateTo).NotNull().NotEmpty().GreaterThan(HotelBookingDto => HotelBookingDto.DateFrom);
             RuleFor(HotelBookingDto => HotelBookingDto.RoomId).NotNull().NotEmpty().GreaterThan(0);
             RuleFor(HotelBookingDto => HotelBookingDto.TotalAmount).NotNull().NotEmpty().GreaterThan(-1);
             RuleFor(HotelBookingDto => HotelBookingDto.AdultNr).NotNull().NotEmpty().GreaterThan(-1);
