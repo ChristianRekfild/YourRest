@@ -23,7 +23,7 @@ namespace YourRest.Application.UseCases.HotelBookingUseCase
 
         public async Task<HotelBookingWithIdDto> ExecuteAsync(HotelBookingDto hotelBookingDto, CancellationToken token = default)
         {
-            HotelBooking hotelBooking = new HotelBooking()
+            HotelBooking hotelBookingToInsert = new HotelBooking()
             {
                 AccommodationId = hotelBookingDto.AccommodationId,
                 DateFrom = hotelBookingDto.DateFrom,
@@ -43,9 +43,9 @@ namespace YourRest.Application.UseCases.HotelBookingUseCase
                 //t.DateFrom < hotelBookingDto.DateTo;
             var AlreadyHaveBooking = RoomIdBooking.Select(x => x)
                 .Where(x => 
-                (hotelBookingDto.DateFrom <= x.DateFrom && x.DateFrom < hotelBookingDto.DateTo)||
-                (hotelBookingDto.DateFrom < x.DateTo && x.DateTo < hotelBookingDto.DateTo)||
-                (x.DateFrom <= hotelBookingDto.DateFrom && hotelBookingDto.DateTo > x.DateTo)
+                (x.DateFrom  <= hotelBookingToInsert.DateFrom && hotelBookingToInsert.DateFrom <  x.DateTo) ||
+                (x.DateFrom < hotelBookingToInsert.DateTo && hotelBookingToInsert.DateTo < x.DateTo)||
+                (hotelBookingToInsert.DateFrom <= x.DateFrom && x.DateTo < hotelBookingToInsert.DateTo)
                 ).ToList();
 
             if (AlreadyHaveBooking.Any())
@@ -53,7 +53,7 @@ namespace YourRest.Application.UseCases.HotelBookingUseCase
                 throw new InvalidParameterException("Бронирование на выбранные даты невозможно. Комната занята.");
             }
 
-            var savedHotelBooking = await _hotelBookingRepository.AddAsync(hotelBooking, true, token);
+            var savedHotelBooking = await _hotelBookingRepository.AddAsync(hotelBookingToInsert, true, token);
 
             HotelBookingWithIdDto hotelBookingWithIdDto = new HotelBookingWithIdDto()
             {
