@@ -1,0 +1,67 @@
+﻿@using YourRest.ClientWebApp.Controllers;
+@model YourRest.ClientWebApp.Models.HotelBookingClientModel
+
+@{
+    ViewData["Title"] = "Booking";
+    DateTime dateToday = DateTime.UtcNow;
+}
+
+<h1>Booking</h1>
+
+<h4>HotelBookingClientModel</h4>
+<hr />
+@{
+    HotelBookingClientModel newBooking = new HotelBookingClientModel();
+}
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Booking">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="AccommodationId" class="control-label"></label>
+                <input asp-for="@newBooking.AccommodationId" class="form-control"  />
+                <span asp-validation-for="AccommodationId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="DateFrom" class="control-label"></label>
+                <input asp-for="@newBooking.DateFrom" class="form-control" value="dateToday" />
+                <span asp-validation-for="DateFrom" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="DateTo" class="control-label"></label>
+                <input asp-for="@newBooking.DateTo" class="form-control" value="dateToday" />
+                <span asp-validation-for="DateTo" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="RoomId" class="control-label"></label>
+                <input asp-for="@newBooking.RoomId" class="form-control" />
+                <span asp-validation-for="RoomId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="TotalAmount" class="control-label"></label>
+                <input asp-for="@newBooking.TotalAmount" class="form-control" />
+                <span asp-validation-for="TotalAmount" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="AdultNr" class="control-label"></label>
+                <input asp-for="@newBooking.AdultNr" class="form-control" />
+                <span asp-validation-for="AdultNr" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ChildrenNr" class="control-label"></label>
+                <input asp-for="@newBooking.ChildrenNr" class="form-control" />
+                <span asp-validation-for="ChildrenNr" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+
