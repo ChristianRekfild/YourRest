@@ -12,6 +12,8 @@
   <ItemGroup>
     <!-- Microsoft Packages -->
     <PackageReference Include="IdentityModel" Version="6.2.0" />
+    <PackageReference Include="MassTransit" Version="8.1.2-develop.1590" />
+    <PackageReference Include="MassTransit.RabbitMQ" Version="8.1.2-develop.1590" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="7.0.11" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="7.0.10" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.10">
@@ -34,6 +36,8 @@
     <ProjectReference Include="..\Infrastructure\YourRest.Infrastructure.Core\YourRest.Infrastructure.Core.csproj" />
     <ProjectReference Include="..\Infrastructure\YourRest.Producer.Infrastructure\YourRest.Producer.Infrastructure.csproj" />
     <ProjectReference Include="..\Infrastructure\YourRest.Producer.Infrastructure.Middleware\YourRest.Producer.Infrastructure.Middleware.csproj" />
+    <ProjectReference Include="..\YouRest.Booking.Contracts\YouRest.Booking.Contracts.csproj" />
+    <ProjectReference Include="..\YouRest.Orchestrator\YouRest.Orchestrator.csproj" />
     <ProjectReference Include="..\YourRest.Application\YourRest.Application.csproj" />
     <ProjectReference Include="..\YourRest.Domain\YourRest.Domain.csproj" />
     <ProjectReference Include="..\Infrastructure\YourRest.Producer.Infrastructure.Keycloak\YourRest.Producer.Infrastructure.Keycloak.csproj" />

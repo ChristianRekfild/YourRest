@@ -12,6 +12,13 @@ services:
 #      - webapidb
 #    networks:
 #      - local-network
+  rabbitmq:
+    image: masstransit/rabbitmq
+    container_name: rabbitmq
+    hostname: rabbitmq
+    ports:
+      - 5672:5672
+      - 15672:15672
 
   keycloak:
     build:
