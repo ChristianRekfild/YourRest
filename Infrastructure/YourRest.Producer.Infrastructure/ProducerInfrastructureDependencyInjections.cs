@@ -23,6 +23,7 @@ namespace YourRest.Producer.Infrastructure
             services.AddScoped<IAgeRangeRepository, AgeRangeRepository>();
 
             services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IAccommodationPhotoRepository, AccommodationPhotoRepository>();
 
             return services;
         }
