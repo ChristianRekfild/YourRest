@@ -1,7 +1,12 @@
 ﻿using MassTransit;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using YouRest.Orchestrator.Consumers;
 using YouRest.Orchestrator.StateMachines.BookingStateMachine;
+using YourRest.Application;
+using YourRest.Infrastructure.Core.DbContexts;
+using YourRest.Producer.Infrastructure;
 
 namespace YouRest.Orchestrator
 {
@@ -23,8 +28,8 @@ namespace YouRest.Orchestrator
                 {
                     cfg.ConfigureEndpoints(context);
                 });
-
             });
+            services.AddHttpClient();
             return services;
         }
     }

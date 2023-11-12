@@ -5,6 +5,8 @@ using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using YouRest.Orchestrator;
+using YourRest.Application;
 using YourRest.ClientIdentity.Infrastructure;
 using YourRest.ClientIdentity.Infrastructure.Contracts.Entities;
 using YourRest.Infrastructure.Core.DbContexts;
@@ -50,6 +52,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)  // с
             ValidateIssuerSigningKey = true,
         };
     });
+builder.Services.AddOrchestrator();
 builder.Services.AddAuthorization();            // добавление сервисов авторизации
 
 var app = builder.Build();

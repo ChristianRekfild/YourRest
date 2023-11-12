@@ -26,6 +26,9 @@ namespace YouRest.Orchestrator.StateMachines.BookingStateMachine
                     context.Saga.AccommodationId = context.Message.AccommodationId;
                     context.Saga.StartDate = context.Message.StartDate;
                     context.Saga.EndDate = context.Message.EndDate;
+                    context.Saga.AdultNr = context.Message.AdultNr;
+                    context.Saga.ChildrenNr = context.Message.ChildrenNr;
+                    context.Saga.TotalAmount = context.Message.TotalAmount;
                 })
                 //.PublishAsync(context => context.Init<ConfirmBooking>(new
                 //{

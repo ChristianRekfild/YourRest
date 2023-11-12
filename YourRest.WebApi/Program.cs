@@ -85,7 +85,6 @@ public class Program
         services.AddKeycloakInfrastructure();
         services.AddInfrastructure();
         services.AddApplication();
-        services.AddOrchestrator();
 
         services.AddHttpClient();
         services.AddTransient<ICustomHttpClientFactory, CustomHttpClientFactory>();

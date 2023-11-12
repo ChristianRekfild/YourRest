@@ -7,7 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="MassTransit" Version="8.1.2-develop.1590" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="7.0.12" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.10">
       <PrivateAssets>all</PrivateAssets>
@@ -20,6 +19,8 @@
     <ProjectReference Include="..\Infrastructure\YourRest.ClientIdentity.Infrastructure.Contracts\YourRest.ClientIdentity.Infrastructure.Contracts.csproj" />
     <ProjectReference Include="..\Infrastructure\YourRest.ClientIdentity.Infrastructure\YourRest.ClientIdentity.Infrastructure.csproj" />
     <ProjectReference Include="..\Infrastructure\YourRest.Infrastructure.Core\YourRest.Infrastructure.Core.csproj" />
+    <ProjectReference Include="..\YouRest.Booking.Contracts\YouRest.Booking.Contracts.csproj" />
+    <ProjectReference Include="..\YouRest.Orchestrator\YouRest.Orchestrator.csproj" />
   </ItemGroup>
 
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">

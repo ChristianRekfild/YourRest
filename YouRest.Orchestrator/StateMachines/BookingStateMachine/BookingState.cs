@@ -11,5 +11,8 @@ namespace YouRest.Orchestrator.StateMachines.BookingStateMachine
         public int AccommodationId { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
+        public decimal TotalAmount { get; set; }
+        public int AdultNr { get; set; }
+        public int ChildrenNr { get; set; }
     }
 }
