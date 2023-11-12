@@ -21,7 +21,7 @@ namespace YourRest.Application.UseCases.HotelBookingUseCase
             this._hotelBookingRepository = hotelBookingRepository;
         }
 
-        public async Task<HotelBookingWithIdDto> ExecuteAsync(HotelBookingDto hotelBookingDto, CancellationToken token = default)
+        public async Task<HotelBookingWithIdDto> ExecuteAsync(HotelBookingDto hotelBookingDto, CancellationToken token = default) 
         {
             HotelBooking hotelBookingToInsert = new HotelBooking()
             {
