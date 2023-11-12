@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using MassTransit;
+using Microsoft.AspNetCore.Mvc;
 using YourRest.ClientWebApp.Models;
 using YourRest.Domain.Entities;
 
@@ -6,7 +7,12 @@ namespace YourRest.ClientWebApp.Controllers
 {
     public class HotelBookingController : Controller
     {
+        private readonly IPublishEndpoint publishEndpoint;
 
+        public HotelBookingController(IPublishEndpoint publishEndpoint)
+        {
+            this.publishEndpoint = publishEndpoint;
+        }
         public IActionResult index(HotelBookingClientModel booking)
         {
 

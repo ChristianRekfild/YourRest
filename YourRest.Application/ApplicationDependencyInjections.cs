@@ -28,6 +28,8 @@ using YourRest.Application.Dto.Mappers;
 using System.Globalization;
 using YourRest.Application.UseCases.AgeRangeUseCases;
 using YourRest.Application.Interfaces.Age;
+using YourRest.Application.Interfaces.HotelBooking;
+using YourRest.Application.UseCases.HotelBookingUseCase;
 
 namespace YourRest.Application
 {
