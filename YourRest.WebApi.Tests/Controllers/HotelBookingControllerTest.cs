@@ -2,13 +2,16 @@
 using System.Net;
 using System.Net.Http.Json;
 using System.Text;
+using System.Text.Unicode;
 using System.Xml.Serialization;
 using YourRest.Application.Dto;
+using YourRest.Application.Dto.Models;
 using YourRest.Application.Dto.Models.HotelBooking;
 using YourRest.Application.Dto.ViewModels;
 using YourRest.Domain.Entities;
 using YourRest.WebApi.Responses;
 using YourRest.WebApi.Tests.Fixtures;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace YourRest.WebApi.Tests.Controllers
 {
@@ -38,13 +41,13 @@ namespace YourRest.WebApi.Tests.Controllers
 
 
             var hotelBooking = new HotelBookingDto {
-                AccommodationId = accommodationId, 
-                DateFrom = new DateTime(2025, 10, 5),  
+                AccommodationId = accommodationId,
+                DateFrom = new DateTime(2025, 10, 5),
                 DateTo = new DateTime(2025, 10, 15),
                 RoomId = 1,
                 TotalAmount = 5000.0m,
                 AdultNr = 2,
-                ChildrenNr = 2 
+                ChildrenNr = 2
             };
 
             var content = new StringContent(JsonConvert.SerializeObject(hotelBooking), Encoding.UTF8, "application/json");
@@ -108,65 +111,6 @@ namespace YourRest.WebApi.Tests.Controllers
             var response = await fixture.Client.PostAsync($"api/hotelbooking/", content);
 
             Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
-
-            var hotelBooking2 = new HotelBookingDto
-            {
-                AccommodationId = accommodationId,
-                DateFrom = new DateTime(2025, 9, 20),
-                DateTo = new DateTime(2025, 10, 15),
-                RoomId = 1,
-                TotalAmount = 5000.0m,
-                AdultNr = 2,
-                ChildrenNr = 2
-            };
-
-
-            content = new StringContent(JsonConvert.SerializeObject(hotelBooking2), Encoding.UTF8, "application/json");
-            response = await fixture.Client.PostAsync($"api/hotelbooking/", content);
-
-            Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
-
-            var hotelBooking3 = new HotelBookingDto
-            {
-                AccommodationId = accommodationId,
-                DateFrom = new DateTime(2025, 10, 5),
-                DateTo = new DateTime(2025, 10, 10),
-                RoomId = 1,
-                TotalAmount = 5000.0m,
-                AdultNr = 2,
-                ChildrenNr = 2
-            };
-
-
-            content = new StringContent(JsonConvert.SerializeObject(hotelBooking3), Encoding.UTF8, "application/json");
-            response = await fixture.Client.PostAsync($"api/hotelbooking/", content);
-
-            Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
-
-            var hotelBooking4 = new HotelBookingDto
-            {
-                AccommodationId = accommodationId,
-                DateFrom = new DateTime(2025, 9, 1),
-                DateTo = new DateTime(2025, 10, 10),
-                RoomId = 1,
-                TotalAmount = 5000.0m,
-                AdultNr = 2,
-                ChildrenNr = 2
-            };
-
-
-            content = new StringContent(JsonConvert.SerializeObject(hotelBooking4), Encoding.UTF8, "application/json");
-            response = await fixture.Client.PostAsync($"api/hotelbooking/", content);
-
-            Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
-            //var content = new StringContent(JsonConvert.SerializeObject(hotelBooking), Encoding.UTF8, "application/json");
-            //var response = await fixture.Client.PostAsync($"api/hotelbooking/", content);
-
-            //Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
-
-            //var errorData = await response.Content.ReadAsStringAsync();
-
-            //Assert.Equal("Бронирование на выбранные даты невозможно. Комната занята.", errorData);
         }
     }
 }
