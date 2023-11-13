@@ -34,21 +34,20 @@ namespace YourRest.Application.UseCases.HotelBookingUseCase
                 ChildrenNr = hotelBookingDto.ChildrenNr
             };
 
-            var RoomIdBooking = await _hotelBookingRepository.
-                FindAsync(t => t.RoomId == hotelBookingDto.RoomId, token);
+            var AlreadyHaveBooking = (await _hotelBookingRepository.
+                FindAsync(x => x.Id == hotelBookingDto.RoomId &&(
+                (x.DateFrom <= hotelBookingToInsert.DateFrom && hotelBookingToInsert.DateFrom < x.DateTo) ||
+                (x.DateFrom < hotelBookingToInsert.DateTo && hotelBookingToInsert.DateTo < x.DateTo) ||
+                (hotelBookingToInsert.DateFrom <= x.DateFrom && x.DateTo < hotelBookingToInsert.DateTo)), token)).Any();
 
-                //  Exception: не может выбрать ниже описанное
-                //&&
-                //t.DateFrom >= hotelBookingDto.DateFrom &&
-                //t.DateFrom < hotelBookingDto.DateTo;
-            var AlreadyHaveBooking = RoomIdBooking.Select(x => x)
-                .Where(x => 
-                (x.DateFrom  <= hotelBookingToInsert.DateFrom && hotelBookingToInsert.DateFrom <  x.DateTo) ||
-                (x.DateFrom < hotelBookingToInsert.DateTo && hotelBookingToInsert.DateTo < x.DateTo)||
-                (hotelBookingToInsert.DateFrom <= x.DateFrom && x.DateTo < hotelBookingToInsert.DateTo)
-                ).ToList();
+            //var AlreadyHaveBooking = RoomIdBooking.Select(x => x)
+            //    .Where(x => 
+            //    (x.DateFrom  <= hotelBookingToInsert.DateFrom && hotelBookingToInsert.DateFrom <  x.DateTo) ||
+            //    (x.DateFrom < hotelBookingToInsert.DateTo && hotelBookingToInsert.DateTo < x.DateTo)||
+            //    (hotelBookingToInsert.DateFrom <= x.DateFrom && x.DateTo < hotelBookingToInsert.DateTo)
+            //    ).ToList();
 
-            if (AlreadyHaveBooking.Any())
+            if (AlreadyHaveBooking)
             {
                 throw new InvalidParameterException("Бронирование на выбранные даты невозможно. Комната занята.");
             }
