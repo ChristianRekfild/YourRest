@@ -9,9 +9,9 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace YourRest.Application.Dto.Validators
 {
-    public class HotelBookingDtoValidator : AbstractValidator<BookingDto>
+    public class BookingDtoValidator : AbstractValidator<BookingDto>
     {
-        public HotelBookingDtoValidator() 
+        public BookingDtoValidator() 
         {
            
             RuleFor(HotelBookingDto => HotelBookingDto.StartDate).NotNull().NotEmpty().GreaterThanOrEqualTo(DateTime.Today);
