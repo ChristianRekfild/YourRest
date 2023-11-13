@@ -26,7 +26,7 @@ namespace YourRest.WebApi.Tests.Controllers
         [Fact]
         public async Task GivenBookingAndCorrectReviewData_WhenPostCalled_ReturnsCreatedAtAction()
         {
-            var customer = new Customer
+            var customer = new Guest
                 {
                     FirstName = "Test",
                     LastName = "Test",

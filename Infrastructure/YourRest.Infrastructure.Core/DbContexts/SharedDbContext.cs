@@ -6,7 +6,7 @@ namespace YourRest.Infrastructure.Core.DbContexts
     public class SharedDbContext : DbContext
     {
         public DbSet<Country> Countries { get; set; }
-        public DbSet<Customer> Customers { get; set; }
+        public DbSet<Guest> Guests { get; set; }
         public DbSet<City> Cities { get; set; }
         public DbSet<Booking> Bookings { get; set; }
         public DbSet<Region> Regions { get; set; }
@@ -20,7 +20,6 @@ namespace YourRest.Infrastructure.Core.DbContexts
         public DbSet<UserAccommodation> UserAccommodations { get; set; }
         public DbSet<AccommodationType> AccommodationTypes { get; set; }
         public DbSet<AgeRange> AgeRanges { get; set; }
-        public DbSet<HotelBooking> HotelBookings { get; set; }
 
 
 
@@ -115,7 +114,7 @@ namespace YourRest.Infrastructure.Core.DbContexts
         {
             Countries.RemoveRange(Countries);
             Bookings.RemoveRange(Bookings);
-            Customers.RemoveRange(Customers);
+            Guests.RemoveRange(Guests);
             Cities.RemoveRange(Cities);
             Regions.RemoveRange(Regions);
             Reviews.RemoveRange(Reviews);
@@ -126,7 +125,6 @@ namespace YourRest.Infrastructure.Core.DbContexts
             RoomTypes.RemoveRange(RoomTypes);
             AccommodationTypes.RemoveRange(AccommodationTypes);
             AgeRanges.RemoveRange(AgeRanges);
-            HotelBookings.RemoveRange(HotelBookings);
 
             // Add other DbSet removals here
             // Example: 

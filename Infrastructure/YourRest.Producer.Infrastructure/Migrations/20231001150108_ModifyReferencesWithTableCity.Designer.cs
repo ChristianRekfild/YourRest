@@ -95,7 +95,7 @@ namespace YourRest.Producer.Infrastructure.Migrations
                     b.ToTable("Countries");
                 });
 
-            modelBuilder.Entity("YourRest.Domain.Entities.Customer", b =>
+            modelBuilder.Entity("YourRest.Domain.Entities.Guest", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -131,7 +131,7 @@ namespace YourRest.Producer.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Customers");
+                    b.ToTable("Guests");
                 });
 
             modelBuilder.Entity("YourRest.Domain.Entities.Region", b =>
@@ -183,13 +183,13 @@ namespace YourRest.Producer.Infrastructure.Migrations
 
             modelBuilder.Entity("YourRest.Domain.Entities.Booking", b =>
                 {
-                    b.HasOne("YourRest.Domain.Entities.Customer", "Customer")
+                    b.HasOne("YourRest.Domain.Entities.Guest", "Guest")
                         .WithMany()
                         .HasForeignKey("CustomerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Customer");
+                    b.Navigation("Guest");
                 });
 
             modelBuilder.Entity("YourRest.Domain.Entities.City", b =>

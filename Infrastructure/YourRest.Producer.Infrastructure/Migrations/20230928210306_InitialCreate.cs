@@ -39,7 +39,7 @@ namespace YourRest.Producer.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Customers",
+                name: "Guests",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
@@ -95,7 +95,7 @@ namespace YourRest.Producer.Infrastructure.Migrations
                     table.ForeignKey(
                         name: "FK_Bookings_Customers_CustomerId",
                         column: x => x.CustomerId,
-                        principalTable: "Customers",
+                        principalTable: "Guests",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -156,7 +156,7 @@ namespace YourRest.Producer.Infrastructure.Migrations
                 name: "Bookings");
 
             migrationBuilder.DropTable(
-                name: "Customers");
+                name: "Guests");
         }
     }
 }

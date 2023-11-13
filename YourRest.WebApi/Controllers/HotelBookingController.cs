@@ -12,16 +12,16 @@ namespace YourRest.WebApi.Controllers
     [FluentValidationAutoValidation]
     public class HotelBookingController : Controller
     {
-        private readonly ICreateHotelBookingUseCase _createHotelBookingUseCase;
+        private readonly ICreateBookingUseCase _createHotelBookingUseCase;
 
-        public HotelBookingController(ICreateHotelBookingUseCase createHotelBookingUseCase)
+        public HotelBookingController(ICreateBookingUseCase createHotelBookingUseCase)
         {
             _createHotelBookingUseCase = createHotelBookingUseCase;
         }
 
         [HttpPost]
         [Route("api/hotelbooking/")]
-        public async Task<IActionResult> PostHotelBookingAsync([FromBody] HotelBookingDto createHotelBookingUseCase)
+        public async Task<IActionResult> PostHotelBookingAsync([FromBody] BookingDto createHotelBookingUseCase)
         {
             var createdHotelBooking = await _createHotelBookingUseCase.ExecuteAsync(createHotelBookingUseCase, HttpContext.RequestAborted);
             return Created(nameof(PostHotelBookingAsync), createdHotelBooking);
