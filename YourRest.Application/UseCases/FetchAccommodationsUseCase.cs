@@ -22,7 +22,7 @@ namespace YourRest.Application.UseCases
             _mapper = mapper;
         }
 
-        public async Task<IEnumerable<AccommodationDto>> Execute(FetchAccommodationsViewModel viewModel)
+        public async Task<IEnumerable<AccommodationExtendedDto>> Execute(FetchAccommodationsViewModel viewModel)
         {
             var domainFilterCriteria = _mapper.MapToFilterCriteria(viewModel);
 
@@ -31,9 +31,9 @@ namespace YourRest.Application.UseCases
         }
 
 
-        private AccommodationDto ConvertToDto(Accommodation accommodation)
+        private AccommodationExtendedDto ConvertToDto(Accommodation accommodation)
         {
-            return new AccommodationDto
+            return new AccommodationExtendedDto
             {
                 Id = accommodation.Id,
                 Name = accommodation.Name,

@@ -5,6 +5,6 @@ namespace YourRest.Application.Interfaces
 {
     public interface IFetchAccommodationsUseCase
     {
-        Task<IEnumerable<AccommodationDto>> Execute(FetchAccommodationsViewModel viewModel);
+        Task<IEnumerable<AccommodationExtendedDto>> Execute(FetchAccommodationsViewModel viewModel);
     }
 }

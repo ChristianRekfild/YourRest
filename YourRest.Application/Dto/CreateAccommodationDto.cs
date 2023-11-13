@@ -3,11 +3,10 @@ using YourRest.Application.Dto.Models.Room;
 
 namespace YourRest.Application.Dto
 {
-    public class AccommodationDto
+    public class CreateAccommodationDto
     {
-        public int Id { get; set; }
         public string Name { get; set; }
-        public AccommodationTypeDto AccommodationType { get; set; }
+        public int AccommodationTypeId { get; set; }
         public string Description { get; set; }
     }
 }

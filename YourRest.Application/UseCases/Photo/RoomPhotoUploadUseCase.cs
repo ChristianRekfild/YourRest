@@ -10,42 +10,42 @@ using YourRest.Application.Dto.Models;
 
 namespace YourRest.Application.UseCases.Photo
 {
-    public class AccommodationPhotoUploadUseCase : IAccommodationPhotoUploadUseCase
+    public class RoomPhotoUploadUseCase : IRoomPhotoUploadUseCase
     {
-        private readonly IAccommodationPhotoRepository _photoRepository;
-        private readonly IAccommodationRepository _accommodationRepository;
+        private readonly IRoomPhotoRepository _photoRepository;
+        private readonly IRoomRepository _roomRepository;
         private readonly IFileService _fileService;
 
-        public AccommodationPhotoUploadUseCase(
-            IAccommodationPhotoRepository photoRepository, 
-            IAccommodationRepository accommodationRepository,
+        public RoomPhotoUploadUseCase(
+            IRoomPhotoRepository photoRepository, 
+            IRoomRepository roomRepository,
             IFileService fileService
             )
         {
             _photoRepository = photoRepository;
-            _accommodationRepository = accommodationRepository;
+            _roomRepository = roomRepository;
             _fileService = fileService;
         }
-        public async Task<PhotoUploadResponseDto> Handle(PhotoUploadModel photoUploadModel, string bucketName)
+        public async Task<PhotoUploadResponseDto> Handle(RoomPhotoUploadModel request, string bucketName)
         {
-            var accommodation = await _accommodationRepository.GetAsync(photoUploadModel.AccommodationId);
+            var room = await _roomRepository.GetAsync(request.RoomId);
 
-            if (accommodation == null)
+            if (room == null)
             {
-                throw new EntityNotFoundException($"Accommodation with id {photoUploadModel.AccommodationId} not found");
+                throw new EntityNotFoundException($"Room with id {request.RoomId} not found");
             }
             
             var fileData = new FileData
             {
-                Content = photoUploadModel.Photo.OpenReadStream(),
-                FileName = photoUploadModel.Photo.FileName
+                Content = request.Photo.OpenReadStream(),
+                FileName = request.Photo.FileName
             };
 
             var photoPath = await _fileService.AddPhoto(fileData, bucketName);
             
-            var photo = new AccommodationPhoto()
+            var photo = new RoomPhoto()
             {
-                Accommodation = accommodation,
+                Room = room,
                 FilePath = photoPath
             };
 

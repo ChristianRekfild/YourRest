@@ -239,7 +239,7 @@ namespace YourRest.WebApi.Tests.Controllers
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
             var responseString = await response.Content.ReadAsStringAsync();
-            var accommodations = JsonConvert.DeserializeObject<List<AccommodationDto>>(responseString);
+            var accommodations = JsonConvert.DeserializeObject<List<AccommodationExtendedDto>>(responseString);
             
             Assert.True(accommodations.Count > 0);
             Assert.Contains(accommodations, dto => dto.Name == "GoldenHotel");

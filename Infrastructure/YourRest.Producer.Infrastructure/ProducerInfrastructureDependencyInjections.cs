@@ -24,6 +24,8 @@ namespace YourRest.Producer.Infrastructure
 
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IAccommodationPhotoRepository, AccommodationPhotoRepository>();
+            services.AddScoped<IRoomPhotoRepository, RoomPhotoRepository>();
+            services.AddScoped<IAccommodationTypeRepository, AccommodationTypeRepository>();
 
             return services;
         }

@@ -83,7 +83,11 @@ namespace YourRest.Application
             services.AddScoped<IFetchAccommodationsUseCase, FetchAccommodationsUseCase>();
             services.AddScoped<IAuthenticationService, AuthenticationService>();
             services.AddScoped<IAccommodationPhotoUploadUseCase, AccommodationPhotoUploadUseCase>();
-
+            services.AddScoped<IRoomPhotoUploadUseCase, RoomPhotoUploadUseCase>();
+            services.AddScoped<ICreateAccommodationUseCase, CreateAccommodationUseCase>();
+            services.AddScoped<IGetAccommodationTypeListUseCase, GetAccommodationTypeListUseCase>();
+            services.AddScoped<IFileService, FileService>();
+            
             return services;
         }
     }

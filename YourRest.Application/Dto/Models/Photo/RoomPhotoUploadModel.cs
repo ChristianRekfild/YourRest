@@ -3,9 +3,9 @@ using System.ComponentModel.DataAnnotations;
 
 namespace YourRest.Application.Dto.Models.Photo
 {
-    public class PhotoUploadModel: BasePhotoUploadModel
+    public class RoomPhotoUploadModel: BasePhotoUploadModel
     {
         [Required]
-        public int AccommodationId { get; set; }
+        public int RoomId { get; set; }
     }
 }
