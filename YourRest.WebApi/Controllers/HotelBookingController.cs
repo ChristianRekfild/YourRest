@@ -12,9 +12,9 @@ namespace YourRest.WebApi.Controllers
     [FluentValidationAutoValidation]
     public class HotelBookingController : Controller
     {
-        private readonly ICreateHotelBookingUseCase _createHotelBookingUseCase;
+        private readonly ICreateBookingUseCase _createHotelBookingUseCase;
 
-        public HotelBookingController(ICreateHotelBookingUseCase createHotelBookingUseCase)
+        public HotelBookingController(ICreateBookingUseCase createHotelBookingUseCase)
         {
             _createHotelBookingUseCase = createHotelBookingUseCase;
         }

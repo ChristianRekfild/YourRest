@@ -8,8 +8,8 @@ using YourRest.Application.Dto.Models.HotelBooking;
 
 namespace YourRest.Application.Interfaces.HotelBooking
 {
-    public interface ICreateHotelBookingUseCase
+    public interface ICreateBookingUseCase
     {
-        Task<HotelBookingWithIdDto> ExecuteAsync(BookingDto hotelBookingDto, CancellationToken token = default);
+        Task<BookingWithIdDto> ExecuteAsync(BookingDto hotelBookingDto, CancellationToken token = default);
     }
 }

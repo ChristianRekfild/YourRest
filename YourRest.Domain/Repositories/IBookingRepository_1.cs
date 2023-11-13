@@ -7,7 +7,7 @@ using YourRest.Domain.Entities;
 
 namespace YourRest.Domain.Repositories
 {
-    public interface IBookingRepository : IRepository<HotelBooking, int>
+    public interface IBkingRepository : IRepository<Booking, int>
     {
     }
 }

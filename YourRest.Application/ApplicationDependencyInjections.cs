@@ -87,7 +87,7 @@ namespace YourRest.Application
             services.AddScoped<IEditAgeRangeUseCase, EditAgeRangeUseCase>();
             services.AddScoped<IGetAgeRangeByIdUseCase, GetAgeRangeByIdUseCase>();
             //HotelBooking
-            services.AddScoped<ICreateHotelBookingUseCase, CreateHotelBookingUseCase>();
+            services.AddScoped<ICreateBookingUseCase, CreateBookingUseCase>();
 
             services.AddScoped<IAccommodationMapper, AccommodationMapper>();
             services.AddScoped<IFetchAccommodationsUseCase, FetchAccommodationsUseCase>();
