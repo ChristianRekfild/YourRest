@@ -10,7 +10,7 @@ namespace YourRest.Producer.Infrastructure
         {
             services.AddScoped<IBookingRepository, BookingRepository>();
             services.AddScoped<ICountryRepository, CountryRepository>();
-            services.AddScoped<ICustomerRepository, CustomerRepository>();
+            services.AddScoped<IGuestRepository, GuestRepository>();
             services.AddScoped<ICityRepository, CityRepository>();
             services.AddScoped<IRegionRepository, RegionRepository>();
             services.AddScoped<IReviewRepository, ReviewRepository>();
@@ -21,7 +21,7 @@ namespace YourRest.Producer.Infrastructure
             services.AddScoped<IRoomTypeRepository, RoomTypeRepository>();
             services.AddScoped<IAgeRangeRepository, AgeRangeRepository>();
             services.AddScoped<IUserRepository, UserRepository>();           
-            services.AddScoped<IHotelBookingRepository, HotelBookingRepository>();
+            services.AddScoped<IBookingRepository, HotelBookingRepository>();
 
             return services;
         }

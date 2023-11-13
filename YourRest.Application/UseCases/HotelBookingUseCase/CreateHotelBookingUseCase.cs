@@ -14,33 +14,33 @@ namespace YourRest.Application.UseCases.HotelBookingUseCase
 {
     public class CreateHotelBookingUseCase : ICreateHotelBookingUseCase
     { 
-        private readonly IHotelBookingRepository _hotelBookingRepository;
+        private readonly IBookingRepository _bookingRepository;
 
-        public CreateHotelBookingUseCase(IHotelBookingRepository hotelBookingRepository)
+        public CreateHotelBookingUseCase(IBookingRepository hotelBookingRepository)
         {
-            this._hotelBookingRepository = hotelBookingRepository;
+            this._bookingRepository = hotelBookingRepository;
         }
 
-        public async Task<HotelBookingWithIdDto> ExecuteAsync(HotelBookingDto hotelBookingDto, CancellationToken token = default)
+        public async Task<HotelBookingWithIdDto> ExecuteAsync(BookingDto bookingDto, CancellationToken token = default)
         {
-            HotelBooking hotelBookingToInsert = new HotelBooking()
+            Booking hotelBookingToInsert = new Booking()
             {
-                AccommodationId = hotelBookingDto.AccommodationId,
-                DateFrom = hotelBookingDto.DateFrom,
-                DateTo = hotelBookingDto.DateTo,
-                RoomId = hotelBookingDto.RoomId,
-                TotalAmount = hotelBookingDto.TotalAmount,
-                AdultNr = hotelBookingDto.AdultNr,
-                ChildrenNr = hotelBookingDto.ChildrenNr
+                AccommodationId = bookingDto.AccommodationId,
+                DateFrom = bookingDto.DateFrom,
+                DateTo = bookingDto.DateTo,
+                RoomId = bookingDto.RoomId,
+                TotalAmount = bookingDto.TotalAmount,
+                AdultNr = bookingDto.AdultNr,
+                ChildrenNr = bookingDto.ChildrenNr
             };
 
-            var RoomIdBooking = await _hotelBookingRepository.
-                FindAsync(t => t.RoomId == hotelBookingDto.RoomId, token);
+            var RoomIdBooking = await _bookingRepository.
+                FindAsync(t => t.RoomId == bookingDto.RoomId, token);
 
                 //  Exception: не может выбрать ниже описанное
                 //&&
-                //t.DateFrom >= hotelBookingDto.DateFrom &&
-                //t.DateFrom < hotelBookingDto.DateTo;
+                //t.DateFrom >= bookingDto.DateFrom &&
+                //t.DateFrom < bookingDto.DateTo;
             var AlreadyHaveBooking = RoomIdBooking.Select(x => x)
                 .Where(x => 
                 (x.DateFrom  <= hotelBookingToInsert.DateFrom && hotelBookingToInsert.DateFrom <  x.DateTo) ||
@@ -53,7 +53,7 @@ namespace YourRest.Application.UseCases.HotelBookingUseCase
                 throw new InvalidParameterException("Бронирование на выбранные даты невозможно. Комната занята.");
             }
 
-            var savedHotelBooking = await _hotelBookingRepository.AddAsync(hotelBookingToInsert, true, token);
+            var savedHotelBooking = await _bookingRepository.AddAsync(hotelBookingToInsert, true, token);
 
             HotelBookingWithIdDto hotelBookingWithIdDto = new HotelBookingWithIdDto()
             {

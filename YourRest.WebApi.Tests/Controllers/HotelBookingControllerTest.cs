@@ -37,7 +37,7 @@ namespace YourRest.WebApi.Tests.Controllers
             var firstRoom = await fixture.InsertObjectIntoDatabase(new Room { Name = "310", AccommodationId = accommodationId, Capacity = 1, SquareInMeter = 20, RoomType = "Luxe" });
 
 
-            var hotelBooking = new HotelBookingDto {
+            var hotelBooking = new BookingDto {
                 AccommodationId = accommodationId, 
                 DateFrom = new DateTime(2025, 10, 5),  
                 DateTo = new DateTime(2025, 10, 15),
@@ -53,7 +53,7 @@ namespace YourRest.WebApi.Tests.Controllers
             Assert.Equal(HttpStatusCode.Created, response.StatusCode);
 
             var responseContent = await response.Content.ReadAsStringAsync();
-            var hotelBookingResponse = JsonConvert.DeserializeObject<HotelBookingDto>(responseContent);
+            var hotelBookingResponse = JsonConvert.DeserializeObject<BookingDto>(responseContent);
 
             Assert.NotNull(hotelBookingResponse);
             Assert.Equal(hotelBooking.AccommodationId, hotelBookingResponse.AccommodationId);
@@ -93,7 +93,7 @@ namespace YourRest.WebApi.Tests.Controllers
             await fixture.InsertObjectIntoDatabase(hotelBookingEntity);
             await fixture.InsertObjectIntoDatabase(new Room { Name = "310", AccommodationId = accommodationId, Capacity = 1, SquareInMeter = 20, RoomType = "Luxe" });
 
-            var hotelBooking = new HotelBookingDto
+            var hotelBooking = new BookingDto
             {
                 AccommodationId = accommodationId,
                 DateFrom = new DateTime(2025, 10, 5),
@@ -109,7 +109,7 @@ namespace YourRest.WebApi.Tests.Controllers
 
             Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
 
-            var hotelBooking2 = new HotelBookingDto
+            var hotelBooking2 = new BookingDto
             {
                 AccommodationId = accommodationId,
                 DateFrom = new DateTime(2025, 9, 20),
@@ -126,7 +126,7 @@ namespace YourRest.WebApi.Tests.Controllers
 
             Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
 
-            var hotelBooking3 = new HotelBookingDto
+            var hotelBooking3 = new BookingDto
             {
                 AccommodationId = accommodationId,
                 DateFrom = new DateTime(2025, 10, 5),
@@ -143,7 +143,7 @@ namespace YourRest.WebApi.Tests.Controllers
 
             Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
 
-            var hotelBooking4 = new HotelBookingDto
+            var hotelBooking4 = new BookingDto
             {
                 AccommodationId = accommodationId,
                 DateFrom = new DateTime(2025, 9, 1),

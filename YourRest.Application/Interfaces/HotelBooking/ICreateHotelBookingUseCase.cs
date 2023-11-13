@@ -10,6 +10,6 @@ namespace YourRest.Application.Interfaces.HotelBooking
 {
     public interface ICreateHotelBookingUseCase
     {
-        Task<HotelBookingWithIdDto> ExecuteAsync(HotelBookingDto hotelBookingDto, CancellationToken token = default);
+        Task<HotelBookingWithIdDto> ExecuteAsync(BookingDto hotelBookingDto, CancellationToken token = default);
     }
 }

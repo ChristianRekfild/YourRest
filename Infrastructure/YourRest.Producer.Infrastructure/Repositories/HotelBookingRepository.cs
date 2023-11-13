@@ -5,7 +5,7 @@ using YourRest.Infrastructure.Core.Repositories;
 
 namespace YourRest.Producer.Infrastructure.Repositories;
 
-public class HotelBookingRepository : PgRepository<HotelBooking, int>, IHotelBookingRepository
+public class HotelBookingRepository : PgRepository<HotelBooking, int>, IBookingRepository
 {
     public HotelBookingRepository(SharedDbContext context) : base(context)
     {

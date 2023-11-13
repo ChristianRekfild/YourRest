@@ -9,7 +9,7 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace YourRest.Application.Dto.Validators
 {
-    public class HotelBookingDtoValidator : AbstractValidator<HotelBookingDto>
+    public class HotelBookingDtoValidator : AbstractValidator<BookingDto>
     {
         public HotelBookingDtoValidator() 
         {
