@@ -1,8 +1,13 @@
 ﻿using AutoMapper;
+using System.Linq;
 using YourRest.Application.Dto.Models.HotelBooking;
+using YourRest.Application.Dto.Models.Room;
+using YourRest.Application.Exceptions;
 using YourRest.Application.Interfaces.HotelBooking;
 using YourRest.Domain.Entities;
 using YourRest.Domain.Repositories;
+
+
 
 namespace YourRest.Application.UseCases.HotelBookingUseCase
 {
@@ -19,79 +24,27 @@ namespace YourRest.Application.UseCases.HotelBookingUseCase
 
         public async Task<BookingWithIdDto> ExecuteAsync(BookingDto bookingDto, CancellationToken token = default)
         {
-            //Booking hotelBookingToInsert = new Booking()              УДАЛИ КОМЕНТАРИЙ
-            //{
-
-            //    StartDate = bookingDto.StartDate,                     УДАЛИ КОМЕНТАРИЙ             
-            //    EndDate = bookingDto.EndDate,
-            //    TotalAmount = bookingDto.TotalAmount,                 УДАЛИ КОМЕНТАРИЙ
-            //    AdultNr = bookingDto.AdultNr,
-            //    ChildrenNr = bookingDto.ChildrenNr,                   УДАЛИ КОМЕНТАРИЙ
-            //    Guest = new Guest()                                   
-            //    {
-            //        FirstName = bookingDto.FirstName,                 УДАЛИ КОМЕНТАРИЙ
-            //        MiddleName = bookingDto.MiddleName,
-            //        LastName = bookingDto.LastName,            
-            //        DateOfBirth = bookingDto.DateOfBirth,             УДАЛИ КОМЕНТАРИЙ
-            //        Email = bookingDto.Email,
-            //        PassportNumber = bookingDto.PassportNumber,            
-            //        PhoneNumber = bookingDto.PhoneNumber,             УДАЛИ КОМЕНТАРИЙ
-            //        SystemId = bookingDto.SystemId,
-            //        ExternalId = bookingDto.ExternalId                УДАЛИ КОМЕНТАРИЙ
-            //    },
-            //    Rooms = new List<RoomEntity>()          <==========   Это ещё одно место где надо создавать объекты
-            //    {
-
-            //    }
-            //};
-
 
             Booking hotelBookingToInsert = mapper.Map<Booking>(bookingDto);                              // Вот для чего нужен AutoMapper
             BookingDto hotelBookingDto = mapper.Map<BookingDto>(hotelBookingToInsert);                   //                    AutoMapper
             BookingWithIdDto hotelBookingWithIdDto = mapper.Map<BookingWithIdDto>(hotelBookingToInsert); //                    AutoMapper
 
-
-
-            var RoomIdBooking = await _bookingRepository.
-                FindAsync(t => t.RoomId == bookingDto.Rooms., token);
-
-            //  Exception: не может выбрать ниже описанное
-            //&&
-            //t.DateFrom >= bookingDto.DateFrom &&
-            //t.DateFrom < bookingDto.DateTo;
-            var AlreadyHaveBooking = RoomIdBooking.Select(x => x)
-                .Where(x =>
-                (x.DateFrom <= hotelBookingToInsert.StartDate && hotelBookingToInsert.StartDate < x.) ||
-                (x.DateFrom < hotelBookingToInsert.DateTo && hotelBookingToInsert.DateTo < x.DateTo) ||
-                (hotelBookingToInsert.DateFrom <= x.DateFrom && x.DateTo < hotelBookingToInsert.DateTo)
-                ).ToList();
-
-            if (AlreadyHaveBooking.Any())
+            foreach (RoomWithIdDto RoomDto in hotelBookingDto.Rooms)
             {
-                throw new InvalidParameterException("Бронирование на выбранные даты невозможно. Комната занята.");
+                Domain.Entities.Room room = mapper.Map<Domain.Entities.Room>(RoomDto);
+                var AlreadyHaveBooking = (await bookingRepository.
+                FindAsync(x => x.Rooms.Contains(room)&&(
+                (x.StartDate <= hotelBookingToInsert.StartDate && hotelBookingToInsert.EndDate < x.StartDate) ||
+                (x.StartDate < hotelBookingToInsert.EndDate && hotelBookingToInsert.EndDate < x.EndDate) ||
+                (hotelBookingToInsert.StartDate <= x.StartDate && x.EndDate < hotelBookingToInsert.EndDate)), token)).Any();
+
+                if (AlreadyHaveBooking)
+                {
+                    throw new InvalidParameterException("Бронирование на выбранные даты невозможно. Комната занята.");
+                }
             }
 
             var savedHotelBooking = await bookingRepository.AddAsync(hotelBookingToInsert, true, token);
-
-            //BookingWithIdDto hotelBookingWithIdDto = new BookingWithIdDto()                      УДАЛИ КОМЕНТАРИЙ
-            //{
-            //    Id = savedHotelBooking.Id,                                                       УДАЛИ КОМЕНТАРИЙ
-            //    StartDate = savedHotelBooking.StartDate,
-            //    EndDate = savedHotelBooking.EndDate,
-            //    TotalAmount = savedHotelBooking.TotalAmount,                                     УДАЛИ КОМЕНТАРИЙ
-            //    AdultNr = savedHotelBooking.AdultNr,
-            //    ChildrenNr = savedHotelBooking.ChildrenNr,
-            //    FirstName = savedHotelBooking.Guest.FirstName,
-            //    MiddleName = savedHotelBooking.Guest.MiddleName,
-            //    LastName = savedHotelBooking.Guest.LastName,
-            //    DateOfBirth = savedHotelBooking.Guest.DateOfBirth,
-            //    Email = savedHotelBooking.Guest.Email,
-            //    PassportNumber = savedHotelBooking.Guest.PassportNumber,
-            //    PhoneNumber = savedHotelBooking.Guest.PhoneNumber,
-            //    SystemId = savedHotelBooking.Guest.SystemId,
-            //    ExternalId = savedHotelBooking.Guest.ExternalId,
-            //    //Rooms = savedHotelBooking.Rooms
-            //};                                                                                    УДАЛИ КОМЕНТАРИЙ       
 
             return mapper.Map<BookingWithIdDto>(savedHotelBooking);
         }

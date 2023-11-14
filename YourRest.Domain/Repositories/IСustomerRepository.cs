@@ -2,7 +2,7 @@
 
 namespace YourRest.Domain.Repositories
 {
-    public interface IGuestRepository : IRepository<Guest, int>
+    public interface ICustomerrRepository : IRepository<Customer, int>
     {
     }
 }

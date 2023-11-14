@@ -6,7 +6,7 @@ namespace YourRest.Infrastructure.Core.DbContexts
     public class SharedDbContext : DbContext
     {
         public DbSet<Country> Countries { get; set; }
-        public DbSet<Guest> Guests { get; set; }
+        public DbSet<Customer> Customers { get; set; }
         public DbSet<City> Cities { get; set; }
         public DbSet<Booking> Bookings { get; set; }
         public DbSet<Region> Regions { get; set; }
@@ -114,7 +114,7 @@ namespace YourRest.Infrastructure.Core.DbContexts
         {
             Countries.RemoveRange(Countries);
             Bookings.RemoveRange(Bookings);
-            Customers.RemoveRange(Customers);
+            Customers.RemoveRange(Customer);
             Cities.RemoveRange(Cities);
             Regions.RemoveRange(Regions);
             Reviews.RemoveRange(Reviews);

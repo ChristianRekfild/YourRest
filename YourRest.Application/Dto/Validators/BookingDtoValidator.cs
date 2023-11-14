@@ -20,8 +20,8 @@ namespace YourRest.Application.Dto.Validators
             RuleForEach(HotelBookingDto => HotelBookingDto.Rooms).NotNull().NotEmpty(); // Можно проверить через SetValidator или Mast
             
             RuleFor(HotelBookingDto => HotelBookingDto.TotalAmount).NotNull().NotEmpty().GreaterThan(-1);
-            RuleFor(HotelBookingDto => HotelBookingDto.AdultNr).NotNull().NotEmpty().GreaterThan(-1);
-            RuleFor(HotelBookingDto => HotelBookingDto.ChildrenNr).NotNull().NotEmpty().GreaterThan(-1);
+            RuleFor(HotelBookingDto => HotelBookingDto.AdultNumber).NotNull().NotEmpty().GreaterThan(-1);
+            RuleFor(HotelBookingDto => HotelBookingDto.ChildrenNumber).NotNull().NotEmpty().GreaterThan(-1);
         }
     }
 }

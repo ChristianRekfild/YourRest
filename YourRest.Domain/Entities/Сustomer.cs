@@ -1,6 +1,6 @@
 ﻿namespace YourRest.Domain.Entities
 {
-    public class Guest : IntBaseEntity
+    public class Customer : IntBaseEntity
     {
         public Guid SystemId { get; set; } = Guid.Empty;
         public int ExternalId { get; set; }

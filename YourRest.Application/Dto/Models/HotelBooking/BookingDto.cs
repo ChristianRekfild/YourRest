@@ -8,8 +8,8 @@ namespace YourRest.Application.Dto.Models.HotelBooking
         public int ExternalId { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
-        public int AdultNr { get; set; }
-        public int ChildrenNr { get; set; }
+        public int AdultNumber { get; set; }
+        public int ChildrenNumber { get; set; }
         public decimal TotalAmount { get; set; }
         public string LastName { get; set; }
         public string MiddleName { get; set; }
@@ -18,6 +18,6 @@ namespace YourRest.Application.Dto.Models.HotelBooking
         public string? PhoneNumber { get; set; }
         public string? Email { get; set; }
         public int? PassportNumber { get; set; }
-        public List<RoomDto> Rooms { get; set; } = new();
+        public List<RoomWithIdDto> Rooms { get; set; } = new();
     }
 }

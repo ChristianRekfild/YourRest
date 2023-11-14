@@ -1,8 +1,11 @@
-﻿using Moq;
+﻿using AutoMapper;
+using Moq;
 using System;
 using System.Linq.Expressions;
+using YourRest.Application.Dto.Mappers;
 using YourRest.Application.Dto.Models;
 using YourRest.Application.Dto.Models.HotelBooking;
+using YourRest.Application.Dto.Models.Room;
 using YourRest.Application.Exceptions;
 using YourRest.Application.UseCases;
 using YourRest.Application.UseCases.HotelBookingUseCase;
@@ -13,66 +16,65 @@ namespace YourRest.Application.Tests.UseCases
 {
     public class CreateHotelBookingUseCaseTests
     {
-        private readonly Mock<IHotelBookingRepository> _hotelBookingRepositoryMock;
+        private readonly Mock<IBookingRepository> _bookingRepositoryMock;
+        private readonly Mock<IMapper> _mapperMock;
 
 
-        private readonly CreateHotelBookingUseCase createHotelBookingUseCase;
+
+        private readonly CreateBookingUseCase createHotelBookingUseCase;
 
         public CreateHotelBookingUseCaseTests()
         {
-            _hotelBookingRepositoryMock = new Mock<IHotelBookingRepository>();
+            _bookingRepositoryMock = new Mock<IBookingRepository>();
+            _mapperMock = new Mock<IMapper>();
 
-            createHotelBookingUseCase = new CreateHotelBookingUseCase(
-                _hotelBookingRepositoryMock.Object);
+            createHotelBookingUseCase = new CreateBookingUseCase(
+                _bookingRepositoryMock.Object, _mapperMock.Object);
         }
 
         [Fact]
         public async Task Execute_WhenDataoccupied_ReturnsStatusCodeError()
         {
             //Arrange
-            _hotelBookingRepositoryMock
-                .Setup(r => r.FindAsync(It.IsAny<Expression<Func<HotelBooking, bool>>>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(new[] { new HotelBooking()
+            _bookingRepositoryMock
+                .Setup(r => r.FindAsync(It.IsAny<Expression<Func<Booking, bool>>>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(new[] { new Booking()
                         {
-                            AccommodationId = 1,
-                            DateFrom = new DateTime(2025, 10, 5),
-                            DateTo = new DateTime(2025, 10, 15),
-                            RoomId = 1,
+                            StartDate = new DateTime(2025, 10, 5),
+                            EndDate = new DateTime(2025, 10, 15),
+                            Rooms = new List<Room>() { new Room { Id = 1} },
                             TotalAmount = 5000.0m,
-                            AdultNr = 2,
-                            ChildrenNr = 2
+                            AdultNumber = 2,
+                            ChildrenNumber = 2
                         }
                 });
 
-            HotelBookingDto newHotelBookingDateToIn = new HotelBookingDto()
+            BookingDto newHotelBookingDateToIn = new BookingDto()
             {
-                AccommodationId = 1,
-                DateFrom = new DateTime(2025, 10, 2),
-                DateTo = new DateTime(2025, 10, 12),
-                RoomId = 1,
+                StartDate = new DateTime(2025, 10, 2),
+                EndDate = new DateTime(2025, 10, 12),
+                Rooms = new List<RoomWithIdDto>() { new RoomWithIdDto { Id = 1 } },
                 TotalAmount = 5000.0m,
-                AdultNr = 2,
-                ChildrenNr = 2
+                AdultNumber = 2,
+                ChildrenNumber = 2
             };
-            HotelBookingDto newHotelBookingDateFromIn = new HotelBookingDto()
+            BookingDto newHotelBookingDateFromIn = new BookingDto()
             {
-                AccommodationId = 1,
-                DateFrom = new DateTime(2025, 10, 7),
-                DateTo = new DateTime(2025, 10, 17),
-                RoomId = 1,
+                StartDate = new DateTime(2025, 10, 7),
+                EndDate = new DateTime(2025, 10, 17),
+                Rooms = new List<RoomWithIdDto>() { new RoomWithIdDto { Id = 1 } },
                 TotalAmount = 5000.0m,
-                AdultNr = 2,
-                ChildrenNr = 2
-            }; 
-            HotelBookingDto newHotelBookingAllIn = new HotelBookingDto()
+                AdultNumber = 2,
+                ChildrenNumber = 2
+            };
+            BookingDto newHotelBookingAllIn = new BookingDto()
             {
-                AccommodationId = 1,
-                DateFrom = new DateTime(2025, 10, 1),
-                DateTo = new DateTime(2025, 10, 20),
-                RoomId = 1,
+                StartDate = new DateTime(2025, 10, 1),
+                EndDate = new DateTime(2025, 10, 20),
+                Rooms = new List<RoomWithIdDto>() { new RoomWithIdDto { Id = 1 } },
                 TotalAmount = 5000.0m,
-                AdultNr = 2,
-                ChildrenNr = 2
+                AdultNumber = 2,
+                ChildrenNumber = 2
             };
 
             //Act
