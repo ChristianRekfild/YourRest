@@ -87,7 +87,11 @@ namespace YourRest.WebApi.Tests.Fixtures
                             new("KeycloakSetting:ClientId",  "your_rest_app"),
                             new("KeycloakSetting:RealmName",  "YourRest"),
                             new("KeycloakSetting:KeycloakUrl",  "http://localhost:8081"),
-                            new("KeycloakSetting:ClientSecret", "qBC5V3wc2AYKTcYN1CACo6REU9t1Inrf")
+                            new("KeycloakSetting:ClientSecret", "qBC5V3wc2AYKTcYN1CACo6REU9t1Inrf"),
+                            new("AWS:AccessKey",  "test"),
+                            new("AWS:SecretKey",  "test"),
+                            new("AWS:ServiceURL",  "http://test:8081"),
+                            new("AWS:BucketName", "test")
                         })
                         .Build();
 
