@@ -114,7 +114,7 @@ namespace YourRest.Infrastructure.Core.DbContexts
         {
             Countries.RemoveRange(Countries);
             Bookings.RemoveRange(Bookings);
-            Guests.RemoveRange(Guests);
+            Customers.RemoveRange(Customers);
             Cities.RemoveRange(Cities);
             Regions.RemoveRange(Regions);
             Reviews.RemoveRange(Reviews);
