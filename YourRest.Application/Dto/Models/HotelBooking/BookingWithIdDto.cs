@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace YourRest.Application.Dto.Models.HotelBooking
 {
-    public class HotelBookingWithIdDto : HotelBookingDto
+    public class BookingWithIdDto : BookingDto
     {
         public int Id { get; set; }
     }

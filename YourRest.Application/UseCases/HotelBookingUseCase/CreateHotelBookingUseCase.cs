@@ -1,10 +1,12 @@
-﻿using System;
+﻿using AutoMapper;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using YourRest.Application.Dto;
 using YourRest.Application.Dto.Models.HotelBooking;
+using YourRest.Application.Dto.Models.Room;
 using YourRest.Application.Exceptions;
 using YourRest.Application.Interfaces.HotelBooking;
 using YourRest.Domain.Entities;
@@ -12,61 +14,43 @@ using YourRest.Domain.Repositories;
 
 namespace YourRest.Application.UseCases.HotelBookingUseCase
 {
-    public class CreateHotelBookingUseCase : ICreateHotelBookingUseCase
-    { 
-        private readonly IHotelBookingRepository _hotelBookingRepository;
+    public class CreateBookingUseCase : ICreateBookingUseCase
+    {
+        private readonly IBookingRepository bookingRepository;
+        private readonly IMapper mapper;
 
-        public CreateHotelBookingUseCase(IHotelBookingRepository hotelBookingRepository)
+        public CreateBookingUseCase(IBookingRepository bookingRepository, IMapper mapper)
         {
-            this._hotelBookingRepository = hotelBookingRepository;
+            this.bookingRepository = bookingRepository;
+            this.mapper = mapper;
         }
 
-        public async Task<HotelBookingWithIdDto> ExecuteAsync(HotelBookingDto hotelBookingDto, CancellationToken token = default)
+        public async Task<BookingWithIdDto> ExecuteAsync(BookingDto bookingDto, CancellationToken token = default)
         {
-            HotelBooking hotelBookingToInsert = new HotelBooking()
+
+            Booking hotelBookingToInsert = mapper.Map<Booking>(bookingDto);                              // Вот для чего нужен AutoMapper
+            BookingDto hotelBookingDto = mapper.Map<BookingDto>(hotelBookingToInsert);                   //                    AutoMapper
+            BookingWithIdDto hotelBookingWithIdDto = mapper.Map<BookingWithIdDto>(hotelBookingToInsert); //                    AutoMapper
+
+            foreach (RoomWithIdDto RoomDto in hotelBookingDto.Rooms)
             {
-                AccommodationId = hotelBookingDto.AccommodationId,
-                DateFrom = hotelBookingDto.DateFrom,
-                DateTo = hotelBookingDto.DateTo,
-                RoomId = hotelBookingDto.RoomId,
-                TotalAmount = hotelBookingDto.TotalAmount,
-                AdultNr = hotelBookingDto.AdultNr,
-                ChildrenNr = hotelBookingDto.ChildrenNr
-            };
+                Domain.Entities.Room room = mapper.Map<Domain.Entities.Room>(RoomDto);
+                var AlreadyHaveBooking = (await bookingRepository.
+                FindAsync(x => x.Rooms.Contains(room) && (
+                (x.StartDate <= hotelBookingToInsert.StartDate && hotelBookingToInsert.EndDate < x.StartDate) ||
+                (x.StartDate < hotelBookingToInsert.EndDate && hotelBookingToInsert.EndDate < x.EndDate) ||
+                (hotelBookingToInsert.StartDate <= x.StartDate && x.EndDate < hotelBookingToInsert.EndDate)), token)).Any();
 
-            var AlreadyHaveBooking = (await _hotelBookingRepository.
-                FindAsync(x => x.Id == hotelBookingDto.RoomId &&(
-                (x.DateFrom <= hotelBookingToInsert.DateFrom && hotelBookingToInsert.DateFrom < x.DateTo) ||
-                (x.DateFrom < hotelBookingToInsert.DateTo && hotelBookingToInsert.DateTo < x.DateTo) ||
-                (hotelBookingToInsert.DateFrom <= x.DateFrom && x.DateTo < hotelBookingToInsert.DateTo)), token)).Any();
-
-            //var AlreadyHaveBooking = RoomIdBooking.Select(x => x)
-            //    .Where(x => 
-            //    (x.DateFrom  <= hotelBookingToInsert.DateFrom && hotelBookingToInsert.DateFrom <  x.DateTo) ||
-            //    (x.DateFrom < hotelBookingToInsert.DateTo && hotelBookingToInsert.DateTo < x.DateTo)||
-            //    (hotelBookingToInsert.DateFrom <= x.DateFrom && x.DateTo < hotelBookingToInsert.DateTo)
-            //    ).ToList();
-
-            if (AlreadyHaveBooking)
-            {
-                throw new InvalidParameterException("Бронирование на выбранные даты невозможно. Комната занята.");
+                if (AlreadyHaveBooking)
+                {
+                    throw new InvalidParameterException("Бронирование на выбранные даты невозможно. Комната занята.");
+                }
             }
 
-            var savedHotelBooking = await _hotelBookingRepository.AddAsync(hotelBookingToInsert, true, token);
+            var savedHotelBooking = await bookingRepository.AddAsync(hotelBookingToInsert, true, token);
 
-            HotelBookingWithIdDto hotelBookingWithIdDto = new HotelBookingWithIdDto()
-            {
-                Id = savedHotelBooking.Id,
-                AccommodationId = savedHotelBooking.AccommodationId,
-                DateFrom = savedHotelBooking.DateFrom,
-                DateTo = savedHotelBooking.DateTo,
-                RoomId = savedHotelBooking.RoomId,
-                TotalAmount = savedHotelBooking.TotalAmount,
-                AdultNr = savedHotelBooking.AdultNr,
-                ChildrenNr = savedHotelBooking.ChildrenNr
-            };
-
-            return hotelBookingWithIdDto;
+            return mapper.Map<BookingWithIdDto>(savedHotelBooking);
         }
     }
 }
+
