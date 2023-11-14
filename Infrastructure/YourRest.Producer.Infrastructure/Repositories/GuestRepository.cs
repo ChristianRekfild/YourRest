@@ -5,8 +5,8 @@ using YourRest.Infrastructure.Core.Repositories;
 
 namespace YourRest.Producer.Infrastructure.Repositories
 {
-    public class GuestRepository : PgRepository<Guest, int>, IGuestRepository
+    public class CustomerRepository : PgRepository<Customer, int>, ICustomerRepository
     {
-        public GuestRepository(SharedDbContext dbContext) : base(dbContext) { }
+        public CustomerRepository(SharedDbContext dbContext) : base(dbContext) { }
     }
 }

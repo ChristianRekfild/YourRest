@@ -10,7 +10,7 @@ namespace YourRest.Producer.Infrastructure
         {
             services.AddScoped<IBookingRepository, BookingRepository>();
             services.AddScoped<ICountryRepository, CountryRepository>();
-            services.AddScoped<IGuestRepository, GuestRepository>();
+            services.AddScoped<ICustomerRepository, CustomerRepository>();
             services.AddScoped<ICityRepository, CityRepository>();
             services.AddScoped<IRegionRepository, RegionRepository>();
             services.AddScoped<IReviewRepository, ReviewRepository>();
