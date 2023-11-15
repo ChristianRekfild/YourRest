@@ -20,7 +20,6 @@ namespace YourRest.Infrastructure.Core.DbContexts
         public DbSet<UserAccommodation> UserAccommodations { get; set; }
         public DbSet<AccommodationType> AccommodationTypes { get; set; }
         public DbSet<AgeRange> AgeRanges { get; set; }
-        public DbSet<HotelBooking> HotelBookings { get; set; }
 
 
 
@@ -126,7 +125,6 @@ namespace YourRest.Infrastructure.Core.DbContexts
             RoomTypes.RemoveRange(RoomTypes);
             AccommodationTypes.RemoveRange(AccommodationTypes);
             AgeRanges.RemoveRange(AgeRanges);
-            HotelBookings.RemoveRange(HotelBookings);
 
             // Add other DbSet removals here
             // Example: 
