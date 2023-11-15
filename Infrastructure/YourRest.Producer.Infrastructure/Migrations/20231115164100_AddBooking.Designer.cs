@@ -12,7 +12,7 @@ using YourRest.Infrastructure.Core.DbContexts;
 namespace YourRest.Producer.Infrastructure.Migrations
 {
     [DbContext(typeof(SharedDbContext))]
-    [Migration("20231115123558_AddBooking")]
+    [Migration("20231115164100_AddBooking")]
     partial class AddBooking
     {
         /// <inheritdoc />
@@ -154,7 +154,6 @@ namespace YourRest.Producer.Infrastructure.Migrations
                         .HasColumnType("integer");
 
                     b.Property<string>("Comment")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<int>("CustomerId")
@@ -235,7 +234,7 @@ namespace YourRest.Producer.Infrastructure.Migrations
                     b.Property<string>("Email")
                         .HasColumnType("text");
 
-                    b.Property<int>("ExternalId")
+                    b.Property<int?>("ExternalId")
                         .HasColumnType("integer");
 
                     b.Property<string>("FirstName")

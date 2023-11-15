@@ -17,6 +17,8 @@ namespace YourRest.Application.Tests.UseCases
     public class CreateHotelBookingUseCaseTests
     {
         private readonly Mock<IBookingRepository> _bookingRepositoryMock;
+        private readonly Mock<IRoomRepository> _roomRepositoryMock;
+        private readonly Mock<ICustomerRepository> _customerRepositoryMock;
         private readonly Mock<IMapper> _mapperMock;
 
 
@@ -26,10 +28,15 @@ namespace YourRest.Application.Tests.UseCases
         public CreateHotelBookingUseCaseTests()
         {
             _bookingRepositoryMock = new Mock<IBookingRepository>();
+            _roomRepositoryMock = new Mock<IRoomRepository>();
+            _customerRepositoryMock = new Mock<ICustomerRepository>();
             _mapperMock = new Mock<IMapper>();
 
             createHotelBookingUseCase = new CreateBookingUseCase(
-                _bookingRepositoryMock.Object, _mapperMock.Object);
+                _bookingRepositoryMock.Object,
+                _mapperMock.Object,               
+                _customerRepositoryMock.Object,
+                _roomRepositoryMock.Object);
         }
 
         [Fact]
@@ -53,7 +60,7 @@ namespace YourRest.Application.Tests.UseCases
             {
                 StartDate = new DateTime(2025, 10, 2),
                 EndDate = new DateTime(2025, 10, 12),
-                Rooms = new List<RoomWithIdDto>() { new RoomWithIdDto { Id = 1 } },
+                Rooms = new List<int>() { 1 },
                 TotalAmount = 5000.0m,
                 AdultNumber = 2,
                 ChildrenNumber = 2
@@ -62,7 +69,7 @@ namespace YourRest.Application.Tests.UseCases
             {
                 StartDate = new DateTime(2025, 10, 7),
                 EndDate = new DateTime(2025, 10, 17),
-                Rooms = new List<RoomWithIdDto>() { new RoomWithIdDto { Id = 1 } },
+                Rooms = new List<int>() { 1 },
                 TotalAmount = 5000.0m,
                 AdultNumber = 2,
                 ChildrenNumber = 2
@@ -71,7 +78,7 @@ namespace YourRest.Application.Tests.UseCases
             {
                 StartDate = new DateTime(2025, 10, 1),
                 EndDate = new DateTime(2025, 10, 20),
-                Rooms = new List<RoomWithIdDto>() { new RoomWithIdDto { Id = 1 } },
+                Rooms = new List<int>() { 1 },
                 TotalAmount = 5000.0m,
                 AdultNumber = 2,
                 ChildrenNumber = 2

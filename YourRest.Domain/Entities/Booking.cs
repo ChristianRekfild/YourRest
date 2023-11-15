@@ -10,7 +10,7 @@
         public int AdultNumber { get; set; }
         public int ChildrenNumber { get; set; }
         public decimal TotalAmount { get; set; }
-        public string Comment { get; set; }
+        public string? Comment { get; set; }
 
         public int CustomerId { get; set; }
         public Customer Customer { get; set; }

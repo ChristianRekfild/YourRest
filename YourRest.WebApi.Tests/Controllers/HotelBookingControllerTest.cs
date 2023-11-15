@@ -45,7 +45,7 @@ namespace YourRest.WebApi.Tests.Controllers
             {
                 StartDate = new DateTime(2025, 10, 5),
                 EndDate = new DateTime(2025, 10, 15),
-                Rooms = new List<RoomWithIdDto> { new RoomWithIdDto() { Id = 1 } },
+                Rooms = new List<int> {1},
                 TotalAmount = 5000.0m,
                 AdultNumber = 2,
                 ChildrenNumber = 2
@@ -99,7 +99,7 @@ namespace YourRest.WebApi.Tests.Controllers
             {
                 StartDate = new DateTime(2025, 10, 5),
                 EndDate = new DateTime(2025, 10, 15),
-                Rooms = new List<RoomWithIdDto> { new RoomWithIdDto() { Id = 1 } },
+                Rooms = new List<int> { 1 },
                 TotalAmount = 5000.0m,
                 AdultNumber = 2,
                 ChildrenNumber = 2

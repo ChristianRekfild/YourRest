@@ -23,6 +23,6 @@ namespace YourRest.Application.Dto.Models.HotelBooking
         public string? PhoneNumber { get; set; }
         public string? Email { get; set; }
         public int? PassportNumber { get; set; }
-        public List<RoomWithIdDto> Rooms { get; set; } = new();
+        public List<int> Rooms { get; set; } = new();
     }
 }

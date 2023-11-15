@@ -151,7 +151,6 @@ namespace YourRest.Producer.Infrastructure.Migrations
                         .HasColumnType("integer");
 
                     b.Property<string>("Comment")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<int>("CustomerId")
@@ -232,7 +231,7 @@ namespace YourRest.Producer.Infrastructure.Migrations
                     b.Property<string>("Email")
                         .HasColumnType("text");
 
-                    b.Property<int>("ExternalId")
+                    b.Property<int?>("ExternalId")
                         .HasColumnType("integer");
 
                     b.Property<string>("FirstName")

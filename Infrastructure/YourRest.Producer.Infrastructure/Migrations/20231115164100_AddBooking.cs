@@ -52,8 +52,7 @@ namespace YourRest.Producer.Infrastructure.Migrations
                 name: "ExternalId",
                 table: "Customers",
                 type: "integer",
-                nullable: false,
-                defaultValue: 0);
+                nullable: true);
 
             migrationBuilder.AddColumn<int>(
                 name: "PassportNumber",
@@ -73,6 +72,14 @@ namespace YourRest.Producer.Infrastructure.Migrations
                 type: "uuid",
                 nullable: false,
                 defaultValue: new Guid("00000000-0000-0000-0000-000000000000"));
+
+            migrationBuilder.AlterColumn<string>(
+                name: "Comment",
+                table: "Bookings",
+                type: "text",
+                nullable: true,
+                oldClrType: typeof(string),
+                oldType: "text");
 
             migrationBuilder.AddColumn<int>(
                 name: "AdultNumber",
@@ -180,6 +187,16 @@ namespace YourRest.Producer.Infrastructure.Migrations
                 type: "text",
                 nullable: false,
                 defaultValue: "");
+
+            migrationBuilder.AlterColumn<string>(
+                name: "Comment",
+                table: "Bookings",
+                type: "text",
+                nullable: false,
+                defaultValue: "",
+                oldClrType: typeof(string),
+                oldType: "text",
+                oldNullable: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Bookings_AccommodationId",

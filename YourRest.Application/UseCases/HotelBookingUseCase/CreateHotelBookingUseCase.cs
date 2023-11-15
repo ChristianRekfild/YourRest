@@ -12,34 +12,60 @@ using YourRest.Application.Interfaces.HotelBooking;
 using YourRest.Domain.Entities;
 using YourRest.Domain.Repositories;
 
+
 namespace YourRest.Application.UseCases.HotelBookingUseCase
 {
     public class CreateBookingUseCase : ICreateBookingUseCase
     {
         private readonly IBookingRepository bookingRepository;
+        private readonly IRoomRepository roomRepository;
+        private readonly ICustomerRepository customerRepository;
         private readonly IMapper mapper;
 
-        public CreateBookingUseCase(IBookingRepository bookingRepository, IMapper mapper)
+        public CreateBookingUseCase(
+            IBookingRepository bookingRepository,
+            IMapper mapper,
+            ICustomerRepository customerRepository,
+            IRoomRepository roomRepository
+            )
         {
             this.bookingRepository = bookingRepository;
             this.mapper = mapper;
+            this.roomRepository = roomRepository;
+            this.customerRepository = customerRepository;
         }
 
         public async Task<BookingWithIdDto> ExecuteAsync(BookingDto bookingDto, CancellationToken token = default)
         {
 
-            Booking hotelBookingToInsert = mapper.Map<Booking>(bookingDto);                              // Вот для чего нужен AutoMapper
-            BookingDto hotelBookingDto = mapper.Map<BookingDto>(hotelBookingToInsert);                   //                    AutoMapper
-            BookingWithIdDto hotelBookingWithIdDto = mapper.Map<BookingWithIdDto>(hotelBookingToInsert); //                    AutoMapper
+            //Booking hotelBookingToInsert = mapper.Map<Booking>(bookingDto);                              // Вот для чего нужен AutoMapper
+            //BookingDto hotelBookingDto = mapper.Map<BookingDto>(hotelBookingToInsert);                   //                    AutoMapper
+            //BookingWithIdDto hotelBookingWithIdDto = mapper.Map<BookingWithIdDto>(hotelBookingToInsert); //                    AutoMapper
 
-            foreach (RoomWithIdDto RoomDto in hotelBookingDto.Rooms)
+            var rooms = new List<Domain.Entities.Room>();
+            foreach (var roomId in bookingDto.Rooms)
             {
-                Domain.Entities.Room room = mapper.Map<Domain.Entities.Room>(RoomDto);
+                var tempRoom = await roomRepository.GetAsync(roomId);
+                if (tempRoom == null)
+                {
+                    throw new InvalidParameterException("Бронируемой комнаты не существует.");
+                }
+                rooms.Add(tempRoom);
+            }
+
+            if (!rooms.Any())
+            {
+                throw new InvalidParameterException("Пустая бронь - в брони нет комнат");
+            }
+
+            foreach (var room in rooms)
+            {
+               
                 var AlreadyHaveBooking = (await bookingRepository.
                 FindAsync(x => x.Rooms.Contains(room) && (
-                (x.StartDate <= hotelBookingToInsert.StartDate && hotelBookingToInsert.EndDate < x.StartDate) ||
-                (x.StartDate < hotelBookingToInsert.EndDate && hotelBookingToInsert.EndDate < x.EndDate) ||
-                (hotelBookingToInsert.StartDate <= x.StartDate && x.EndDate < hotelBookingToInsert.EndDate)), token)).Any();
+                (x.StartDate <= bookingDto.StartDate && bookingDto.EndDate < x.StartDate) ||
+                (x.StartDate < bookingDto.EndDate && bookingDto.EndDate < x.EndDate) ||
+                (bookingDto.StartDate <= x.StartDate && x.EndDate < bookingDto.EndDate)), token)).Any();
 
                 if (AlreadyHaveBooking)
                 {
@@ -47,7 +73,45 @@ namespace YourRest.Application.UseCases.HotelBookingUseCase
                 }
             }
 
+            var customer = await customerRepository.AddAsync(
+                new Customer() 
+                    {
+                        FirstName = bookingDto.FirstName,
+                        MiddleName = bookingDto.MiddleName,
+                        LastName = bookingDto.LastName,
+                        DateOfBirth = bookingDto.DateOfBirth,
+                        Email = bookingDto.Email,
+                        PassportNumber = bookingDto.PassportNumber,
+                        PhoneNumber = bookingDto.PhoneNumber
+                    });
+
+            Booking hotelBookingToInsert = new Booking() 
+            { 
+                StartDate = bookingDto.StartDate,
+                EndDate = bookingDto.EndDate,
+                Rooms = rooms,
+                AdultNumber = bookingDto.AdultNumber,
+                ChildrenNumber = bookingDto.ChildrenNumber,
+                TotalAmount = bookingDto.TotalAmount,
+                Status = BookingStatus.Pending,
+                CustomerId = customer.Id,
+                    
+            };
+           
             var savedHotelBooking = await bookingRepository.AddAsync(hotelBookingToInsert, true, token);
+            BookingWithIdDto bookingWithIdDto = new BookingWithIdDto()
+            {
+                StartDate = savedHotelBooking.StartDate,
+                EndDate = savedHotelBooking.EndDate,
+                Rooms = savedHotelBooking.Rooms.Select(t => t.Id).ToList(),
+                AdultNumber = savedHotelBooking.AdultNumber,
+                ChildrenNumber = savedHotelBooking.ChildrenNumber,
+                TotalAmount = savedHotelBooking.TotalAmount,
+                FirstName = savedHotelBooking.Customer.FirstName,
+                MiddleName = savedHotelBooking.Customer.MiddleName,
+                LastName = savedHotelBooking.Customer.LastName,
+                DateOfBirth = savedHotelBooking.Customer.DateOfBirth
+            };
 
             return mapper.Map<BookingWithIdDto>(savedHotelBooking);
         }
