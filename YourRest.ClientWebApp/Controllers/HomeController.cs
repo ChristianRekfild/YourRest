@@ -22,6 +22,21 @@ namespace YourRest.ClientWebApp.Controllers
         {
             return View();
         }
+        [HttpPost]
+        public IActionResult GetDataFormJS(SelectedDateViewModel selectedDate)
+        {
+            return View("Index");
+        }
+
+        public IActionResult Login(LoginViewModel data)
+        {
+            return View("Index");
+        }
+        public IActionResult Register(RegisterViewModel data)
+        {
+            return View("Privacy");
+        }
+
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()

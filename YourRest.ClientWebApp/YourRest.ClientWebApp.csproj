@@ -7,6 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Include="wwwroot\css\_Layout.css" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="7.0.12" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.10">
       <PrivateAssets>all</PrivateAssets>
@@ -19,6 +23,10 @@
     <ProjectReference Include="..\Infrastructure\YourRest.ClientIdentity.Infrastructure.Contracts\YourRest.ClientIdentity.Infrastructure.Contracts.csproj" />
     <ProjectReference Include="..\Infrastructure\YourRest.ClientIdentity.Infrastructure\YourRest.ClientIdentity.Infrastructure.csproj" />
     <ProjectReference Include="..\Infrastructure\YourRest.Infrastructure.Core\YourRest.Infrastructure.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="wwwroot\Images\" />
   </ItemGroup>
 
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">

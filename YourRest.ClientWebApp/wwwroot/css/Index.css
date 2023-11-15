@@ -1,0 +1,39 @@
+﻿.search {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 90%;
+    height: 54px;
+    background-color: #f1b833;
+    border-radius: 5px;
+    margin-top: 2rem;
+    margin-bottom: 3rem;
+}
+.search-field {
+    display: flex;
+    align-items: center;
+    width: 30.3%;
+    height: 46px;
+    margin-right: 3px;
+    border-radius: 3px;
+    background-color: white;
+}
+.bi-size {
+    margin-left: 0.5rem;
+    margin-right: 0.5rem;
+    font-size: 1.6rem;
+}
+.search-input {
+    height: 46px;
+    width: 100%;
+    border: none;
+    border-radius: 3px;
+    outline: none;
+}
+.auldt_btn{
+    height: 46px;
+    width: 100%;
+    border: none;
+    background-color:transparent;
+    
+}

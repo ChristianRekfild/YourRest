@@ -1,3 +1,7 @@
+@import url(_Layout.css);
+@import url(Index.css);
+@import url(daterangepicker.css);
+
 html {
   font-size: 14px;
 }
@@ -5,7 +9,7 @@ html {
 @media (min-width: 768px) {
   html {
     font-size: 16px;
-  }
+  } 
 }
 
 .btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
@@ -20,3 +24,8 @@ html {
 body {
   margin-bottom: 60px;
 }
+#company-name{
+    width: 70pt;
+    height: 35pt;
+}
+

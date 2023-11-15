@@ -1,7 +1,47 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
 }
+<script src="~/js/moment.min.js"></script>
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/js/daterangepicker.js"></script>
+<link href="~/css/daterangepicker.css" rel="stylesheet" />
 
+
+
+<div class="row">
+    <div class="col-md-12">
+        <h1>Найдите жилье для новой поездки</h1>
+        <p>Ищите спецпредложения на отели, дома и другие варианты.</p>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12 d-flex justify-content-center">
+        <div class="search">
+            <div class="search-field">
+                <i class="bi bi-luggage bi-size"></i>
+                <input class="search-input" type="text" placeholder="Куда Вы хотите поехать?" />
+            </div>
+            <div class="search-field">
+                <i class="bi bi-calendar-week bi-size"></i>
+                <input type="text"  id="my-datapicker" class="search-input">
+            </div>
+            <div class="search-field">
+                <i class="bi bi-person bi-size"></i>
+                <div class="dropdown">
+                    <button class="dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                       2 взрослых 2 детей 1 комната
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenu">
+                        <li><a class="dropdown-item" href="#">Action</a></li>
+                        <li><a class="dropdown-item" href="#">Another action</a></li>
+                        <li><a class="dropdown-item" href="#">Something else here</a></li>
+                    </ul>
+                </div>
+            </div>
+            <button class="btn-lg btn-primary">Найти</button>
+        </div>
+    </div>
+</div>
 <div class="row">
     <div class="col-md-4">
         <div class="card" style="width: 18rem;">
@@ -135,3 +175,29 @@
         </div>
     </div>
 </div>
+
+<script type="text/javascript">
+    $(document).ready(
+        function () {
+            $('#my-datapicker').daterangepicker({
+                "linkedCalendars": true,
+                "autoUpdateInput": true,
+                "showCustomRangeLabel": false,
+                "startDate": moment(Date.now()).format("DD.MM.YYYY"),
+                "endDate": moment(Date.now()).add(2, 'days').format("DD.MM.YYYY"),
+                "opens": "center",
+                locale: {
+                    "applyLabel": "Выбрать",
+                    "cancelLabel": "Отменить",
+                    "format": "DD.MM.YYYY"
+                }
+            }, function (start, end, label) {
+
+                $.post("/Home/GetDataFormJS", {
+                    StartDate: start.format('YYYY-MM-DD'),
+                    EndDate: end.format('YYYY-MM-DD')
+                }, null, "json");
+            });
+
+        });
+</script>
