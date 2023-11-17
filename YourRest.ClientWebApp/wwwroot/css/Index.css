@@ -155,14 +155,17 @@ input::-webkit-outer-spin-button {
     -webkit-appearance: none;
 }
 
+
+
+/*Карточка рекомендаций*/
 .recomendation-card {
     position: relative;
     padding: 0;
-    margin-bottom: 1.5rem;
-    width: 80%;
+    width: 100%;
+    margin: 10px 0;
     border-radius: 25px;
-    background-color: red;
 }
+
 .recomendation-card_wrapper {
     padding: 0;
     margin: 0;
@@ -170,11 +173,13 @@ input::-webkit-outer-spin-button {
     overflow: hidden;
     border-radius: 25px;
 }
+
 .recomendation-card-wrapper_img {
     width: 100%;
     border-radius: 25px;
     transition: transform 2s;
 }
+
 .recomendation-card_title {
     position: absolute;
     color: white;
@@ -182,6 +187,7 @@ input::-webkit-outer-spin-button {
     left: 5%;
     z-index: 2;
 }
+
 .recomendation-card_description {
     position: absolute;
     color: white;
@@ -189,6 +195,39 @@ input::-webkit-outer-spin-button {
     left: 5%;
     z-index: 2;
 }
+
 .recomendation-card:hover .recomendation-card-wrapper_img {
     -webkit-transform: scale(1.1);
+}
+
+.recomendation-section {
+    display: grid;
+    grid-template-columns: 0.4fr 0.22fr 0.43fr;
+    grid-template-rows: 0.4fr 0.3fr 0.3fr;
+    grid-template-areas:
+        "first first six"
+        "second thrid  thrid"
+        "fourth fourth five";
+    grid-gap: 5px;
+}
+.first {
+    grid-area: first;
+
+}
+.second {
+    grid-area: second;
+}
+.thrid {
+    grid-area: thrid;
+
+}
+.fourth {
+    grid-area: fourth;
+    align-self: center;
+}
+.five {
+    grid-area: five;
+}
+.six {
+    grid-area: six;
 }

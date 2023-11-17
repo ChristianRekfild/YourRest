@@ -5,7 +5,7 @@
 
 <div class="row">
     <div class="col-md-12">
-        <h1>Найдите жилье для новой поездки по России</h1>
+        <h2>Найдите жилье для новой поездки по России</h2>
         <p>Ищите спецпредложения на отели, дома и другие варианты.</p>
     </div>
 </div>
@@ -15,16 +15,11 @@
     </div>
 </div>
 <div class="row">
-    <div class="col-md-6">
-        @(await Html.RenderComponentAsync<RecomendationCardComponent>(RenderMode.ServerPrerendered, new
-           
-            {
-                Url = "https://thumb.tildacdn.com/tild3232-3038-4530-b531-623461306364/-/resize/960x/-/format/webp/shutterstock_7075422.jpg",
-                Title = "Пермский край",
-                Description = "Кунгурская ледяная пещера"
-            }))
-    </div> 
-    <div class="col-md-6">
+    <h2>Популярные направления</h2>
+    <p>Лучшие места России, которые обязательно стоит увидеть своими глазами</p>
+</div>
+<div class="row recomendation-section">
+        <div class="first">
         @(await Html.RenderComponentAsync<RecomendationCardComponent>(RenderMode.ServerPrerendered, new
 
         {
@@ -32,8 +27,19 @@
             Title = "Карелия",
             Description = "Мраморный каньон Рускеала"
         }))
-    </div> 
-    <div class="col-md-6">
+    </div>
+    <div class="second">
+        @(await Html.RenderComponentAsync<RecomendationCardComponent>(RenderMode.ServerPrerendered, new
+
+        {
+           @* Url = "https://cdn.lifehacker.ru/wp-content/uploads/2019/05/Xibiny_1599817901.jpg",*@
+            Url = "https://cdn.tripster.ru/thumbs2/f367bda8-49fa-11ee-a338-4a562d065b03.1080x810.jpeg",
+            Title = "Калининград",
+            Description = "«Европейский» город России"
+        }))
+        <p>Калининград – город в России и столица одноименной области. Он расположен между Польшей и Литвой на побережье Балтийского моря. Во времена прусского правления город назывался по-другому – Кёнигсберг.</p>
+    </div>
+    <div class="thrid">
         @(await Html.RenderComponentAsync<RecomendationCardComponent>(RenderMode.ServerPrerendered, new
 
         {
@@ -42,8 +48,43 @@
             Description = "Гамсутль"
         }))
     </div>
-   
-   
+    <div class="fourth">
+        @(await Html.RenderComponentAsync<RecomendationCardComponent>(RenderMode.ServerPrerendered, new
+
+        {
+            Url = "https://static.tildacdn.com/tild3335-3364-4863-a662-613261343538/Multa-Altaj-1.jpg",
+            Title = "Алтай",
+            Description = "Кучерлинские озёра"
+        }))
+
+    </div>
+    
+    <div class="five">
+        @(await Html.RenderComponentAsync<RecomendationCardComponent>(RenderMode.ServerPrerendered, new
+
+        {
+            Url = "https://cdn.lifehacker.ru/wp-content/uploads/2019/05/Novgorod_1599818052.jpg",
+            Title = "Великий Новгород",
+            Description = "Новгородский детинец"
+        }))
+        <p>На берегу Волхова, в сердце Великого Новгорода стоит крепость, первое летописное упоминание о которой датируется 1044 годом. XI век! Новгородский детинец включает в себя девять башен и четыре собора. В том числе знаменитый белоснежный Софийский собор.</p>
+    </div>
+    <div class="six">
+        @(await Html.RenderComponentAsync<RecomendationCardComponent>(RenderMode.ServerPrerendered, new
+
+        {
+            @*Url = "https://cdn.lifehacker.ru/wp-content/uploads/2019/05/SHixany_1599818138.jpg",*@
+            Url = "https://mperspektiva.ru/upload/resize_cache/webp/iblock/093/720_453_1/093985e1041ea629473c55ca68df9d08.webp",
+            Title = "Москва",
+            Description = "Moscow city"
+        }))
+        <p>Москва – столица России, многонациональный город на Москве-реке в западной части страны. В его историческом центре находится средневековая крепость Кремль – резиденция российского президента. На ее территории можно посетить Оружейную палату, где выставляются драгоценные предметы, принадлежавшие царской семье.</p>
+        
+    </div>
+
+
+
+
 </div>
 @*<div class="row">
     <div class="col-md-3">
@@ -102,7 +143,7 @@
             Description = " Комплекс расположен в Пресненском районе Москвы. Он включает в себя 20 высотных зданий. Среди них и самый высокий небоскреб в Европе – «Башня Федерация» и самый эстетичный небоскреб мира – «Город Столиц».",
             Price = 15640d,
             ImageUrls = new List<string>()
-            {   
+            {
                 "https://lh3.googleusercontent.com/p/AF1QipNZqWDLthSpYZLhwG6KkA2zdyVqRro3_3JVkiE=w287-h192-n-k-rw-no-v1",
                 "https://lh3.googleusercontent.com/p/AF1QipNX8lek66ztb8FnmUTMFShDc3sQ8prr9euYSc4=w287-h192-n-k-rw-no-v1",
                 "https://lh3.googleusercontent.com/p/AF1QipM7p0SR-h8x3ITPo__H-HnQ6suzb4SghDfDP6E=w287-h192-n-k-rw-no-v1",
