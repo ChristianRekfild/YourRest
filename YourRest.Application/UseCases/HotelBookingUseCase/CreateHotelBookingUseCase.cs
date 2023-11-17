@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 using YourRest.Application.Dto;
@@ -60,14 +61,29 @@ namespace YourRest.Application.UseCases.HotelBookingUseCase
 
             foreach (var room in rooms)
             {
-               
-                var AlreadyHaveBooking = (await bookingRepository.
-                FindAsync(x => x.Rooms.Contains(room) && (
-                (x.StartDate <= bookingDto.StartDate && bookingDto.EndDate < x.StartDate) ||
-                (x.StartDate < bookingDto.EndDate && bookingDto.EndDate < x.EndDate) ||
-                (bookingDto.StartDate <= x.StartDate && x.EndDate < bookingDto.EndDate)), token)).Any();
 
-                if (AlreadyHaveBooking)
+
+
+
+                var alreadyHaveBooking = await bookingRepository.
+                FindAsync(x => x.Rooms.Contains(room) && ((x.StartDate <= bookingDto.StartDate && bookingDto.StartDate < x.EndDate) ||
+                    (x.StartDate < bookingDto.EndDate && bookingDto.EndDate < x.EndDate) ||
+                    (bookingDto.StartDate <= x.StartDate && x.EndDate <= bookingDto.EndDate)), token);
+
+                //var AlreadyHaveBooking = await bookingRepository.
+                //    FindAsyncDoubleWhere(t => t.Rooms.Contains(room), x => (x.StartDate <= bookingDto.StartDate && bookingDto.EndDate < x.StartDate) ||
+                //    (x.StartDate < bookingDto.EndDate && bookingDto.EndDate < x.EndDate) ||
+                //    (bookingDto.StartDate <= x.StartDate && x.EndDate < bookingDto.EndDate), token);
+
+                //var bookingsWithRoom = (await bookingRepository.
+                //    GetWithIncludeAsync(x => x.Rooms.Contains(room), token, x => x.Rooms)).ToList();
+
+                //var alreadyHaveBooking = bookingsWithRoom.Where(x => (x.StartDate <= bookingDto.StartDate && bookingDto.StartDate < x.EndDate) ||
+                //    (x.StartDate < bookingDto.EndDate && bookingDto.EndDate < x.EndDate) ||
+                //    (bookingDto.StartDate <= x.StartDate && x.EndDate <= bookingDto.EndDate)).ToList();
+
+
+                if (alreadyHaveBooking.Any())
                 {
                     throw new InvalidParameterException("Бронирование на выбранные даты невозможно. Комната занята.");
                 }
@@ -101,6 +117,7 @@ namespace YourRest.Application.UseCases.HotelBookingUseCase
             var savedHotelBooking = await bookingRepository.AddAsync(hotelBookingToInsert, true, token);
             BookingWithIdDto bookingWithIdDto = new BookingWithIdDto()
             {
+                Id = savedHotelBooking.Id,
                 StartDate = savedHotelBooking.StartDate,
                 EndDate = savedHotelBooking.EndDate,
                 Rooms = savedHotelBooking.Rooms.Select(t => t.Id).ToList(),
@@ -113,7 +130,7 @@ namespace YourRest.Application.UseCases.HotelBookingUseCase
                 DateOfBirth = savedHotelBooking.Customer.DateOfBirth
             };
 
-            return mapper.Map<BookingWithIdDto>(savedHotelBooking);
+            return bookingWithIdDto;
         }
     }
 }

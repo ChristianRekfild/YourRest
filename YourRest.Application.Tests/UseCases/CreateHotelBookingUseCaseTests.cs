@@ -34,7 +34,7 @@ namespace YourRest.Application.Tests.UseCases
 
             createHotelBookingUseCase = new CreateBookingUseCase(
                 _bookingRepositoryMock.Object,
-                _mapperMock.Object,               
+                _mapperMock.Object,
                 _customerRepositoryMock.Object,
                 _roomRepositoryMock.Object);
         }
@@ -44,16 +44,49 @@ namespace YourRest.Application.Tests.UseCases
         {
             //Arrange
             _bookingRepositoryMock
-                .Setup(r => r.FindAsync(It.IsAny<Expression<Func<Booking, bool>>>(), It.IsAny<CancellationToken>()))
+                .Setup(r => r.FindAsyncDoubleWhere(It.IsAny<Expression<Func<Booking, bool>>>(), It.IsAny<Expression<Func<Booking, bool>>>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(new[] { new Booking()
                         {
                             StartDate = new DateTime(2025, 10, 5),
                             EndDate = new DateTime(2025, 10, 15),
-                            Rooms = new List<Room>() { new Room { Id = 1} },
+                            Rooms = new List<Room>() { new Room()
+                                    {
+                                        Id = 1,
+                                        AccommodationId = 1,
+                                        Name = "DeluxeRoom",
+                                        RoomType = "ZBS",
+                                        SquareInMeter = 1,
+                                        Capacity = 20
+                                    } },
                             TotalAmount = 5000.0m,
                             AdultNumber = 2,
-                            ChildrenNumber = 2
+                            ChildrenNumber = 2,
+                            CustomerId = 1
                         }
+                });
+
+            _roomRepositoryMock
+                .Setup(r => r.GetAsync(It.IsAny<int>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(new Room()
+                        {
+                            Id = 1, 
+                            AccommodationId = 1,
+                            Name = "DeluxeRoom",
+                            RoomType = "ZBS",
+                            SquareInMeter = 1,
+                            Capacity = 20
+                        }
+                );
+
+            _customerRepositoryMock
+                .Setup(r => r.GetAsync(It.IsAny<int>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(new Customer()
+                {
+                    Id = 1,
+                    FirstName = "Test",
+                    MiddleName = "Test",
+                    LastName = "Test",
+                    DateOfBirth = new DateTime(1950, 11, 5),
                 });
 
             BookingDto newHotelBookingDateToIn = new BookingDto()

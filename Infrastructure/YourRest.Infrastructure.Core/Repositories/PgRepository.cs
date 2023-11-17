@@ -2,6 +2,7 @@
 using YourRest.Domain.Entities;
 using YourRest.Domain.Repositories;
 using System.Linq.Expressions;
+using System.Linq;
 
 namespace YourRest.Infrastructure.Core.Repositories
 {
@@ -39,7 +40,10 @@ namespace YourRest.Infrastructure.Core.Repositories
         {
             return await _dataContext.Set<T>().Where(expression).ToListAsync(cancellationToken);
         }
-
+        public async Task<IEnumerable<T>> FindAsyncDoubleWhere(Expression<Func<T, bool>> expressionFirst, Expression<Func<T, bool>> expression, CancellationToken cancellationToken = default)
+        {
+            return await _dataContext.Set<T>().Where(expressionFirst).Where(expression).ToListAsync(cancellationToken);
+        }
         public async Task<IEnumerable<T>> GetAllAsync(CancellationToken cancellationToken = default)
         {
             return await _dataContext.Set<T>().ToListAsync(cancellationToken);
