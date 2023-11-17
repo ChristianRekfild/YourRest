@@ -7,8 +7,10 @@ namespace YourRest.ClientWebApp.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+
+
         //test
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger )
         {
             _logger = logger;
         }
@@ -18,7 +20,7 @@ namespace YourRest.ClientWebApp.Controllers
             return View();
         }
 
-        public IActionResult Privacy()
+        public async Task<IActionResult> Privacy()
         {
             return View();
         }

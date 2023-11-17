@@ -52,6 +52,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)  // с
     });
 builder.Services.AddAuthorization();            // добавление сервисов авторизации
 builder.Services.AddServerSideBlazor();
+builder.Services.AddHttpClient();
 
 var app = builder.Build();
 

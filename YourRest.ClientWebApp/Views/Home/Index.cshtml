@@ -2,16 +2,10 @@
 @{
     ViewData["Title"] = "Home Page";
 }
-<script src="~/js/moment.min.js"></script>
-<script src="~/lib/jquery/dist/jquery.min.js"></script>
-<script src="~/js/daterangepicker.js"></script>
-<link href="~/css/daterangepicker.css" rel="stylesheet" />
-
-
 
 <div class="row">
     <div class="col-md-12">
-        <h1>Найдите жилье для новой поездки</h1>
+        <h1>Найдите жилье для новой поездки по России</h1>
         <p>Ищите спецпредложения на отели, дома и другие варианты.</p>
     </div>
 </div>
@@ -21,139 +15,103 @@
     </div>
 </div>
 <div class="row">
-    <div class="col-md-4">
-        <div class="card" style="width: 18rem;">
-            <div id="carouselExampleControls1" class="carousel slide" data-bs-ride="carousel">
-                <div class="carousel-inner">
-                    <div class="carousel-item active">
-                        <img src="https://lh3.googleusercontent.com/p/AF1QipM9zhAjfRsqyu-OiER_ndy89cI7vo6ZIq4UNSdC=w287-h192-n-k-rw-no-v1"
-                             class="d-block w-100" alt="img">
-                    </div>
-                    <div class="carousel-item">
-                        <img src="https://lh3.googleusercontent.com/p/AF1QipNGQfyyhtvI3Mdp2lKxOYWhvZ5sdEC2He0vtN5C=w287-h192-n-k-rw-no-v1"
-                             class="d-block w-100" alt="img">
-                    </div>
-                    <div class="carousel-item">
-                        <img src="https://lh3.googleusercontent.com/p/AF1QipNfBWvPq_OsUNlofBLsmtzhonEygtucZ6Q9f3Go=w287-h192-n-k-rw-no-v1"
-                             class="d-block w-100" alt="img">
-                    </div>
-                    <div class="carousel-item">
-                        <img src="https://lh3.googleusercontent.com/p/AF1QipNX83NAOMCPJHDHCsmIV_WtEIizEQIXU6czZbxc=w287-h192-n-k-rw-no-v1"
-                             class="d-block w-100" alt="img">
-                    </div>
-                    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls1" data-bs-slide="prev">
-                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                        <span class="visually-hidden">Previous</span>
-                    </button>
-                    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls1" data-bs-slide="next">
-                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                        <span class="visually-hidden">Next</span>
-                    </button>
-                </div>
-            </div>
-            <div class="card-body">
-                <h5 class="card-title">Hyatt Regency Moscow Petrovsky Park</h5>
-                <p class="card-text">
-                    Высококлассный отель с видом на Петровский парк,
-                    расположенный на крупной улице в 8 км от знаменитой Красной площади,
-                    в 6 км от Большого театра и в 3 км от Савеловского вокзала.
-                </p>
-                <b>От 15 000 р.</b> <hr />
-                <a href="#" class="btn btn-primary">Забронировать</a>
-            </div>
-        </div>
+    <div class="col-md-6">
+        @(await Html.RenderComponentAsync<RecomendationCardComponent>(RenderMode.ServerPrerendered, new
+           
+            {
+                Url = "https://thumb.tildacdn.com/tild3232-3038-4530-b531-623461306364/-/resize/960x/-/format/webp/shutterstock_7075422.jpg",
+                Title = "Пермский край",
+                Description = "Кунгурская ледяная пещера"
+            }))
+    </div> 
+    <div class="col-md-6">
+        @(await Html.RenderComponentAsync<RecomendationCardComponent>(RenderMode.ServerPrerendered, new
+
+        {
+            Url = "https://thumb.tildacdn.com/tild3333-3237-4164-b963-623431646164/-/resize/960x/-/format/webp/shutterstock_1870650.jpg",
+            Title = "Карелия",
+            Description = "Мраморный каньон Рускеала"
+        }))
+    </div> 
+    <div class="col-md-6">
+        @(await Html.RenderComponentAsync<RecomendationCardComponent>(RenderMode.ServerPrerendered, new
+
+        {
+            Url = "https://thumb.tildacdn.com/tild3239-3937-4265-b236-343532333236/-/resize/960x/-/format/webp/shutterstock_1978293.jpg",
+            Title = "Дагестан",
+            Description = "Гамсутль"
+        }))
     </div>
-    <div class="col-md-4">
-        <div class="card" style="width: 18rem;">
-            <div id="carouselExampleControls2" class="carousel slide" data-bs-ride="carousel">
-                <div class="carousel-inner">
-                    <div class="carousel-item active">
-                        <img src="https://lh3.googleusercontent.com/gps-proxy/AFm_dcTp_BURSk2ggvR1_xdoX0s7tX6WAdkCbW7zd8-NyaQV0o6dvi66jm30n_qI4zWWsEfRoqnSdd2YwO8wcpX2-gZmtkvfL2vQahBOnxOZ4qHiId4KrlhOSQF8hITfCZQMJATx7xqCJSvFzhIInJeGwpxLaN_QgSzRTa29APdyuIJHMo8Jv79603yq=w287-h192-n-k-rw-no-v1"
-                             class="d-block w-100" alt="img">
-                    </div>
-                    <div class="carousel-item">
-                        <img src="https://lh3.googleusercontent.com/gps-proxy/AFm_dcRyqzpG3WSIGxaV6_yXgahFPQqFOnnQXJ30Hrqh3LexTwqLfZhHP7U8W5XrtVSw3iMu310laN5gcsLKVPIBgd_Wam_VECarfYS2-wk310SkbxWIwU7-24uVZAGph04K41FObvKvSD75wU4eSHpUUf-c-GOQzfPoyLA7UiG0RtgFdbVFxhjPmNCJFw=w287-h192-n-k-rw-no-v1"
-                             class="d-block w-100" alt="img">
-                    </div>
-                    <div class="carousel-item">
-                        <img src="https://lh3.googleusercontent.com/p/AF1QipOsU-a3qPH7mfC4idz6fR98VTok30K3gGqo79Sw=w287-h192-n-k-rw-no-v1"
-                             class="d-block w-100" alt="img">
-                    </div>
-                    <div class="carousel-item">
-                        <img src="https://lh3.googleusercontent.com/gps-proxy/AFm_dcRcUK3IEc9l8JryeRjJ4zL_Emb5hUQSQQ90xioY_KXbfzU450Yvl09aguZlx3x-T7OCN_14rT4BA49sT8uMgUhyy6p2pmdWThAqYYIYpL_rzB8P5PqGvw9nrFI7Dnzt3BHcqWpylKmnDqPm4O7cGz_nJNwi8N7Kpo_lyYTj7hK4JpGhuR8EQsbe=w287-h192-n-k-rw-no-v1"
-                             class="d-block w-100" alt="img">
-                    </div>
-                    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls2" data-bs-slide="prev">
-                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                        <span class="visually-hidden">Previous</span>
-                    </button>
-                    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls2" data-bs-slide="next">
-                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                        <span class="visually-hidden">Next</span>
-                    </button>
-                </div>
-            </div>
-            <div class="card-body">
-                <h5 class="card-title">Марриотт Империал Плаза</h5>
-                <p class="card-text">
-                    Moscow Marriott Imperial Plaza – новая и безупречная локация для бизнес-поездок,
-                    семейного отдыха или увлекательных путешествий.
-                    Отель, расположенный в центре Москвы.
-                </p>
-                <b>От 8 100 р.</b> <hr />
-                <a href="#" class="btn btn-primary">Забронировать</a>
-            </div>
-        </div>
+   
+   
+</div>
+@*<div class="row">
+    <div class="col-md-3">
+        @(await Html.RenderComponentAsync<CardComponent>(RenderMode.ServerPrerendered, new
+        {
+            CarouseControlId = "first",
+            Title = "Hyatt Regency Moscow Petrovsky Park",
+            Description = "Высококлассный отель с видом на Петровский парк, расположенный на крупной улице в 8 км от знаменитой Красной площади, в 6 км от Большого театра и в 3 км от Савеловского вокзала.",
+            Price = 8100d,
+            ImageUrls = new List<string>()
+            {
+                "https://lh3.googleusercontent.com/p/AF1QipM9zhAjfRsqyu-OiER_ndy89cI7vo6ZIq4UNSdC=w287-h192-n-k-rw-no-v1",
+                "https://lh3.googleusercontent.com/p/AF1QipNGQfyyhtvI3Mdp2lKxOYWhvZ5sdEC2He0vtN5C=w287-h192-n-k-rw-no-v1",
+                "https://lh3.googleusercontent.com/p/AF1QipNfBWvPq_OsUNlofBLsmtzhonEygtucZ6Q9f3Go=w287-h192-n-k-rw-no-v1",
+                "https://lh3.googleusercontent.com/p/AF1QipM-O-4XGDb-lFf2nqtt8WLcEa2NBiK-NLx6rpke=w287-h192-n-k-rw-no-v1",
+            }
+        }))
     </div>
-    <div class="col-md-4">
-        <div class="card" style="width: 18rem;">
-            <div id="carouselExampleControls3" class="carousel slide" data-bs-ride="carousel">
-                <div class="carousel-inner">
-                    <div class="carousel-item active">
-                        <img src="https://lh3.googleusercontent.com/gps-proxy/AFm_dcTUamzu66w8vCDJdq49NILpbvjSpNnjFxSQFe3cybGi4LtEnMCmmlywsG3T6Qr_umlJBU2f36SaLymfYGpAAE53Z0nEA3WCs-svA6RDREzijCQHymr64oJ0-N9n1hgA_mtz9U7GD_JQsgNrPU23p5yiCOD4rTSeuqbQsjXvHgcjZAyVUEc7-Hkjnw=w287-h192-n-k-rw-no-v1"
-                             class="d-block w-100" alt="img">
-                    </div>
-                    <div class="carousel-item">
-                        <img src="https://lh3.googleusercontent.com/gps-proxy/AFm_dcR2sPtVL06M9aIl3w0MPgrdMLOUfTSfg8Qjqq0teQaHtU73TFbWkJfuEOlq62TVBFLp-lTAxOob1qX91-rbTQCBEyP0yu7dJ8iv8BL9ef4Ql3h_IxdBORs0Cy3OwYewJkN3QNOFaFbwZaCbkdNRtVbC0bah1SG5Iw0p4PnSTeWxFauB1ipHlXY=w287-h192-n-k-rw-no-v1"
-                             class="d-block w-100" alt="img">
-                    </div>
-                    <div class="carousel-item">
-                        <img src="https://lh3.googleusercontent.com/p/AF1QipMgMYHgJU5NmdObATOkbGgRFtyO1dC838DY-NGN=w287-h192-n-k-rw-no-v1"
-                             class="d-block w-100" alt="img">
-                    </div>
-                    <div class="carousel-item">
-                        <img src="https://lh3.googleusercontent.com/p/AF1QipMt1tsIJzm4SITE7mFKb3Y8yXb81KZkB3HHebiY=w287-h192-n-k-rw-no-v1"
-                             class="d-block w-100" alt="img">
-                    </div>
-                </div>
-                <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls3" data-bs-slide="prev">
-                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                    <span class="visually-hidden">Previous</span>
-                </button>
-                <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls3" data-bs-slide="next">
-                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                    <span class="visually-hidden">Next</span>
-                </button>
-            </div>
-            @*<img src="https://lh3.googleusercontent.com/gps-proxy/AFm_dcTUamzu66w8vCDJdq49NILpbvjSpNnjFxSQFe3cybGi4LtEnMCmmlywsG3T6Qr_umlJBU2f36SaLymfYGpAAE53Z0nEA3WCs-svA6RDREzijCQHymr64oJ0-N9n1hgA_mtz9U7GD_JQsgNrPU23p5yiCOD4rTSeuqbQsjXvHgcjZAyVUEc7-Hkjnw=w287-h192-n-k-rw-no-v1" class="card-img-top" alt="img">*@
-
-
-
-            <div class="card-body">
-                <h5 class="card-title">Sky Apartments</h5>
-                <p class="card-text">
-                    Комплекс расположен в Пресненском районе Москвы.
-                    Он включает в себя 20 высотных зданий.
-                    Среди них и самый высокий небоскреб в Европе – «Башня Федерация»,
-                    и самый эстетичный небоскреб мира – «Город Столиц».
-                </p>
-                <b>От 14 800 р.</b> <hr />
-                <a href="#" class="btn btn-primary">Забронировать</a>
-            </div>
-        </div>
+    <div class="col-md-3">
+        @(await Html.RenderComponentAsync<CardComponent>(RenderMode.ServerPrerendered, new
+        {
+            CarouseControlId = "second",
+            Title = "Марриотт Империал Плаза",
+            Description = "Moscow Marriott Imperial Plaza – новая и безупречная локация для бизнес-поездок, семейного отдыха или увлекательных путешествий. Отель, расположенный в центре Москвы.",
+            Price = 11400d,
+            ImageUrls = new List<string>()
+            {
+                "https://lh3.googleusercontent.com/gps-proxy/AFm_dcSfWxW0Dk8AtY3m0-3xIlNDdS8gq5_c5gab_9aYkAkKPWrAWiM6tifmgcxQgJI0dljr9zV2xi8sr9BM7UGxqRCMH5i3pFBIQfYgbKd-9OgdYuE8K27s7gz5x0ssKXD5tKbN-iDjgWqQXXr6EAEllKRQjRPuguZG8M4MrurwsBMo42SP3d6-TgRT=w287-h192-n-k-rw-no-v1",
+                "https://lh3.googleusercontent.com/gps-proxy/AFm_dcQyQR4riExD4OlgcgGwVJqC6XDi_24dVk7PUVLXpqjjMwAE64mVB6OT2_0DYPjK4r0Y7nadP0T5OL-P-XiCvSHwSXXBemk-TI7xluUhZtO6P503T_3wA2fxe75nY6JERZVqJS56_BjpKN1DxRfauGN3YQYs4dECCkk35M8i920UTI7gwMkJAOymOQ=w287-h192-n-k-rw-no-v1",
+                "https://lh3.googleusercontent.com/p/AF1QipOsU-a3qPH7mfC4idz6fR98VTok30K3gGqo79Sw=w287-h192-n-k-rw-no-v1",
+                "https://lh3.googleusercontent.com/gps-proxy/AFm_dcT9Fq2ISzQ5uK5Ps8xeKwXFokWCXn0wpBwLftSJ_c4X1Sf_x7DgcYVT_XDKYQLLNRuRXZl2vuuF-lVEeETo1HntFuiQr5IUes68ld1-OCo_iZf8pbh7f6cPwTLXUiwGDyIDnl0MTXWySG_cPlmkQRBgp_U-eJfWfpL5InfCPtut1_bcCc1PTZhh=w287-h192-n-k-rw-no-v1",
+            }
+        }))
+    </div>
+    <div class="col-md-3">
+        @(await Html.RenderComponentAsync<CardComponent>(RenderMode.ServerPrerendered, new
+        {
+            CarouseControlId = "thrid",
+            Title = "Sky Apartments",
+            Description = " Комплекс расположен в Пресненском районе Москвы. Он включает в себя 20 высотных зданий. Среди них и самый высокий небоскреб в Европе – «Башня Федерация» и самый эстетичный небоскреб мира – «Город Столиц».",
+            Price = 14800d,
+            ImageUrls = new List<string>()
+            {
+                "https://lh3.googleusercontent.com/gps-proxy/AFm_dcS3LeCbZsOoLbjqj3wQUYxEBMCHiSHKjxxBldKNwNDvOVSFVBkTR6ofg1eh49uVvckxYnhimfv6lp90r2S1SbsaPcj_9xXUwoCZWljGnD308BRCB-nvSVkmOh9kDLedetub6kkWjmQol3E_tmAW3MnfawqgFIFp4qn1FUAJkYeOh6Tyvoy4hppy2Q=w287-h192-n-k-rw-no-v1",
+                "https://lh3.googleusercontent.com/gps-proxy/AFm_dcQAh3WOX509Hid2L1xbS9tgH3PAQrZV5kuQPnbIAZ-gFQoKkDfSrlWlSJOov2sNRkebZS5WUyJRjFJcX2_bIt8n62VJaVXP9qMqvGXJYalRfEoWzwtNOZUmnUQW6BSi-QEMxN1BIR8j8RGySCxiBDWceK4zL7weYHnHMSOP8-rlsgSwn4MxC7E=w287-h192-n-k-rw-no-v1",
+                "https://lh3.googleusercontent.com/p/AF1QipMt1tsIJzm4SITE7mFKb3Y8yXb81KZkB3HHebiY=w287-h192-n-k-rw-no-v1",
+                "https://lh3.googleusercontent.com/p/AF1QipNBvnkxGZMprX63uTqSYxJQe7Wk19ZjfQi7YfPU=w287-h192-n-k-rw-no-v1",
+            }
+        }))
+    </div>
+    <div class="col-md-3">
+        @(await Html.RenderComponentAsync<CardComponent>(RenderMode.ServerPrerendered, new
+        {
+            CarouseControlId = "fourth",
+            Title = "Балчуг Кемпински",
+            Description = " Комплекс расположен в Пресненском районе Москвы. Он включает в себя 20 высотных зданий. Среди них и самый высокий небоскреб в Европе – «Башня Федерация» и самый эстетичный небоскреб мира – «Город Столиц».",
+            Price = 15640d,
+            ImageUrls = new List<string>()
+            {   
+                "https://lh3.googleusercontent.com/p/AF1QipNZqWDLthSpYZLhwG6KkA2zdyVqRro3_3JVkiE=w287-h192-n-k-rw-no-v1",
+                "https://lh3.googleusercontent.com/p/AF1QipNX8lek66ztb8FnmUTMFShDc3sQ8prr9euYSc4=w287-h192-n-k-rw-no-v1",
+                "https://lh3.googleusercontent.com/p/AF1QipM7p0SR-h8x3ITPo__H-HnQ6suzb4SghDfDP6E=w287-h192-n-k-rw-no-v1",
+                "https://lh3.googleusercontent.com/gps-proxy/AFm_dcT7vByvlMu62BeDmKDH8vwvkwf2gZZInbDlVJoKrRe6ctYWsLdEKP_93bT5MbLVTXUtGOMkgFnYOzOc_cqyagTTBy6RXG7M_A2mmIiObIuyo_XiC3g8rU2jwUZ87cSN_XjVVXdsIgacIcoXAwYY_hHtQb5XLYRnJgNq1Lg6MQc7UtjRGVl-9CTq=w287-h192-n-k-rw-no-v1",
+            }
+        }))
     </div>
 </div>
-
+*@
 <script type="text/javascript">
     let openForm = () => {
         $('#myForm').show();

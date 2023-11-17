@@ -21,7 +21,7 @@ export function ShowDataPicker() {
                 StartDate = start.format('YYYY-MM-DD');
                 EndDate = end.format('YYYY-MM-DD');
             });
-
+            
         }
     );
 }
