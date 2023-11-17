@@ -1,4 +1,5 @@
-﻿@{
+﻿@using YourRest.ClientWebApp.Views.Shared.Components;
+@{
     ViewData["Title"] = "Home Page";
 }
 <script src="~/js/moment.min.js"></script>
@@ -16,44 +17,7 @@
 </div>
 <div class="row">
     <div class="col-md-12 d-flex justify-content-center">
-        <div class="search">
-            <div class="search-field">
-                <i class="bi bi-luggage bi-size"></i>
-                <input class="search-input" type="text" placeholder="Куда Вы хотите поехать?" />
-            </div>
-            <div class="search-field">
-                <i class="bi bi-calendar-week bi-size"></i>
-                <input type="text" id="my-datapicker" class="search-input">
-            </div>
-            <div class="search-field">
-                <i class="bi bi-person bi-size"></i>
-                <div class="auldt_btn" onclick="openForm()">2 взрослых 2 детей 1 комната</div>
-                <!-- Hide Form -->
-                <div class="form-popup" id="myForm">
-                    <div class="form-container">
-                        <!-- Custom Numeric -->
-                        <div class="control">
-                            <div class="control_name">
-                                Взрослые
-                            </div>
-                            <div class="control_counter">
-                                <div class="control-counter_fbtn" onclick="decrease()">
-                                    -
-                                </div>
-                                <input type="number" min="0" max="99" value="0" step="1" class="control-counter_vbtn" oninput="change()" />
-
-                                <div class="control-counter_sbtn" onclick="increase()">
-                                    +
-                                </div>
-                            </div>
-                        </div>
-                        <div class="btn cancel" onclick="closeForm()">Готово</div>
-                    </div>
-                </div>
-
-            </div>
-            <button class="btn-lg btn-primary">Найти</button>
-        </div>
+        @(await Html.RenderComponentAsync<SearchComponent>(RenderMode.ServerPrerendered))
     </div>
 </div>
 <div class="row">
@@ -191,55 +155,11 @@
 </div>
 
 <script type="text/javascript">
-    $(document).ready(
-        function () {
-            $('#my-datapicker').daterangepicker({
-                "linkedCalendars": true,
-                "autoUpdateInput": true,
-                "showCustomRangeLabel": false,
-                "startDate": moment(Date.now()).format("DD.MM.YYYY"),
-                "endDate": moment(Date.now()).add(2, 'days').format("DD.MM.YYYY"),
-                "opens": "center",
-                locale: {
-                    "applyLabel": "Выбрать",
-                    "cancelLabel": "Отменить",
-                    "format": "DD.MM.YYYY"
-                }
-            }, function (start, end, label) {
-
-                $.post("/Home/GetDataFormJS", {
-                    StartDate: start.format('YYYY-MM-DD'),
-                    EndDate: end.format('YYYY-MM-DD')
-                }, null, "json");
-            });
-
-        }
-    );
     let openForm = () => {
-        console.log("open");
         $('#myForm').show();
     }
 
     let closeForm = () => {
-        console.log('close');
         $('#myForm').hide();
-    }
-    let increase = () => {
-        let input = $('.control-counter_vbtn').get(0);
-        let currentValue = input.value;
-        if (currentValue <= 99)
-            $('.control-counter_vbtn').get(0).value++;
-    }
-    let decrease = () => {
-        let input = $('.control-counter_vbtn').get(0);
-        let currentValue = input.value;
-        if (currentValue > 0)
-            $('.control-counter_vbtn').get(0).value--;
-    }
-    let change = () => {
-        let input = $('.control-counter_vbtn').get(0);
-        let currentValue = input.value;
-        if (currentValue < 0)
-            input.value = 0;
     }
 </script>
