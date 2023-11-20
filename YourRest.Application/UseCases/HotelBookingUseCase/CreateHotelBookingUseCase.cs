@@ -61,27 +61,10 @@ namespace YourRest.Application.UseCases.HotelBookingUseCase
 
             foreach (var room in rooms)
             {
-
-
-
-
                 var alreadyHaveBooking = await bookingRepository.
                 FindAsync(x => x.Rooms.Contains(room) && ((x.StartDate <= bookingDto.StartDate && bookingDto.StartDate < x.EndDate) ||
                     (x.StartDate < bookingDto.EndDate && bookingDto.EndDate < x.EndDate) ||
                     (bookingDto.StartDate <= x.StartDate && x.EndDate <= bookingDto.EndDate)), token);
-
-                //var AlreadyHaveBooking = await bookingRepository.
-                //    FindAsyncDoubleWhere(t => t.Rooms.Contains(room), x => (x.StartDate <= bookingDto.StartDate && bookingDto.EndDate < x.StartDate) ||
-                //    (x.StartDate < bookingDto.EndDate && bookingDto.EndDate < x.EndDate) ||
-                //    (bookingDto.StartDate <= x.StartDate && x.EndDate < bookingDto.EndDate), token);
-
-                //var bookingsWithRoom = (await bookingRepository.
-                //    GetWithIncludeAsync(x => x.Rooms.Contains(room), token, x => x.Rooms)).ToList();
-
-                //var alreadyHaveBooking = bookingsWithRoom.Where(x => (x.StartDate <= bookingDto.StartDate && bookingDto.StartDate < x.EndDate) ||
-                //    (x.StartDate < bookingDto.EndDate && bookingDto.EndDate < x.EndDate) ||
-                //    (bookingDto.StartDate <= x.StartDate && x.EndDate <= bookingDto.EndDate)).ToList();
-
 
                 if (alreadyHaveBooking.Any())
                 {
