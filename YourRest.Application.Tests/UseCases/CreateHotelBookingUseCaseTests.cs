@@ -38,33 +38,10 @@ namespace YourRest.Application.Tests.UseCases
                 _customerRepositoryMock.Object,
                 _roomRepositoryMock.Object);
         }
-
         [Fact]
-        public async Task Execute_WhenDataoccupied_ReturnsStatusCodeError()
+        public async Task Execute_WhenNoRoom_ReturnsError()
         {
             //Arrange
-            _bookingRepositoryMock
-                .Setup(r => r.FindAsync(It.IsAny<Expression<Func<Booking, bool>>>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(new[] { new Booking()
-                        {
-                            StartDate = new DateTime(2025, 10, 5),
-                            EndDate = new DateTime(2025, 10, 15),
-                            Rooms = new List<Room>() { new Room()
-                                    {
-                                        Id = 1,
-                                        AccommodationId = 1,
-                                        Name = "DeluxeRoom",
-                                        RoomType = "ZBS",
-                                        SquareInMeter = 1,
-                                        Capacity = 20
-                                    } },
-                            TotalAmount = 5000.0m,
-                            AdultNumber = 2,
-                            ChildrenNumber = 2,
-                            CustomerId = 1
-                        }
-                });
-
             _roomRepositoryMock
                 .Setup(r => r.GetAsync(It.IsAny<int>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(new Room()
@@ -76,18 +53,51 @@ namespace YourRest.Application.Tests.UseCases
                     SquareInMeter = 1,
                     Capacity = 20
                 }
-                );
+             );
 
-            _customerRepositoryMock
-                .Setup(r => r.GetAsync(It.IsAny<int>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(new Customer()
+            BookingDto newBooking = new BookingDto()
+            {
+                StartDate = new DateTime(2025, 10, 2),
+                EndDate = new DateTime(2025, 10, 12),
+                Rooms = new List<int>() { 1, 2 },
+                TotalAmount = 5000.0m,
+                AdultNumber = 2,
+                ChildrenNumber = 2
+            };
+
+            //Act
+            var act = async () => await createHotelBookingUseCase.ExecuteAsync(newBooking);
+
+            //Assert
+            var exception= await Assert.ThrowsAsync<InvalidParameterException>(act);
+
+            //The thrown exception can be used for even more detailed assertions.
+            Assert.Equal("Бронируемой комнаты не существует.", exception.Message);
+
+        }
+
+        [Fact]
+        public async Task Execute_WhenDataoccupied_ReturnsStatusCodeError()
+        {
+            //Arrange
+
+            _bookingRepositoryMock
+                .Setup(r => r.FindAnyAsync(It.IsAny<Expression<Func<Booking, bool>>>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync( true
+            );
+
+            _roomRepositoryMock
+                .Setup(r => r.FindAsync(It.IsAny<Expression<Func<Room, bool>>>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(new [] { new Room()
                 {
                     Id = 1,
-                    FirstName = "Test",
-                    MiddleName = "Test",
-                    LastName = "Test",
-                    DateOfBirth = new DateTime(1950, 11, 5),
-                });
+                    AccommodationId = 1,
+                    Name = "DeluxeRoom",
+                    RoomType = "ZBS",
+                    SquareInMeter = 1,
+                    Capacity = 20
+                } }
+            );          
 
             BookingDto newHotelBookingDateToIn = new BookingDto()
             {
@@ -96,41 +106,22 @@ namespace YourRest.Application.Tests.UseCases
                 Rooms = new List<int>() { 1 },
                 TotalAmount = 5000.0m,
                 AdultNumber = 2,
-                ChildrenNumber = 2
-            };
-            BookingDto newHotelBookingDateFromIn = new BookingDto()
-            {
-                StartDate = new DateTime(2025, 10, 7),
-                EndDate = new DateTime(2025, 10, 17),
-                Rooms = new List<int>() { 1 },
-                TotalAmount = 5000.0m,
-                AdultNumber = 2,
-                ChildrenNumber = 2
-            };
-            BookingDto newHotelBookingAllIn = new BookingDto()
-            {
-                StartDate = new DateTime(2025, 10, 1),
-                EndDate = new DateTime(2025, 10, 20),
-                Rooms = new List<int>() { 1 },
-                TotalAmount = 5000.0m,
-                AdultNumber = 2,
-                ChildrenNumber = 2
+                ChildrenNumber = 2,
+                FirstName = "Test",
+                MiddleName = "Test",
+                LastName = "Test",
+                DateOfBirth = new DateTime(1950, 11, 5),
             };
 
             //Act
             var actDateToIn = async () => await createHotelBookingUseCase.ExecuteAsync(newHotelBookingDateToIn);
-            var actDateFromIn = async () => await createHotelBookingUseCase.ExecuteAsync(newHotelBookingDateFromIn);
-            var actAllIn = async () => await createHotelBookingUseCase.ExecuteAsync(newHotelBookingAllIn);
 
             //Assert
             var exceptionDateToIn = await Assert.ThrowsAsync<InvalidParameterException>(actDateToIn);
-            var exceptionDateFromIn = await Assert.ThrowsAsync<InvalidParameterException>(actDateFromIn);
-            var exceptionAllIn = await Assert.ThrowsAsync<InvalidParameterException>(actAllIn);
 
             //The thrown exception can be used for even more detailed assertions.
             Assert.Equal("Бронирование на выбранные даты невозможно. Комната занята.", exceptionDateToIn.Message);
-            Assert.Equal("Бронирование на выбранные даты невозможно. Комната занята.", exceptionDateFromIn.Message);
-            Assert.Equal("Бронирование на выбранные даты невозможно. Комната занята.", exceptionAllIn.Message);
+
         }
     }
 }

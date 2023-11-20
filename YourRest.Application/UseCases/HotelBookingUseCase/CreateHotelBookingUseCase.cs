@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using System.Net.Http.Headers;
 using System.Text;
@@ -43,30 +44,24 @@ namespace YourRest.Application.UseCases.HotelBookingUseCase
             //BookingDto hotelBookingDto = mapper.Map<BookingDto>(hotelBookingToInsert);                   //                    AutoMapper
             //BookingWithIdDto hotelBookingWithIdDto = mapper.Map<BookingWithIdDto>(hotelBookingToInsert); //                    AutoMapper
 
-            var rooms = new List<Domain.Entities.Room>();
+            var rooms = (await roomRepository.FindAsync(t => bookingDto.Rooms.Contains(t.Id))).ToList();
+             
             foreach (var roomId in bookingDto.Rooms)
-            {
-                var tempRoom = await roomRepository.GetAsync(roomId);
-                if (tempRoom == null)
+            {               
+                if (!rooms.Where(r => r.Id == roomId).Any())
                 {
                     throw new InvalidParameterException("Бронируемой комнаты не существует.");
                 }
-                rooms.Add(tempRoom);
-            }
-
-            if (!rooms.Any())
-            {
-                throw new InvalidParameterException("Пустая бронь - в брони нет комнат");
             }
 
             foreach (var room in rooms)
             {
                 var alreadyHaveBooking = await bookingRepository.
-                FindAsync(x => x.Rooms.Contains(room) && ((x.StartDate <= bookingDto.StartDate && bookingDto.StartDate < x.EndDate) ||
+                FindAnyAsync(x => x.Rooms.Contains(room) && ((x.StartDate <= bookingDto.StartDate && bookingDto.StartDate < x.EndDate) ||
                     (x.StartDate < bookingDto.EndDate && bookingDto.EndDate < x.EndDate) ||
                     (bookingDto.StartDate <= x.StartDate && x.EndDate <= bookingDto.EndDate)), token);
 
-                if (alreadyHaveBooking.Any())
+                if (alreadyHaveBooking)
                 {
                     throw new InvalidParameterException("Бронирование на выбранные даты невозможно. Комната занята.");
                 }

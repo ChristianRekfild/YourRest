@@ -40,7 +40,10 @@ namespace YourRest.Infrastructure.Core.Repositories
         {
             return await _dataContext.Set<T>().Where(expression).ToListAsync(cancellationToken);
         }
-
+        public async Task<bool> FindAnyAsync(Expression<Func<T, bool>> expression, CancellationToken cancellationToken = default)
+        {
+            return await _dataContext.Set<T>().Where(expression).AnyAsync(cancellationToken);
+        }
         public async Task<IEnumerable<T>> GetAllAsync(CancellationToken cancellationToken = default)
         {
             return await _dataContext.Set<T>().ToListAsync(cancellationToken);

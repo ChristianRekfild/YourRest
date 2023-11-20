@@ -2,7 +2,6 @@
 {
     public class Booking : IntBaseEntity
     {
-        public Booking() => Rooms = new List<Room>();
         public Guid SystemId { get; set; } = Guid.Empty;
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
@@ -15,5 +14,7 @@
         public int CustomerId { get; set; }
         public Customer Customer { get; set; }
         public ICollection<Room> Rooms { get; set; }
+        public Booking() => Rooms = new List<Room>();
+
     }
 }
