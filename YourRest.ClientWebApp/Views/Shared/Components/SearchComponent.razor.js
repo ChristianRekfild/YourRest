@@ -1,6 +1,6 @@
 let StartDate
 let EndDate;
-export function ShowDataPicker() {
+export function ShowDataPicker(startDate, endDate) {
 
     $(document).ready(
         function () {
@@ -9,8 +9,10 @@ export function ShowDataPicker() {
                 "linkedCalendars": true,
                 "autoUpdateInput": true,
                 "showCustomRangeLabel": false,
-                "startDate": moment(Date.now()).format("DD.MM.YYYY"),
-                "endDate": moment(Date.now()).add(2, 'days').format("DD.MM.YYYY"),
+                //"startDate": moment(Date.now()).format("DD.MM.YYYY"),
+                //"endDate": moment(Date.now()).add(2, 'days').format("DD.MM.YYYY"),
+                "startDate": moment(startDate, "DD.MM.yyyy"),
+                "endDate": moment(endDate, "DD.MM.yyyy"),
                 "opens": "center",
                 locale: {
                     "applyLabel": "Выбрать",
@@ -20,8 +22,8 @@ export function ShowDataPicker() {
             }, function (start, end, label) {
                 StartDate = start.format('YYYY-MM-DD');
                 EndDate = end.format('YYYY-MM-DD');
+                $('#my-datapicker').val(StartDate);
             });
-            
         }
     );
 }

@@ -14,78 +14,75 @@
         @(await Html.RenderComponentAsync<SearchComponent>(RenderMode.ServerPrerendered))
     </div>
 </div>
-<div class="row">
-    <h2>Популярные направления</h2>
-    <p>Лучшие места России, которые обязательно стоит увидеть своими глазами</p>
-</div>
-<div class="row recomendation-section">
+<section>
+    <div class="row">
+        <h2>Популярные направления</h2>
+        <p>Лучшие места России, которые обязательно стоит увидеть своими глазами</p>
+    </div>
+    <div class="row recomendation-section">
         <div class="first">
-        @(await Html.RenderComponentAsync<RecomendationCardComponent>(RenderMode.ServerPrerendered, new
+            @(await Html.RenderComponentAsync<RecomendationCardComponent>(RenderMode.ServerPrerendered, new
 
-        {
-            Url = "https://thumb.tildacdn.com/tild3333-3237-4164-b963-623431646164/-/resize/960x/-/format/webp/shutterstock_1870650.jpg",
-            Title = "Карелия",
-            Description = "Мраморный каньон Рускеала"
-        }))
+            {
+                Url = "Images/1.jpg",
+                Title = "Карелия",
+                Description = "Мраморный каньон Рускеала"
+            }))
+        </div>
+        <div class="second">
+            @(await Html.RenderComponentAsync<RecomendationCardComponent>(RenderMode.ServerPrerendered, new
+
+            {
+                Url = "Images/2.jpg",
+                Title = "Калининград",
+                Description = "«Европейский» город России"
+            }))
+            <p>Калининград – город в России и столица одноименной области. Он расположен между Польшей и Литвой на побережье Балтийского моря. Во времена прусского правления город назывался по-другому – Кёнигсберг.</p>
+        </div>
+        <div class="thrid">
+            @(await Html.RenderComponentAsync<RecomendationCardComponent>(RenderMode.ServerPrerendered, new
+
+            {
+                Url = "Images/3.jpg",
+                Title = "Дагестан",
+                Description = "Гамсутль"
+            }))
+        </div>
+        <div class="fourth">
+            @(await Html.RenderComponentAsync<RecomendationCardComponent>(RenderMode.ServerPrerendered, new
+
+            {
+                Url = "Images/4.jpg",
+                Title = "Алтай",
+                Description = "Кучерлинские озёра"
+            }))
+
+        </div>
+
+        <div class="five">
+            @(await Html.RenderComponentAsync<RecomendationCardComponent>(RenderMode.ServerPrerendered, new
+
+            {
+                Url = "Images/5.jpg",
+                Title = "Великий Новгород",
+                Description = "Новгородский детинец"
+            }))
+            <p>На берегу Волхова, в сердце Великого Новгорода стоит крепость, первое летописное упоминание о которой датируется 1044 годом. XI век! Новгородский детинец включает в себя девять башен и четыре собора. В том числе знаменитый белоснежный Софийский собор.</p>
+        </div>
+        <div class="six">
+            @(await Html.RenderComponentAsync<RecomendationCardComponent>(RenderMode.ServerPrerendered, new
+
+            {
+                Url = "Images/6.webp",
+                Title = "Москва",
+                Description = "Moscow city"
+            }))
+            <p>Москва – столица России, многонациональный город на Москве-реке в западной части страны. В его историческом центре находится средневековая крепость Кремль – резиденция российского президента. На ее территории можно посетить Оружейную палату, где выставляются драгоценные предметы, принадлежавшие царской семье.</p>
+
+        </div>
     </div>
-    <div class="second">
-        @(await Html.RenderComponentAsync<RecomendationCardComponent>(RenderMode.ServerPrerendered, new
+</section>
 
-        {
-           @* Url = "https://cdn.lifehacker.ru/wp-content/uploads/2019/05/Xibiny_1599817901.jpg",*@
-            Url = "https://cdn.tripster.ru/thumbs2/f367bda8-49fa-11ee-a338-4a562d065b03.1080x810.jpeg",
-            Title = "Калининград",
-            Description = "«Европейский» город России"
-        }))
-        <p>Калининград – город в России и столица одноименной области. Он расположен между Польшей и Литвой на побережье Балтийского моря. Во времена прусского правления город назывался по-другому – Кёнигсберг.</p>
-    </div>
-    <div class="thrid">
-        @(await Html.RenderComponentAsync<RecomendationCardComponent>(RenderMode.ServerPrerendered, new
-
-        {
-            Url = "https://thumb.tildacdn.com/tild3239-3937-4265-b236-343532333236/-/resize/960x/-/format/webp/shutterstock_1978293.jpg",
-            Title = "Дагестан",
-            Description = "Гамсутль"
-        }))
-    </div>
-    <div class="fourth">
-        @(await Html.RenderComponentAsync<RecomendationCardComponent>(RenderMode.ServerPrerendered, new
-
-        {
-            Url = "https://static.tildacdn.com/tild3335-3364-4863-a662-613261343538/Multa-Altaj-1.jpg",
-            Title = "Алтай",
-            Description = "Кучерлинские озёра"
-        }))
-
-    </div>
-    
-    <div class="five">
-        @(await Html.RenderComponentAsync<RecomendationCardComponent>(RenderMode.ServerPrerendered, new
-
-        {
-            Url = "https://cdn.lifehacker.ru/wp-content/uploads/2019/05/Novgorod_1599818052.jpg",
-            Title = "Великий Новгород",
-            Description = "Новгородский детинец"
-        }))
-        <p>На берегу Волхова, в сердце Великого Новгорода стоит крепость, первое летописное упоминание о которой датируется 1044 годом. XI век! Новгородский детинец включает в себя девять башен и четыре собора. В том числе знаменитый белоснежный Софийский собор.</p>
-    </div>
-    <div class="six">
-        @(await Html.RenderComponentAsync<RecomendationCardComponent>(RenderMode.ServerPrerendered, new
-
-        {
-            @*Url = "https://cdn.lifehacker.ru/wp-content/uploads/2019/05/SHixany_1599818138.jpg",*@
-            Url = "https://mperspektiva.ru/upload/resize_cache/webp/iblock/093/720_453_1/093985e1041ea629473c55ca68df9d08.webp",
-            Title = "Москва",
-            Description = "Moscow city"
-        }))
-        <p>Москва – столица России, многонациональный город на Москве-реке в западной части страны. В его историческом центре находится средневековая крепость Кремль – резиденция российского президента. На ее территории можно посетить Оружейную палату, где выставляются драгоценные предметы, принадлежавшие царской семье.</p>
-        
-    </div>
-
-
-
-
-</div>
 @*<div class="row">
     <div class="col-md-3">
         @(await Html.RenderComponentAsync<CardComponent>(RenderMode.ServerPrerendered, new
@@ -151,8 +148,8 @@
             }
         }))
     </div>
-</div>
-*@
+</div>*@
+
 <script type="text/javascript">
     let openForm = () => {
         $('#myForm').show();
