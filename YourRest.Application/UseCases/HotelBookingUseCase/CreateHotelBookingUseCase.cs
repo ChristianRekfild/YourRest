@@ -56,8 +56,8 @@ namespace YourRest.Application.UseCases.HotelBookingUseCase
 
             foreach (var room in rooms)
             {
-                var alreadyHaveBooking = await bookingRepository.
-                FindAnyAsync(x => x.Rooms.Contains(room) && ((x.StartDate <= bookingDto.StartDate && bookingDto.StartDate < x.EndDate) ||
+                var alreadyHaveBooking = await bookingRepository.FindAnyAsync(x => x.Rooms.Contains(room) && 
+                    ((x.StartDate <= bookingDto.StartDate && bookingDto.StartDate < x.EndDate) ||
                     (x.StartDate < bookingDto.EndDate && bookingDto.EndDate < x.EndDate) ||
                     (bookingDto.StartDate <= x.StartDate && x.EndDate <= bookingDto.EndDate)), token);
 

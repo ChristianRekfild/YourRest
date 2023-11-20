@@ -13,12 +13,9 @@ namespace YourRest.Application.Dto.Validators
     {
         public BookingDtoValidator()
         {
-
             RuleFor(HotelBookingDto => HotelBookingDto.StartDate).NotNull().NotEmpty().GreaterThanOrEqualTo(DateTime.Today);
             RuleFor(HotelBookingDto => HotelBookingDto.EndDate).NotNull().NotEmpty().GreaterThan(HotelBookingDto => HotelBookingDto.StartDate);
-
             RuleForEach(HotelBookingDto => HotelBookingDto.Rooms).NotNull().NotEmpty(); // Можно проверить через SetValidator или Mast
-
             RuleFor(HotelBookingDto => HotelBookingDto.TotalAmount).NotNull().NotEmpty().GreaterThan(-1);
             RuleFor(HotelBookingDto => HotelBookingDto.AdultNumber).NotNull().NotEmpty().GreaterThan(-1);
             RuleFor(HotelBookingDto => HotelBookingDto.ChildrenNumber).NotNull().NotEmpty().GreaterThan(-1);

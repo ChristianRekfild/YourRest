@@ -4,10 +4,10 @@ using YourRest.Domain.Entities;
 
 namespace YourRest.Application.Dto.Mappers.Profiles
 {
-    public class BookingDtoProfile : Profile
-    {
-        public BookingDtoProfile()
-        {
+    //public class BookingDtoProfile : Profile
+    //{
+    //    public BookingDtoProfile()
+    //    {
             //CreateMap<Booking, BookingDto>()
             //.ForMember(target => target.StartDate, opt => opt.MapFrom(src => src.StartDate))
             //.ForMember(target => target.EndDate, opt => opt.MapFrom(src => src.EndDate))
@@ -33,6 +33,6 @@ namespace YourRest.Application.Dto.Mappers.Profiles
             //CreateMap<BookingDto, BookingWithIdDto>()
             //.ForMember(target => target.Id, opt => opt.Ignore())
             //.ReverseMap();
-        }
-    }
+    //    }
+    //}
 }
