@@ -1,0 +1,11 @@
+﻿.login-btn {
+    font-size: 30px;
+}
+
+    .login-btn:hover {
+        color: #0d6efd;
+        cursor: pointer;
+    }
+header.container{
+    padding: 0;
+}
