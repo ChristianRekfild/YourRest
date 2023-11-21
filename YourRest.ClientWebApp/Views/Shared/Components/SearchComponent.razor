@@ -6,7 +6,7 @@
     </div>
     <div class="search-field">
         <i class="bi bi-calendar-week bi-size"></i>
-        <input type="text" id="my-datapicker" class="search-input" @onchange="@SetData">
+        <input type="text" id="my-datapicker" class="search-input" @onupdateselecteddate="@UpdateSelectedDate">
     </div>
     <div class="search-field">
         <i class="bi bi-person bi-size"></i>
@@ -22,6 +22,6 @@
             </div>
         </div>
     </div>
-    <button class="btn-lg btn-primary" @onclick="GetData">Найти</button>
+    <button class="btn-lg btn-primary">Найти</button>
 </div>
 
