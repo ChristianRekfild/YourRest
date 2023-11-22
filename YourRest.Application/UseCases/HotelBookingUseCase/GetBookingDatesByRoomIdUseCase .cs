@@ -40,14 +40,17 @@ namespace YourRest.Application.UseCases.HotelBookingUseCase
         public async Task<List<RoomOccupiedDateDto>> ExecuteAsync(int RoomId, CancellationToken token = default)
         {
 
-            var roomsExist = await roomRepository.FindAsync(t => t.Id == RoomId);
+            var roomsExist = await roomRepository.GetAsync(RoomId);
 
-            if (!roomsExist.Any())
+            if (roomsExist == null)
             {
                 throw new InvalidParameterException("Бронируемой комнаты не существует.");
             }
-
-            var bookingList =  await bookingRepository.FindAsync(booking =>booking.Rooms.Contains((Domain.Entities.Room)roomsExist));
+            var bookingList =  await bookingRepository.FindAsync(
+                booking =>booking.Rooms.Contains((Domain.Entities.Room)roomsExist) && (
+                (booking.StartDate >= DateTime.Now) || 
+                (booking.StartDate < DateTime.Now && booking.EndDate > DateTime.Now )
+                ));
 
             List<RoomOccupiedDateDto> OccupiedDates = new List<RoomOccupiedDateDto>();
             foreach ( var booking in bookingList ) 
@@ -57,6 +60,7 @@ namespace YourRest.Application.UseCases.HotelBookingUseCase
                     StartDate = DateOnly.FromDateTime(booking.StartDate),
                     EndDate = DateOnly.FromDateTime(booking.EndDate)
                 };
+                OccupiedDates.Add(tempOccupiedDate);
             }
             return OccupiedDates;
         }
