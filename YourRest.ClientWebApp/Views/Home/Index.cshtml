@@ -1,8 +1,161 @@
-﻿@{
+﻿@using YourRest.ClientWebApp.Views.Shared.Components;
+@{
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="row">
+    <div class="col-md-12">
+        <h2>Найдите жилье для новой поездки по России</h2>
+        <p>Ищите спецпредложения на отели, дома и другие варианты.</p>
+    </div>
 </div>
+<div class="row">
+    <div class="col-md-12 d-flex justify-content-center">
+        @(await Html.RenderComponentAsync<SearchComponent>(RenderMode.ServerPrerendered))
+    </div>
+</div>
+<section>
+    <div class="row">
+        <h2>Популярные направления</h2>
+        <p>Лучшие места России, которые обязательно стоит увидеть своими глазами</p>
+    </div>
+    <div class="row recomendation-section">
+        <div class="first">
+            @(await Html.RenderComponentAsync<RecomendationCardComponent>(RenderMode.ServerPrerendered, new
+
+            {
+                Url = "Images/1.jpg",
+                Title = "Карелия",
+                Description = "Мраморный каньон Рускеала"
+            }))
+        </div>
+        <div class="second">
+            @(await Html.RenderComponentAsync<RecomendationCardComponent>(RenderMode.ServerPrerendered, new
+
+            {
+                Url = "Images/2.jpg",
+                Title = "Калининград",
+                Description = "«Европейский» город России"
+            }))
+            <p>Калининград – город в России и столица одноименной области. Он расположен между Польшей и Литвой на побережье Балтийского моря. Во времена прусского правления город назывался по-другому – Кёнигсберг.</p>
+        </div>
+        <div class="thrid">
+            @(await Html.RenderComponentAsync<RecomendationCardComponent>(RenderMode.ServerPrerendered, new
+
+            {
+                Url = "Images/3.jpg",
+                Title = "Дагестан",
+                Description = "Гамсутль"
+            }))
+        </div>
+        <div class="fourth">
+            @(await Html.RenderComponentAsync<RecomendationCardComponent>(RenderMode.ServerPrerendered, new
+
+            {
+                Url = "Images/4.jpg",
+                Title = "Алтай",
+                Description = "Кучерлинские озёра"
+            }))
+
+        </div>
+
+        <div class="five">
+            @(await Html.RenderComponentAsync<RecomendationCardComponent>(RenderMode.ServerPrerendered, new
+
+            {
+                Url = "Images/5.jpg",
+                Title = "Великий Новгород",
+                Description = "Новгородский детинец"
+            }))
+            <p>На берегу Волхова, в сердце Великого Новгорода стоит крепость, первое летописное упоминание о которой датируется 1044 годом. XI век! Новгородский детинец включает в себя девять башен и четыре собора. В том числе знаменитый белоснежный Софийский собор.</p>
+        </div>
+        <div class="six">
+            @(await Html.RenderComponentAsync<RecomendationCardComponent>(RenderMode.ServerPrerendered, new
+
+            {
+                Url = "Images/6.webp",
+                Title = "Москва",
+                Description = "Moscow city"
+            }))
+            <p>Москва – столица России, многонациональный город на Москве-реке в западной части страны. В его историческом центре находится средневековая крепость Кремль – резиденция российского президента. На ее территории можно посетить Оружейную палату, где выставляются драгоценные предметы, принадлежавшие царской семье.</p>
+
+        </div>
+    </div>
+</section>
+
+@*<div class="row">
+    <div class="col-md-3">
+        @(await Html.RenderComponentAsync<CardComponent>(RenderMode.ServerPrerendered, new
+        {
+            CarouseControlId = "first",
+            Title = "Hyatt Regency Moscow Petrovsky Park",
+            Description = "Высококлассный отель с видом на Петровский парк, расположенный на крупной улице в 8 км от знаменитой Красной площади, в 6 км от Большого театра и в 3 км от Савеловского вокзала.",
+            Price = 8100d,
+            ImageUrls = new List<string>()
+            {
+                "https://lh3.googleusercontent.com/p/AF1QipM9zhAjfRsqyu-OiER_ndy89cI7vo6ZIq4UNSdC=w287-h192-n-k-rw-no-v1",
+                "https://lh3.googleusercontent.com/p/AF1QipNGQfyyhtvI3Mdp2lKxOYWhvZ5sdEC2He0vtN5C=w287-h192-n-k-rw-no-v1",
+                "https://lh3.googleusercontent.com/p/AF1QipNfBWvPq_OsUNlofBLsmtzhonEygtucZ6Q9f3Go=w287-h192-n-k-rw-no-v1",
+                "https://lh3.googleusercontent.com/p/AF1QipM-O-4XGDb-lFf2nqtt8WLcEa2NBiK-NLx6rpke=w287-h192-n-k-rw-no-v1",
+            }
+        }))
+    </div>
+    <div class="col-md-3">
+        @(await Html.RenderComponentAsync<CardComponent>(RenderMode.ServerPrerendered, new
+        {
+            CarouseControlId = "second",
+            Title = "Марриотт Империал Плаза",
+            Description = "Moscow Marriott Imperial Plaza – новая и безупречная локация для бизнес-поездок, семейного отдыха или увлекательных путешествий. Отель, расположенный в центре Москвы.",
+            Price = 11400d,
+            ImageUrls = new List<string>()
+            {
+                "https://lh3.googleusercontent.com/gps-proxy/AFm_dcSfWxW0Dk8AtY3m0-3xIlNDdS8gq5_c5gab_9aYkAkKPWrAWiM6tifmgcxQgJI0dljr9zV2xi8sr9BM7UGxqRCMH5i3pFBIQfYgbKd-9OgdYuE8K27s7gz5x0ssKXD5tKbN-iDjgWqQXXr6EAEllKRQjRPuguZG8M4MrurwsBMo42SP3d6-TgRT=w287-h192-n-k-rw-no-v1",
+                "https://lh3.googleusercontent.com/gps-proxy/AFm_dcQyQR4riExD4OlgcgGwVJqC6XDi_24dVk7PUVLXpqjjMwAE64mVB6OT2_0DYPjK4r0Y7nadP0T5OL-P-XiCvSHwSXXBemk-TI7xluUhZtO6P503T_3wA2fxe75nY6JERZVqJS56_BjpKN1DxRfauGN3YQYs4dECCkk35M8i920UTI7gwMkJAOymOQ=w287-h192-n-k-rw-no-v1",
+                "https://lh3.googleusercontent.com/p/AF1QipOsU-a3qPH7mfC4idz6fR98VTok30K3gGqo79Sw=w287-h192-n-k-rw-no-v1",
+                "https://lh3.googleusercontent.com/gps-proxy/AFm_dcT9Fq2ISzQ5uK5Ps8xeKwXFokWCXn0wpBwLftSJ_c4X1Sf_x7DgcYVT_XDKYQLLNRuRXZl2vuuF-lVEeETo1HntFuiQr5IUes68ld1-OCo_iZf8pbh7f6cPwTLXUiwGDyIDnl0MTXWySG_cPlmkQRBgp_U-eJfWfpL5InfCPtut1_bcCc1PTZhh=w287-h192-n-k-rw-no-v1",
+            }
+        }))
+    </div>
+    <div class="col-md-3">
+        @(await Html.RenderComponentAsync<CardComponent>(RenderMode.ServerPrerendered, new
+        {
+            CarouseControlId = "thrid",
+            Title = "Sky Apartments",
+            Description = " Комплекс расположен в Пресненском районе Москвы. Он включает в себя 20 высотных зданий. Среди них и самый высокий небоскреб в Европе – «Башня Федерация» и самый эстетичный небоскреб мира – «Город Столиц».",
+            Price = 14800d,
+            ImageUrls = new List<string>()
+            {
+                "https://lh3.googleusercontent.com/gps-proxy/AFm_dcS3LeCbZsOoLbjqj3wQUYxEBMCHiSHKjxxBldKNwNDvOVSFVBkTR6ofg1eh49uVvckxYnhimfv6lp90r2S1SbsaPcj_9xXUwoCZWljGnD308BRCB-nvSVkmOh9kDLedetub6kkWjmQol3E_tmAW3MnfawqgFIFp4qn1FUAJkYeOh6Tyvoy4hppy2Q=w287-h192-n-k-rw-no-v1",
+                "https://lh3.googleusercontent.com/gps-proxy/AFm_dcQAh3WOX509Hid2L1xbS9tgH3PAQrZV5kuQPnbIAZ-gFQoKkDfSrlWlSJOov2sNRkebZS5WUyJRjFJcX2_bIt8n62VJaVXP9qMqvGXJYalRfEoWzwtNOZUmnUQW6BSi-QEMxN1BIR8j8RGySCxiBDWceK4zL7weYHnHMSOP8-rlsgSwn4MxC7E=w287-h192-n-k-rw-no-v1",
+                "https://lh3.googleusercontent.com/p/AF1QipMt1tsIJzm4SITE7mFKb3Y8yXb81KZkB3HHebiY=w287-h192-n-k-rw-no-v1",
+                "https://lh3.googleusercontent.com/p/AF1QipNBvnkxGZMprX63uTqSYxJQe7Wk19ZjfQi7YfPU=w287-h192-n-k-rw-no-v1",
+            }
+        }))
+    </div>
+    <div class="col-md-3">
+        @(await Html.RenderComponentAsync<CardComponent>(RenderMode.ServerPrerendered, new
+        {
+            CarouseControlId = "fourth",
+            Title = "Балчуг Кемпински",
+            Description = " Комплекс расположен в Пресненском районе Москвы. Он включает в себя 20 высотных зданий. Среди них и самый высокий небоскреб в Европе – «Башня Федерация» и самый эстетичный небоскреб мира – «Город Столиц».",
+            Price = 15640d,
+            ImageUrls = new List<string>()
+            {
+                "https://lh3.googleusercontent.com/p/AF1QipNZqWDLthSpYZLhwG6KkA2zdyVqRro3_3JVkiE=w287-h192-n-k-rw-no-v1",
+                "https://lh3.googleusercontent.com/p/AF1QipNX8lek66ztb8FnmUTMFShDc3sQ8prr9euYSc4=w287-h192-n-k-rw-no-v1",
+                "https://lh3.googleusercontent.com/p/AF1QipM7p0SR-h8x3ITPo__H-HnQ6suzb4SghDfDP6E=w287-h192-n-k-rw-no-v1",
+                "https://lh3.googleusercontent.com/gps-proxy/AFm_dcT7vByvlMu62BeDmKDH8vwvkwf2gZZInbDlVJoKrRe6ctYWsLdEKP_93bT5MbLVTXUtGOMkgFnYOzOc_cqyagTTBy6RXG7M_A2mmIiObIuyo_XiC3g8rU2jwUZ87cSN_XjVVXdsIgacIcoXAwYY_hHtQb5XLYRnJgNq1Lg6MQc7UtjRGVl-9CTq=w287-h192-n-k-rw-no-v1",
+            }
+        }))
+    </div>
+</div>*@
+
+<script type="text/javascript">
+    let openForm = () => {
+        $('#myForm').show();
+    }
+
+    let closeForm = () => {
+        $('#myForm').hide();
+    }
+</script>
