@@ -67,7 +67,7 @@ namespace YourRest.WebApi.Tests.Controllers
                 };
 
             var content = new StringContent(JsonConvert.SerializeObject(booking), Encoding.UTF8, "application/json");
-            var response = await fixture.Client.PostAsync($"api/hotelbooking/", content);
+            var response = await fixture.Client.PostAsync($"api/booking/", content);
 
             Assert.Equal(HttpStatusCode.Created, response.StatusCode);
 
@@ -173,12 +173,12 @@ namespace YourRest.WebApi.Tests.Controllers
             };
 
             var content = new StringContent(JsonConvert.SerializeObject(bookingDateToIn), Encoding.UTF8, "application/json");
-            var response = await fixture.Client.PostAsync($"api/hotelbooking/", content);
+            var response = await fixture.Client.PostAsync($"api/booking/", content);
 
             Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
 
             content = new StringContent(JsonConvert.SerializeObject(bookingDateToInWithSecondRoomId), Encoding.UTF8, "application/json");
-            response = await fixture.Client.PostAsync($"api/hotelbooking/", content);
+            response = await fixture.Client.PostAsync($"api/booking/", content);
 
             Assert.Equal(HttpStatusCode.Created, response.StatusCode);
 
@@ -286,12 +286,12 @@ namespace YourRest.WebApi.Tests.Controllers
 
 
             var content = new StringContent(JsonConvert.SerializeObject(bookingDateFromIn), Encoding.UTF8, "application/json");
-            var response = await fixture.Client.PostAsync($"api/hotelbooking/", content);
+            var response = await fixture.Client.PostAsync($"api/booking/", content);
 
             Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
 
             content = new StringContent(JsonConvert.SerializeObject(bookingDateFromInWithSecondRoomId), Encoding.UTF8, "application/json");
-            response = await fixture.Client.PostAsync($"api/hotelbooking/", content);
+            response = await fixture.Client.PostAsync($"api/booking/", content);
 
             Assert.Equal(HttpStatusCode.Created, response.StatusCode);
 
@@ -400,12 +400,12 @@ namespace YourRest.WebApi.Tests.Controllers
 
 
             var content = new StringContent(JsonConvert.SerializeObject(bookingAllIn), Encoding.UTF8, "application/json");
-            var response = await fixture.Client.PostAsync($"api/hotelbooking/", content);
+            var response = await fixture.Client.PostAsync($"api/booking/", content);
 
             Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
 
             content = new StringContent(JsonConvert.SerializeObject(bookingAllInWithSecondRoomId), Encoding.UTF8, "application/json");
-            response = await fixture.Client.PostAsync($"api/hotelbooking/", content);
+            response = await fixture.Client.PostAsync($"api/booking/", content);
 
             Assert.Equal(HttpStatusCode.Created, response.StatusCode);
 
@@ -514,12 +514,12 @@ namespace YourRest.WebApi.Tests.Controllers
 
 
             var content = new StringContent(JsonConvert.SerializeObject(bookingEqual), Encoding.UTF8, "application/json");
-            var response = await fixture.Client.PostAsync($"api/hotelbooking/", content);
+            var response = await fixture.Client.PostAsync($"api/booking/", content);
 
             Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
 
             content = new StringContent(JsonConvert.SerializeObject(bookingEqualWithSecondRoomId), Encoding.UTF8, "application/json");
-            response = await fixture.Client.PostAsync($"api/hotelbooking/", content);
+            response = await fixture.Client.PostAsync($"api/booking/", content);
 
             Assert.Equal(HttpStatusCode.Created, response.StatusCode);
 
