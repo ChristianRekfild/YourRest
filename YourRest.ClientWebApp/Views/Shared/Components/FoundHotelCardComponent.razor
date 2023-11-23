@@ -1,0 +1,23 @@
+﻿<h3>FoundHotelCardComponent</h3>
+<div class="hotel_card">
+    <img src="https://lh3.googleusercontent.com/p/AF1QipOh0s0mQS1GcMy8NTT6QgvtKDYG4RFckO4c8bhC=w287-h192-n-k-rw-no-v1"
+         class="rounded float-start hotel-card_img"
+         alt="hotel_img">
+    <div class="hotel-card_body">
+        <div class="hotel-card_title">
+            <h4>@Title</h4>
+            <div>
+                @for (int i = 1; i <= StarCount; i++)
+                {
+                    <i class="bi bi-star-fill"></i>
+                }
+            </div>
+        </div>
+        <div class="hotel-card_description">
+            <p>
+                @Description
+            </p>
+        </div>
+    </div>
+</div>
+
