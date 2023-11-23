@@ -10,7 +10,7 @@
     </div>
     <div class="search-field">
         <i class="bi bi-person bi-size"></i>
-        <div class="auldt_btn" onclick="openForm()"> @AdultNumber взрослых @ChildrenNumber детей @RoomCount комната</div>
+        <div class="auldt_btn" @onclick="@Show"> @AdultNumber взрослых @ChildrenNumber детей @RoomCount комната</div>
         <!-- Hide Form -->
         <div class="form-popup" id="myForm">
             <div class="form-container">
@@ -18,10 +18,10 @@
                 <NumericComponent Title="Взрослых" @bind-Value="@AdultNumber" Min="0" Max="30" />
                 <NumericComponent Title="Детей" @bind-Value="@ChildrenNumber" Min="0" Max="10" />
                 <NumericComponent Title="Номеров" @bind-Value="@RoomCount" Min="0" Max="30" />
-                <div class="btn cancel" onclick="closeForm()">Готово</div>
+                <div class="btn cancel" @onclick="@Hide">Готово</div>
             </div>
         </div>
     </div>
-    <button class="btn-lg btn-primary" @onclick="GetData">Найти</button>
+    <div class="search-btn" @onclick="GetData">Найти</div>
 </div>
 

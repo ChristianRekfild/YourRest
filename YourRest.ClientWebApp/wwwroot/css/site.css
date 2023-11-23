@@ -1,5 +1,5 @@
 @import url(_Layout.css);
-@import url(Index.css);
+@import url(components/search_component_style.css);
 @import url(daterangepicker.css);
 
 html {
@@ -12,7 +12,7 @@ html {
   } 
 }
 
-html {
+html {`
   position: relative;
   min-height: 100%;
 }

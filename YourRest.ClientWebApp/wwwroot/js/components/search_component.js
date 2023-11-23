@@ -27,4 +27,11 @@ export function ShowDataPicker(startDate, endDate) {
         }
     );
 }
+export let openForm = () => {
+    let bntPosition = $('.auldt_btn').position();
+    $('.form-popup').css('top', `${bntPosition.top + 55}px`);
+    $('#myForm').show();
+}
+export let closeForm = () => $('#myForm').hide();
+
 export function GetData() { return { StartDate, EndDate } };
