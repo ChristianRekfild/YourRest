@@ -1,0 +1,42 @@
+﻿/*Карточка рекомендаций*/
+.recomendation-card {
+    position: relative;
+    padding: 0;
+    width: 100%;
+    margin: 10px 0;
+    border-radius: 25px;
+}
+
+.recomendation-card_wrapper {
+    padding: 0;
+    margin: 0;
+    width: 100%;
+    overflow: hidden;
+    border-radius: 25px;
+}
+
+.recomendation-card-wrapper_img {
+    width: 100%;
+    border-radius: 25px;
+    transition: transform 2s;
+}
+
+.recomendation-card_title {
+    position: absolute;
+    color: white;
+    top: 65%;
+    left: 5%;
+    z-index: 2;
+}
+
+.recomendation-card_description {
+    position: absolute;
+    color: white;
+    top: 80%;
+    left: 5%;
+    z-index: 2;
+}
+
+.recomendation-card:hover .recomendation-card-wrapper_img {
+    -webkit-transform: scale(1.1);
+}

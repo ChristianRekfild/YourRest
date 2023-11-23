@@ -1,5 +1,10 @@
 @import url(_Layout.css);
+@import url(pages/home.css);
+
+
 @import url(components/search_component_style.css);
+@import url(components/numeric_component.css);
+@import url(components/recomendation_card_component.css);
 @import url(daterangepicker.css);
 
 html {
