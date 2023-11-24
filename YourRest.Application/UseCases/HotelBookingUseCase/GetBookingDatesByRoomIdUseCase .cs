@@ -22,7 +22,6 @@ namespace YourRest.Application.UseCases.HotelBookingUseCase
         private readonly IBookingRepository bookingRepository;
         private readonly IRoomRepository roomRepository;
         private readonly ICustomerRepository customerRepository;
-        private readonly IMapper mapper;
 
         public GetBookingDatesByRoomIdUseCase(
             IBookingRepository bookingRepository,
@@ -32,25 +31,28 @@ namespace YourRest.Application.UseCases.HotelBookingUseCase
             )
         {
             this.bookingRepository = bookingRepository;
-            this.mapper = mapper;
             this.roomRepository = roomRepository;
             this.customerRepository = customerRepository;
         }
 
         public async Task<List<RoomOccupiedDateDto>> ExecuteAsync(int RoomId, CancellationToken token = default)
         {
-
-            var roomsExist = await roomRepository.GetAsync(RoomId);
+            DateTime dateNow = DateTime.Now;
+            var roomsExist = await roomRepository.GetAsync(RoomId, token);
 
             if (roomsExist == null)
             {
                 throw new InvalidParameterException("Бронируемой комнаты не существует.");
             }
-            var bookingList =  await bookingRepository.FindAsync(
-                booking =>booking.Rooms.Contains((Domain.Entities.Room)roomsExist) && (
-                (booking.StartDate >= DateTime.Now) || 
-                (booking.StartDate < DateTime.Now && booking.EndDate > DateTime.Now )
-                ));
+            var bookingIncludeList =  await bookingRepository.FindIncludeAsync(booking => booking.Rooms.Contains(roomsExist) , t => t.Rooms, token);
+         
+            var bookingList = await bookingRepository.FindAsync(booking => booking.Rooms.Contains(roomsExist), token);
+
+            var bookingCList = await bookingRepository.FindAsync(booking => booking.Rooms.Contains<Domain.Entities.Room > (roomsExist), token);
+
+
+            var bookingGetList = await bookingRepository.GetAllAsync(token);
+
 
             List<RoomOccupiedDateDto> OccupiedDates = new List<RoomOccupiedDateDto>();
             foreach ( var booking in bookingList ) 

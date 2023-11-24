@@ -49,22 +49,22 @@ namespace YourRest.WebApi.Tests.Controllers
                 SquareInMeter = 1,
                 Capacity = 20
             };
-            
+
             var firstRoom = await fixture.InsertObjectIntoDatabase(firstRoomToInsert);
 
             BookingDto booking = new BookingDto()
-                {
-                    StartDate = new DateTime(2025, 10, 5),
-                    EndDate = new DateTime(2025, 10, 15),
-                    Rooms = new List<int>() { firstRoom.Id },
-                    TotalAmount = 5000.0m,
-                    AdultNumber = 2,
-                    ChildrenNumber = 2,
-                    FirstName = "Test",
-                    MiddleName = "Test",
-                    LastName = "Test",
-                    DateOfBirth = new DateTime(1950, 11, 5)
-                };
+            {
+                StartDate = new DateTime(2025, 10, 5),
+                EndDate = new DateTime(2025, 10, 15),
+                Rooms = new List<int>() { firstRoom.Id },
+                TotalAmount = 5000.0m,
+                AdultNumber = 2,
+                ChildrenNumber = 2,
+                FirstName = "Test",
+                MiddleName = "Test",
+                LastName = "Test",
+                DateOfBirth = new DateTime(1950, 11, 5)
+            };
 
             var content = new StringContent(JsonConvert.SerializeObject(booking), Encoding.UTF8, "application/json");
             var response = await fixture.Client.PostAsync($"api/booking/", content);
@@ -483,7 +483,6 @@ namespace YourRest.WebApi.Tests.Controllers
 
             await fixture.InsertObjectIntoDatabase(bookingToInsert);
 
-
             BookingDto bookingEqual = new BookingDto()
             {
                 StartDate = new DateTime(2025, 10, 5),
@@ -512,7 +511,6 @@ namespace YourRest.WebApi.Tests.Controllers
                 DateOfBirth = new DateTime(1950, 11, 5)
             };
 
-
             var content = new StringContent(JsonConvert.SerializeObject(bookingEqual), Encoding.UTF8, "application/json");
             var response = await fixture.Client.PostAsync($"api/booking/", content);
 
@@ -526,7 +524,6 @@ namespace YourRest.WebApi.Tests.Controllers
             var responseContent = await response.Content.ReadAsStringAsync();
             var hotelBookingResponse = JsonConvert.DeserializeObject<BookingDto>(responseContent);
 
-
             Assert.NotNull(hotelBookingResponse);
             Assert.Equal(bookingEqualWithSecondRoomId.StartDate, hotelBookingResponse.StartDate);
             Assert.Equal(bookingEqualWithSecondRoomId.EndDate, hotelBookingResponse.EndDate);
@@ -538,6 +535,108 @@ namespace YourRest.WebApi.Tests.Controllers
             Assert.Equal(bookingEqualWithSecondRoomId.MiddleName, hotelBookingResponse.MiddleName);
             Assert.Equal(bookingEqualWithSecondRoomId.LastName, hotelBookingResponse.LastName);
             Assert.Equal(bookingEqualWithSecondRoomId.DateOfBirth, hotelBookingResponse.DateOfBirth);
+        }
+
+        [Fact]
+        public async Task GetOccupiedDatesByRoomId_WhenDataoccupiedStartDateIn_ReturnsStatusCodeError()
+        {
+            var accommodationType = new AccommodationType
+            {
+                Name = "Test Type"
+            };
+            var accommodationEntity = new Accommodation
+            {
+                Name = "Test",
+                AccommodationType = accommodationType
+            };
+
+            Customer customerToInsert = new Customer()
+            {
+                FirstName = "Test",
+                MiddleName = "Test1",
+                LastName = "Test2",
+                DateOfBirth = new DateTime(1950, 11, 5),
+            };
+
+            var testCustomer = await fixture.InsertObjectIntoDatabase(customerToInsert);
+
+            var accommodation = await fixture.InsertObjectIntoDatabase(accommodationEntity);
+
+            Room roomToInsert = new Room()
+            {
+                Accommodation = accommodation,
+                AccommodationId = accommodation.Id,
+                Name = "DeluxeRoom",
+                RoomType = "ZBS",
+                SquareInMeter = 1,
+                Capacity = 20
+            };
+            var room = await fixture.InsertObjectIntoDatabase(roomToInsert);
+  
+
+
+
+            Booking bookingInFutureToInsert = new Booking()
+            {
+                StartDate = new DateTime(2030, 10, 5),
+                EndDate = new DateTime(2030, 10, 15),
+                Rooms = new List<Room>(),
+                TotalAmount = 5000.0m,
+                AdultNumber = 2,
+                ChildrenNumber = 2,
+                CustomerId = testCustomer.Id
+            };
+            bookingInFutureToInsert.Rooms.Add(room);
+            var bookingInFuture = await fixture.InsertObjectIntoDatabase(bookingInFutureToInsert);
+
+
+            Booking bookingCurrentInsert = new Booking()
+            {
+                StartDate = new DateTime(2021, 10, 5),
+                EndDate = new DateTime(2027, 10, 15),
+                Rooms = new List<Room>() { room },
+                TotalAmount = 5000.0m,
+                AdultNumber = 2,
+                ChildrenNumber = 2,
+                CustomerId = testCustomer.Id
+            };
+            var bookingCurren = await fixture.InsertObjectIntoDatabase(bookingCurrentInsert);
+
+
+            Booking bookingPastToInsert = new Booking()
+            {
+                StartDate = new DateTime(2020, 10, 5),
+                EndDate = new DateTime(2020, 10, 15),
+                Rooms = new List<Room>() { room },
+                TotalAmount = 5000.0m,
+                AdultNumber = 2,
+                ChildrenNumber = 2,
+                CustomerId = testCustomer.Id
+            };
+
+            var bookingPastTo = await fixture.InsertObjectIntoDatabase(bookingPastToInsert);
+
+
+            List<RoomOccupiedDateDto> occupiedDateResult = new List<RoomOccupiedDateDto>()
+            {
+                new RoomOccupiedDateDto() {
+                    StartDate = DateOnly.FromDateTime(bookingCurrentInsert.StartDate),
+                    EndDate= DateOnly.FromDateTime(bookingCurrentInsert.EndDate)
+                    },
+                 new RoomOccupiedDateDto() {
+                    StartDate = DateOnly.FromDateTime(bookingInFutureToInsert.StartDate),
+                    EndDate= DateOnly.FromDateTime(bookingInFutureToInsert.EndDate)
+                    }
+            };
+
+            var response = await fixture.Client.GetAsync($"api/booking/rooms/{room.Id}");
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+
+            var responseContent = await response.Content.ReadAsStringAsync();
+            var occupiedDateResponse = JsonConvert.DeserializeObject<List<RoomOccupiedDateDto>>(responseContent);
+
+            Assert.NotNull(occupiedDateResponse);
+            Assert.Equal(occupiedDateResult, occupiedDateResponse);
         }
     }
 }
