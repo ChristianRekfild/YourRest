@@ -2,6 +2,7 @@
 using YourRest.Domain.Entities;
 using YourRest.Domain.Repositories;
 using System.Linq.Expressions;
+using System.Linq;
 
 namespace YourRest.Infrastructure.Core.Repositories
 {
@@ -39,7 +40,10 @@ namespace YourRest.Infrastructure.Core.Repositories
         {
             return await _dataContext.Set<T>().Where(expression).ToListAsync(cancellationToken);
         }
-
+        public async Task<bool> FindAnyAsync(Expression<Func<T, bool>> expression, CancellationToken cancellationToken = default)
+        {
+            return await _dataContext.Set<T>().Where(expression).AnyAsync(cancellationToken);
+        }
         public async Task<IEnumerable<T>> GetAllAsync(CancellationToken cancellationToken = default)
         {
             return await _dataContext.Set<T>().ToListAsync(cancellationToken);
@@ -55,10 +59,10 @@ namespace YourRest.Infrastructure.Core.Repositories
             return await Include(includeProperties).Where(predicate).ToListAsync(cancellationToken);
         }
        
-       public async Task<IEnumerable<T>> GetAllWithIncludeAsync(Expression<Func<T, object>> includeProperty, CancellationToken cancellationToken = default)
-       {
-           return await Include(includeProperty).ToListAsync(cancellationToken);
-       }
+        public async Task<IEnumerable<T>> GetAllWithIncludeAsync(Expression<Func<T, object>> includeProperty, CancellationToken cancellationToken = default)
+        {
+            return await Include(includeProperty).ToListAsync(cancellationToken);
+        }
 
         
         public async Task DeleteAsync(U id, bool saveChanges = true, CancellationToken cancellationToken = default)

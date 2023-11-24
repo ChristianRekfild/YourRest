@@ -30,10 +30,7 @@ namespace YourRest.WebApi.Tests.Controllers
                 {
                     FirstName = "Test",
                     LastName = "Test",
-                    MiddleName = "Test",
-                    IsActive = true,
-                    Login = "ivanov@ivan.com",
-                    Password = "qwerty"
+                    MiddleName = "Test"
                 };
             var customerId = (await fixture.InsertObjectIntoDatabase(customer)).Id;
             var accommodationType = new AccommodationType
@@ -53,8 +50,7 @@ namespace YourRest.WebApi.Tests.Controllers
                 EndDate = new DateTime(2023, 10, 5),
                 Status = YourRest.Domain.Entities.BookingStatus.Pending,
                 Comment = "test",
-                CustomerId = customerId,
-                AccommodationId = accommodationId
+                CustomerId = customerId
             };
 
             var bookingId = (await fixture.InsertObjectIntoDatabase(booking)).Id;

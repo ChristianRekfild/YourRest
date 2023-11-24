@@ -134,6 +134,7 @@ csharp_indent_labels = one_less_than_current
 
 # CS8603: Возможно, возврат ссылки, допускающей значение NULL.
 dotnet_diagnostic.CS8603.severity = none
+csharp_space_after_keywords_in_control_flow_statements = true
 
 [*.vb]
 #### Стили именования ####
