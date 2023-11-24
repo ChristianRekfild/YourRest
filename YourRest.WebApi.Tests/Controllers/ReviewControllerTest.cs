@@ -46,8 +46,8 @@ namespace YourRest.WebApi.Tests.Controllers
             var accommodationId = (await fixture.InsertObjectIntoDatabase(accommodation)).Id;
 
             var booking = new Booking {
-                StartDate = new DateTime(2023, 10, 1),
-                EndDate = new DateTime(2023, 10, 5),
+                StartDate = new DateOnly(2023, 10, 1),
+                EndDate = new DateOnly(2023, 10, 5),
                 Status = YourRest.Domain.Entities.BookingStatus.Pending,
                 Comment = "test",
                 CustomerId = customerId

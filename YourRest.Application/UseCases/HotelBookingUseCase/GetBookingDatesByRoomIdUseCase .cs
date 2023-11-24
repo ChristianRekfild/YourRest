@@ -37,30 +37,24 @@ namespace YourRest.Application.UseCases.HotelBookingUseCase
 
         public async Task<List<RoomOccupiedDateDto>> ExecuteAsync(int RoomId, CancellationToken token = default)
         {
-            DateTime dateNow = DateTime.Now;
+            DateOnly dateNow = DateOnly.FromDateTime(DateTime.Today);
             var roomsExist = await roomRepository.GetAsync(RoomId, token);
 
             if (roomsExist == null)
             {
                 throw new InvalidParameterException("Бронируемой комнаты не существует.");
             }
-            var bookingIncludeList =  await bookingRepository.FindIncludeAsync(booking => booking.Rooms.Contains(roomsExist) , t => t.Rooms, token);
-         
-            var bookingList = await bookingRepository.FindAsync(booking => booking.Rooms.Contains(roomsExist), token);
-
-            var bookingCList = await bookingRepository.FindAsync(booking => booking.Rooms.Contains<Domain.Entities.Room > (roomsExist), token);
-
-
-            var bookingGetList = await bookingRepository.GetAllAsync(token);
-
+ 
+            var bookingList = await bookingRepository.FindAsync(booking => booking.Rooms.Contains(roomsExist) && 
+                booking.EndDate > dateNow, token);
 
             List<RoomOccupiedDateDto> OccupiedDates = new List<RoomOccupiedDateDto>();
             foreach ( var booking in bookingList ) 
             {
                 RoomOccupiedDateDto tempOccupiedDate = new RoomOccupiedDateDto()
                 {
-                    StartDate = DateOnly.FromDateTime(booking.StartDate),
-                    EndDate = DateOnly.FromDateTime(booking.EndDate)
+                    StartDate = booking.StartDate,
+                    EndDate = booking.EndDate
                 };
                 OccupiedDates.Add(tempOccupiedDate);
             }

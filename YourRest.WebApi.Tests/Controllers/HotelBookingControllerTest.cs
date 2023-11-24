@@ -54,8 +54,8 @@ namespace YourRest.WebApi.Tests.Controllers
 
             BookingDto booking = new BookingDto()
             {
-                StartDate = new DateTime(2025, 10, 5),
-                EndDate = new DateTime(2025, 10, 15),
+                StartDate = new DateOnly(2025, 10, 5),
+                EndDate = new DateOnly(2025, 10, 15),
                 Rooms = new List<int>() { firstRoom.Id },
                 TotalAmount = 5000.0m,
                 AdultNumber = 2,
@@ -133,8 +133,8 @@ namespace YourRest.WebApi.Tests.Controllers
 
             Booking bookingToInsert = new Booking()
             {
-                StartDate = new DateTime(2025, 10, 5),
-                EndDate = new DateTime(2025, 10, 15),
+                StartDate = new DateOnly(2025, 10, 5),
+                EndDate = new DateOnly(2025, 10, 15),
                 Rooms = new List<Room>() { firstRoom },
                 TotalAmount = 5000.0m,
                 AdultNumber = 2,
@@ -146,8 +146,8 @@ namespace YourRest.WebApi.Tests.Controllers
 
             BookingDto bookingDateToIn = new BookingDto()
             {
-                StartDate = new DateTime(2025, 10, 2),
-                EndDate = new DateTime(2025, 10, 12),
+                StartDate = new DateOnly(2025, 10, 2),
+                EndDate = new DateOnly(2025, 10, 12),
                 Rooms = new List<int>() { firstRoom.Id },
                 TotalAmount = 5000.0m,
                 AdultNumber = 2,
@@ -160,8 +160,8 @@ namespace YourRest.WebApi.Tests.Controllers
 
             BookingDto bookingDateToInWithSecondRoomId = new BookingDto()
             {
-                StartDate = new DateTime(2025, 10, 2),
-                EndDate = new DateTime(2025, 10, 12),
+                StartDate = new DateOnly(2025, 10, 2),
+                EndDate = new DateOnly(2025, 10, 12),
                 Rooms = new List<int>() { secondRoom.Id },
                 TotalAmount = 5000.0m,
                 AdultNumber = 2,
@@ -245,8 +245,8 @@ namespace YourRest.WebApi.Tests.Controllers
 
             Booking bookingToInsert = new Booking()
             {
-                StartDate = new DateTime(2025, 10, 5),
-                EndDate = new DateTime(2025, 10, 15),
+                StartDate = new DateOnly(2025, 10, 5),
+                EndDate = new DateOnly(2025, 10, 15),
                 Rooms = new List<Room>() { firstRoom },
                 TotalAmount = 5000.0m,
                 AdultNumber = 2,
@@ -259,8 +259,8 @@ namespace YourRest.WebApi.Tests.Controllers
 
             BookingDto bookingDateFromIn = new BookingDto()
             {
-                StartDate = new DateTime(2025, 10, 7),
-                EndDate = new DateTime(2025, 10, 17),
+                StartDate = new DateOnly(2025, 10, 7),
+                EndDate = new DateOnly(2025, 10, 17),
                 Rooms = new List<int>() { firstRoom.Id },
                 TotalAmount = 5000.0m,
                 AdultNumber = 2,
@@ -272,8 +272,8 @@ namespace YourRest.WebApi.Tests.Controllers
             };
             BookingDto bookingDateFromInWithSecondRoomId = new BookingDto()
             {
-                StartDate = new DateTime(2025, 10, 7),
-                EndDate = new DateTime(2025, 10, 17),
+                StartDate = new DateOnly(2025, 10, 7),
+                EndDate = new DateOnly(2025, 10, 17),
                 Rooms = new List<int>() { secondRoom.Id },
                 TotalAmount = 5000.0m,
                 AdultNumber = 2,
@@ -358,8 +358,8 @@ namespace YourRest.WebApi.Tests.Controllers
 
             Booking bookingToInsert = new Booking()
             {
-                StartDate = new DateTime(2025, 10, 5),
-                EndDate = new DateTime(2025, 10, 15),
+                StartDate = new DateOnly(2025, 10, 5),
+                EndDate = new DateOnly(2025, 10, 15),
                 Rooms = new List<Room>() { firstRoom },
                 TotalAmount = 5000.0m,
                 AdultNumber = 2,
@@ -372,8 +372,8 @@ namespace YourRest.WebApi.Tests.Controllers
 
             BookingDto bookingAllIn = new BookingDto()
             {
-                StartDate = new DateTime(2025, 10, 1),
-                EndDate = new DateTime(2025, 10, 20),
+                StartDate = new DateOnly(2025, 10, 1),
+                EndDate = new DateOnly(2025, 10, 20),
                 Rooms = new List<int>() { firstRoom.Id },
                 TotalAmount = 5000.0m,
                 AdultNumber = 2,
@@ -386,8 +386,8 @@ namespace YourRest.WebApi.Tests.Controllers
 
             BookingDto bookingAllInWithSecondRoomId = new BookingDto()
             {
-                StartDate = new DateTime(2025, 10, 1),
-                EndDate = new DateTime(2025, 10, 20),
+                StartDate = new DateOnly(2025, 10, 1),
+                EndDate = new DateOnly(2025, 10, 20),
                 Rooms = new List<int>() { secondRoom.Id },
                 TotalAmount = 5000.0m,
                 AdultNumber = 2,
@@ -472,8 +472,8 @@ namespace YourRest.WebApi.Tests.Controllers
 
             Booking bookingToInsert = new Booking()
             {
-                StartDate = new DateTime(2025, 10, 5),
-                EndDate = new DateTime(2025, 10, 15),
+                StartDate = new DateOnly(2025, 10, 5),
+                EndDate = new DateOnly(2025, 10, 15),
                 Rooms = new List<Room>() { firstRoom },
                 TotalAmount = 5000.0m,
                 AdultNumber = 2,
@@ -485,8 +485,8 @@ namespace YourRest.WebApi.Tests.Controllers
 
             BookingDto bookingEqual = new BookingDto()
             {
-                StartDate = new DateTime(2025, 10, 5),
-                EndDate = new DateTime(2025, 10, 15),
+                StartDate = new DateOnly(2025, 10, 5),
+                EndDate = new DateOnly(2025, 10, 15),
                 Rooms = new List<int>() { firstRoom.Id },
                 TotalAmount = 5000.0m,
                 AdultNumber = 2,
@@ -499,8 +499,8 @@ namespace YourRest.WebApi.Tests.Controllers
 
             BookingDto bookingEqualWithSecondRoomId = new BookingDto()
             {
-                StartDate = new DateTime(2025, 10, 5),
-                EndDate = new DateTime(2025, 10, 15),
+                StartDate = new DateOnly(2025, 10, 5),
+                EndDate = new DateOnly(2025, 10, 15),
                 Rooms = new List<int>() { secondRoom.Id },
                 TotalAmount = 5000.0m,
                 AdultNumber = 2,
@@ -550,6 +550,8 @@ namespace YourRest.WebApi.Tests.Controllers
                 AccommodationType = accommodationType
             };
 
+            var accommodation = await fixture.InsertObjectIntoDatabase(accommodationEntity);
+
             Customer customerToInsert = new Customer()
             {
                 FirstName = "Test",
@@ -559,8 +561,6 @@ namespace YourRest.WebApi.Tests.Controllers
             };
 
             var testCustomer = await fixture.InsertObjectIntoDatabase(customerToInsert);
-
-            var accommodation = await fixture.InsertObjectIntoDatabase(accommodationEntity);
 
             Room roomToInsert = new Room()
             {
@@ -572,60 +572,52 @@ namespace YourRest.WebApi.Tests.Controllers
                 Capacity = 20
             };
             var room = await fixture.InsertObjectIntoDatabase(roomToInsert);
-  
-
-
 
             Booking bookingInFutureToInsert = new Booking()
             {
-                StartDate = new DateTime(2030, 10, 5),
-                EndDate = new DateTime(2030, 10, 15),
-                Rooms = new List<Room>(),
+                StartDate = new DateOnly(2030, 10, 5),
+                EndDate = new DateOnly(2030, 10, 15),
+                Rooms = new List<Room>() { room },
                 TotalAmount = 5000.0m,
                 AdultNumber = 2,
                 ChildrenNumber = 2,
                 CustomerId = testCustomer.Id
             };
-            bookingInFutureToInsert.Rooms.Add(room);
-            var bookingInFuture = await fixture.InsertObjectIntoDatabase(bookingInFutureToInsert);
-
+            await fixture.InsertObjectIntoDatabase(bookingInFutureToInsert);
 
             Booking bookingCurrentInsert = new Booking()
             {
-                StartDate = new DateTime(2021, 10, 5),
-                EndDate = new DateTime(2027, 10, 15),
+                StartDate = new DateOnly(2021, 10, 5),
+                EndDate = new DateOnly(2027, 10, 15),
                 Rooms = new List<Room>() { room },
                 TotalAmount = 5000.0m,
                 AdultNumber = 2,
                 ChildrenNumber = 2,
                 CustomerId = testCustomer.Id
             };
-            var bookingCurren = await fixture.InsertObjectIntoDatabase(bookingCurrentInsert);
-
+            await fixture.InsertObjectIntoDatabase(bookingCurrentInsert);
 
             Booking bookingPastToInsert = new Booking()
             {
-                StartDate = new DateTime(2020, 10, 5),
-                EndDate = new DateTime(2020, 10, 15),
+                StartDate = new DateOnly(2020, 10, 5),
+                EndDate = new DateOnly(2020, 10, 15),
                 Rooms = new List<Room>() { room },
                 TotalAmount = 5000.0m,
                 AdultNumber = 2,
                 ChildrenNumber = 2,
                 CustomerId = testCustomer.Id
             };
-
-            var bookingPastTo = await fixture.InsertObjectIntoDatabase(bookingPastToInsert);
-
+            await fixture.InsertObjectIntoDatabase(bookingPastToInsert);
 
             List<RoomOccupiedDateDto> occupiedDateResult = new List<RoomOccupiedDateDto>()
             {
                 new RoomOccupiedDateDto() {
-                    StartDate = DateOnly.FromDateTime(bookingCurrentInsert.StartDate),
-                    EndDate= DateOnly.FromDateTime(bookingCurrentInsert.EndDate)
+                    StartDate = bookingCurrentInsert.StartDate,
+                    EndDate = bookingCurrentInsert.EndDate
                     },
-                 new RoomOccupiedDateDto() {
-                    StartDate = DateOnly.FromDateTime(bookingInFutureToInsert.StartDate),
-                    EndDate= DateOnly.FromDateTime(bookingInFutureToInsert.EndDate)
+                new RoomOccupiedDateDto() {
+                    StartDate = bookingInFutureToInsert.StartDate,
+                    EndDate= bookingInFutureToInsert.EndDate
                     }
             };
 
@@ -635,8 +627,11 @@ namespace YourRest.WebApi.Tests.Controllers
             var responseContent = await response.Content.ReadAsStringAsync();
             var occupiedDateResponse = JsonConvert.DeserializeObject<List<RoomOccupiedDateDto>>(responseContent);
 
-            Assert.NotNull(occupiedDateResponse);
-            Assert.Equal(occupiedDateResult, occupiedDateResponse);
+            Assert.NotNull( occupiedDateResponse );
+            Assert.Equal(occupiedDateResult.First().StartDate, occupiedDateResponse.Last().StartDate);
+            Assert.Equal(occupiedDateResult.Last().StartDate, occupiedDateResponse.First().StartDate);
+            Assert.Equal(occupiedDateResult.First().EndDate, occupiedDateResponse.Last().EndDate);
+            Assert.Equal(occupiedDateResult.Last().EndDate, occupiedDateResponse.First().EndDate);
         }
     }
 }

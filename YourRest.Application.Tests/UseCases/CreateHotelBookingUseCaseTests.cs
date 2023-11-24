@@ -57,8 +57,8 @@ namespace YourRest.Application.Tests.UseCases
 
             BookingDto newBooking = new BookingDto()
             {
-                StartDate = new DateTime(2025, 10, 2),
-                EndDate = new DateTime(2025, 10, 12),
+                StartDate = new DateOnly(2025, 10, 2),
+                EndDate = new DateOnly(2025, 10, 12),
                 Rooms = new List<int>() { 1, 2 },
                 TotalAmount = 5000.0m,
                 AdultNumber = 2,
@@ -101,8 +101,8 @@ namespace YourRest.Application.Tests.UseCases
 
             BookingDto newHotelBookingDateToIn = new BookingDto()
             {
-                StartDate = new DateTime(2025, 10, 2),
-                EndDate = new DateTime(2025, 10, 12),
+                StartDate = new DateOnly(2025, 10, 2),
+                EndDate = new DateOnly(2025, 10, 12),
                 Rooms = new List<int>() { 1 },
                 TotalAmount = 5000.0m,
                 AdultNumber = 2,
