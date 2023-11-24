@@ -538,7 +538,7 @@ namespace YourRest.WebApi.Tests.Controllers
         }
 
         [Fact]
-        public async Task GetOccupiedDatesByRoomId_WhenDataoccupiedStartDateIn_ReturnsStatusCodeError()
+        public async Task GetOccupiedDatesByRoomId()
         {
             var accommodationType = new AccommodationType
             {
