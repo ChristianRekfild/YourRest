@@ -67,7 +67,7 @@ namespace YourRest.WebApi.Tests.Controllers
 
             fixture.Client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
-            var response = await fixture.Client.PostAsync("api/operator/review", content);
+            var response = await fixture.Client.PostAsync("api/operators/reviews", content);
 
             response.EnsureSuccessStatusCode();
 
@@ -106,7 +106,7 @@ namespace YourRest.WebApi.Tests.Controllers
 
             var content = new StringContent(JsonConvert.SerializeObject(invalidReview), Encoding.UTF8, "application/json");
 
-            var response = await fixture.Client.PostAsync("api/operator/review", content);
+            var response = await fixture.Client.PostAsync("api/operators/reviews", content);
 
             Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
         }
@@ -116,7 +116,7 @@ namespace YourRest.WebApi.Tests.Controllers
         {
             fixture.Client.DefaultRequestHeaders.Authorization = null;
             
-            var response = await fixture.Client.PostAsync("api/operator/review", null);
+            var response = await fixture.Client.PostAsync("api/operators/reviews", null);
 
             Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
         }

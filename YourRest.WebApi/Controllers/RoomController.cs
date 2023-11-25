@@ -44,7 +44,7 @@ namespace YourRest.WebApi.Controllers
         }
 
         [HttpGet]
-        [Route("api/accommodation/{accommodationId}/rooms")]
+        [Route("api/accommodations/{accommodationId}/rooms")]
         public async Task<IActionResult> GetAllRooms(int accommodationId)
         {
             var regions = await _getRoomListUseCase.Execute(accommodationId, HttpContext.RequestAborted);
@@ -52,7 +52,7 @@ namespace YourRest.WebApi.Controllers
         }
 
         [HttpPost]
-        [Route("api/accommodation/{accommodationId}/rooms")]
+        [Route("api/accommodations/{accommodationId}/rooms")]
         public async Task<IActionResult> Post([FromRoute] int accommodationId, [FromBody] RoomDto roomDto)
         {
 
@@ -71,7 +71,7 @@ namespace YourRest.WebApi.Controllers
         }
 
         [HttpPut]
-        [Route("api/accommodation/{accommodationId}/rooms/{id}")]
+        [Route("api/accommodations/{accommodationId}/rooms/{id}")]
         public async Task<IActionResult> EditRoom([FromRoute] int accommodationId, [FromRoute] RouteViewModel route, [FromBody] RoomDto room)
         {
             var roomWithId = mapper.Map<RoomWithIdDto>(room);

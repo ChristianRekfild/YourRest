@@ -20,7 +20,7 @@ namespace YourRest.WebApi.Controllers
         }
 
         [HttpPost]
-        [Route("api/token")]
+        [Route("api/tokens")]
         public async Task<IActionResult> GetToken([FromBody] UserCredentialsViewModel credentials)
         {
             var tokenResponse = await _authenticationService.AuthenticateAsync(credentials.Username, credentials.Password);
