@@ -11,8 +11,6 @@ namespace YourRest.Domain.Repositories
 
         Task<IEnumerable<T>> FindAsync(Expression<Func<T, bool>> expression, CancellationToken cancellationToken = default);
     
-        Task<IEnumerable<T>> FindIncludeAsync(Expression<Func<T, bool>> expression, Expression<Func<T, object>> includeProperty, CancellationToken cancellationToken = default);
-
         Task<bool> FindAnyAsync(Expression<Func<T, bool>> expression, CancellationToken cancellationToken = default);
 
         Task<IEnumerable<T>> GetAllAsync(CancellationToken cancellationToken = default);
