@@ -23,8 +23,8 @@ namespace YourRest.ClientWebApp.Views.Shared.Components
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
-           module = await JSRuntime.InvokeAsync<IJSObjectReference>("import", "./Views/Shared/Components/SearchComponent.razor.js");
-           await module.InvokeAsync<SelectedDateViewModel>("ShowDataPicker", StartDate.ToString("dd.MM.yyyy"), EndDate.ToString("dd.MM.yyyy"));
+            module = await JSRuntime.InvokeAsync<IJSObjectReference>("import", "./js/components/search_component.js");
+            await module.InvokeAsync<SelectedDateViewModel>("ShowDataPicker", StartDate.ToString("dd.MM.yyyy"), EndDate.ToString("dd.MM.yyyy"));
         }
         private void UpdateSelectedDate(ApplyBtnClickEventArgs e)
         {
