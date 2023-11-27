@@ -10,7 +10,7 @@ using YourRest.Domain.Entities;
 namespace YourRest.WebApi.Controllers
 {
     [ApiController]
-    [Route("api/bookings/")]
+    //[Route("api/bookings/")]
     [FluentValidationAutoValidation]
     public class BookingController : Controller
     {
@@ -25,6 +25,7 @@ namespace YourRest.WebApi.Controllers
         }
 
         [HttpPost]
+        [Route("api/bookings/")]
         public async Task<IActionResult> PostBookingAsync([FromBody] BookingDto createHotelBookingUseCase)
         {
             var createdHotelBooking = await _createHotelBookingUseCase.ExecuteAsync(createHotelBookingUseCase, HttpContext.RequestAborted);
@@ -32,7 +33,7 @@ namespace YourRest.WebApi.Controllers
         }
 
         [HttpGet]
-        [Route("rooms/{roomId}")]
+        [Route("rooms/{roomId}/bookings/dates")]
         public async Task<IActionResult> GetBookingDateByRoomIdAsync(int roomId)
         {
             var occupiedDateList = await _getBookingDatesByRoomIdUseCase.ExecuteAsync(roomId, HttpContext.RequestAborted);
