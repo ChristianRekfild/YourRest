@@ -13,6 +13,6 @@ namespace YourRest.Application.Interfaces.HotelBooking
 {
     public interface IGetRoomsByCityAndBookingDatesUseCase
     {
-        Task<List<RoomDto>> ExecuteAsync(DateOnly startDay, DateOnly endDay, int cityId , CancellationToken token = default);
+        Task<List<RoomDto>> ExecuteAsync(DateOnly startDate, DateOnly endDate, int cityId , CancellationToken token = default);
     }
 }

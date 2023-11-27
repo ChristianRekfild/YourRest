@@ -13,6 +13,7 @@ using YourRest.Application.Exceptions;
 using YourRest.Application.Interfaces.HotelBooking;
 using YourRest.Domain.Entities;
 using YourRest.Domain.Repositories;
+using YourRest.Domain.ValueObjects.Bookings;
 
 
 namespace YourRest.Application.UseCases.HotelBookingUseCase
@@ -21,44 +22,56 @@ namespace YourRest.Application.UseCases.HotelBookingUseCase
     {
         private readonly IBookingRepository bookingRepository;
         private readonly IRoomRepository roomRepository;
-        private readonly ICustomerRepository customerRepository;
+        private readonly ICityRepository cityRepository;
+        private readonly IAccommodationRepository accommodationRepository;
+        private readonly IMapper mapper;
 
-        public GetBookingDatesByRoomIdUseCase(
+
+        public GetRoomsByCityAndBookingDatesUseCase(
             IBookingRepository bookingRepository,
             IMapper mapper,
-            ICustomerRepository customerRepository,
-            IRoomRepository roomRepository
+            IRoomRepository roomRepository,
+            ICityRepository cityRepository,
+            IAccommodationRepository accommodationRepository
             )
         {
             this.bookingRepository = bookingRepository;
             this.roomRepository = roomRepository;
-            this.customerRepository = customerRepository;
-        }
+            this.cityRepository = cityRepository;
+            this.accommodationRepository = accommodationRepository;
+            this.mapper = mapper;
+    }
 
-        public async Task<List<RoomOccupiedDateDto>> ExecuteAsync(int RoomId, CancellationToken token = default)
+        public async Task<List<RoomDto>> ExecuteAsync(DateOnly startDate, DateOnly endDate, int cityId, CancellationToken token = default)
         {
-            DateOnly dateNow = DateOnly.FromDateTime(DateTime.Today);
-            var roomsExist = await roomRepository.GetAsync(RoomId, token);
-
-            if (roomsExist == null)
+            
+            var cityExist = await cityRepository.FindAnyAsync(t => t.Id == cityId);
+            if (!cityExist)
             {
-                throw new InvalidParameterException("Бронируемой комнаты не существует.");
+                throw new InvalidParameterException("Города с таким ID не существует.");
             }
- 
-            var bookingList = await bookingRepository.FindAsync(booking => booking.Rooms.Contains(roomsExist) && 
-                booking.EndDate > dateNow, token);
+            var accomodationList = await accommodationRepository.GetAllWithIncludeAsync(accom => accom.Address.CityId == cityId);
+            List<int> accomodationIdList = accomodationList.Select(accom => accom.Id).ToList();
+            var roomsList = await roomRepository.FindAsync(room => accomodationIdList.Contains(room.AccommodationId));
+            List<int> roomsListIdList = roomsList.Select(room => room.Id).ToList();
 
-            List<RoomOccupiedDateDto> OccupiedDates = new List<RoomOccupiedDateDto>();
-            foreach ( var booking in bookingList ) 
+            var bookingList = await bookingRepository.GetAllWithIncludeAsync(booking =>
+            ((booking.StartDate <= startDate && startDate < booking.EndDate) ||
+            (booking.StartDate < endDate && endDate < booking.EndDate) ||
+            (startDate <= booking.StartDate && booking.EndDate <= endDate))
+            , token);
+            foreach (var booking in bookingList)
             {
-                RoomOccupiedDateDto tempOccupiedDate = new RoomOccupiedDateDto()
-                {
-                    StartDate = booking.StartDate,
-                    EndDate = booking.EndDate
-                };
-                OccupiedDates.Add(tempOccupiedDate);
+                roomsListIdList.Except(booking.Rooms.Select(r => r.Id));
             }
-            return OccupiedDates;
+            var resultRooms = roomsList.Where(room => roomsListIdList.Contains(room.Id)).ToList();
+            var resultRoomsDto = new List<RoomDto>();
+            foreach (var room in resultRooms)
+            {
+                resultRoomsDto.Add(mapper.Map<RoomExtendedDto>(room));
+            }
+
+            return resultRoomsDto;
         }
     }
 }
