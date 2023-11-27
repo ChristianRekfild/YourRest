@@ -33,7 +33,7 @@ namespace YourRest.WebApi.Controllers
         }
 
         [HttpGet]
-        [Route("rooms/{roomId}/bookings/dates")]
+        [Route("api/rooms/{roomId}/bookings/dates")]
         public async Task<IActionResult> GetBookingDateByRoomIdAsync(int roomId)
         {
             var occupiedDateList = await _getBookingDatesByRoomIdUseCase.ExecuteAsync(roomId, HttpContext.RequestAborted);
