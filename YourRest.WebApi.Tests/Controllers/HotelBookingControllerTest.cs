@@ -633,5 +633,102 @@ namespace YourRest.WebApi.Tests.Controllers
             Assert.Equal(occupiedDateResult.First().EndDate, occupiedDateResponse.Last().EndDate);
             Assert.Equal(occupiedDateResult.Last().EndDate, occupiedDateResponse.First().EndDate);
         }
+
+        [Fact]
+        public async Task GetRoomsByDateAndCity()
+        {
+            var accommodationType = new AccommodationType
+            {
+                Name = "Test Type"
+            };
+            var accommodationEntity = new Accommodation
+            {
+                Name = "Test",
+                AccommodationType = accommodationType
+            };
+
+            var accommodation = await fixture.InsertObjectIntoDatabase(accommodationEntity);
+
+            Customer customerToInsert = new Customer()
+            {
+                FirstName = "Test",
+                MiddleName = "Test1",
+                LastName = "Test2",
+                DateOfBirth = new DateTime(1950, 11, 5),
+            };
+
+            var testCustomer = await fixture.InsertObjectIntoDatabase(customerToInsert);
+
+            Room roomToInsert = new Room()
+            {
+                Accommodation = accommodation,
+                AccommodationId = accommodation.Id,
+                Name = "DeluxeRoom",
+                RoomType = "ZBS",
+                SquareInMeter = 1,
+                Capacity = 20
+            };
+            var room = await fixture.InsertObjectIntoDatabase(roomToInsert);
+
+            Booking bookingInFutureToInsert = new Booking()
+            {
+                StartDate = new DateOnly(2030, 10, 5),
+                EndDate = new DateOnly(2030, 10, 15),
+                Rooms = new List<Room>() { room },
+                TotalAmount = 5000.0m,
+                AdultNumber = 2,
+                ChildrenNumber = 2,
+                CustomerId = testCustomer.Id
+            };
+            await fixture.InsertObjectIntoDatabase(bookingInFutureToInsert);
+
+            Booking bookingCurrentInsert = new Booking()
+            {
+                StartDate = new DateOnly(2021, 10, 5),
+                EndDate = new DateOnly(2027, 10, 15),
+                Rooms = new List<Room>() { room },
+                TotalAmount = 5000.0m,
+                AdultNumber = 2,
+                ChildrenNumber = 2,
+                CustomerId = testCustomer.Id
+            };
+            await fixture.InsertObjectIntoDatabase(bookingCurrentInsert);
+
+            Booking bookingPastToInsert = new Booking()
+            {
+                StartDate = new DateOnly(2020, 10, 5),
+                EndDate = new DateOnly(2020, 10, 15),
+                Rooms = new List<Room>() { room },
+                TotalAmount = 5000.0m,
+                AdultNumber = 2,
+                ChildrenNumber = 2,
+                CustomerId = testCustomer.Id
+            };
+            await fixture.InsertObjectIntoDatabase(bookingPastToInsert);
+
+            List<RoomOccupiedDateDto> occupiedDateResult = new List<RoomOccupiedDateDto>()
+            {
+                new RoomOccupiedDateDto() {
+                    StartDate = bookingCurrentInsert.StartDate,
+                    EndDate = bookingCurrentInsert.EndDate
+                    },
+                new RoomOccupiedDateDto() {
+                    StartDate = bookingInFutureToInsert.StartDate,
+                    EndDate= bookingInFutureToInsert.EndDate
+                    }
+            };
+
+            var response = await fixture.Client.GetAsync($"rooms/{room.Id}/bookings/dates");
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+
+            var responseContent = await response.Content.ReadAsStringAsync();
+            var occupiedDateResponse = JsonConvert.DeserializeObject<List<RoomOccupiedDateDto>>(responseContent);
+
+            Assert.NotNull(occupiedDateResponse);
+            Assert.Equal(occupiedDateResult.First().StartDate, occupiedDateResponse.Last().StartDate);
+            Assert.Equal(occupiedDateResult.Last().StartDate, occupiedDateResponse.First().StartDate);
+            Assert.Equal(occupiedDateResult.First().EndDate, occupiedDateResponse.Last().EndDate);
+            Assert.Equal(occupiedDateResult.Last().EndDate, occupiedDateResponse.First().EndDate);
+        }
     }
 }
