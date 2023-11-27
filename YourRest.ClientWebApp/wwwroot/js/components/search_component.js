@@ -1,5 +1,16 @@
 let StartDate
 let EndDate;
+
+Blazor.registerCustomEventType('updateselecteddate', {
+    browserEventName: "change",
+    createEventArgs: event => {
+        return {
+            StartDate,
+            EndDate
+        }
+    }
+});
+
 export function ShowDataPicker(startDate, endDate) {
 
     $(document).ready(
@@ -9,10 +20,8 @@ export function ShowDataPicker(startDate, endDate) {
                 "linkedCalendars": true,
                 "autoUpdateInput": true,
                 "showCustomRangeLabel": false,
-                //"startDate": moment(Date.now()).format("DD.MM.YYYY"),
-                //"endDate": moment(Date.now()).add(2, 'days').format("DD.MM.YYYY"),
-                "startDate": moment(startDate, "DD.MM.yyyy"),
-                "endDate": moment(endDate, "DD.MM.yyyy"),
+                "startDate": moment(startDate, "DD.MM.YYYY"),
+                "endDate": moment(endDate, "DD.MM.YYYY"),
                 "opens": "center",
                 locale: {
                     "applyLabel": "Выбрать",
@@ -20,9 +29,10 @@ export function ShowDataPicker(startDate, endDate) {
                     "format": "DD.MM.YYYY"
                 }
             }, function (start, end, label) {
-                StartDate = start.format('YYYY-MM-DD');
-                EndDate = end.format('YYYY-MM-DD');
-                $('#my-datapicker').val(StartDate);
+                StartDate = start.format();
+                EndDate = end.format();
+                let event = new Event("change", { bubbles: true });
+                $('#my-datapicker')[0].dispatchEvent(event);
             });
         }
     );
