@@ -9,6 +9,7 @@
 @import url(components/numeric_component.css);
 @import url(components/recomendation_card_component.css);
 @import url(components/found_hotel_card_component.css);
+@import url(components/filter_component.css);
 
 
 html {
