@@ -621,7 +621,7 @@ namespace YourRest.WebApi.Tests.Controllers
                     }
             };
 
-            var response = await fixture.Client.GetAsync($"api/bookings/rooms/{room.Id}");
+            var response = await fixture.Client.GetAsync($"rooms/{room.Id}/bookings/dates");
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
             var responseContent = await response.Content.ReadAsStringAsync();
