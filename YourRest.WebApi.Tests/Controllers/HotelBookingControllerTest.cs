@@ -730,5 +730,198 @@ namespace YourRest.WebApi.Tests.Controllers
             Assert.Equal(occupiedDateResult.First().EndDate, occupiedDateResponse.Last().EndDate);
             Assert.Equal(occupiedDateResult.Last().EndDate, occupiedDateResponse.First().EndDate);
         }
+
+        //#region TSTG
+        //[Fact]
+        //public async Task GetOccupiedDatesByRoomId()
+        //{
+        //    var countryRus = await fixture.InsertObjectIntoDatabase(new Country { Name = "Russia" });
+        //    var countryTest = await fixture.InsertObjectIntoDatabase(new Country { Name = "countryTest" });
+
+        //    var regionMoscow = await fixture.InsertObjectIntoDatabase(new Region { Name = "Moscow region", CountryId = countryRus.Id });
+        //    var cityMoscow = await fixture.InsertObjectIntoDatabase(new City { Name = "Moscow", RegionId = regionMoscow.Id });
+
+        //    var regionTest = await fixture.InsertObjectIntoDatabase(new Region { Name = "Test region", CountryId = countryTest.Id });
+        //    var cityTest = await fixture.InsertObjectIntoDatabase(new City { Name = "Test", RegionId = regionTest.Id });
+
+        //    var addressMoscowEntity1 = await fixture.InsertObjectIntoDatabase(new Address
+        //    {
+        //        Street = "Moscow Street1",
+        //        CityId = cityMoscow.Id,
+        //        ZipCode = "11111",
+        //        Longitude = 121,
+        //        Latitude = 77,
+        //    });
+
+
+        //    var addressMoscowEntity2 = await fixture.InsertObjectIntoDatabase(new Address
+        //    {
+        //        Street = "Moscow Street2",
+        //        CityId = cityMoscow.Id,
+        //        ZipCode = "22222",
+        //        Longitude = 122,
+        //        Latitude = 72,
+        //    });
+
+        //    var addressTestEntity1 = await fixture.InsertObjectIntoDatabase(new Address
+        //    {
+        //        Street = "Test Street1",
+        //        CityId = cityTest.Id,
+        //        ZipCode = "33333",
+        //        Longitude = 123,
+        //        Latitude = 73,
+        //    });
+
+
+        //    var addressTestEntity2 = await fixture.InsertObjectIntoDatabase(new Address
+        //    {
+        //        Street = "Test Street2",
+        //        CityId = cityTest.Id,
+        //        ZipCode = "44444",
+        //        Longitude = 124,
+        //        Latitude = 74,
+        //    });
+
+
+        //    var accommodationTypeLuxury = new AccommodationType
+        //    {
+        //        Name = "Luxury"
+        //    };
+
+
+        //    var accommodationTypeHernia = new AccommodationType
+        //    {
+        //        Name = "Hernia"
+        //    };
+
+        //    await fixture.InsertObjectIntoDatabase(addressMoscowEntity1);
+        //    await fixture.InsertObjectIntoDatabase(addressMoscowEntity2);
+        //    await fixture.InsertObjectIntoDatabase(addressTestEntity1);
+        //    await fixture.InsertObjectIntoDatabase(addressTestEntity2);
+
+        //    Accommodation accommodationMskLyx = await fixture.InsertObjectIntoDatabase(new Accommodation
+        //    {
+        //        Name = "GoldenHotelMoscow",
+        //        AddressId = addressMoscowEntity1.Id,
+        //        AccommodationType = accommodationTypeLuxury
+        //    });
+        //    Accommodation accommodationMskHern = await fixture.InsertObjectIntoDatabase(new Accommodation
+        //    {
+        //        Name = "heroHotelMoscow",
+        //        AddressId = addressMoscowEntity2.Id,
+        //        AccommodationType = accommodationTypeHernia
+        //    });
+        //    Accommodation accommodationTestLyx = await fixture.InsertObjectIntoDatabase(new Accommodation
+        //    {
+        //        Name = "GoldenHotelTest",
+        //        AddressId = addressTestEntity1.Id,
+        //        AccommodationType = accommodationTypeLuxury
+        //    });
+        //    Accommodation accommodationTestHern = await fixture.InsertObjectIntoDatabase(new Accommodation
+        //    {
+        //        Name = "heroHotelTest",
+        //        AddressId = addressTestEntity2.Id,
+        //        AccommodationType = accommodationTypeHernia
+        //    });
+
+        //    Customer customerToInsert = new Customer()
+        //    {
+        //        FirstName = "Test",
+        //        MiddleName = "Test1",
+        //        LastName = "Test2",
+        //        DateOfBirth = new DateTime(1950, 11, 5),
+        //    };
+
+        //    var testCustomer = await fixture.InsertObjectIntoDatabase(customerToInsert);
+
+        //    Room roomMskLyx1 = AddRoom(accommodationMskLyx, 1);
+        //    Room roomMskLyx2 = AddRoom(accommodationMskLyx, 2);
+        //    Room roomMskHern1 = AddRoom(accommodationMskHern, 3);
+        //    Room roomMskHern2 = AddRoom(accommodationMskHern, 4);
+
+        //    Room roomTestLyx1 = AddRoom(accommodationTestLyx, 5);
+        //    Room roomTestLyx2 = AddRoom(accommodationTestLyx, 6);
+        //    Room roomMskHern3 = AddRoom(accommodationTestHern, 7);
+        //    Room roomMskHern4 = AddRoom(accommodationTestHern, 8);
+
+
+
+        //    Booking bookingInMskLyxFutureToInsert = new Booking()
+        //    {
+        //        StartDate = new DateOnly(2030, 10, 5),
+        //        EndDate = new DateOnly(2030, 10, 15),
+        //        Rooms = new List<Room>() { roomMskLyx1, roomMskLyx2 },
+        //        TotalAmount = 5000.0m,
+        //        AdultNumber = 2,
+        //        ChildrenNumber = 2,
+        //        CustomerId = testCustomer.Id
+        //    };
+        //    await fixture.InsertObjectIntoDatabase(bookingInMskLyxFutureToInsert);
+
+        //    Booking bookingInMskLyxCurrentInsert = new Booking()
+        //    {
+        //        StartDate = new DateOnly(2021, 10, 5),
+        //        EndDate = new DateOnly(2027, 10, 15),
+        //        Rooms = new List<Room>() { roomMskLyx1, roomMskLyx2 },
+        //        TotalAmount = 5000.0m,
+        //        AdultNumber = 2,
+        //        ChildrenNumber = 2,
+        //        CustomerId = testCustomer.Id
+        //    };
+        //    await fixture.InsertObjectIntoDatabase(bookingCurrentInsert);
+
+        //    Booking bookingPastToInsert = new Booking()
+        //    {
+        //        StartDate = new DateOnly(2020, 10, 5),
+        //        EndDate = new DateOnly(2020, 10, 15),
+        //        Rooms = new List<Room>() { room },
+        //        TotalAmount = 5000.0m,
+        //        AdultNumber = 2,
+        //        ChildrenNumber = 2,
+        //        CustomerId = testCustomer.Id
+        //    };
+        //    await fixture.InsertObjectIntoDatabase(bookingPastToInsert);
+
+        //    List<RoomOccupiedDateDto> occupiedDateResult = new List<RoomOccupiedDateDto>()
+        //    {
+        //        new RoomOccupiedDateDto() {
+        //            StartDate = bookingCurrentInsert.StartDate,
+        //            EndDate = bookingCurrentInsert.EndDate
+        //            },
+        //        new RoomOccupiedDateDto() {
+        //            StartDate = bookingInFutureToInsert.StartDate,
+        //            EndDate= bookingInFutureToInsert.EndDate
+        //            }
+        //    };
+
+        //    var response = await fixture.Client.GetAsync($"api/rooms/{room.Id}/bookings/dates");
+        //    Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+
+        //    var responseContent = await response.Content.ReadAsStringAsync();
+        //    var occupiedDateResponse = JsonConvert.DeserializeObject<List<RoomOccupiedDateDto>>(responseContent);
+
+        //    Assert.NotNull(occupiedDateResponse);
+        //    Assert.Equal(occupiedDateResult.First().StartDate, occupiedDateResponse.Last().StartDate);
+        //    Assert.Equal(occupiedDateResult.Last().StartDate, occupiedDateResponse.First().StartDate);
+        //    Assert.Equal(occupiedDateResult.First().EndDate, occupiedDateResponse.Last().EndDate);
+        //    Assert.Equal(occupiedDateResult.Last().EndDate, occupiedDateResponse.First().EndDate);
+        //}
+
+        //private async Task<Room> AddRoom(Accommodation accommodation, int DeluxeRoomId)
+        //{
+        //    Room roomToInsert = new Room()
+        //    {
+        //        Accommodation = accommodation,
+        //        AccommodationId = accommodation.Id,
+        //        Name = $"DeluxeRoom{DeluxeRoomId}",
+        //        RoomType = "ZBS",
+        //        SquareInMeter = 1,
+        //        Capacity = 20
+        //    };
+        //    Room resultRoom = await fixture.InsertObjectIntoDatabase(roomToInsert);
+        //    return resultRoom;
+        //}
+        //#endregion
+
     }
 }

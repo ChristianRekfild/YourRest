@@ -60,12 +60,14 @@ namespace YourRest.Application.UseCases.HotelBookingUseCase
             (booking.StartDate < endDate && endDate < booking.EndDate) ||
             (startDate <= booking.StartDate && booking.EndDate <= endDate))
             , token);
+
             foreach (var booking in bookingList)
             {
                 roomsListIdList.Except(booking.Rooms.Select(r => r.Id));
             }
             var resultRooms = roomsList.Where(room => roomsListIdList.Contains(room.Id)).ToList();
             var resultRoomsDto = new List<RoomDto>();
+
             foreach (var room in resultRooms)
             {
                 resultRoomsDto.Add(mapper.Map<RoomExtendedDto>(room));
