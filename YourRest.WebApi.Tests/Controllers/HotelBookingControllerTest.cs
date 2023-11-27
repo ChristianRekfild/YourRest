@@ -834,15 +834,15 @@ namespace YourRest.WebApi.Tests.Controllers
 
             var testCustomer = await fixture.InsertObjectIntoDatabase(customerToInsert);
 
-            Room roomMskLyx1 = AddRoom(accommodationMskLyx, 1);
-            Room roomMskLyx2 = AddRoom(accommodationMskLyx, 2);
-            Room roomMskHern1 = AddRoom(accommodationMskHern, 3);
-            Room roomMskHern2 = AddRoom(accommodationMskHern, 4);
+            Room roomMskLyx1 = await AddRoom(accommodationMskLyx, 1);
+            Room roomMskLyx2 = await AddRoom(accommodationMskLyx, 2);
+            Room roomMskHern1 = await AddRoom(accommodationMskHern, 3);
+            Room roomMskHern2 = await AddRoom(accommodationMskHern, 4);
 
-            Room roomTestLyx1 = AddRoom(accommodationTestLyx, 5);
-            Room roomTestLyx2 = AddRoom(accommodationTestLyx, 6);
-            Room roomMskHern3 = AddRoom(accommodationTestHern, 7);
-            Room roomMskHern4 = AddRoom(accommodationTestHern, 8);
+            Room roomTestLyx1 = await AddRoom(accommodationTestLyx, 5);
+            Room roomTestLyx2 = await AddRoom(accommodationTestLyx, 6);
+            Room roomMskHern3 = await AddRoom(accommodationTestHern, 7);
+            Room roomMskHern4 = await AddRoom(accommodationTestHern, 8);
 
 
 

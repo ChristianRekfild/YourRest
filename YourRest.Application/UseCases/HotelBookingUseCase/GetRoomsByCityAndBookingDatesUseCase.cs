@@ -65,6 +65,7 @@ namespace YourRest.Application.UseCases.HotelBookingUseCase
             {
                 roomsListIdList.Except(booking.Rooms.Select(r => r.Id));
             }
+
             var resultRooms = roomsList.Where(room => roomsListIdList.Contains(room.Id)).ToList();
             var resultRoomsDto = new List<RoomDto>();
 
