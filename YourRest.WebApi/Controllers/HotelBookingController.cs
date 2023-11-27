@@ -16,12 +16,20 @@ namespace YourRest.WebApi.Controllers
     {
         private readonly ICreateBookingUseCase _createHotelBookingUseCase;
         private readonly IGetBookingDatesByRoomIdUseCase _getBookingDatesByRoomIdUseCase;
+        private readonly IGetRoomsByCityAndBookingDatesUseCase _getRoomsByCityAndBookingDatesUseCase;
+        private readonly IGetRoomsByHotelAndBookingDatesUseCase _getRoomsByHotelAndBookingDatesUseCase;
 
 
-        public BookingController(ICreateBookingUseCase createHotelBookingUseCase, IGetBookingDatesByRoomIdUseCase getBookingDatesByRoomIdUseCase)
+        public BookingController(ICreateBookingUseCase createHotelBookingUseCase,
+            IGetBookingDatesByRoomIdUseCase getBookingDatesByRoomIdUseCase,
+            IGetRoomsByCityAndBookingDatesUseCase getRoomsByCityAndBookingDatesUseCase,
+            IGetRoomsByHotelAndBookingDatesUseCase getRoomsByHotelAndBookingDatesUseCase
+            )
         {
             _createHotelBookingUseCase = createHotelBookingUseCase;
             _getBookingDatesByRoomIdUseCase = getBookingDatesByRoomIdUseCase;
+            _getRoomsByCityAndBookingDatesUseCase = getRoomsByCityAndBookingDatesUseCase;
+            _getRoomsByHotelAndBookingDatesUseCase = getRoomsByHotelAndBookingDatesUseCase;
         }
 
         [HttpPost]
@@ -33,10 +41,27 @@ namespace YourRest.WebApi.Controllers
         }
 
         [HttpGet]
-        [Route("rooms/{roomId}/bookings/dates")]
+        [Route("api/rooms/{roomId}/bookings/dates")]
         public async Task<IActionResult> GetBookingDateByRoomIdAsync(int roomId)
         {
             var occupiedDateList = await _getBookingDatesByRoomIdUseCase.ExecuteAsync(roomId, HttpContext.RequestAborted);
+            return Ok(occupiedDateList);
+        }
+
+
+        [HttpGet]
+        [Route("api/citys/{cityId}/rooms/{startDate}/{endDate}")]
+        public async Task<IActionResult> GetRoomsByCityAndBookingDatesUseCase(DateOnly startDate, DateOnly endDate, int cityId)
+        {
+            var occupiedDateList = await _getRoomsByCityAndBookingDatesUseCase.ExecuteAsync(startDate, endDate, cityId, HttpContext.RequestAborted);
+            return Ok(occupiedDateList);
+        }
+
+        [HttpGet]
+        [Route("api/accommodations/{accommodationId}/rooms/{startDate}/{endDate}")]
+        public async Task<IActionResult> GetRoomsByHotelIdAndBookingDatesUseCase(DateOnly startDate, DateOnly endDate, int accommodationId)
+        {
+            var occupiedDateList = await _getRoomsByHotelAndBookingDatesUseCase.ExecuteAsync(startDate, endDate, accommodationId, HttpContext.RequestAborted);
             return Ok(occupiedDateList);
         }
     }
