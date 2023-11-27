@@ -1,0 +1,70 @@
+﻿/* Стили для numeric*/
+.control {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.control_counter {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    justify-content: space-between;
+    width: 124px;
+    height: 40px;
+    border: 1px solid #000;
+    border-radius: 5px;
+    margin-bottom: 5px;
+}
+
+.control-counter_fbtn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0px;
+    margin: 0px;
+    width: 40px;
+    height: 100%;
+    border-start-start-radius: 5px;
+    border-end-start-radius: 5px;
+    font-size: 20px;
+    text-align: center;
+}
+
+    .control-counter_fbtn:hover {
+        background-color: #E2EDFF;
+        cursor: pointer;
+    }
+
+.control-counter_sbtn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0px;
+    margin: 0px;
+    width: 40px;
+    height: 100%;
+    border-start-end-radius: 5px;
+    border-end-end-radius: 5px;
+    font-size: 20px;
+    text-align: center;
+}
+
+    .control-counter_sbtn:hover {
+        background-color: #E2EDFF;
+        cursor: pointer;
+    }
+
+.control-counter_vbtn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
+    height: 100%;
+    border: 0;
+}
+
+.control_counter input::-webkit-inner-spin-button,
+input::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+}
