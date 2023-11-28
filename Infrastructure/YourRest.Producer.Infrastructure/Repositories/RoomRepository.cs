@@ -23,15 +23,6 @@ namespace YourRest.Producer.Infrastructure.Repositories
                 (startDate <= booking.StartDate && booking.EndDate <= endDate)).FirstOrDefault())).ToListAsync(cancellation);
 
 
-
-            //room.bookings.Where(b => b.StartDate >= endDate || b.EndDate <= startDate)
-
-            //var bookingList = await bookingRepository.GetAllWithIncludeAsync(booking =>
-            //((booking.StartDate <= startDate && startDate < booking.EndDate) ||
-            //(booking.StartDate < endDate && endDate < booking.EndDate) ||
-            //(startDate <= booking.StartDate && booking.EndDate <= endDate))
-            //, token);
-
             throw new NotImplementedException();
         }
 
