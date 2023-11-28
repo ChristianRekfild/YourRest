@@ -1,3 +1,17 @@
+@import url(daterangepicker.css);
+@import url(_Layout.css);
+
+
+@import url(pages/home.css);
+@import url(pages/search_result_page.css);
+
+@import url(components/search_component_style.css);
+@import url(components/numeric_component.css);
+@import url(components/recomendation_card_component.css);
+@import url(components/found_hotel_card_component.css);
+@import url(components/filter_component.css);
+
+
 html {
   font-size: 14px;
 }
@@ -5,14 +19,10 @@ html {
 @media (min-width: 768px) {
   html {
     font-size: 16px;
-  }
+  } 
 }
 
-.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
-}
-
-html {
+html {`
   position: relative;
   min-height: 100%;
 }
@@ -20,3 +30,8 @@ html {
 body {
   margin-bottom: 60px;
 }
+#company-name{
+    width: 80pt;
+    height: 40pt;
+}
+

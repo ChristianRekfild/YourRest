@@ -51,6 +51,8 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)  // с
         };
     });
 builder.Services.AddAuthorization();            // добавление сервисов авторизации
+builder.Services.AddServerSideBlazor();
+builder.Services.AddHttpClient();
 
 var app = builder.Build();
 
@@ -107,6 +109,7 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
+app.MapBlazorHub();
 app.Run();
 
 public class AuthOptions

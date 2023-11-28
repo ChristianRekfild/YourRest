@@ -1,0 +1,44 @@
+﻿<div class="hotel_card">
+    <img src="@RoomUrl"
+         class="rounded float-start hotel-card_img"
+         alt="hotel_img">
+    <div class="hotel-card_information">
+        <div class="hotel-card-information_title">
+            <h4>@Title</h4>
+            <div>
+                @for (int i = 1; i <= StarCount; i++)
+                {
+                    <i class="bi bi-star-fill"></i>
+                }
+            </div>
+        </div>
+        <div class="hotel-card-information_description">
+            <p>
+                @Description
+            </p>
+        </div>
+    </div>
+
+    <div class="hotel-card_control">
+        <div class="hotel-card_raiting">
+            <div>
+                <p class="hotel-card-raiting_description">Оценка по отзывам</p>
+                <a class="hotel-card-raiting_href text-primary" href="#">150 отзывов</a>
+            </div>
+            <div class="hotel-card-raiting_icon">
+                <p>
+                    @Rating
+                </p>
+            </div>
+        </div>
+        <div class="hotel-card_price text-end">
+            <h4>@Price руб.</h4>
+        </div>
+        <div class="hotel-card_booking--btn">
+            Забронировать
+        </div>
+    </div>
+    
+
+</div>
+

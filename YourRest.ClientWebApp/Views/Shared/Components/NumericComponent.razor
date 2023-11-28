@@ -1,0 +1,16 @@
+﻿<div class="control">
+    <div class="control_name">
+        @Title
+    </div>
+    <div class="control_counter">
+        <div class="control-counter_fbtn" @onclick=@(async () => await Decrease())>
+            -
+        </div>
+        <span class="control-counter_vbtn">@Value</span>
+
+        <div class="control-counter_sbtn" @onclick=@(async () => await Increase())>
+            +
+        </div>
+    </div>
+</div>
+

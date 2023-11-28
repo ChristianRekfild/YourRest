@@ -16,9 +16,7 @@ namespace YourRest.Infrastructure.Core.DbContexts
         public DbSet<Room> Rooms { get; set; }
         public DbSet<RoomFacility> RoomFacilities { get; set; }
         public DbSet<RoomType> RoomTypes { get; set; }
-
-        public DbSet<User> Users { get; set; }
-        
+        public DbSet<User> Users { get; set; }    
         public DbSet<UserAccommodation> UserAccommodations { get; set; }
         public DbSet<AccommodationType> AccommodationTypes { get; set; }
         public DbSet<AgeRange> AgeRanges { get; set; }
@@ -26,6 +24,7 @@ namespace YourRest.Infrastructure.Core.DbContexts
         public DbSet<AccommodationPhoto> AccommodationPhotos { get; set; }
         
         public DbSet<RoomPhoto> RoomPhotos { get; set; }
+
 
 
         static SharedDbContext()
