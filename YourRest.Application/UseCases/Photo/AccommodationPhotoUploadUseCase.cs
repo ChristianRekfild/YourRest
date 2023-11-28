@@ -26,9 +26,9 @@ namespace YourRest.Application.UseCases.Photo
             _accommodationRepository = accommodationRepository;
             _fileService = fileService;
         }
-        public async Task<PhotoUploadResponseDto> Handle(PhotoUploadModel photoUploadModel, string bucketName)
+        public async Task<PhotoUploadResponseDto> ExecuteAsync(PhotoUploadModel photoUploadModel, string bucketName, CancellationToken cancellationToken)
         {
-            var accommodation = await _accommodationRepository.GetAsync(photoUploadModel.AccommodationId);
+            var accommodation = await _accommodationRepository.GetAsync(photoUploadModel.AccommodationId, cancellationToken);
 
             if (accommodation == null)
             {
@@ -41,7 +41,7 @@ namespace YourRest.Application.UseCases.Photo
                 FileName = photoUploadModel.Photo.FileName
             };
 
-            var photoPath = await _fileService.AddPhoto(fileData, bucketName);
+            var photoPath = await _fileService.AddPhotoAsync(fileData, bucketName, cancellationToken);
             
             var photo = new AccommodationPhoto()
             {
@@ -49,8 +49,8 @@ namespace YourRest.Application.UseCases.Photo
                 FilePath = photoPath
             };
 
-            var savedPhoto = await _photoRepository.AddAsync(photo, false);
-            await _photoRepository.SaveChangesAsync();
+            var savedPhoto = await _photoRepository.AddAsync(photo, false, cancellationToken);
+            await _photoRepository.SaveChangesAsync(cancellationToken);
 
             return new PhotoUploadResponseDto() { FilePath = savedPhoto.FilePath };
         }

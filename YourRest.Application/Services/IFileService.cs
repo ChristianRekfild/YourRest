@@ -4,8 +4,8 @@ using YourRest.Application.Dto.Models;
 namespace YourRest.Application.Services;
 public interface IFileService
 {
-    Task<FileDto> GetFileByPathAsync(string path, string bucketName);
+    Task<FileDto> GetFileByPathAsync(string path, string bucketName, CancellationToken cancellationToken);
 
-    Task<string> AddPhoto(FileData fileData, string bucketName);
+    Task<string> AddPhotoAsync(FileData fileData, string bucketName, CancellationToken cancellationToken);
 }
 

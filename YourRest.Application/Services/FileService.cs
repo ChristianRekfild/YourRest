@@ -14,9 +14,9 @@ public class FileService: IFileService
         _s3Client = s3Client;
     }
 
-    public async Task<FileDto> GetFileByPathAsync(string filePath, string bucketName)
+    public async Task<FileDto> GetFileByPathAsync(string filePath, string bucketName, CancellationToken cancellationToken)
     {
-        var response = await _s3Client.GetObjectAsync(bucketName, filePath);
+        var response = await _s3Client.GetObjectAsync(bucketName, filePath, cancellationToken);
         if (response.HttpStatusCode != System.Net.HttpStatusCode.OK)
         {
             return null;
@@ -30,15 +30,18 @@ public class FileService: IFileService
         };
     }
 
-    public async Task<string> AddPhoto(FileData fileData, string bucketName)
+    public async Task<string> AddPhotoAsync(FileData fileData, string bucketName, CancellationToken cancellationToken)
     {
         bool bucketExists = true;
         try
         {
-            await _s3Client.GetBucketLocationAsync(new GetBucketLocationRequest
-            {
-                BucketName = bucketName
-            });
+            await _s3Client.GetBucketLocationAsync(
+                new GetBucketLocationRequest
+                {
+                    BucketName = bucketName
+                },
+                cancellationToken
+            );
         }
         catch (AmazonS3Exception ex) when (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
         {
@@ -48,10 +51,13 @@ public class FileService: IFileService
 
         if (!bucketExists)
         {
-            await _s3Client.PutBucketAsync(new PutBucketRequest
-            {
-                BucketName = bucketName
-            });
+            await _s3Client.PutBucketAsync(
+                new PutBucketRequest
+                {
+                    BucketName = bucketName
+                },
+                cancellationToken
+            );
         }
 
         var stream = new MemoryStream();
@@ -64,7 +70,7 @@ public class FileService: IFileService
             InputStream = stream
         };
 
-        var response = await _s3Client.PutObjectAsync(putRequest);
+        var response = await _s3Client.PutObjectAsync(putRequest, cancellationToken);
         return response.HttpStatusCode == System.Net.HttpStatusCode.OK 
             ? putRequest.Key
             : null;

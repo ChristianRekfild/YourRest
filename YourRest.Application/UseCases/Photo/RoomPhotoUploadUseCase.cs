@@ -26,9 +26,9 @@ namespace YourRest.Application.UseCases.Photo
             _roomRepository = roomRepository;
             _fileService = fileService;
         }
-        public async Task<PhotoUploadResponseDto> Handle(RoomPhotoUploadModel request, string bucketName)
+        public async Task<PhotoUploadResponseDto> ExecuteAsync(RoomPhotoUploadModel request, string bucketName, CancellationToken cancellationToken)
         {
-            var room = await _roomRepository.GetAsync(request.RoomId);
+            var room = await _roomRepository.GetAsync(request.RoomId, cancellationToken);
 
             if (room == null)
             {
@@ -41,7 +41,7 @@ namespace YourRest.Application.UseCases.Photo
                 FileName = request.Photo.FileName
             };
 
-            var photoPath = await _fileService.AddPhoto(fileData, bucketName);
+            var photoPath = await _fileService.AddPhotoAsync(fileData, bucketName, cancellationToken);
             
             var photo = new RoomPhoto()
             {
@@ -49,8 +49,8 @@ namespace YourRest.Application.UseCases.Photo
                 FilePath = photoPath
             };
 
-            var savedPhoto = await _photoRepository.AddAsync(photo, false);
-            await _photoRepository.SaveChangesAsync();
+            var savedPhoto = await _photoRepository.AddAsync(photo, false, cancellationToken);
+            await _photoRepository.SaveChangesAsync(cancellationToken);
 
             return new PhotoUploadResponseDto() { FilePath = savedPhoto.FilePath };
         }

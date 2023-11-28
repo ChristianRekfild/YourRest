@@ -30,25 +30,25 @@ namespace YourRest.WebApi.Controllers
 
         [HttpPost]
         [Route("api/operator/accommodation-photo")]
-        public async Task<IActionResult> UploadAccommodationPhoto([FromForm] PhotoUploadModel model)
+        public async Task<IActionResult> UploadAccommodationPhotoAsync([FromForm] PhotoUploadModel model)
         {
-            var dto = await _accommodationPhotoUploadUseCase.Handle(model, _awsOptions.BucketName);
+            var dto = await _accommodationPhotoUploadUseCase.ExecuteAsync(model, _awsOptions.BucketName, HttpContext.RequestAborted);
             return Ok(dto);
         }
 
         [HttpPost]
         [Route("api/operator/room-photo")]
-        public async Task<IActionResult> UploadRoomPhoto([FromForm] RoomPhotoUploadModel model)
+        public async Task<IActionResult> UploadRoomPhotoAsync([FromForm] RoomPhotoUploadModel model)
         {
-            var dto = await _roomPhotoUploadUseCase.Handle(model, _awsOptions.BucketName);
+            var dto = await _roomPhotoUploadUseCase.ExecuteAsync(model, _awsOptions.BucketName, HttpContext.RequestAborted);
             return Ok(dto);
         }
 
         [HttpGet]
         [Route("api/operator/photo/{path}")]
-        public async Task<IActionResult> DownloadFileByPath(string path)
+        public async Task<IActionResult> DownloadFileByPathAsync(string path)
         {
-            var fileDto = await _fileService.GetFileByPathAsync(path, _awsOptions.BucketName);
+            var fileDto = await _fileService.GetFileByPathAsync(path, _awsOptions.BucketName, HttpContext.RequestAborted);
             if (fileDto == null)
             {
                 return NotFound();

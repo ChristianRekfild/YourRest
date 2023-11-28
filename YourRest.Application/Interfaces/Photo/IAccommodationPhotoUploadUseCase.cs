@@ -5,6 +5,6 @@ namespace YourRest.Application.Interfaces.Photo
 {
     public interface IAccommodationPhotoUploadUseCase
     {
-        Task<PhotoUploadResponseDto> Handle(PhotoUploadModel request, string bucketName);
+        Task<PhotoUploadResponseDto> ExecuteAsync(PhotoUploadModel request, string bucketName, CancellationToken cancellationToken);
     }
 }
