@@ -22,7 +22,7 @@ namespace YourRest.WebApi.Controllers
         [Route("api/accommodation-types")]
         public async Task<IActionResult> GetAllAccommodationTypes()
         {
-            IEnumerable<AccommodationTypeDto> types = await _getAccommodationTypeListUseCase.Execute();
+            IEnumerable<AccommodationTypeDto> types = await _getAccommodationTypeListUseCase.ExecuteAsync(HttpContext.RequestAborted);
             return Ok(types);
         }
     }

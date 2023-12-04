@@ -4,6 +4,6 @@ namespace YourRest.Application.Interfaces
 {
     public interface IGetAccommodationTypeListUseCase
     {
-        Task<IEnumerable<AccommodationTypeDto>> Execute();
+        Task<IEnumerable<AccommodationTypeDto>> ExecuteAsync(CancellationToken cancellationToken);
     }
 }

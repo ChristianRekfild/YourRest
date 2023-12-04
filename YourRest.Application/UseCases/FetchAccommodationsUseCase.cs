@@ -22,11 +22,11 @@ namespace YourRest.Application.UseCases
             _mapper = mapper;
         }
 
-        public async Task<IEnumerable<AccommodationExtendedDto>> Execute(FetchAccommodationsViewModel viewModel)
+        public async Task<IEnumerable<AccommodationExtendedDto>> ExecuteAsync(FetchAccommodationsViewModel viewModel, CancellationToken cancellationToken)
         {
             var domainFilterCriteria = _mapper.MapToFilterCriteria(viewModel);
 
-            var hotels = await _accommodationRepository.GetHotelsByFilter(domainFilterCriteria);
+            var hotels = await _accommodationRepository.GetHotelsByFilter(domainFilterCriteria, cancellationToken);
             return hotels.Select(h => ConvertToDto(h)).ToList();
         }
 

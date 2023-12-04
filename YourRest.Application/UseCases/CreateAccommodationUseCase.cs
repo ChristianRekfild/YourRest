@@ -17,7 +17,7 @@ namespace YourRest.Application.UseCases
             _accommodationRepository = accommodationRepository;
         }
 
-        public async Task<AccommodationDto> Execute(CreateAccommodationDto accommodationDto, CancellationToken cancellationToken)
+        public async Task<AccommodationDto> ExecuteAsync(CreateAccommodationDto accommodationDto, CancellationToken cancellationToken)
         {
             var accommodationType = await _accommodationTypeRepository.GetAsync(accommodationDto.AccommodationTypeId, cancellationToken);
 

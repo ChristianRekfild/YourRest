@@ -48,7 +48,7 @@ namespace YourRest.WebApi.Controllers
                 return BadRequest("date_from, date_to, and adults are required fields.");
             }
 
-            var hotels = await _fetchAccommodationsUseCase.Execute(fetchHotelsViewModel);
+            var hotels = await _fetchAccommodationsUseCase.ExecuteAsync(fetchHotelsViewModel, HttpContext.RequestAborted);
             return Ok(hotels);
         }
         
@@ -60,7 +60,7 @@ namespace YourRest.WebApi.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var createdAccommodation = await _createAccommodationUseCase.Execute(accommodationExtendedDto, HttpContext.RequestAborted);
+            var createdAccommodation = await _createAccommodationUseCase.ExecuteAsync(accommodationExtendedDto, HttpContext.RequestAborted);
             return CreatedAtAction(nameof(Post), createdAccommodation);
         }
     }
