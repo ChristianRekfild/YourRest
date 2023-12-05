@@ -99,7 +99,7 @@ namespace YourRest.Application.Tests.UseCases
             _mapperMock.Setup(mapper => mapper.MapToFilterCriteria(It.IsAny<FetchAccommodationsViewModel>())).Returns(mockFilterCriteria);
             _accommodationRepositoryMock.Setup(repo => repo.GetHotelsByFilter(It.IsAny<AccommodationFilterCriteria>(), It.IsAny<CancellationToken>())).ReturnsAsync(accommodations);
 
-            var result = await _fetchHotelsUseCase.Execute(viewModel);
+            var result = await _fetchHotelsUseCase.ExecuteAsync(viewModel, default);
 
             _mapperMock.Verify(mapper => mapper.MapToFilterCriteria(viewModel), Times.Once);
 

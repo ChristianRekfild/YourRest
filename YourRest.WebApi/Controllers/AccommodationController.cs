@@ -15,14 +15,17 @@ namespace YourRest.WebApi.Controllers
     {
         private readonly IAddAddressToAccommodationUseCase _addAddressToAccommodationUseCase;
         private readonly IFetchAccommodationsUseCase _fetchAccommodationsUseCase;
+        private readonly ICreateAccommodationUseCase _createAccommodationUseCase;
 
         public AccommodationController(
             IAddAddressToAccommodationUseCase addAddressToAccommodationUseCase,
-            IFetchAccommodationsUseCase fetchAccommodationsUseCase
+            IFetchAccommodationsUseCase fetchAccommodationsUseCase,
+            ICreateAccommodationUseCase createAccommodationUseCase
             )
         {
             _addAddressToAccommodationUseCase = addAddressToAccommodationUseCase;
             _fetchAccommodationsUseCase = fetchAccommodationsUseCase;
+            _createAccommodationUseCase = createAccommodationUseCase;
         }
 
         [HttpPost("api/operator/accommodation/{accommodationId}/address", Name = "AddAddressToAccommodationAsync")]
@@ -45,8 +48,20 @@ namespace YourRest.WebApi.Controllers
                 return BadRequest("date_from, date_to, and adults are required fields.");
             }
 
-            var hotels = await _fetchAccommodationsUseCase.Execute(fetchHotelsViewModel);
+            var hotels = await _fetchAccommodationsUseCase.ExecuteAsync(fetchHotelsViewModel, HttpContext.RequestAborted);
             return Ok(hotels);
+        }
+        
+        [HttpPost]
+        [Route("api/accommodation")]
+        public async Task<IActionResult> Post([FromBody] CreateAccommodationDto accommodationExtendedDto)
+        {
+
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var createdAccommodation = await _createAccommodationUseCase.ExecuteAsync(accommodationExtendedDto, HttpContext.RequestAborted);
+            return CreatedAtAction(nameof(Post), createdAccommodation);
         }
     }
 }
