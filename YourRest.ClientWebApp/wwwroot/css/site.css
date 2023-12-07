@@ -1,7 +1,6 @@
 @import url(daterangepicker.css);
 @import url(_Layout.css);
 
-
 @import url(pages/home.css);
 @import url(pages/search_result_page.css);
 
@@ -22,7 +21,7 @@ html {
   } 
 }
 
-html {`
+html {
   position: relative;
   min-height: 100%;
 }
