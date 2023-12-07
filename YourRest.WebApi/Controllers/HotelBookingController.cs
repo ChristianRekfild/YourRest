@@ -16,12 +16,17 @@ namespace YourRest.WebApi.Controllers
     {
         private readonly ICreateBookingUseCase _createHotelBookingUseCase;
         private readonly IGetBookingDatesByRoomIdUseCase _getBookingDatesByRoomIdUseCase;
+        private readonly IGetRoomsByCityAndBookingDatesUseCase _getRoomsByCityAndBookingDatesUseCase;
 
 
-        public BookingController(ICreateBookingUseCase createHotelBookingUseCase, IGetBookingDatesByRoomIdUseCase getBookingDatesByRoomIdUseCase)
+        public BookingController(
+            ICreateBookingUseCase createHotelBookingUseCase, 
+            IGetBookingDatesByRoomIdUseCase getBookingDatesByRoomIdUseCase,
+            IGetRoomsByCityAndBookingDatesUseCase getRoomsByCityAndBookingDatesUseCase)
         {
             _createHotelBookingUseCase = createHotelBookingUseCase;
             _getBookingDatesByRoomIdUseCase = getBookingDatesByRoomIdUseCase;
+            _getRoomsByCityAndBookingDatesUseCase = getRoomsByCityAndBookingDatesUseCase;
         }
 
         [HttpPost]
@@ -38,6 +43,14 @@ namespace YourRest.WebApi.Controllers
         {
             var occupiedDateList = await _getBookingDatesByRoomIdUseCase.ExecuteAsync(roomId, HttpContext.RequestAborted);
             return Ok(occupiedDateList);
+        }
+
+        [HttpGet]
+        [Route("api/cities/{cityId}/rooms/{startDate}/{endDate}")]
+        public async Task<IActionResult> GetRoomsByCityAndBookingDatesUseCase(DateOnly startDate, DateOnly endDate, int cityId)
+        {
+            var roomList = await _getRoomsByCityAndBookingDatesUseCase.ExecuteAsync(startDate, endDate, cityId, HttpContext.RequestAborted);
+            return Ok(roomList);
         }
     }
 }

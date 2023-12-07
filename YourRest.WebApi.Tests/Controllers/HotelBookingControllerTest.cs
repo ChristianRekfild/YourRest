@@ -1,11 +1,14 @@
-﻿using Newtonsoft.Json;
+﻿using AutoMapper;
+using Newtonsoft.Json;
 using System.Net;
 using System.Net.Http.Json;
 using System.Text;
+using System.Text.Json;
 using System.Text.Unicode;
 using System.Xml.Linq;
 using System.Xml.Serialization;
 using YourRest.Application.Dto;
+using YourRest.Application.Dto.Mappers.Profiles;
 using YourRest.Application.Dto.Models;
 using YourRest.Application.Dto.Models.HotelBooking;
 using YourRest.Application.Dto.Models.Room;
@@ -633,5 +636,192 @@ namespace YourRest.WebApi.Tests.Controllers
             Assert.Equal(occupiedDateResult.First().EndDate, occupiedDateResponse.Last().EndDate);
             Assert.Equal(occupiedDateResult.Last().EndDate, occupiedDateResponse.First().EndDate);
         }
+        #region TSTG
+        [Fact]
+        public async Task GetRoomsByCityAndDates()
+        {
+
+            //Add country
+            var countryRus = await fixture.InsertObjectIntoDatabase(new Country { Name = "Russia" });
+            var countryTest = await fixture.InsertObjectIntoDatabase(new Country { Name = "countryTest" });
+
+            //Add region
+            var regionMoscow = await fixture.InsertObjectIntoDatabase(new Region { Name = "Moscow region", CountryId = countryRus.Id });
+            var regionTest = await fixture.InsertObjectIntoDatabase(new Region { Name = "Test region", CountryId = countryTest.Id });
+
+            //Add city
+            var cityMoscow = await fixture.InsertObjectIntoDatabase(new City { Name = "Moscow", RegionId = regionMoscow.Id });
+            var cityTest = await fixture.InsertObjectIntoDatabase(new City { Name = "Test", RegionId = regionTest.Id });
+
+            //add adress
+            var addressMoscowEntity1 = await fixture.InsertObjectIntoDatabase(new Address
+            {
+                Street = "Moscow Street1",
+                CityId = cityMoscow.Id,
+                ZipCode = "11111",
+                Longitude = 121,
+                Latitude = 77,
+            });
+
+            var addressMoscowEntity2 = await fixture.InsertObjectIntoDatabase(new Address
+            {
+                Street = "Moscow Street2",
+                CityId = cityMoscow.Id,
+                ZipCode = "22222",
+                Longitude = 122,
+                Latitude = 72,
+            });
+
+            var addressTestEntity1 = await fixture.InsertObjectIntoDatabase(new Address
+            {
+                Street = "Test Street1",
+                CityId = cityTest.Id,
+                ZipCode = "33333",
+                Longitude = 123,
+                Latitude = 73,
+            });
+
+            var addressTestEntity2 = await fixture.InsertObjectIntoDatabase(new Address
+            {
+                Street = "Test Street2",
+                CityId = cityTest.Id,
+                ZipCode = "44444",
+                Longitude = 124,
+                Latitude = 74,
+            });
+
+            //AccommodationType
+            var accommodationTypeLuxury = new AccommodationType
+            {
+                Name = "Luxury"
+            };
+
+            var accommodationTypeHernia = new AccommodationType
+            {
+                Name = "Hernia"
+            };
+
+            //Add Accommodation
+            Accommodation accommodationMskLyx = await fixture.InsertObjectIntoDatabase(new Accommodation
+            {
+                Name = "GoldenHotelMoscow",
+                AddressId = addressMoscowEntity1.Id,
+                AccommodationType = accommodationTypeLuxury
+            });
+            Accommodation accommodationMskHern = await fixture.InsertObjectIntoDatabase(new Accommodation
+            {
+                Name = "heroHotelMoscow",
+                AddressId = addressMoscowEntity2.Id,
+                AccommodationType = accommodationTypeHernia
+            });
+            Accommodation accommodationTestLyx = await fixture.InsertObjectIntoDatabase(new Accommodation
+            {
+                Name = "GoldenHotelTest",
+                AddressId = addressTestEntity1.Id,
+                AccommodationType = accommodationTypeLuxury
+            });
+            Accommodation accommodationTestHern = await fixture.InsertObjectIntoDatabase(new Accommodation
+            {
+                Name = "heroHotelTest",
+                AddressId = addressTestEntity2.Id,
+                AccommodationType = accommodationTypeHernia
+            });
+
+            //Add Customer
+            var testCustomer = await fixture.InsertObjectIntoDatabase(new Customer()
+            {
+                FirstName = "Test",
+                MiddleName = "Test1",
+                LastName = "Test2",
+                DateOfBirth = new DateTime(1950, 11, 5)
+            });
+
+            //Add rooms
+            Room roomMskLyx1 = await AddRoom(accommodationMskLyx, 1);
+            Room roomMskLyx2 = await AddRoom(accommodationMskLyx, 2);
+            Room roomMskHern1 = await AddRoom(accommodationMskHern, 3);
+            Room roomMskHern2 = await AddRoom(accommodationMskHern, 4);
+
+            Room roomTestLyx1 = await AddRoom(accommodationTestLyx, 5);
+            Room roomTestLyx2 = await AddRoom(accommodationTestLyx, 6);
+            Room roomMskHern3 = await AddRoom(accommodationTestHern, 7);
+            Room roomMskHern4 = await AddRoom(accommodationTestHern, 8);
+
+            //Add bookings
+            Booking bookingInMskLyxFuture = await fixture.InsertObjectIntoDatabase(new Booking()
+            {
+                StartDate = DateOnly.FromDateTime(DateTime.Now.AddDays(50)),
+                EndDate = DateOnly.FromDateTime(DateTime.Now.AddDays(60)),
+                Rooms = new List<Room>() { roomMskLyx2 },
+                TotalAmount = 5000.0m,
+                AdultNumber = 2,
+                ChildrenNumber = 2,
+                CustomerId = testCustomer.Id
+            });
+
+            Booking bookingInMskLyxCurrent = await fixture.InsertObjectIntoDatabase(new Booking()
+            {
+                StartDate = new DateOnly(2021, 10, 5),
+                EndDate = DateOnly.FromDateTime(DateTime.Now.AddDays(4)),
+                Rooms = new List<Room>() { roomMskLyx1 },
+                TotalAmount = 5000.0m,
+                AdultNumber = 2,
+                ChildrenNumber = 2,
+                CustomerId = testCustomer.Id
+            });
+
+            Booking bookingMskLyxPast = await fixture.InsertObjectIntoDatabase(new Booking()
+            {
+                StartDate = new DateOnly(2020, 10, 5),
+                EndDate = new DateOnly(2020, 10, 15),
+                Rooms = new List<Room>() { roomMskLyx1 },
+                TotalAmount = 5000.0m,
+                AdultNumber = 2,
+                ChildrenNumber = 2,
+                CustomerId = testCustomer.Id
+            });
+
+            var startDate = DateOnly.FromDateTime(DateTime.Now.AddDays(4));
+            var endDate = DateOnly.FromDateTime(DateTime.Now.AddDays(5));
+
+            var response = await fixture.Client.GetAsync($"api/cities/{cityMoscow.Id}/rooms/{startDate}/{endDate}");
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+
+            //var responseRoomsList = await response.Content.ReadFromJsonAsync<IEnumerable<RoomWithIdDto>>();
+            var responseContent = await response.Content.ReadAsStringAsync();
+            var responseRoomsList = JsonConvert.DeserializeObject<List<RoomWithIdDto>>(responseContent);
+
+            Assert.NotNull(responseRoomsList);
+            var responseRoomsIdList = responseRoomsList.Select(x => x.Id).ToList();
+            RoomWithIdDto roomToAssert = new RoomWithIdDto()
+            {
+                Capacity = roomMskLyx2.Capacity,
+                Id = roomMskLyx2.Id,
+                Name = roomMskLyx2.Name,
+                SquareInMeter = roomMskLyx2.SquareInMeter,
+                RoomType =  roomMskLyx2.RoomType
+
+            };
+            bool asset = responseRoomsIdList.Contains(roomToAssert.Id);
+
+            Assert.True(asset);               
+        }
+
+        private async Task<Room> AddRoom(Accommodation accommodation, int DeluxeRoomId)
+        {
+            Room roomToInsert = new Room()
+            {
+                Accommodation = accommodation,
+                AccommodationId = accommodation.Id,
+                Name = $"DeluxeRoom{DeluxeRoomId}",
+                RoomType = "ZBS",
+                SquareInMeter = 1,
+                Capacity = 20
+            };
+            Room resultRoom = await fixture.InsertObjectIntoDatabase(roomToInsert);
+            return resultRoom;
+        }
+        #endregion
+
     }
 }
