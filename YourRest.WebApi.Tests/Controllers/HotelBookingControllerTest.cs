@@ -743,8 +743,8 @@ namespace YourRest.WebApi.Tests.Controllers
 
             Room roomTestLyx1 = await AddRoom(accommodationTestLyx, 5);
             Room roomTestLyx2 = await AddRoom(accommodationTestLyx, 6);
-            Room roomMskHern3 = await AddRoom(accommodationTestHern, 7);
-            Room roomMskHern4 = await AddRoom(accommodationTestHern, 8);
+            Room roomTestHern3 = await AddRoom(accommodationTestHern, 7);
+            Room roomTestHern4 = await AddRoom(accommodationTestHern, 8);
 
             //Add bookings
             Booking bookingInMskLyxFuture = await fixture.InsertObjectIntoDatabase(new Booking()
@@ -916,8 +916,8 @@ namespace YourRest.WebApi.Tests.Controllers
 
             Room roomTestLyx1 = await AddRoom(accommodationTestLyx, 5);
             Room roomTestLyx2 = await AddRoom(accommodationTestLyx, 6);
-            Room roomMskHern3 = await AddRoom(accommodationTestHern, 7);
-            Room roomMskHern4 = await AddRoom(accommodationTestHern, 8);
+            Room roomTestHern3 = await AddRoom(accommodationTestHern, 7);
+            Room roomTestHern4 = await AddRoom(accommodationTestHern, 8);
 
             //Add bookings
             Booking bookingInMskLyxFuture = await fixture.InsertObjectIntoDatabase(new Booking()
@@ -1090,8 +1090,8 @@ namespace YourRest.WebApi.Tests.Controllers
 
             Room roomTestLyx1 = await AddRoom(accommodationTestLyx, 5);
             Room roomTestLyx2 = await AddRoom(accommodationTestLyx, 6);
-            Room roomMskHern3 = await AddRoom(accommodationTestHern, 7);
-            Room roomMskHern4 = await AddRoom(accommodationTestHern, 8);
+            Room roomTestHern3 = await AddRoom(accommodationTestHern, 7);
+            Room roomTestHern4 = await AddRoom(accommodationTestHern, 8);
 
             //Add bookings
             Booking bookingInMskLyxFuture = await fixture.InsertObjectIntoDatabase(new Booking()
