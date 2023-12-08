@@ -793,18 +793,11 @@ namespace YourRest.WebApi.Tests.Controllers
 
             Assert.NotNull(responseRoomsList);
             var responseRoomsIdList = responseRoomsList.Select(x => x.Id).ToList();
-            RoomWithIdDto roomToAssert = new RoomWithIdDto()
-            {
-                Capacity = roomMskLyx2.Capacity,
-                Id = roomMskLyx2.Id,
-                Name = roomMskLyx2.Name,
-                SquareInMeter = roomMskLyx2.SquareInMeter,
-                RoomType =  roomMskLyx2.RoomType
 
-            };
-            bool asset = responseRoomsIdList.Contains(roomToAssert.Id);
+            
+            Assert.True(responseRoomsIdList.Contains(roomMskLyx1.Id));
+            Assert.True(responseRoomsIdList.Contains(roomMskLyx2.Id));
 
-            Assert.True(asset);               
         }
 
         private async Task<Room> AddRoom(Accommodation accommodation, int DeluxeRoomId)
