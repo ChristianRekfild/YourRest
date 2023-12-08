@@ -17,16 +17,20 @@ namespace YourRest.WebApi.Controllers
         private readonly ICreateBookingUseCase _createHotelBookingUseCase;
         private readonly IGetBookingDatesByRoomIdUseCase _getBookingDatesByRoomIdUseCase;
         private readonly IGetRoomsByCityAndBookingDatesUseCase _getRoomsByCityAndBookingDatesUseCase;
+        private readonly IGetRoomsByAccommodationAndBookingDatesUseCase _getRoomsByAccommodationAndBookingDatesUseCase;
+
 
 
         public BookingController(
             ICreateBookingUseCase createHotelBookingUseCase, 
             IGetBookingDatesByRoomIdUseCase getBookingDatesByRoomIdUseCase,
-            IGetRoomsByCityAndBookingDatesUseCase getRoomsByCityAndBookingDatesUseCase)
+            IGetRoomsByCityAndBookingDatesUseCase getRoomsByCityAndBookingDatesUseCase,
+            IGetRoomsByAccommodationAndBookingDatesUseCase getRoomsByAccommodationAndBookingDatesUseCase)
         {
             _createHotelBookingUseCase = createHotelBookingUseCase;
             _getBookingDatesByRoomIdUseCase = getBookingDatesByRoomIdUseCase;
             _getRoomsByCityAndBookingDatesUseCase = getRoomsByCityAndBookingDatesUseCase;
+            _getRoomsByAccommodationAndBookingDatesUseCase = getRoomsByAccommodationAndBookingDatesUseCase;
         }
 
         [HttpPost]
@@ -57,7 +61,7 @@ namespace YourRest.WebApi.Controllers
         [Route("api/accommodations/{accommodationId}/rooms/{startDate}/{endDate}")]
         public async Task<IActionResult> GetRoomsByAccommodationAndBookingDatesUseCase(string startDate, string endDate, int accommodationId)
         {
-            var roomList = await _getRoomsByCityAndBookingDatesUseCase.ExecuteAsync(DateOnly.Parse(startDate), DateOnly.Parse(endDate), accommodationId, HttpContext.RequestAborted);
+            var roomList = await _getRoomsByAccommodationAndBookingDatesUseCase.ExecuteAsync(DateOnly.Parse(startDate), DateOnly.Parse(endDate), accommodationId, HttpContext.RequestAborted);
             return Ok(roomList);
         }
     }

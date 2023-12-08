@@ -44,7 +44,7 @@ namespace YourRest.Application.UseCases.HotelBookingUseCase
             {
                 throw new InvalidParameterException("Отеля с таким ID не существует.");
             }
-            var resultRooms = await roomRepository.GetRoomsByCityAndDatesAsync(startDate, endDate, accommodationId, token);
+            var resultRooms = await roomRepository.GetRoomsByAccommodationAndDatesAsync(startDate, endDate, accommodationId, token);
             var resultRoomsDto = new List<RoomWithIdDto>();
 
             foreach (var room in resultRooms)

@@ -36,7 +36,7 @@ namespace YourRest.Producer.Infrastructure.Repositories
                .Where(room => room.Accommodation.Address != null &&
                 room.Accommodation.Id == accommodationId);
 
-            var roomsByCityIdInBooking = this._dataContext.Set<Room>()
+            var roomsByAccommodationIdInBooking = this._dataContext.Set<Room>()
                 .Where(room => room.Accommodation.Address != null &&
                 room.Accommodation.Id == accommodationId &&
                 room.bookings.Any(b => (b.StartDate <= startDate && startDate < b.EndDate) ||
@@ -44,7 +44,7 @@ namespace YourRest.Producer.Infrastructure.Repositories
                 (startDate <= b.StartDate && b.EndDate <= endDate)));
 
             return roomsByAccommodationId
-                .Except(roomsByCityIdInBooking)
+                .Except(roomsByAccommodationIdInBooking)
                 .AsQueryable()
                 .ToListAsync(cancellation);
         }
