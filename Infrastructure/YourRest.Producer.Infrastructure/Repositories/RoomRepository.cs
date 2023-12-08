@@ -30,5 +30,23 @@ namespace YourRest.Producer.Infrastructure.Repositories
                 .AsQueryable()
                 .ToListAsync(cancellation);
         }
+        public Task<List<Room>> GetRoomsByAccommodationAndDatesAsync(DateOnly startDate, DateOnly endDate, int accommodationId, CancellationToken cancellation = default)
+        {
+            var roomsByAccommodationId = this._dataContext.Set<Room>()
+               .Where(room => room.Accommodation.Address != null &&
+                room.Accommodation.Id == accommodationId);
+
+            var roomsByCityIdInBooking = this._dataContext.Set<Room>()
+                .Where(room => room.Accommodation.Address != null &&
+                room.Accommodation.Id == accommodationId &&
+                room.bookings.Any(b => (b.StartDate <= startDate && startDate < b.EndDate) ||
+                (b.StartDate < endDate && endDate < b.EndDate) ||
+                (startDate <= b.StartDate && b.EndDate <= endDate)));
+
+            return roomsByAccommodationId
+                .Except(roomsByCityIdInBooking)
+                .AsQueryable()
+                .ToListAsync(cancellation);
+        }
     }
 }

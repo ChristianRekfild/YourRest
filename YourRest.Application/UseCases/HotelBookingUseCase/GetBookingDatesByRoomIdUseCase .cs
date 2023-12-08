@@ -21,18 +21,14 @@ namespace YourRest.Application.UseCases.HotelBookingUseCase
     {
         private readonly IBookingRepository bookingRepository;
         private readonly IRoomRepository roomRepository;
-        private readonly ICustomerRepository customerRepository;
 
         public GetBookingDatesByRoomIdUseCase(
-            IBookingRepository bookingRepository,
-            IMapper mapper,
-            ICustomerRepository customerRepository,
+            IBookingRepository bookingRepository,          
             IRoomRepository roomRepository
             )
         {
             this.bookingRepository = bookingRepository;
-            this.roomRepository = roomRepository;
-            this.customerRepository = customerRepository;
+            this.roomRepository = roomRepository;          
         }
 
         public async Task<List<RoomOccupiedDateDto>> ExecuteAsync(int RoomId, CancellationToken token = default)

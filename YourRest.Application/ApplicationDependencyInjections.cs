@@ -90,6 +90,7 @@ namespace YourRest.Application
             services.AddScoped<ICreateBookingUseCase, CreateBookingUseCase>();
             services.AddScoped<IGetBookingDatesByRoomIdUseCase, GetBookingDatesByRoomIdUseCase>();
             services.AddScoped<IGetRoomsByCityAndBookingDatesUseCase, GetRoomsByCityAndBookingDatesUseCase>();
+            services.AddScoped<IGetRoomsByAccommodationAndBookingDatesUseCase, GetRoomsByAccommodationAndBookingDatesUseCase>();
 
             services.AddScoped<IAccommodationMapper, AccommodationMapper>();
             services.AddScoped<IFetchAccommodationsUseCase, FetchAccommodationsUseCase>();

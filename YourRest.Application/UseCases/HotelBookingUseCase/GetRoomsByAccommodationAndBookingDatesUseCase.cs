@@ -18,33 +18,33 @@ using YourRest.Domain.ValueObjects.Bookings;
 
 namespace YourRest.Application.UseCases.HotelBookingUseCase
 {
-    public class GetRoomsByCityAndBookingDatesUseCase : IGetRoomsByCityAndBookingDatesUseCase
+    public class GetRoomsByAccommodationAndBookingDatesUseCase : IGetRoomsByAccommodationAndBookingDatesUseCase
     {
         private readonly IRoomRepository roomRepository;
-        private readonly ICityRepository cityRepository;
+        private readonly IAccommodationRepository accommodationRepository;
         private readonly IMapper mapper;
 
 
-        public GetRoomsByCityAndBookingDatesUseCase(
+        public GetRoomsByAccommodationAndBookingDatesUseCase(
             IMapper mapper,
             IRoomRepository roomRepository,
-            ICityRepository cityRepository
+            IAccommodationRepository accommodationRepository
             )
         {
             this.roomRepository = roomRepository;
-            this.cityRepository = cityRepository;
+            this.accommodationRepository = accommodationRepository;
             this.mapper = mapper;
-        }
+    }
 
-        public async Task<List<RoomWithIdDto>> ExecuteAsync(DateOnly startDate, DateOnly endDate, int cityId, CancellationToken token = default)
+        public async Task<List<RoomWithIdDto>> ExecuteAsync(DateOnly startDate, DateOnly endDate, int accommodationId, CancellationToken token = default)
         {
             
-            var cityExist = await cityRepository.FindAnyAsync(t => t.Id == cityId);
+            var cityExist = await accommodationRepository.FindAnyAsync(t => t.Id == accommodationId);
             if (!cityExist)
             {
-                throw new InvalidParameterException("Города с таким ID не существует.");
+                throw new InvalidParameterException("Отеля с таким ID не существует.");
             }
-            var resultRooms = await roomRepository.GetRoomsByCityAndDatesAsync(startDate, endDate, cityId, token);
+            var resultRooms = await roomRepository.GetRoomsByCityAndDatesAsync(startDate, endDate, accommodationId, token);
             var resultRoomsDto = new List<RoomWithIdDto>();
 
             foreach (var room in resultRooms)
