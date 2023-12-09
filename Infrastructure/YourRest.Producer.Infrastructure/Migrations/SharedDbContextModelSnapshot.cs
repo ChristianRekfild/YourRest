@@ -90,6 +90,28 @@ namespace YourRest.Producer.Infrastructure.Migrations
                     b.ToTable("AccommodationPhotos");
                 });
 
+            modelBuilder.Entity("YourRest.Domain.Entities.AccommodationStarRating", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("AccommodationId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("Stars")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AccommodationId")
+                        .IsUnique();
+
+                    b.ToTable("AccommodationStarRatings");
+                });
+
             modelBuilder.Entity("YourRest.Domain.Entities.AccommodationType", b =>
                 {
                     b.Property<int>("Id")
@@ -514,6 +536,17 @@ namespace YourRest.Producer.Infrastructure.Migrations
                     b.Navigation("Accommodation");
                 });
 
+            modelBuilder.Entity("YourRest.Domain.Entities.AccommodationStarRating", b =>
+                {
+                    b.HasOne("YourRest.Domain.Entities.Accommodation", "Accommodation")
+                        .WithOne("StarRating")
+                        .HasForeignKey("YourRest.Domain.Entities.AccommodationStarRating", "AccommodationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Accommodation");
+                });
+
             modelBuilder.Entity("YourRest.Domain.Entities.Address", b =>
                 {
                     b.HasOne("YourRest.Domain.Entities.City", "City")
@@ -645,6 +678,8 @@ namespace YourRest.Producer.Infrastructure.Migrations
             modelBuilder.Entity("YourRest.Domain.Entities.Accommodation", b =>
                 {
                     b.Navigation("Rooms");
+
+                    b.Navigation("StarRating");
 
                     b.Navigation("UserAccommodations");
                 });

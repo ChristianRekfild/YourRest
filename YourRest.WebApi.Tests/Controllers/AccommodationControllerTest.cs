@@ -216,12 +216,23 @@ namespace YourRest.WebApi.Tests.Controllers
             {
                 Name = "Luxury"
             };
-            await fixture.InsertObjectIntoDatabase(new Accommodation
+            var accommodation = new Accommodation
             {
                 Name = "GoldenHotel",
                 AddressId = addressEntity.Id,
                 AccommodationType = accommodationType
-            });
+            };
+            
+            var accommodationStarRating = new AccommodationStarRating
+            {
+                Stars = 5, 
+                Accommodation = accommodation
+            };
+            
+            accommodation.StarRating = accommodationStarRating;
+            
+            await fixture.InsertObjectIntoDatabase(accommodation);
+            
             var fetchHotelsViewModel = new FetchAccommodationsViewModel
             {
                 DateFrom = DateTime.Now.AddDays(1),
@@ -243,6 +254,7 @@ namespace YourRest.WebApi.Tests.Controllers
             
             Assert.True(accommodations.Count > 0);
             Assert.Contains(accommodations, dto => dto.Name == "GoldenHotel");
+            Assert.Contains(accommodations, dto => dto.Stars.HasValue && dto.Stars.Value == 5);
            
             fixture.CleanDatabase();
         }
@@ -266,6 +278,68 @@ namespace YourRest.WebApi.Tests.Controllers
             var errorResponseString = await response.Content.ReadAsStringAsync();
     
             Assert.Equal("date_from, date_to, and adults are required fields.", errorResponseString);
+        }
+        
+        [Fact]
+        public async Task GivenValidAccommodationData_WhenCreateApiMethodInvoked_ThenShouldReturnCreatedResult()
+        {
+            var accommodationType = new AccommodationType
+            {
+                Name = "Luxury"
+            };
+            
+            var accType = await fixture.InsertObjectIntoDatabase(accommodationType);
+            
+            var validCreateAccommodationDto = new CreateAccommodationDto
+            {
+                Name = "Test Accommodation",
+                AccommodationTypeId = accType.Id,
+                Stars = 4,
+                Description = "A test description"
+            };
+
+            var content = new StringContent(JsonConvert.SerializeObject(validCreateAccommodationDto), Encoding.UTF8, "application/json");
+
+            var response = await fixture.Client.PostAsync("api/accommodation", content);
+
+            Assert.Equal(HttpStatusCode.Created, response.StatusCode);
+
+            var createdAccommodation = JsonConvert.DeserializeObject<AccommodationDto>(await response.Content.ReadAsStringAsync());
+            Assert.NotNull(createdAccommodation);
+            Assert.Equal(validCreateAccommodationDto.Name, createdAccommodation.Name);
+            Assert.Equal(validCreateAccommodationDto.AccommodationTypeId, createdAccommodation.AccommodationType.Id);
+            Assert.Equal(validCreateAccommodationDto.Stars, createdAccommodation.Stars);
+            Assert.Equal(validCreateAccommodationDto.Description, createdAccommodation.Description);
+        }
+        
+        [Fact]
+        public async Task GivenAccommodationDataWithoutOptionalFields_WhenCreateApiMethodInvoked_ThenShouldReturnCreatedResult()
+        {
+            var accommodationType = new AccommodationType
+            {
+                Name = "Luxury"
+            };
+            
+            var accType = await fixture.InsertObjectIntoDatabase(accommodationType);
+            
+            var validCreateAccommodationDto = new CreateAccommodationDto
+            {
+                Name = "Test Accommodation",
+                AccommodationTypeId = accType.Id
+            };
+
+            var content = new StringContent(JsonConvert.SerializeObject(validCreateAccommodationDto), Encoding.UTF8, "application/json");
+
+            var response = await fixture.Client.PostAsync("api/accommodation", content);
+
+            Assert.Equal(HttpStatusCode.Created, response.StatusCode);
+
+            var createdAccommodation = JsonConvert.DeserializeObject<AccommodationDto>(await response.Content.ReadAsStringAsync());
+            Assert.NotNull(createdAccommodation);
+            Assert.Equal(createdAccommodation.Name, validCreateAccommodationDto.Name);
+            Assert.Equal(createdAccommodation.AccommodationType.Id, validCreateAccommodationDto.AccommodationTypeId);
+            Assert.Null(validCreateAccommodationDto.Stars);
+            Assert.Null(validCreateAccommodationDto.Description);
         }
 
         private AddressDto CreateValidAddressDto(int cityId)

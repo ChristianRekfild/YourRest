@@ -12,6 +12,7 @@
         public int AccommodationTypeId { get; set; }
         public ICollection<Room> Rooms { get; set; }
         public ICollection<UserAccommodation> UserAccommodations { get; set; } = new List<UserAccommodation>();
+        public AccommodationStarRating? StarRating { get; set; }
         public Accommodation() => Rooms = new List<Room>();
 
     }

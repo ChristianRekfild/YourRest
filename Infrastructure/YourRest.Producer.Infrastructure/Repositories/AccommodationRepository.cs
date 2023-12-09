@@ -36,6 +36,7 @@ namespace YourRest.Producer.Infrastructure.Repositories
 
             return await GetWithIncludeAsync(filterExpression, cancellationToken,
                 h => h.Address,
+                h => h.StarRating,
                 h => h.AccommodationType
             );
         }
