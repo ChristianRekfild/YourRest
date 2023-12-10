@@ -145,6 +145,26 @@ namespace YourRest.Producer.Infrastructure.Keycloak.Repositories
             return userId;
         }
         
+        public async Task<User> GetUser(string userId)
+        {
+            string adminToken = (await GetAdminTokenAsync()).access_token;
+            using var httpClient = GetConfiguredHttpClient(adminToken);
+
+            var url = $"{_url}/auth/admin/realms/{_realmName}/users/{userId}";
+
+            var response = await httpClient.GetAsync(url);
+            response.EnsureSuccessStatusCode();
+
+            var user = JsonConvert.DeserializeObject<User>(await response.Content.ReadAsStringAsync());
+
+            if (user == null)
+            {
+                throw new Exception("User not found.");
+            }
+
+            return user;
+        }
+        
         public async Task<string> CreateGroup(string adminToken, string groupName)
         {
             using var httpClient = GetConfiguredHttpClient(adminToken);
