@@ -24,6 +24,7 @@ namespace YourRest.Infrastructure.Core.DbContexts
         public DbSet<AccommodationPhoto> AccommodationPhotos { get; set; }
         
         public DbSet<RoomPhoto> RoomPhotos { get; set; }
+        public DbSet<UserPhoto> UserPhotos { get; set; }
 
 
 
@@ -131,6 +132,7 @@ namespace YourRest.Infrastructure.Core.DbContexts
             AgeRanges.RemoveRange(AgeRanges);
             AccommodationPhotos.RemoveRange(AccommodationPhotos);
             RoomPhotos.RemoveRange(RoomPhotos);
+            UserPhotos.RemoveRange(UserPhotos);
 
             // Add other DbSet removals here
             // Example: 

@@ -154,7 +154,7 @@ public class Program
         app.UseAuthentication();
         app.UseMiddleware<UserSavingMiddleware>();
         app.UseAuthorization();
-        app.UseMiddleware<ErrorHandlingMiddleware>();
+        //app.UseMiddleware<ErrorHandlingMiddleware>();
         app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
         
         using var serviceScope = app.ApplicationServices.CreateScope();

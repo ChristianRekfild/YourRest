@@ -4,6 +4,9 @@ using YourRest.Application.Dto.Models.Photo;
 using YourRest.Application.Services;
 using YourRest.WebApi.Options;
 using SharpGrip.FluentValidation.AutoValidation.Mvc.Attributes;
+using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
+
 namespace YourRest.WebApi.Controllers
 {
     [ApiController]
@@ -12,43 +15,72 @@ namespace YourRest.WebApi.Controllers
     {
         private readonly IAccommodationPhotoUploadUseCase _accommodationPhotoUploadUseCase;
         private readonly IRoomPhotoUploadUseCase _roomPhotoUploadUseCase;
+        private readonly IUserPhotoUploadUseCase _userPhotoUploadUseCase;
         private readonly AwsOptions _awsOptions;
         private readonly IFileService _fileService;
 
         public PhotoController(
             IAccommodationPhotoUploadUseCase accommodationPhotoUploadUseCase,
             IRoomPhotoUploadUseCase roomPhotoUploadUseCase,
+            IUserPhotoUploadUseCase userPhotoUploadUseCase,
             AwsOptions awsOptions,
             IFileService fileService
         )
         {
             _accommodationPhotoUploadUseCase = accommodationPhotoUploadUseCase;
             _roomPhotoUploadUseCase = roomPhotoUploadUseCase;
+            _userPhotoUploadUseCase = userPhotoUploadUseCase;
             _awsOptions = awsOptions;
             _fileService = fileService;
         }
 
         [HttpPost]
-        [Route("api/operator/accommodation-photo")]
+        [Route("api/accommodation-photo")]
         public async Task<IActionResult> UploadAccommodationPhotoAsync([FromForm] PhotoUploadModel model)
         {
-            var dto = await _accommodationPhotoUploadUseCase.ExecuteAsync(model, _awsOptions.BucketName, HttpContext.RequestAborted);
+            var dto = await _accommodationPhotoUploadUseCase.ExecuteAsync(model, _awsOptions.BucketNames.Accommodation, HttpContext.RequestAborted);
             return Ok(dto);
         }
 
         [HttpPost]
-        [Route("api/operator/room-photo")]
+        [Route("api/room-photo")]
         public async Task<IActionResult> UploadRoomPhotoAsync([FromForm] RoomPhotoUploadModel model)
         {
-            var dto = await _roomPhotoUploadUseCase.ExecuteAsync(model, _awsOptions.BucketName, HttpContext.RequestAborted);
+            var dto = await _roomPhotoUploadUseCase.ExecuteAsync(model, _awsOptions.BucketNames.Room, HttpContext.RequestAborted);
+            return Ok(dto);
+        }
+        
+        [Authorize]
+        [HttpPost]
+        [Route("api/user-photo")]
+        public async Task<IActionResult> UploadUserPhotoAsync([FromForm] UserPhotoUploadModel model)
+        {
+            var user = HttpContext.User;
+            var identity = user.Identity as ClaimsIdentity;
+            var sub = identity?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            if (sub == null)
+            {
+                return NotFound("User not found");
+            }
+            
+            var dto = await _userPhotoUploadUseCase.ExecuteAsync(model, _awsOptions.BucketNames.User, sub, HttpContext.RequestAborted);
             return Ok(dto);
         }
 
         [HttpGet]
-        [Route("api/operator/photo/{path}")]
-        public async Task<IActionResult> DownloadFileByPathAsync(string path)
+        [Route("api/photo/{path}")]
+        public async Task<IActionResult> DownloadFileByPathAsync(string path, [FromQuery] string bucketType)
         {
-            var fileDto = await _fileService.GetFileByPathAsync(path, _awsOptions.BucketName, HttpContext.RequestAborted);
+            string bucketName = bucketType switch
+            {
+                "Accommodation" => _awsOptions.BucketNames.Accommodation,
+                "Room" => _awsOptions.BucketNames.Room,
+                "User" => _awsOptions.BucketNames.User,
+                _ => throw new ArgumentException("Invalid bucket type")
+            };
+
+            var fileDto = await _fileService.GetFileByPathAsync(path, bucketName, HttpContext.RequestAborted);
             if (fileDto == null)
             {
                 return NotFound();
