@@ -99,21 +99,29 @@ namespace YourRest.Producer.Infrastructure.Keycloak.Repositories
         public async Task<string> CreateUser(string adminToken, string username, string firstName, string lastName, string email, string password)
         {
             using var httpClient = GetConfiguredHttpClient(adminToken);
-    
-            // Step 1: Create the user
             var url = $"{_url}/auth/admin/realms/{_realmName}/users";
-            var payload = new
-            {
-                username = username,
-                firstName = firstName,
-                lastName = lastName,
-                email = email,
-                enabled = true
-            };
 
-            var content = new StringContent(JsonConvert.SerializeObject(payload), Encoding.UTF8, "application/json");
-            var response = await httpClient.PostAsync(url, content);
-            response.EnsureSuccessStatusCode();
+            try
+            {
+                // Step 1: Create the user
+                var payload = new
+                {
+                    username = username,
+                    firstName = firstName,
+                    lastName = lastName,
+                    email = email,
+                    enabled = true
+                };
+
+                var content = new StringContent(JsonConvert.SerializeObject(payload), Encoding.UTF8,
+                    "application/json");
+                var response = await httpClient.PostAsync(url, content);
+                response.EnsureSuccessStatusCode();
+            }
+            catch (Exception e)
+            {
+                //Console.WriteLine(e);
+            }
 
             // Step 2: Obtain the ID of the user just created
             var searchUrl = $"{url}?username={username}";

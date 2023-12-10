@@ -139,14 +139,8 @@ namespace YourRest.WebApi.Tests.Controllers
             
             string adminToken = (await _tokenRepository.GetAdminTokenAsync()).access_token;
 
-            try
-            {
-                userId = await _tokenRepository.CreateUser(adminToken,  "test", "test", "test", "test@test.ru", "test");
-                return userId;
-            }
-            catch { }
-
-            return null;
+            userId = await _tokenRepository.CreateUser(adminToken,  "test", "test", "test", "test@test.ru", "test");
+            return userId;
         }
 
         public async Task<string> GetAccessTokenAsync()
