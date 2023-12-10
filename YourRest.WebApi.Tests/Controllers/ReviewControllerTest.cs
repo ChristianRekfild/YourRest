@@ -26,6 +26,15 @@ namespace YourRest.WebApi.Tests.Controllers
         [Fact]
         public async Task GivenBookingAndCorrectReviewData_WhenPostCalled_ReturnsCreatedAtAction()
         {
+            string userId = await CreateKeyCloakUser();
+
+            var user = new User
+            {
+                FirstName = "Test",
+                LastName = "Test",
+                Email = "test@test.ru",
+                KeyCloakId = userId
+            };
             var customer = new Customer
                 {
                     FirstName = "Test",
@@ -42,15 +51,18 @@ namespace YourRest.WebApi.Tests.Controllers
                 Name = "Test2",
                 AccommodationType = accommodationType
             };
-
-            var accommodationId = (await fixture.InsertObjectIntoDatabase(accommodation)).Id;
+            
+            user.UserAccommodations.Add(new UserAccommodation { User = user, Accommodation = accommodation });
+            
+            await fixture.InsertObjectIntoDatabase(accommodation);
+            await fixture.InsertObjectIntoDatabase(user);
 
             var booking = new Booking {
                 StartDate = new DateTime(2023, 10, 1),
                 EndDate = new DateTime(2023, 10, 5),
-                Status = YourRest.Domain.Entities.BookingStatus.Pending,
+                Status = BookingStatus.Pending,
                 Comment = "test",
-                CustomerId = customerId
+                Customer = customer
             };
 
             var bookingId = (await fixture.InsertObjectIntoDatabase(booking)).Id;
@@ -62,13 +74,12 @@ namespace YourRest.WebApi.Tests.Controllers
             };
             var content = new StringContent(JsonConvert.SerializeObject(review), Encoding.UTF8, "application/json");
 
-            await CreateGroup(accommodationId);
             var token = await GetAccessTokenAsync();
 
             fixture.Client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
             var response = await fixture.Client.PostAsync("api/operator/review", content);
-
+            
             response.EnsureSuccessStatusCode();
 
             var responseString = await response.Content.ReadAsStringAsync();           
@@ -93,7 +104,7 @@ namespace YourRest.WebApi.Tests.Controllers
             };
 
             await fixture.InsertObjectIntoDatabase(accommodation);
-            await CreateGroup(accommodation.Id);
+            await CreateKeyCloakUser();
             var token = await GetAccessTokenAsync();
 
             fixture.Client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
@@ -121,31 +132,20 @@ namespace YourRest.WebApi.Tests.Controllers
             Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
         }
         
-        private async Task CreateGroup(int accommodationId)
+        private async Task<string> CreateKeyCloakUser()
         {
-            string? groupId = null;
-            string? userId = null;
+            string? userId;
             
             string adminToken = (await _tokenRepository.GetAdminTokenAsync()).access_token;
 
             try
             {
                 userId = await _tokenRepository.CreateUser(adminToken,  "test", "test", "test", "test@test.ru", "test");
+                return userId;
             }
             catch { }
-            try
-            {
-                groupId = await _tokenRepository.CreateGroup(adminToken, "/accommodations/" + accommodationId);
-            }
-            catch { }
-            try
-            {
-                if (groupId != null && userId != null)
-                {
-                    await _tokenRepository.AssignUserToGroup(adminToken, userId, groupId);
-                }
-            }
-            catch { }
+
+            return null;
         }
 
         public async Task<string> GetAccessTokenAsync()
