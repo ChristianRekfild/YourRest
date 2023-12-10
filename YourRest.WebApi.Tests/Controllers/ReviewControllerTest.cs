@@ -57,6 +57,7 @@ namespace YourRest.WebApi.Tests.Controllers
             await fixture.InsertObjectIntoDatabase(accommodation);
             await fixture.InsertObjectIntoDatabase(user);
 
+            //ToDo Remove customer entity. User should be added instead
             var booking = new Booking {
                 StartDate = new DateTime(2023, 10, 1),
                 EndDate = new DateTime(2023, 10, 5),
