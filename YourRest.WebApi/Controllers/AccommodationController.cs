@@ -56,10 +56,6 @@ namespace YourRest.WebApi.Controllers
         [Route("api/accommodation")]
         public async Task<IActionResult> Post([FromBody] CreateAccommodationDto accommodationExtendedDto)
         {
-
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-
             var createdAccommodation = await _createAccommodationUseCase.ExecuteAsync(accommodationExtendedDto, HttpContext.RequestAborted);
             return CreatedAtAction(nameof(Post), createdAccommodation);
         }

@@ -30,10 +30,20 @@ namespace YourRest.Application.UseCases
             accommodation.Description = accommodationDto.Description;
             accommodation.Name = accommodationDto.Name;
             accommodation.AccommodationTypeId = accommodationDto.AccommodationTypeId;
+            
+            if (accommodationDto.Stars >= 1 && accommodationDto.Stars <= 5)
+            {
+                var accommodationStarRating = new AccommodationStarRating
+                {
+                    Stars = accommodationDto.Stars.Value, 
+                    Accommodation = accommodation
+                };
+                accommodation.StarRating = accommodationStarRating;
+            }
 
             var savedAccommodation = await _accommodationRepository.AddAsync(accommodation, cancellationToken:cancellationToken);
 
-            var AccommodationTypeDto = new AccommodationTypeDto()
+            var accommodationTypeDto = new AccommodationTypeDto()
             {
                 Id = accommodationType.Id,
                 Name = accommodationType.Name
@@ -43,7 +53,8 @@ namespace YourRest.Application.UseCases
                 Id = savedAccommodation.Id,
                 Description = savedAccommodation.Description,
                 Name = savedAccommodation.Name,
-                AccommodationType = AccommodationTypeDto,
+                AccommodationType = accommodationTypeDto,
+                Stars = savedAccommodation.StarRating?.Stars
             };
 
             return savedAccommodationDto;
