@@ -153,14 +153,14 @@ namespace YourRest.Producer.Infrastructure.Keycloak.Repositories
             return userId;
         }
         
-        public async Task<User> GetUser(string userId)
+        public async Task<User> GetUser(string userId, CancellationToken cancellationToken)
         {
             string adminToken = (await GetAdminTokenAsync()).access_token;
             using var httpClient = GetConfiguredHttpClient(adminToken);
 
             var url = $"{_url}/auth/admin/realms/{_realmName}/users/{userId}";
 
-            var response = await httpClient.GetAsync(url);
+            var response = await httpClient.GetAsync(url, cancellationToken);
             response.EnsureSuccessStatusCode();
 
             var user = JsonConvert.DeserializeObject<User>(await response.Content.ReadAsStringAsync());

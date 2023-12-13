@@ -16,9 +16,9 @@ namespace YourRest.Application.UseCases
             _tokenRepository = tokenRepository;
         }
 
-        public async Task<UserDto> Execute(string userKeyCloakId)
+        public async Task<UserDto> ExecuteAsync(string userKeyCloakId, CancellationToken cancellationToken)
         {
-            var keycloakUser = await _tokenRepository.GetUser(userKeyCloakId);
+            var keycloakUser = await _tokenRepository.GetUser(userKeyCloakId, cancellationToken);
 
             var userDto = new UserDto
             {

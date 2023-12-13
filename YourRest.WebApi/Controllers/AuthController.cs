@@ -44,7 +44,7 @@ namespace YourRest.WebApi.Controllers
                 return NotFound("User not found");
             }
 
-            var userDetails = await _getUserInfoUseCase.Execute(sub);
+            var userDetails = await _getUserInfoUseCase.ExecuteAsync(sub, HttpContext.RequestAborted);
 
             return Ok(userDetails);
         }

@@ -4,6 +4,6 @@ namespace YourRest.Application.Interfaces
 {
     public interface IGetUserInfoUseCase
     {
-        Task<UserDto> Execute(string userKeyCloakId);
+        Task<UserDto> ExecuteAsync(string userKeyCloakId, CancellationToken cancellationToken);
     }
 }
