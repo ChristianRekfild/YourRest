@@ -4,7 +4,7 @@ namespace YourRest.Domain.Repositories;
 public interface ITokenRepository
 {
     Task<Token> GetTokenAsync(string username, string password);
-    Task<Token> GetAdminTokenAsync();
+    Task<Token> GetAdminTokenAsync(CancellationToken cancellationToken = default);
     Task CreateRealm(string adminToken, string realmName);
     Task CreateClient(string adminToken, string realmName, string clientId, string clientName);
 

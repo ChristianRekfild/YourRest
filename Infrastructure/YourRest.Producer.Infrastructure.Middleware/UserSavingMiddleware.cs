@@ -55,12 +55,6 @@ public class UserSavingMiddleware
                     }                        
                 }            
             }
-            
-            //ToDo: Allow user login without hotel group
-            if (accommodationIds.Count == 0) 
-            {
-                throw new Exception("No accommodations found from token groups");
-            }
 
             if (user == null)
             {
@@ -74,23 +68,26 @@ public class UserSavingMiddleware
                 };
                 await userRepository.AddAsync(user);
             }
-
-            foreach (var accommodationId in accommodationIds)
+            
+            if (accommodationIds.Count > 0)
             {
-                var accommodations = await accommodationRepository.GetWithIncludeAsync(a => a.Id == accommodationId);
-                var accommodation = accommodations.FirstOrDefault();
-
-                if (accommodation != null)
+                foreach (var accommodationId in accommodationIds)
                 {
-                    var existingUserAccommodation = user.UserAccommodations.FirstOrDefault(ua => ua.AccommodationId == accommodation.Id);
-                    if(existingUserAccommodation == null)
+                    var accommodations = await accommodationRepository.GetWithIncludeAsync(a => a.Id == accommodationId);
+                    var accommodation = accommodations.FirstOrDefault();
+
+                    if (accommodation != null)
                     {
-                        user.UserAccommodations.Add(new UserAccommodation { User = user, Accommodation = accommodation });
+                        var existingUserAccommodation = user.UserAccommodations.FirstOrDefault(ua => ua.AccommodationId == accommodation.Id);
+                        if(existingUserAccommodation == null)
+                        {
+                            user.UserAccommodations.Add(new UserAccommodation { User = user, Accommodation = accommodation });
+                        }
                     }
                 }
-            }
 
-            await userRepository.UpdateAsync(user);
+                await userRepository.UpdateAsync(user);
+            }
         }
 
         await _next(httpContext);

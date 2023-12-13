@@ -45,7 +45,7 @@ namespace YourRest.Producer.Infrastructure.Keycloak.Repositories
             return JsonConvert.DeserializeObject<Token>(result);
         }
         
-        public async Task<Token> GetAdminTokenAsync()
+        public async Task<Token> GetAdminTokenAsync(CancellationToken cancellationToken = default)
         {
             using var httpClient = GetConfiguredHttpClient();
 
@@ -56,7 +56,7 @@ namespace YourRest.Producer.Infrastructure.Keycloak.Repositories
                 new KeyValuePair<string, string>("username", "admin"),
                 new KeyValuePair<string, string>("password", "admin")
             });
-            var response = await httpClient.PostAsync($"{_url}/auth/realms/master/protocol/openid-connect/token", content);
+            var response = await httpClient.PostAsync($"{_url}/auth/realms/master/protocol/openid-connect/token", content, cancellationToken);
             response.EnsureSuccessStatusCode();
 
             var result = await response.Content.ReadAsStringAsync();
