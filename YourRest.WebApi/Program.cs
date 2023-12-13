@@ -152,7 +152,6 @@ public class Program
         app.UseHttpsRedirection();
         app.UseRouting();
         app.UseAuthentication();
-        app.UseMiddleware<UserSavingMiddleware>();
         app.UseAuthorization();
         //app.UseMiddleware<ErrorHandlingMiddleware>();
         app.UseEndpoints(endpoints => { endpoints.MapControllers(); });

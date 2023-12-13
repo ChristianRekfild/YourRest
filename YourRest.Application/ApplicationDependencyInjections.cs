@@ -95,6 +95,7 @@ namespace YourRest.Application
             services.AddScoped<IGetAccommodationTypeListUseCase, GetAccommodationTypeListUseCase>();
             services.AddScoped<IFileService, FileService>();
             services.AddScoped<IUserPhotoUploadUseCase, UserPhotoUploadUseCase>();
+            services.AddScoped<IGetUserInfoUseCase, GetUserInfoUseCase>();
             
             return services;
         }
