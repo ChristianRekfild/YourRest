@@ -83,10 +83,10 @@ namespace YourRest.WebApi.Tests.Fixtures
                         .AddInMemoryCollection(new List<KeyValuePair<string, string?>>
                         {
                             new("ConnectionStrings:DefaultConnection", connectionString),
-                            new("KeycloakSetting:Authority", "http://localhost:8081/auth/realms/YourRest"),
+                            new("KeycloakSetting:Authority", "http://localhost:8083/auth/realms/YourRest"),
                             new("KeycloakSetting:ClientId",  "your_rest_app"),
                             new("KeycloakSetting:RealmName",  "YourRest"),
-                            new("KeycloakSetting:KeycloakUrl",  "http://localhost:8081"),
+                            new("KeycloakSetting:KeycloakUrl",  "http://localhost:8083"),
                             new("KeycloakSetting:ClientSecret", "qBC5V3wc2AYKTcYN1CACo6REU9t1Inrf"),
                             new("AWS:AccessKey",  "test"),
                             new("AWS:SecretKey",  "test"),
