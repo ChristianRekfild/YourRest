@@ -10,6 +10,8 @@ public interface ITokenRepository
 
     Task<string> CreateUser(string adminToken, string username, string firstName, string lastName,
         string email, string password);
+
+    Task<User> GetUser(string userId, CancellationToken cancellationToken);
     Task<string> CreateGroup(string adminToken, string groupName);
     Task AssignUserToGroup(string adminToken, string userId, string groupId);
     Task<string> GetClientSecret(string adminToken, string clientId);
