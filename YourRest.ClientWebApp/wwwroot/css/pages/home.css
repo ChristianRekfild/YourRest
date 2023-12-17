@@ -1,0 +1,35 @@
+﻿.recomendation-section {
+    display: grid;
+    grid-template-columns: 0.4fr 0.22fr 0.43fr;
+    grid-template-rows: 0.4fr 0.3fr 0.3fr;
+    grid-template-areas:
+        "first first six"
+        "second thrid  thrid"
+        "fourth fourth five";
+    grid-gap: 5px;
+}
+
+.first {
+    grid-area: first;
+}
+
+.second {
+    grid-area: second;
+}
+
+.thrid {
+    grid-area: thrid;
+}
+
+.fourth {
+    grid-area: fourth;
+    align-self: center;
+}
+
+.five {
+    grid-area: five;
+}
+
+.six {
+    grid-area: six;
+}

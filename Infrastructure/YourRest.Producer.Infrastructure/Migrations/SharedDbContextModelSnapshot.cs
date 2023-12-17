@@ -17,7 +17,7 @@ namespace YourRest.Producer.Infrastructure.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "7.0.10")
+                .HasAnnotation("ProductVersion", "7.0.12")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
@@ -66,6 +66,50 @@ namespace YourRest.Producer.Infrastructure.Migrations
                         .IsUnique();
 
                     b.ToTable("Accommodations", (string)null);
+                });
+
+            modelBuilder.Entity("YourRest.Domain.Entities.AccommodationPhoto", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("AccommodationId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("FilePath")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AccommodationId");
+
+                    b.ToTable("AccommodationPhotos");
+                });
+
+            modelBuilder.Entity("YourRest.Domain.Entities.AccommodationStarRating", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("AccommodationId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("Stars")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AccommodationId")
+                        .IsUnique();
+
+                    b.ToTable("AccommodationStarRatings");
                 });
 
             modelBuilder.Entity("YourRest.Domain.Entities.AccommodationType", b =>
@@ -363,6 +407,28 @@ namespace YourRest.Producer.Infrastructure.Migrations
                     b.ToTable("RoomFacilities", (string)null);
                 });
 
+            modelBuilder.Entity("YourRest.Domain.Entities.RoomPhoto", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("FilePath")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("RoomId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RoomId");
+
+                    b.ToTable("RoomPhotos");
+                });
+
             modelBuilder.Entity("YourRest.Domain.Entities.RoomType", b =>
                 {
                     b.Property<int>("Id")
@@ -427,6 +493,28 @@ namespace YourRest.Producer.Infrastructure.Migrations
                     b.ToTable("UserAccommodations", (string)null);
                 });
 
+            modelBuilder.Entity("YourRest.Domain.Entities.UserPhoto", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("FilePath")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("UserPhotos");
+                });
+
             modelBuilder.Entity("RoomRoomFacility", b =>
                 {
                     b.HasOne("YourRest.Domain.Entities.RoomFacility", null)
@@ -457,6 +545,28 @@ namespace YourRest.Producer.Infrastructure.Migrations
                     b.Navigation("AccommodationType");
 
                     b.Navigation("Address");
+                });
+
+            modelBuilder.Entity("YourRest.Domain.Entities.AccommodationPhoto", b =>
+                {
+                    b.HasOne("YourRest.Domain.Entities.Accommodation", "Accommodation")
+                        .WithMany()
+                        .HasForeignKey("AccommodationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Accommodation");
+                });
+
+            modelBuilder.Entity("YourRest.Domain.Entities.AccommodationStarRating", b =>
+                {
+                    b.HasOne("YourRest.Domain.Entities.Accommodation", "Accommodation")
+                        .WithOne("StarRating")
+                        .HasForeignKey("YourRest.Domain.Entities.AccommodationStarRating", "AccommodationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Accommodation");
                 });
 
             modelBuilder.Entity("YourRest.Domain.Entities.Address", b =>
@@ -557,6 +667,17 @@ namespace YourRest.Producer.Infrastructure.Migrations
                     b.Navigation("Accommodation");
                 });
 
+            modelBuilder.Entity("YourRest.Domain.Entities.RoomPhoto", b =>
+                {
+                    b.HasOne("YourRest.Domain.Entities.Room", "Room")
+                        .WithMany()
+                        .HasForeignKey("RoomId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Room");
+                });
+
             modelBuilder.Entity("YourRest.Domain.Entities.UserAccommodation", b =>
                 {
                     b.HasOne("YourRest.Domain.Entities.Accommodation", "Accommodation")
@@ -576,9 +697,22 @@ namespace YourRest.Producer.Infrastructure.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("YourRest.Domain.Entities.UserPhoto", b =>
+                {
+                    b.HasOne("YourRest.Domain.Entities.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("YourRest.Domain.Entities.Accommodation", b =>
                 {
                     b.Navigation("Rooms");
+
+                    b.Navigation("StarRating");
 
                     b.Navigation("UserAccommodations");
                 });

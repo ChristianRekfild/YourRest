@@ -1,0 +1,301 @@
+{
+	"info": {
+		"_postman_id": "aadd7753-db4e-4236-a9b5-991a44f67cc5",
+		"name": "YourRest",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "2219203"
+	},
+	"item": [
+		{
+			"name": "http://localhost:5000/api/accommodation-types",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"if(jsonData.length > 0){",
+							"    var accommodationType = jsonData[0];",
+							"    pm.environment.set(\"accommodationTypeId\", accommodationType.id);",
+							"}"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": "http://localhost:5000/api/accommodation-types"
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:5000/api/accommodation",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"if(jsonData.length > 0){",
+							"    var accommodation = jsonData;",
+							"    pm.environment.set(\"accommodationId\", accommodation.id);",
+							"}"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {}
+			},
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"description\": \"The Test Hotel is a modern, mid-sized hotel located in the heart of the city. It features 100 well-appointed rooms, each equipped with comfortable bedding, a work desk, and complimentary Wi-Fi. Guests can enjoy amenities like an on-site restaurant serving international cuisine, a fitness center, and a rooftop terrace with panoramic city views. The hotel is ideal for both business and leisure travelers seeking convenience and quality service.\",\n  \"name\": \"The Test Hotel\",\n  \"accommodationTypeId\": \"{{accommodationTypeId}}\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5000/api/accommodation",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"accommodation"
+					],
+					"query": [
+						{
+							"key": "name",
+							"value": "The Test Hotel ",
+							"disabled": true
+						},
+						{
+							"key": "description",
+							"value": "The Test Hotel is a modern, mid-sized hotel located in the heart of the city. It features 100 well-appointed rooms, each equipped with comfortable bedding, a work desk, and complimentary Wi-Fi. Guests can enjoy amenities like an on-site restaurant serving international cuisine, a fitness center, and a rooftop terrace with panoramic city views. The hotel is ideal for both business and leisure travelers seeking convenience and quality service.",
+							"disabled": true
+						},
+						{
+							"key": "accommodationTypeId",
+							"value": "{{accommodationTypeId}}",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:5000/api/operator/accommodation-photo",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "AccommodationId",
+							"value": "{{accommodationId}}",
+							"type": "text"
+						},
+						{
+							"key": "Photo",
+							"type": "file",
+							"src": "fernando-alvarez-rodriguez-M7GddPqJowg-unsplash.jpg"
+						}
+					]
+				},
+				"url": "http://localhost:5000/api/operator/accommodation-photo"
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:5000/api/roomTypes",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"if(jsonData.length > 0){",
+							"    var roomType = jsonData[0];",
+							"    pm.environment.set(\"roomTypeId\", roomType.Id);",
+							"}",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": "http://localhost:5000/api/roomTypes"
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:5000/api/accommodation/1/rooms",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"if(jsonData.length > 0){",
+							"    var room = jsonData;",
+							"    pm.environment.set(\"roomId\", room.id);",
+							"}"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"var roomTypeId = pm.environment.get(\"roomTypeId\");",
+							"pm.variables.set(\"roomTypeId\", roomTypeId);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"name\": \"deluxe\",\n  \"squareInMeter\": 60,\n  \"roomType\": \"deluxe\",\n  \"capacity\": 3\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "http://localhost:5000/api/accommodation/1/rooms"
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:5000/api/operator/room-photo",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"var file = jsonData;",
+							"pm.environment.set(\"filepath\", file.filePath);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "RoomId",
+							"value": "{{roomId}}",
+							"type": "text"
+						},
+						{
+							"key": "Photo",
+							"type": "file",
+							"src": "vojtech-bruzek-Yrxr3bsPdS0-unsplash.jpg"
+						}
+					]
+				},
+				"url": "http://localhost:5000/api/operator/room-photo"
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:5000/api/operator/photo/{{filepath}}",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": "http://localhost:5000/api/operator/photo/{{filepath}}"
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "accommodationTypeId",
+			"value": "3",
+			"type": "string"
+		},
+		{
+			"key": "accommodationId",
+			"value": "1",
+			"type": "string"
+		},
+		{
+			"key": "roomTypeId",
+			"value": "1",
+			"type": "string"
+		},
+		{
+			"key": "roomId",
+			"value": "1",
+			"type": "string"
+		},
+		{
+			"key": "filepath",
+			"value": "test",
+			"type": "string"
+		}
+	]
+}

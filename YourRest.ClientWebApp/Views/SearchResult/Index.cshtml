@@ -1,0 +1,48 @@
+﻿@{
+    ViewData["Title"] = "Результат поиска отелей";
+}
+
+<div class="row">
+    <div class="col-md-12 d-flex justify-content-center">
+        @(await Html.RenderComponentAsync<SearchComponent>(RenderMode.ServerPrerendered))
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-3">
+        <div>
+            @(await Html.RenderComponentAsync<FilterComponent>(RenderMode.ServerPrerendered))
+        </div>
+    </div>
+    <div class="col-md-9">
+        <h3>Результат поиска вашего запроса</h3>
+        @(await Html.RenderComponentAsync<FoundHotelCardComponent>(RenderMode.ServerPrerendered, new
+        {
+            Title = "Русотель",
+            Price = 15000d,
+            Rating = 9.2,
+            StarCount = 5,
+            Description = "Этот уютный отель расположен в 10 минутах ходьбы от железнодорожной станции Битца, в 12 км от парка \"Битцевский лес\" и в 14 км от музея-заповедника \"Царицыно\" с дворцом XVIII века.",
+            RoomUrl = "https://lh3.googleusercontent.com/p/AF1QipOh0s0mQS1GcMy8NTT6QgvtKDYG4RFckO4c8bhC=w287-h192-n-k-rw-no-v1"
+        }))
+
+        @(await Html.RenderComponentAsync<FoundHotelCardComponent>(RenderMode.ServerPrerendered, new
+        {
+            Title = "Hyatt Regency",
+            Price = 9000d,
+            Rating = 4.6,
+            StarCount = 5,
+            Description = "Высококлассный отель с видом на Петровский парк, расположенный на крупной улице в 8 км от знаменитой Красной площади, в 6 км от Большого театра и в 3 км от Савеловского вокзала",
+            RoomUrl = "https://lh5.googleusercontent.com/p/AF1QipM2PcdueRGb9_-IRHFwam73hpD-Nw4iroNRx0S3=w253-h168-k-no"
+        })
+            )
+        @(await Html.RenderComponentAsync<FoundHotelCardComponent>(RenderMode.ServerPrerendered, new
+        {
+            Title = "Four Seasons",
+            Price = 52000d,
+            Rating = 10d,
+            StarCount = 5,
+            Description = "Высококлассный Роскошный отель, занимающий впечатляющее здание в стиле 30-х годов, в 2 минутах ходьбы от ближайшей станции метро, в 10 минутах ходьбы от Красной площади и в 1 км от Кремля",
+            RoomUrl = "https://lh3.googleusercontent.com/p/AF1QipMt-ZfXtfpIIHFKIERhTSfbpMR_Sul4iR8TQHf3=w574-h384-n-k-rw-no-v1"
+        }))
+    </div>
+</div>

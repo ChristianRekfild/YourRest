@@ -11,8 +11,15 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using YourRest.Producer.Infrastructure.Keycloak.Http;
 using System.Text;
+using Amazon;
+using Amazon.Extensions.NETCore.Setup;
+using Amazon.Runtime;
 using YourRest.Producer.Infrastructure.Seeds;
 using YourRest.Producer.Infrastructure.Keycloak.Settings;
+using YourRest.WebApi.Options;
+using Amazon.S3;
+using Microsoft.AspNetCore.Http.Features;
+
 public class Program
 {
     public static void Main(string[] args)
@@ -20,6 +27,7 @@ public class Program
         var builder = WebApplication.CreateBuilder(args);
         ConfigureServices(builder.Services);
         var app = builder.Build();
+        
         Configure(app);
 
         app.Run();
@@ -110,6 +118,26 @@ public class Program
                 IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration.GetValue<string>("KeycloakSetting:ClientSecret"))),
             };
         });
+        
+        var awsOptions = configuration.GetSection("AWS").Get<AwsOptions>();
+        services.AddSingleton(awsOptions);
+
+        var s3Config = new AmazonS3Config
+        {
+            ServiceURL = awsOptions.ServiceURL,
+            ForcePathStyle = true
+        };
+        services.AddSingleton(s3Config);
+        services.AddSingleton<IAmazonS3>(sp =>
+        {
+            var config = sp.GetRequiredService<AmazonS3Config>();
+            var creds = new BasicAWSCredentials(
+                awsOptions.AccessKey,
+                awsOptions.SecretKey
+            );
+            return new AmazonS3Client(creds, config);
+        });
+        
     }
 
     public static void Configure(IApplicationBuilder app)
@@ -124,7 +152,6 @@ public class Program
         app.UseHttpsRedirection();
         app.UseRouting();
         app.UseAuthentication();
-        app.UseMiddleware<UserSavingMiddleware>();
         app.UseAuthorization();
         app.UseMiddleware<ErrorHandlingMiddleware>();
         app.UseEndpoints(endpoints => { endpoints.MapControllers(); });

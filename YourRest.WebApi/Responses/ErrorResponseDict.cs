@@ -2,6 +2,5 @@
 {
     public class ErrorResponseDict
     {
-        public Dictionary<string, List<string>> Errors { get; set; }
-    }
+        public List<string> Errors { get; set; }    }
 }

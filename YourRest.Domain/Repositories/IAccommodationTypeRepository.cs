@@ -4,6 +4,6 @@ namespace YourRest.Domain.Repositories
 {
 
     public interface IAccommodationTypeRepository : IRepository<AccommodationType, int>
-    {
+    {        
     }
 }

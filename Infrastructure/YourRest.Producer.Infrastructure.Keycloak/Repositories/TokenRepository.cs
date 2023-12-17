@@ -45,7 +45,7 @@ namespace YourRest.Producer.Infrastructure.Keycloak.Repositories
             return JsonConvert.DeserializeObject<Token>(result);
         }
         
-        public async Task<Token> GetAdminTokenAsync()
+        public async Task<Token> GetAdminTokenAsync(CancellationToken cancellationToken = default)
         {
             using var httpClient = GetConfiguredHttpClient();
 
@@ -56,7 +56,7 @@ namespace YourRest.Producer.Infrastructure.Keycloak.Repositories
                 new KeyValuePair<string, string>("username", "admin"),
                 new KeyValuePair<string, string>("password", "admin")
             });
-            var response = await httpClient.PostAsync($"{_url}/auth/realms/master/protocol/openid-connect/token", content);
+            var response = await httpClient.PostAsync($"{_url}/auth/realms/master/protocol/openid-connect/token", content, cancellationToken);
             response.EnsureSuccessStatusCode();
 
             var result = await response.Content.ReadAsStringAsync();
@@ -99,21 +99,29 @@ namespace YourRest.Producer.Infrastructure.Keycloak.Repositories
         public async Task<string> CreateUser(string adminToken, string username, string firstName, string lastName, string email, string password)
         {
             using var httpClient = GetConfiguredHttpClient(adminToken);
-    
-            // Step 1: Create the user
             var url = $"{_url}/auth/admin/realms/{_realmName}/users";
-            var payload = new
-            {
-                username = username,
-                firstName = firstName,
-                lastName = lastName,
-                email = email,
-                enabled = true
-            };
 
-            var content = new StringContent(JsonConvert.SerializeObject(payload), Encoding.UTF8, "application/json");
-            var response = await httpClient.PostAsync(url, content);
-            response.EnsureSuccessStatusCode();
+            try
+            {
+                // Step 1: Create the user
+                var payload = new
+                {
+                    username = username,
+                    firstName = firstName,
+                    lastName = lastName,
+                    email = email,
+                    enabled = true
+                };
+
+                var content = new StringContent(JsonConvert.SerializeObject(payload), Encoding.UTF8,
+                    "application/json");
+                var response = await httpClient.PostAsync(url, content);
+                response.EnsureSuccessStatusCode();
+            }
+            catch (Exception e)
+            {
+                //Console.WriteLine(e);
+            }
 
             // Step 2: Obtain the ID of the user just created
             var searchUrl = $"{url}?username={username}";
@@ -143,6 +151,26 @@ namespace YourRest.Producer.Infrastructure.Keycloak.Repositories
             passwordResponse.EnsureSuccessStatusCode();
 
             return userId;
+        }
+        
+        public async Task<User> GetUser(string userId, CancellationToken cancellationToken)
+        {
+            string adminToken = (await GetAdminTokenAsync()).access_token;
+            using var httpClient = GetConfiguredHttpClient(adminToken);
+
+            var url = $"{_url}/auth/admin/realms/{_realmName}/users/{userId}";
+
+            var response = await httpClient.GetAsync(url, cancellationToken);
+            response.EnsureSuccessStatusCode();
+
+            var user = JsonConvert.DeserializeObject<User>(await response.Content.ReadAsStringAsync());
+
+            if (user == null)
+            {
+                throw new Exception("User not found.");
+            }
+
+            return user;
         }
         
         public async Task<string> CreateGroup(string adminToken, string groupName)

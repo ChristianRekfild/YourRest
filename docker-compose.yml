@@ -1,17 +1,17 @@
 version: '3.8'
 
 services:
-#  webapi:
-#    build:
-#      context: .
-#      dockerfile: YourRest.WebApi/Dockerfile
-#    ports:
-#      - "5000:80"
-#    depends_on:
-#      - keycloak
-#      - webapidb
-#    networks:
-#      - local-network
+  webapi:
+    build:
+      context: .
+      dockerfile: YourRest.WebApi/Dockerfile
+    ports:
+      - "5000:80"
+    depends_on:
+      - keycloak
+      - webapidb
+    networks:
+      - local-network
 
   keycloak:
     build:
@@ -54,9 +54,25 @@ services:
       - "5433:5432"
     networks:
       - local-network
+        
+  minio:
+    image: minio/minio
+    container_name: minio1
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    environment:
+      MINIO_ROOT_USER: minio
+      MINIO_ROOT_PASSWORD: minio123
+    command: server /data --console-address ":9001"
+    volumes:
+      - minio-data:/data
+    networks:
+      - local-network
 
 volumes:
   pgdata:
+  minio-data:
 
 networks:
   local-network:
