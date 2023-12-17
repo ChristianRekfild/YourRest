@@ -22,21 +22,6 @@ namespace YourRest.Producer.Infrastructure.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("BookingRoom", b =>
-                {
-                    b.Property<int>("RoomsId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("bookingsId")
-                        .HasColumnType("integer");
-
-                    b.HasKey("RoomsId", "bookingsId");
-
-                    b.HasIndex("bookingsId");
-
-                    b.ToTable("BookingRoom");
-                });
-
             modelBuilder.Entity("RoomRoomFacility", b =>
                 {
                     b.Property<int>("RoomFacilitiesId")
@@ -49,7 +34,7 @@ namespace YourRest.Producer.Infrastructure.Migrations
 
                     b.HasIndex("RoomsId");
 
-                    b.ToTable("RoomRoomFacility");
+                    b.ToTable("RoomRoomFacility", (string)null);
                 });
 
             modelBuilder.Entity("YourRest.Domain.Entities.Accommodation", b =>
@@ -80,7 +65,7 @@ namespace YourRest.Producer.Infrastructure.Migrations
                     b.HasIndex("AddressId")
                         .IsUnique();
 
-                    b.ToTable("Accommodations");
+                    b.ToTable("Accommodations", (string)null);
                 });
 
             modelBuilder.Entity("YourRest.Domain.Entities.AccommodationType", b =>
@@ -97,7 +82,7 @@ namespace YourRest.Producer.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("AccommodationTypes");
+                    b.ToTable("AccommodationTypes", (string)null);
                 });
 
             modelBuilder.Entity("YourRest.Domain.Entities.Address", b =>
@@ -129,7 +114,7 @@ namespace YourRest.Producer.Infrastructure.Migrations
 
                     b.HasIndex("CityId");
 
-                    b.ToTable("Addresses");
+                    b.ToTable("Addresses", (string)null);
                 });
 
             modelBuilder.Entity("YourRest.Domain.Entities.AgeRange", b =>
@@ -148,7 +133,7 @@ namespace YourRest.Producer.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("AgeRanges");
+                    b.ToTable("AgeRanges", (string)null);
                 });
 
             modelBuilder.Entity("YourRest.Domain.Entities.Booking", b =>
@@ -171,11 +156,11 @@ namespace YourRest.Producer.Infrastructure.Migrations
                     b.Property<int>("CustomerId")
                         .HasColumnType("integer");
 
-                    b.Property<DateOnly>("EndDate")
-                        .HasColumnType("date");
+                    b.Property<DateTime>("EndDate")
+                        .HasColumnType("timestamp without time zone");
 
-                    b.Property<DateOnly>("StartDate")
-                        .HasColumnType("date");
+                    b.Property<DateTime>("StartDate")
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<int>("Status")
                         .HasColumnType("integer");
@@ -190,7 +175,7 @@ namespace YourRest.Producer.Infrastructure.Migrations
 
                     b.HasIndex("CustomerId");
 
-                    b.ToTable("Bookings");
+                    b.ToTable("Bookings", (string)null);
                 });
 
             modelBuilder.Entity("YourRest.Domain.Entities.City", b =>
@@ -212,7 +197,7 @@ namespace YourRest.Producer.Infrastructure.Migrations
 
                     b.HasIndex("RegionId");
 
-                    b.ToTable("Cities");
+                    b.ToTable("Cities", (string)null);
                 });
 
             modelBuilder.Entity("YourRest.Domain.Entities.Country", b =>
@@ -229,7 +214,7 @@ namespace YourRest.Producer.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Countries");
+                    b.ToTable("Countries", (string)null);
                 });
 
             modelBuilder.Entity("YourRest.Domain.Entities.Customer", b =>
@@ -272,7 +257,7 @@ namespace YourRest.Producer.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Customers");
+                    b.ToTable("Customers", (string)null);
                 });
 
             modelBuilder.Entity("YourRest.Domain.Entities.Region", b =>
@@ -294,7 +279,7 @@ namespace YourRest.Producer.Infrastructure.Migrations
 
                     b.HasIndex("CountryId");
 
-                    b.ToTable("Regions");
+                    b.ToTable("Regions", (string)null);
                 });
 
             modelBuilder.Entity("YourRest.Domain.Entities.Review", b =>
@@ -321,7 +306,7 @@ namespace YourRest.Producer.Infrastructure.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Reviews");
+                    b.ToTable("Reviews", (string)null);
                 });
 
             modelBuilder.Entity("YourRest.Domain.Entities.Room", b =>
@@ -333,6 +318,9 @@ namespace YourRest.Producer.Infrastructure.Migrations
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<int>("AccommodationId")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("BookingId")
                         .HasColumnType("integer");
 
                     b.Property<int>("Capacity")
@@ -353,7 +341,9 @@ namespace YourRest.Producer.Infrastructure.Migrations
 
                     b.HasIndex("AccommodationId");
 
-                    b.ToTable("Rooms");
+                    b.HasIndex("BookingId");
+
+                    b.ToTable("Rooms", (string)null);
                 });
 
             modelBuilder.Entity("YourRest.Domain.Entities.RoomFacility", b =>
@@ -370,7 +360,7 @@ namespace YourRest.Producer.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("RoomFacilities");
+                    b.ToTable("RoomFacilities", (string)null);
                 });
 
             modelBuilder.Entity("YourRest.Domain.Entities.RoomType", b =>
@@ -387,7 +377,7 @@ namespace YourRest.Producer.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("RoomTypes");
+                    b.ToTable("RoomTypes", (string)null);
                 });
 
             modelBuilder.Entity("YourRest.Domain.Entities.User", b =>
@@ -416,7 +406,7 @@ namespace YourRest.Producer.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Users");
+                    b.ToTable("Users", (string)null);
                 });
 
             modelBuilder.Entity("YourRest.Domain.Entities.UserAccommodation", b =>
@@ -434,22 +424,7 @@ namespace YourRest.Producer.Infrastructure.Migrations
 
                     b.HasIndex("AccommodationId");
 
-                    b.ToTable("UserAccommodations");
-                });
-
-            modelBuilder.Entity("BookingRoom", b =>
-                {
-                    b.HasOne("YourRest.Domain.Entities.Room", null)
-                        .WithMany()
-                        .HasForeignKey("RoomsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("YourRest.Domain.Entities.Booking", null)
-                        .WithMany()
-                        .HasForeignKey("bookingsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.ToTable("UserAccommodations", (string)null);
                 });
 
             modelBuilder.Entity("RoomRoomFacility", b =>
@@ -542,7 +517,7 @@ namespace YourRest.Producer.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.OwnsOne("YourRest.Domain.ValueObjects.Reviews.RatingVO", "Rating", b1 =>
+                    b.OwnsOne("YourRest.Domain.Entities.Review.Rating#YourRest.Domain.ValueObjects.Reviews.RatingVO", "Rating", b1 =>
                         {
                             b1.Property<int>("ReviewId")
                                 .HasColumnType("integer");
@@ -553,7 +528,7 @@ namespace YourRest.Producer.Infrastructure.Migrations
 
                             b1.HasKey("ReviewId");
 
-                            b1.ToTable("Reviews");
+                            b1.ToTable("Reviews", (string)null);
 
                             b1.WithOwner()
                                 .HasForeignKey("ReviewId");
@@ -574,6 +549,10 @@ namespace YourRest.Producer.Infrastructure.Migrations
                         .HasForeignKey("AccommodationId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("YourRest.Domain.Entities.Booking", null)
+                        .WithMany("Rooms")
+                        .HasForeignKey("BookingId");
 
                     b.Navigation("Accommodation");
                 });
@@ -602,6 +581,11 @@ namespace YourRest.Producer.Infrastructure.Migrations
                     b.Navigation("Rooms");
 
                     b.Navigation("UserAccommodations");
+                });
+
+            modelBuilder.Entity("YourRest.Domain.Entities.Booking", b =>
+                {
+                    b.Navigation("Rooms");
                 });
 
             modelBuilder.Entity("YourRest.Domain.Entities.City", b =>
