@@ -153,7 +153,7 @@ public class Program
         app.UseRouting();
         app.UseAuthentication();
         app.UseAuthorization();
-        app.UseMiddleware<ErrorHandlingMiddleware>();
+        //app.UseMiddleware<ErrorHandlingMiddleware>();
         app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
         
         using var serviceScope = app.ApplicationServices.CreateScope();
