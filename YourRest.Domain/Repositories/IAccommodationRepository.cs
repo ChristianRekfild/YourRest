@@ -6,4 +6,7 @@ public interface IAccommodationRepository : IRepository<Accommodation, int>
 {
     Task<IEnumerable<Accommodation>> GetHotelsByFilter(AccommodationFilterCriteria filter,
         CancellationToken cancellationToken = default);
+
+    Task<IEnumerable<Accommodation>> GetAccommodationsWithFacilitiesAsync(int id,
+        CancellationToken cancellationToken = default);
 }

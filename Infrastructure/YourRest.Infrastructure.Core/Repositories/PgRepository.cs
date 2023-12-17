@@ -56,9 +56,16 @@ namespace YourRest.Infrastructure.Core.Repositories
 
         public async Task<IEnumerable<T>> GetWithIncludeAsync(Expression<Func<T, bool>> predicate, CancellationToken cancellationToken = default, params Expression<Func<T, object>>[] includeProperties)
         {
-            return await Include(includeProperties).Where(predicate).ToListAsync(cancellationToken);
+            var query = _dataContext.Set<T>().AsQueryable();
+
+            foreach (var includeProperty in includeProperties)
+            {
+                query = query.Include(includeProperty);
+            }
+
+            return await query.Where(predicate).ToListAsync(cancellationToken);
         }
-       
+        
         public async Task<IEnumerable<T>> GetAllWithIncludeAsync(Expression<Func<T, object>> includeProperty, CancellationToken cancellationToken = default)
         {
             return await Include(includeProperty).ToListAsync(cancellationToken);

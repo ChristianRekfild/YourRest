@@ -22,9 +22,11 @@ using YourRest.Application.UseCases.Facility;
 using YourRest.Application.UseCases.Room;
 using YourRest.Application.Dto.Mappers;
 using System.Globalization;
+using YourRest.Application.Interfaces.AccommodationFacility;
 using YourRest.Application.UseCases.AgeRangeUseCases;
 using YourRest.Application.Interfaces.Age;
 using YourRest.Application.Interfaces.HotelBooking;
+using YourRest.Application.UseCases;
 using YourRest.Application.UseCases.HotelBookingUseCase;
 
 namespace YourRest.Application
@@ -79,6 +81,11 @@ namespace YourRest.Application
             services.AddScoped<IRemoveRoomFacilityUseCase, RemoveRoomFacilityUseCase>();
             services.AddScoped<IGetRoomTypeListUseCase, GetRoomTypeListUseCase>();
             services.AddScoped<IGetAllRoomFacilitiesUseCase, GetAllRoomFacilitiesUseCase>();
+            //AccommodationFacility
+            services.AddScoped<IAddAccommodationFacilityUseCase, AddAccommodationFacilityUseCase>();
+            services.AddScoped<IRemoveAccommodationFacilityUseCase, RemoveAccommodationFacilityUseCase>();
+            services.AddScoped<IGetAllAccommodationFacilitiesUseCase, GetAllAccommodationFacilitiesUseCase>();
+            services.AddScoped<IGetAccommodationFacilityByAccommodationIdUseCase, GetAccommodationFacilityByAccommodationIdUseCase>();
             //AgeRange
             services.AddScoped<ICreateAgeRangeUseCase, CreateAgeRangeUseCase>();
             services.AddScoped<IEditAgeRangeUseCase, EditAgeRangeUseCase>();

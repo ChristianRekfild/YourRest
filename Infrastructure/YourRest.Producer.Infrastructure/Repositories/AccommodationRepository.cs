@@ -1,5 +1,6 @@
 using System.Linq;
 using System.Linq.Expressions;
+using Microsoft.EntityFrameworkCore;
 using YourRest.Domain.Entities;
 using YourRest.Domain.Models;
 using YourRest.Domain.Repositories;
@@ -11,8 +12,11 @@ namespace YourRest.Producer.Infrastructure.Repositories
 {
     public class AccommodationRepository : PgRepository<Accommodation, int>, IAccommodationRepository
     {
+        private readonly SharedDbContext _context;
+
         public AccommodationRepository(SharedDbContext context) : base(context)
         {
+            _context = context;
         }
 
         public async Task<IEnumerable<Accommodation>> GetHotelsByFilter(AccommodationFilterCriteria filter, CancellationToken cancellationToken = default)
@@ -39,6 +43,15 @@ namespace YourRest.Producer.Infrastructure.Repositories
                 h => h.StarRating,
                 h => h.AccommodationType
             );
+        }
+        
+        public async Task<IEnumerable<Accommodation>> GetAccommodationsWithFacilitiesAsync(int id, CancellationToken cancellationToken = default)
+        {
+            return await _context.Accommodations
+                .Where(a => a.Id == id)
+                .Include(a => a.AccommodationFacilities)
+                .ThenInclude(af => af.AccommodationFacility)
+                .ToListAsync(cancellationToken);
         }
     }
 }
