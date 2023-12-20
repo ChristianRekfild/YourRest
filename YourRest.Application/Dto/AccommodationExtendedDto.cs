@@ -5,7 +5,7 @@ namespace YourRest.Application.Dto
 {
     public class AccommodationExtendedDto: AccommodationDto
     {
-        public AddressDto Address { get; set; }
+        public AddressDto? Address { get; set; }
         public List<RoomWithIdDto> Rooms { get; set; }
     }
 }
