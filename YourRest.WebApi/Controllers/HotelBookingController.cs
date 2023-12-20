@@ -50,7 +50,7 @@ namespace YourRest.WebApi.Controllers
         }
 
         [HttpGet]
-        [Route("api/cities/{cityId}/rooms/{startDate}/{endDate}")]
+        [Route("api/cities1/{cityId}/rooms/{startDate}/{endDate}")]
         public async Task<IActionResult> GetRoomsByCityAndBookingDatesUseCase(string startDate, string endDate, int cityId)
         {
             var roomList = await _getRoomsByCityAndBookingDatesUseCase.ExecuteAsync(DateOnly.Parse(startDate), DateOnly.Parse(endDate), cityId, HttpContext.RequestAborted);
@@ -58,7 +58,7 @@ namespace YourRest.WebApi.Controllers
         }
 
         [HttpGet]
-        [Route("api/accommodations/{accommodationId}/rooms/{startDate}/{endDate}")]
+        [Route("api/accommodations1/{accommodationId}/rooms/{startDate}/{endDate}")]
         public async Task<IActionResult> GetRoomsByAccommodationAndBookingDatesUseCase(string startDate, string endDate, int accommodationId)
         {
             var roomList = await _getRoomsByAccommodationAndBookingDatesUseCase.ExecuteAsync(DateOnly.Parse(startDate), DateOnly.Parse(endDate), accommodationId, HttpContext.RequestAborted);
