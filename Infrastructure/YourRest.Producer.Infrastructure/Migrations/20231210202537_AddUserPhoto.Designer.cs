@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using YourRest.Infrastructure.Core.DbContexts;
@@ -11,9 +12,11 @@ using YourRest.Infrastructure.Core.DbContexts;
 namespace YourRest.Producer.Infrastructure.Migrations
 {
     [DbContext(typeof(SharedDbContext))]
-    partial class SharedDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231210202537_AddUserPhoto")]
+    partial class AddUserPhoto
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -88,28 +91,6 @@ namespace YourRest.Producer.Infrastructure.Migrations
                     b.HasIndex("AccommodationId");
 
                     b.ToTable("AccommodationPhotos");
-                });
-
-            modelBuilder.Entity("YourRest.Domain.Entities.AccommodationStarRating", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("AccommodationId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("Stars")
-                        .HasColumnType("integer");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AccommodationId")
-                        .IsUnique();
-
-                    b.ToTable("AccommodationStarRatings");
                 });
 
             modelBuilder.Entity("YourRest.Domain.Entities.AccommodationType", b =>
@@ -558,17 +539,6 @@ namespace YourRest.Producer.Infrastructure.Migrations
                     b.Navigation("Accommodation");
                 });
 
-            modelBuilder.Entity("YourRest.Domain.Entities.AccommodationStarRating", b =>
-                {
-                    b.HasOne("YourRest.Domain.Entities.Accommodation", "Accommodation")
-                        .WithOne("StarRating")
-                        .HasForeignKey("YourRest.Domain.Entities.AccommodationStarRating", "AccommodationId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Accommodation");
-                });
-
             modelBuilder.Entity("YourRest.Domain.Entities.Address", b =>
                 {
                     b.HasOne("YourRest.Domain.Entities.City", "City")
@@ -711,8 +681,6 @@ namespace YourRest.Producer.Infrastructure.Migrations
             modelBuilder.Entity("YourRest.Domain.Entities.Accommodation", b =>
                 {
                     b.Navigation("Rooms");
-
-                    b.Navigation("StarRating");
 
                     b.Navigation("UserAccommodations");
                 });

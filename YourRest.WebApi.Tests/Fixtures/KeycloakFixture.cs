@@ -68,7 +68,7 @@ namespace YourRest.WebApi.Tests.Fixtures
                 .WithEnvironment("DB_PASSWORD", "keycloakpassword")
                 .WithEnvironment("KEYCLOAK_USER", "admin")
                 .WithEnvironment("KEYCLOAK_PASSWORD", "admin")
-                .WithPortBinding(8081, 8080)
+                .WithPortBinding(8083, 8080)
                 .WithWaitStrategy(Wait.ForUnixContainer().UntilPortIsAvailable(8080/*WeatherForecastImage.HttpsPort*/))
                 //.WithWaitStrategy(Wait.ForUnixContainer().UntilContainerIsHealthy())
                 .Build();

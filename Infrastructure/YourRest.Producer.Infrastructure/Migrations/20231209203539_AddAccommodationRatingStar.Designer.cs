@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using YourRest.Infrastructure.Core.DbContexts;
@@ -11,9 +12,11 @@ using YourRest.Infrastructure.Core.DbContexts;
 namespace YourRest.Producer.Infrastructure.Migrations
 {
     [DbContext(typeof(SharedDbContext))]
-    partial class SharedDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231209203539_AddAccommodationRatingStar")]
+    partial class AddAccommodationRatingStar
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -493,28 +496,6 @@ namespace YourRest.Producer.Infrastructure.Migrations
                     b.ToTable("UserAccommodations");
                 });
 
-            modelBuilder.Entity("YourRest.Domain.Entities.UserPhoto", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("FilePath")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("integer");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("UserPhotos");
-                });
-
             modelBuilder.Entity("RoomRoomFacility", b =>
                 {
                     b.HasOne("YourRest.Domain.Entities.RoomFacility", null)
@@ -693,17 +674,6 @@ namespace YourRest.Producer.Infrastructure.Migrations
                         .IsRequired();
 
                     b.Navigation("Accommodation");
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("YourRest.Domain.Entities.UserPhoto", b =>
-                {
-                    b.HasOne("YourRest.Domain.Entities.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
 
                     b.Navigation("User");
                 });

@@ -13,6 +13,8 @@ namespace YourRest.Infrastructure.Core.DbContexts
         public DbSet<Review> Reviews { get; set; }
         public DbSet<Address> Addresses { get; set; }
         public DbSet<Accommodation> Accommodations { get; set; }
+        
+        public DbSet<AccommodationStarRating> AccommodationStarRatings { get; set; }
         public DbSet<Room> Rooms { get; set; }
         public DbSet<RoomFacility> RoomFacilities { get; set; }
         public DbSet<RoomType> RoomTypes { get; set; }
@@ -24,8 +26,7 @@ namespace YourRest.Infrastructure.Core.DbContexts
         public DbSet<AccommodationPhoto> AccommodationPhotos { get; set; }
         
         public DbSet<RoomPhoto> RoomPhotos { get; set; }
-
-
+        public DbSet<UserPhoto> UserPhotos { get; set; }
 
         static SharedDbContext()
         {
@@ -51,27 +52,6 @@ namespace YourRest.Infrastructure.Core.DbContexts
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            //modelBuilder.Entity<Booking>().OwnsOne(
-            //    b => b.StartDate,
-            //    sa =>
-            //    {
-            //        sa.Property(p => p.Value).HasColumnName("StartDate");
-            //    });
-
-            //modelBuilder.Entity<Booking>().OwnsOne(
-            //    b => b.EndDate,
-            //    sa =>
-            //    {
-            //        sa.Property(p => p.Value).HasColumnName("EndDate");
-            //    });
-
-            //modelBuilder.Entity<Booking>().OwnsOne(
-            //    b => b.Status,
-            //    sa =>
-            //    {
-            //        sa.Property(p => p.Value).HasColumnName("Status");
-            //    });
-
             modelBuilder.Entity<Review>(r =>
             {
                 r.HasOne(r => r.Booking)
@@ -79,12 +59,10 @@ namespace YourRest.Infrastructure.Core.DbContexts
                     .HasForeignKey(r => r.BookingId);
             });       
 
-            //modelBuilder.Entity<Review>().OwnsOne(
-            //    b => b.Comment,
-            //    sa =>
-            //    {
-            //        sa.Property(p => p.Value).HasColumnName("Comment");
-            //    });
+            modelBuilder.Entity<Accommodation>()
+                .HasOne(a => a.StarRating)
+                .WithOne(s => s.Accommodation)
+                .HasForeignKey<AccommodationStarRating>(s => s.AccommodationId);
 
             modelBuilder.Entity<Review>().OwnsOne(
                 b => b.Rating,
@@ -122,6 +100,7 @@ namespace YourRest.Infrastructure.Core.DbContexts
             Cities.RemoveRange(Cities);
             Regions.RemoveRange(Regions);
             Reviews.RemoveRange(Reviews);
+            AccommodationStarRatings.RemoveRange(AccommodationStarRatings);
             Accommodations.RemoveRange(Accommodations);
             Addresses.RemoveRange(Addresses);
             Rooms.RemoveRange(Rooms);
@@ -131,12 +110,7 @@ namespace YourRest.Infrastructure.Core.DbContexts
             AgeRanges.RemoveRange(AgeRanges);
             AccommodationPhotos.RemoveRange(AccommodationPhotos);
             RoomPhotos.RemoveRange(RoomPhotos);
-
-            // Add other DbSet removals here
-            // Example: 
-            // Rooms.RemoveRange(Rooms);
-            // Hotels.RemoveRange(Hotels);
-            // ... and so on
+            UserPhotos.RemoveRange(UserPhotos);
 
             SaveChanges();
         }
