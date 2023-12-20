@@ -64,9 +64,10 @@ namespace YourRest.WebApi.Tests.Fixtures
             await DbContext.SaveChangesAsync();
             return item.Entity;
         }
+
         public void CleanDatabase()
         {
-            DbContext.ClearAllTables();
+            //DbContext.ClearAllTables();
         }
 
         public void Dispose()

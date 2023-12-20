@@ -20,7 +20,8 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace YourRest.WebApi.Tests.Controllers
 {
-    public class HotelBookingControllerTest : IClassFixture<SingletonApiTest>
+    [Collection(nameof(SingletonApiTest))]
+    public class HotelBookingControllerTest //: IClassFixture<SingletonApiTest>
     {
         private readonly SingletonApiTest fixture;
         public HotelBookingControllerTest(SingletonApiTest fixture)

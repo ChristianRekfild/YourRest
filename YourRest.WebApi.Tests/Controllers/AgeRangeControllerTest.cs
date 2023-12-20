@@ -13,7 +13,8 @@ using YourRest.WebApi.Tests.Fixtures;
 
 namespace YourRest.WebApi.Tests.Controllers
 {
-    public class AgeRangeControllerTest : IClassFixture<SingletonApiTest>
+    [Collection(nameof(SingletonApiTest))]
+    public class AgeRangeControllerTest //: IClassFixture<SingletonApiTest>
     {
         private readonly SingletonApiTest fixture;
         public AgeRangeControllerTest(SingletonApiTest fixture)
