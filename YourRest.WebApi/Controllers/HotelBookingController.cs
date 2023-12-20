@@ -54,6 +54,14 @@ namespace YourRest.WebApi.Controllers
         }
 
         [HttpGet]
+        [Route("api/cities/rooms")]
+        public async Task<IActionResult> GetRoomsByCityAndBookingDatesUseCase1(string startDate, string endDate, int cityId)
+        {
+            var roomList = await _getRoomsByCityAndBookingDatesUseCase.ExecuteAsync(DateOnly.Parse(startDate), DateOnly.Parse(endDate), cityId, HttpContext.RequestAborted);
+            return Ok(roomList);
+        }
+
+        [HttpGet]
         [Route("api/accommodations1/{accommodationId}/rooms/{startDate}/{endDate}")]
         public async Task<IActionResult> GetRoomsByAccommodationAndBookingDatesUseCase(string startDate, string endDate, int accommodationId)
         {
