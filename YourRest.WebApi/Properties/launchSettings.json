@@ -10,7 +10,7 @@
       "Docker": {
         "commandName": "DockerCompose"
       },
-      "applicationUrl": "https://localhost:52892;http://localhost:52893"
+      "applicationUrl": "http://localhost:52893;https://localhost:52892;"
     }
   }
 }

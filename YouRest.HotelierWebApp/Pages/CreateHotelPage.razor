@@ -1,0 +1,25 @@
+﻿@page "/hotels/create"
+
+<h3>Create Hotel</h3>
+
+<select class="form-select" aria-label="Default select example">
+    <option selected>Выберите страну</option>
+    @foreach (CountryViewModel country in Countries)
+    {
+        <option>@country.Name</option>
+    }
+</select>
+<select class="form-select" aria-label="Default select example">
+    <option selected>Выберите регион</option>
+    @foreach (RegionViewModel region in Regions)
+    {
+        <option>@region.Name</option>
+    }
+</select>
+<select class="form-select" aria-label="Default select example">
+    <option selected>Выберите город</option>
+    @foreach (CityViewModel city in Cities)
+    {
+        <option>@city.Name</option>
+    }
+</select>

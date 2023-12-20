@@ -1,0 +1,15 @@
+﻿.create_btn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 150px;
+    height: 45px;
+    border: 1px solid #1751A6;
+    border-radius: 5px;
+}
+    .create_btn:hover {
+        cursor: pointer;
+        background-color: rgba(226, 237, 255, 0.8);
+        border: 1px solid #1751A6;
+        color: #1751A6;
+    }
