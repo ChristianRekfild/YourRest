@@ -3,8 +3,8 @@ using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System.Text;
-using YourRest.Infrastructure.Core.DbContexts;
 using YourRest.Domain.Repositories;
+using YourRest.Infrastructure.Core.DbContexts;
 using YourRest.Producer.Infrastructure.Keycloak.Http;
 using YourRest.Producer.Infrastructure.Keycloak.Repositories;
 

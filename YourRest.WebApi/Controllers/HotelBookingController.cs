@@ -1,11 +1,16 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SharpGrip.FluentValidation.AutoValidation.Mvc.Attributes;
+using System.Web.Http;
 using YourRest.Application.Dto;
 using YourRest.Application.Dto.Models.HotelBooking;
 using YourRest.Application.Interfaces;
 using YourRest.Application.Interfaces.HotelBooking;
 using YourRest.Application.UseCases.HotelBookingUseCase;
 using YourRest.Domain.Entities;
+using FromBodyAttribute = Microsoft.AspNetCore.Mvc.FromBodyAttribute;
+using HttpGetAttribute = Microsoft.AspNetCore.Mvc.HttpGetAttribute;
+using HttpPostAttribute = Microsoft.AspNetCore.Mvc.HttpPostAttribute;
+using RouteAttribute = Microsoft.AspNetCore.Mvc.RouteAttribute;
 
 namespace YourRest.WebApi.Controllers
 {
@@ -51,7 +56,7 @@ namespace YourRest.WebApi.Controllers
 
         [HttpGet]
         [Route("api/cities1/{cityId}/rooms/{startDate}/{endDate}")]
-        public async Task<IActionResult> GetRoomsByCityAndBookingDatesUseCase(string startDate, string endDate, int cityId)
+        public async Task<IActionResult> GetRoomsByCityAndBookingDatesUseCase([FromUri] string startDate, [FromUri] string endDate, [FromUri] int cityId)
         {
             var roomList = await _getRoomsByCityAndBookingDatesUseCase.ExecuteAsync(DateOnly.Parse(startDate), DateOnly.Parse(endDate), cityId, HttpContext.RequestAborted);
             return Ok(roomList);
@@ -59,7 +64,7 @@ namespace YourRest.WebApi.Controllers
 
         [HttpGet]
         [Route("api/accommodations1/{accommodationId}/rooms/{startDate}/{endDate}")]
-        public async Task<IActionResult> GetRoomsByAccommodationAndBookingDatesUseCase(string startDate, string endDate, int accommodationId)
+        public async Task<IActionResult> GetRoomsByAccommodationAndBookingDatesUseCase([FromUri] string startDate, [FromUri] string endDate, [FromUri] int accommodationId)
         {
             var roomList = await _getRoomsByAccommodationAndBookingDatesUseCase.ExecuteAsync(DateOnly.Parse(startDate), DateOnly.Parse(endDate), accommodationId, HttpContext.RequestAborted);
             return Ok(roomList);
