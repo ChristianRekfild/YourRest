@@ -11,8 +11,8 @@ namespace YourRest.Application.Dto.Models.HotelBooking
     {
         public Guid SystemId { get; set; } = Guid.Empty;
         public int ExternalId { get; set; }
-        public DateTime StartDate { get; set; }
-        public DateTime EndDate { get; set; }
+        public DateOnly StartDate { get; set; }
+        public DateOnly EndDate { get; set; }
         public int AdultNumber { get; set; }
         public int ChildrenNumber { get; set; }
         public decimal TotalAmount { get; set; }

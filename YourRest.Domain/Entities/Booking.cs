@@ -3,8 +3,8 @@
     public class Booking : IntBaseEntity
     {
         public Guid SystemId { get; set; } = Guid.Empty;
-        public DateTime StartDate { get; set; }
-        public DateTime EndDate { get; set; }
+        public DateOnly StartDate { get; set; }
+        public DateOnly EndDate { get; set; }
         public BookingStatus Status { get; set; }
         public int AdultNumber { get; set; }
         public int ChildrenNumber { get; set; }

@@ -28,7 +28,7 @@ namespace YourRest.WebApi.Controllers
             _createAccommodationUseCase = createAccommodationUseCase;
         }
 
-        [HttpPost("api/operator/accommodation/{accommodationId}/address", Name = "AddAddressToAccommodationAsync")]
+        [HttpPost("api/operators/accommodations/{accommodationId}/address", Name = "AddAddressToAccommodationAsync")]
         public async Task<IActionResult> AddAddressToAccommodationAsync([FromRoute] int accommodationId, [FromBody] AddressDto addressDto)
         {
             if (!ModelState.IsValid)

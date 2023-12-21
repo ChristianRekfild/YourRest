@@ -59,9 +59,9 @@ namespace YourRest.WebApi.Tests.Controllers
 
             //ToDo Remove customer entity. User should be added instead
             var booking = new Booking {
-                StartDate = new DateTime(2023, 10, 1),
-                EndDate = new DateTime(2023, 10, 5),
-                Status = BookingStatus.Pending,
+                StartDate = new DateOnly(2023, 10, 1),
+                EndDate = new DateOnly(2023, 10, 5),
+                Status = YourRest.Domain.Entities.BookingStatus.Pending,
                 Comment = "test",
                 Customer = customer
             };
@@ -79,8 +79,8 @@ namespace YourRest.WebApi.Tests.Controllers
 
             fixture.Client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
-            var response = await fixture.Client.PostAsync("api/operator/review", content);
-            
+            var response = await fixture.Client.PostAsync("api/operators/reviews", content);
+
             response.EnsureSuccessStatusCode();
 
             var responseString = await response.Content.ReadAsStringAsync();           
@@ -118,7 +118,7 @@ namespace YourRest.WebApi.Tests.Controllers
 
             var content = new StringContent(JsonConvert.SerializeObject(invalidReview), Encoding.UTF8, "application/json");
 
-            var response = await fixture.Client.PostAsync("api/operator/review", content);
+            var response = await fixture.Client.PostAsync("api/operators/reviews", content);
 
             Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
         }
@@ -128,7 +128,7 @@ namespace YourRest.WebApi.Tests.Controllers
         {
             fixture.Client.DefaultRequestHeaders.Authorization = null;
             
-            var response = await fixture.Client.PostAsync("api/operator/review", null);
+            var response = await fixture.Client.PostAsync("api/operators/reviews", null);
 
             Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
         }

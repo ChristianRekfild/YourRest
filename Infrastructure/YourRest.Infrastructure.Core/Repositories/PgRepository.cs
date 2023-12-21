@@ -40,6 +40,7 @@ namespace YourRest.Infrastructure.Core.Repositories
         {
             return await _dataContext.Set<T>().Where(expression).ToListAsync(cancellationToken);
         }
+
         public async Task<bool> FindAnyAsync(Expression<Func<T, bool>> expression, CancellationToken cancellationToken = default)
         {
             return await _dataContext.Set<T>().Where(expression).AnyAsync(cancellationToken);
@@ -63,8 +64,7 @@ namespace YourRest.Infrastructure.Core.Repositories
         {
             return await Include(includeProperty).ToListAsync(cancellationToken);
         }
-
-        
+       
         public async Task DeleteAsync(U id, bool saveChanges = true, CancellationToken cancellationToken = default)
         {
             var entity = await _dataContext.Set<T>().FindAsync(id, cancellationToken);

@@ -11,7 +11,7 @@ using YourRest.Application.Dto.Models;
 namespace YourRest.WebApi.Controllers
 {
     [ApiController]
-    [Route("api/operator/review")]
+    [Route("api/operators/reviews")]
     [FluentValidationAutoValidation]
     public class ReviewsController : ControllerBase
     {

@@ -1,30 +1,35 @@
-using YourRest.Infrastructure.Tests.Fixtures;
-using YourRest.Infrastructure.Core.DbContexts;
+using YourRest.Producer.Infrastructure.Tests.Fixtures;
 using YourRest.Producer.Infrastructure.Repositories;
 using YourRest.Domain.Entities;
 using YourRest.Domain.Repositories;
 
-namespace YourRest.Infrastructure.Tests
+namespace YourRest.Producer.Infrastructure.Tests.RepositoryTests
 {
 
-    [Collection("Database")]
+    [Collection(nameof(SingletonApiTest))]
     public class CountryRepositoryTests
     {
-        private SharedDbContext _testDbContext;
         private readonly IRepository<Country, int> _countryRepository;
 
-        public CountryRepositoryTests(DatabaseFixture databaseFixture)
+        private readonly SingletonApiTest fixture;
+        public CountryRepositoryTests(SingletonApiTest fixture)
         {
-            if (databaseFixture.DbContext != null)
-            {
-                _testDbContext = databaseFixture.DbContext;
-                _countryRepository = new CountryRepository(_testDbContext);
-            }
-            else
-            {
-                throw new NullReferenceException("DatabaseFixture.DbContext is null");
-            }
+            this.fixture = fixture;
+            _countryRepository = new CountryRepository(fixture.DbContext);
         }
+
+        // public CountryRepositoryTests(DatabaseFixture databaseFixture)
+        // {
+        //     if (databaseFixture.DbContext != null)
+        //     {
+        //         _testDbContext = databaseFixture.DbContext;
+        //         _countryRepository = new CountryRepository(_testDbContext);
+        //     }
+        //     else
+        //     {
+        //         throw new NullReferenceException("DatabaseFixture.DbContext is null");
+        //     }
+        // }
 
         [Fact]
         public async Task TestWithChangeProperty()
