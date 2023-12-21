@@ -1,11 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SharpGrip.FluentValidation.AutoValidation.Mvc.Attributes;
-using YourRest.Application.Dto;
 using YourRest.Application.Dto.Models.HotelBooking;
-using YourRest.Application.Interfaces;
 using YourRest.Application.Interfaces.HotelBooking;
-using YourRest.Application.UseCases.HotelBookingUseCase;
-using YourRest.Domain.Entities;
 
 namespace YourRest.WebApi.Controllers
 {
@@ -22,7 +18,7 @@ namespace YourRest.WebApi.Controllers
 
 
         public BookingController(
-            ICreateBookingUseCase createHotelBookingUseCase, 
+            ICreateBookingUseCase createHotelBookingUseCase,
             IGetBookingDatesByRoomIdUseCase getBookingDatesByRoomIdUseCase,
             IGetRoomsByCityAndBookingDatesUseCase getRoomsByCityAndBookingDatesUseCase,
             IGetRoomsByAccommodationAndBookingDatesUseCase getRoomsByAccommodationAndBookingDatesUseCase)
@@ -58,8 +54,24 @@ namespace YourRest.WebApi.Controllers
         }
 
         [HttpGet]
-        [Route("api/accommodations/{accommodationId}/rooms/{startDate}/{endDate}")]
+        [Route("api/cities/rooms")]
+        public async Task<IActionResult> GetRoomsByCityAndBookingDatesUseCase1(string startDate, string endDate, int cityId)
+        {
+            var roomList = await _getRoomsByCityAndBookingDatesUseCase.ExecuteAsync(DateOnly.Parse(startDate), DateOnly.Parse(endDate), cityId, HttpContext.RequestAborted);
+            return Ok(roomList);
+        }
+
+        [HttpGet]
+        [Route("api/accommodations1/{accommodationId}/rooms/{startDate}/{endDate}")]
         public async Task<IActionResult> GetRoomsByAccommodationAndBookingDatesUseCase(string startDate, string endDate, int accommodationId)
+        {
+            var roomList = await _getRoomsByAccommodationAndBookingDatesUseCase.ExecuteAsync(DateOnly.Parse(startDate), DateOnly.Parse(endDate), accommodationId, HttpContext.RequestAborted);
+            return Ok(roomList);
+        }
+
+        [HttpGet]
+        [Route("api/accommodations/rooms")]
+        public async Task<IActionResult> GetRoomsByAccommodationAndBookingDatesUseCase1(string startDate, string endDate, int accommodationId)
         {
             var roomList = await _getRoomsByAccommodationAndBookingDatesUseCase.ExecuteAsync(DateOnly.Parse(startDate), DateOnly.Parse(endDate), accommodationId, HttpContext.RequestAborted);
             return Ok(roomList);

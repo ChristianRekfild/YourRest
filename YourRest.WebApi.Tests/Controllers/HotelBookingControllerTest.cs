@@ -1,26 +1,15 @@
-﻿using AutoMapper;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using System.Net;
-using System.Net.Http.Json;
 using System.Text;
-using System.Text.Json;
-using System.Text.Unicode;
-using System.Xml.Linq;
-using System.Xml.Serialization;
-using YourRest.Application.Dto;
-using YourRest.Application.Dto.Mappers.Profiles;
-using YourRest.Application.Dto.Models;
 using YourRest.Application.Dto.Models.HotelBooking;
 using YourRest.Application.Dto.Models.Room;
-using YourRest.Application.Dto.ViewModels;
 using YourRest.Domain.Entities;
-using YourRest.WebApi.Responses;
 using YourRest.WebApi.Tests.Fixtures;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace YourRest.WebApi.Tests.Controllers
 {
-    public class HotelBookingControllerTest : IClassFixture<SingletonApiTest>
+    [Collection(nameof(SingletonApiTest))]
+    public class HotelBookingControllerTest //: IClassFixture<SingletonApiTest>
     {
         private readonly SingletonApiTest fixture;
         public HotelBookingControllerTest(SingletonApiTest fixture)
@@ -796,7 +785,8 @@ namespace YourRest.WebApi.Tests.Controllers
             var endDate = DateOnly.FromDateTime(DateTime.Now.AddDays(5));
 
             //Make request
-            var response = await fixture.Client.GetAsync($"api/cities/{cityMoscow.Id}/rooms/{startDate}/{endDate}");
+            //var response = await fixture.Client.GetAsync($"api/cities/{cityMoscow.Id}/rooms/{startDate}/{endDate}");
+            var response = await fixture.Client.GetAsync($"api/cities/rooms?startDate={startDate}&endDate={endDate}&cityId={cityMoscow.Id}");
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
             var responseContent = await response.Content.ReadAsStringAsync();
@@ -969,7 +959,9 @@ namespace YourRest.WebApi.Tests.Controllers
             var endDate = DateOnly.FromDateTime(DateTime.Now.AddDays(10));
 
             //Make request
-            var response = await fixture.Client.GetAsync($"api/cities/{cityMoscow.Id}/rooms/{startDate}/{endDate}");
+            //var response = await fixture.Client.GetAsync($"api/cities/{cityMoscow.Id}/rooms/{startDate}/{endDate}");
+            var response = await fixture.Client.GetAsync($"api/cities/rooms?startDate={startDate}&endDate={endDate}&cityId={cityMoscow.Id}");
+            
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
             var responseContent = await response.Content.ReadAsStringAsync();
@@ -1121,7 +1113,9 @@ namespace YourRest.WebApi.Tests.Controllers
             var endDate = DateOnly.FromDateTime(DateTime.Now.AddDays(10));
 
             //Make request
-            var response = await fixture.Client.GetAsync($"api/cities/{cityMoscow.Id}/rooms/{startDate}/{endDate}");
+            //var response = await fixture.Client.GetAsync($"api/cities/{cityMoscow.Id}/rooms/{startDate}/{endDate}");
+            var response = await fixture.Client.GetAsync($"api/cities/rooms?startDate={startDate}&endDate={endDate}&cityId={cityMoscow.Id}");
+            
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
             var responseContent = await response.Content.ReadAsStringAsync();
@@ -1268,7 +1262,9 @@ namespace YourRest.WebApi.Tests.Controllers
             var endDate = DateOnly.FromDateTime(DateTime.Now.AddDays(10));
 
             //Make request
-            var response = await fixture.Client.GetAsync($"api/cities/{cityMoscow.Id}/rooms/{startDate}/{endDate}");
+            //var response = await fixture.Client.GetAsync($"api/cities/{cityMoscow.Id}/rooms/{startDate}/{endDate}");
+            var response = await fixture.Client.GetAsync($"api/cities/rooms?startDate={startDate}&endDate={endDate}&cityId={cityMoscow.Id}");
+            
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
             var responseContent = await response.Content.ReadAsStringAsync();
@@ -1438,7 +1434,9 @@ namespace YourRest.WebApi.Tests.Controllers
             var endDate = DateOnly.FromDateTime(DateTime.Now.AddDays(5));
 
             //Make request
-            var response = await fixture.Client.GetAsync($"api/accommodations/{accommodationMskLyx.Id}/rooms/{startDate}/{endDate}");
+            //var response = await fixture.Client.GetAsync($"api/accommodations/{accommodationMskLyx.Id}/rooms/{startDate}/{endDate}");
+            var response = await fixture.Client.GetAsync($"api/accommodations/rooms?startDate={startDate}&endDate={endDate}&accommodationId={accommodationMskLyx.Id}");
+            
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
             var responseContent = await response.Content.ReadAsStringAsync();
@@ -1612,7 +1610,8 @@ namespace YourRest.WebApi.Tests.Controllers
             var endDate = DateOnly.FromDateTime(DateTime.Now.AddDays(10));
 
             //Make request
-            var response = await fixture.Client.GetAsync($"api/accommodations/{accommodationMskLyx.Id}/rooms/{startDate}/{endDate}");
+            //var response = await fixture.Client.GetAsync($"api/accommodations/{accommodationMskLyx.Id}/rooms/{startDate}/{endDate}");
+            var response = await fixture.Client.GetAsync($"api/accommodations/rooms?startDate={startDate}&endDate={endDate}&accommodationId={accommodationMskLyx.Id}");
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
             var responseContent = await response.Content.ReadAsStringAsync();
@@ -1764,7 +1763,9 @@ namespace YourRest.WebApi.Tests.Controllers
             var endDate = DateOnly.FromDateTime(DateTime.Now.AddDays(10));
 
             //Make request                                 
-            var response = await fixture.Client.GetAsync($"api/accommodations/{accommodationMskLyx.Id}/rooms/{startDate}/{endDate}");
+            //var response = await fixture.Client.GetAsync($"api/accommodations/{accommodationMskLyx.Id}/rooms/{startDate}/{endDate}");
+            var response = await fixture.Client.GetAsync($"api/accommodations/rooms?startDate={startDate}&endDate={endDate}&accommodationId={accommodationMskLyx.Id}");
+           
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
             var responseContent = await response.Content.ReadAsStringAsync();
@@ -1911,7 +1912,9 @@ namespace YourRest.WebApi.Tests.Controllers
             var endDate = DateOnly.FromDateTime(DateTime.Now.AddDays(10));
 
             //Make request
-            var response = await fixture.Client.GetAsync($"api/accommodations/{accommodationMskLyx.Id}/rooms/{startDate}/{endDate}");
+            //var response = await fixture.Client.GetAsync($"api/accommodations/{accommodationMskLyx.Id}/rooms/{startDate}/{endDate}");
+            var response = await fixture.Client.GetAsync($"api/accommodations/rooms?startDate={startDate}&endDate={endDate}&accommodationId={accommodationMskLyx.Id}");
+            
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
             var responseContent = await response.Content.ReadAsStringAsync();

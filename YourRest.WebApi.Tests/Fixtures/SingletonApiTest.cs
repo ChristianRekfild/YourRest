@@ -3,8 +3,8 @@ using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System.Text;
-using YourRest.Infrastructure.Core.DbContexts;
 using YourRest.Domain.Repositories;
+using YourRest.Infrastructure.Core.DbContexts;
 using YourRest.Producer.Infrastructure.Keycloak.Http;
 using YourRest.Producer.Infrastructure.Keycloak.Repositories;
 
@@ -64,9 +64,10 @@ namespace YourRest.WebApi.Tests.Fixtures
             await DbContext.SaveChangesAsync();
             return item.Entity;
         }
+
         public void CleanDatabase()
         {
-            DbContext.ClearAllTables();
+            //DbContext.ClearAllTables();
         }
 
         public void Dispose()
