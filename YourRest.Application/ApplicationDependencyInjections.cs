@@ -7,25 +7,22 @@ using SharpGrip.FluentValidation.AutoValidation.Mvc.Extensions;
 using SharpGrip.FluentValidation.AutoValidation.Mvc.Results;
 using System.Globalization;
 using System.Reflection;
+using YourRest.Application.Dto.Mappers;
 using YourRest.Application.Dto.Validators;
 using YourRest.Application.Dto.ViewModels;
 using YourRest.Application.Interfaces;
 using YourRest.Application.Interfaces.Age;
-using YourRest.Application.Interfaces.Photo;
 using YourRest.Application.Interfaces.Facility;
+using YourRest.Application.Interfaces.HotelBooking;
+using YourRest.Application.Interfaces.Photo;
 using YourRest.Application.Interfaces.Room;
 using YourRest.Application.Services;
 using YourRest.Application.UseCases;
-using YourRest.Application.UseCases.Photo;
 using YourRest.Application.UseCases.AgeRangeUseCases;
 using YourRest.Application.UseCases.Facility;
-using YourRest.Application.UseCases.Room;
-using YourRest.Application.Dto.Mappers;
-using System.Globalization;
-using YourRest.Application.UseCases.AgeRangeUseCases;
-using YourRest.Application.Interfaces.Age;
-using YourRest.Application.Interfaces.HotelBooking;
 using YourRest.Application.UseCases.HotelBookingUseCase;
+using YourRest.Application.UseCases.Photo;
+using YourRest.Application.UseCases.Room;
 
 namespace YourRest.Application
 {

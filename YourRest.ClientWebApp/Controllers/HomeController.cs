@@ -8,7 +8,6 @@ namespace YourRest.ClientWebApp.Controllers
     {
         private readonly ILogger<HomeController> _logger;
 
-
         //test
         public HomeController(ILogger<HomeController> logger )
         {
@@ -20,10 +19,11 @@ namespace YourRest.ClientWebApp.Controllers
             return View();
         }
 
-        public async Task<IActionResult> Privacy()
+        public IActionResult Privacy()
         {
             return View();
         }
+
         [HttpPost]
         public IActionResult GetDataFormJS(SelectedDateViewModel selectedDate)
         {
@@ -34,11 +34,11 @@ namespace YourRest.ClientWebApp.Controllers
         {
             return View("Index");
         }
+
         public IActionResult Register(RegisterViewModel data)
         {
             return View("Privacy");
         }
-
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()

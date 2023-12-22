@@ -61,6 +61,7 @@ namespace YourRest.WebApi.Tests.Fixtures
                 .WithImage("keycloak_test:latest")
                 .WithName("keycloak_test")
                 .WithNetwork("yourrest_local-network")
+                .WithAutoRemove(true)
                 .WithEnvironment("DB_VENDOR", "postgres")
                 .WithEnvironment("DB_ADDR", "keycloakdb-test")
                 .WithEnvironment("DB_DATABASE", "keycloak-test")
@@ -131,8 +132,8 @@ namespace YourRest.WebApi.Tests.Fixtures
             var stopContainer = Process.Start("docker", $"stop {containerName}");
             stopContainer?.WaitForExit();
 
-            var removeContainer = Process.Start("docker", $"rm {containerName}");
-            removeContainer?.WaitForExit();
+            //var removeContainer = Process.Start("docker", $"rm {containerName}");
+            //removeContainer?.WaitForExit();
         }
 
         public void Dispose()

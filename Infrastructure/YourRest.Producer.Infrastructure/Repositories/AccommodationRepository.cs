@@ -1,4 +1,3 @@
-using System.Linq;
 using System.Linq.Expressions;
 using YourRest.Domain.Entities;
 using YourRest.Domain.Models;
@@ -21,12 +20,12 @@ namespace YourRest.Producer.Infrastructure.Repositories
 
             if (filter.CountryIds != null && filter.CountryIds.Any())
             {
-                filterExpression = filterExpression.And(h => filter.CountryIds.Contains(h.Address.City.Region.CountryId));
+                filterExpression = filterExpression.And(h => h.Address != null && filter.CountryIds.Contains(h.Address.City.Region.CountryId));
             }
 
             if (filter.CityIds != null && filter.CityIds.Any())
             {
-                filterExpression = filterExpression.And(h => filter.CityIds.Contains(h.Address.CityId));
+                filterExpression = filterExpression.And(h => h.Address != null && filter.CityIds.Contains(h.Address.CityId));
             }
 
             if (filter.AccommodationTypesIds != null && filter.AccommodationTypesIds.Any())

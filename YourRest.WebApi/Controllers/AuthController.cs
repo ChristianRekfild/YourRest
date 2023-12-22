@@ -1,12 +1,9 @@
-using YourRest.Application.Interfaces;
-using Microsoft.AspNetCore.Mvc;
-using YourRest.Application.Dto.ViewModels;
-using YourRest.Application.Services;
-using Microsoft.AspNetCore.Mvc;
-using YourRest.Application.Interfaces;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
-using SharpGrip.FluentValidation.AutoValidation.Mvc.Attributes;
+using YourRest.Application.Dto.ViewModels;
+using YourRest.Application.Interfaces;
+using YourRest.Application.Services;
 
 namespace YourRest.WebApi.Controllers
 {
