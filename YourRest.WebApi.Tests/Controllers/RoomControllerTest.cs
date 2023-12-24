@@ -43,7 +43,7 @@ namespace YourRest.WebApi.Tests.Controllers
             var mapper = mockMapper.CreateMapper();
 
             var content = new StringContent(JsonConvert.SerializeObject(mapper.Map<RoomDto>(editedRoom)), Encoding.UTF8, "application/json");
-            var response = await fixture.Client.PutAsync($"api/accommodation/{room.AccommodationId}/rooms/{room.Id}", content);
+            var response = await fixture.Client.PutAsync($"api/accommodations/{room.AccommodationId}/rooms/{room.Id}", content);
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             Assert.Equal("The room has been edited", await response.Content.ReadAsStringAsync());
             response = await fixture.Client.GetAsync($"api/rooms/{room.Id}");
@@ -168,7 +168,7 @@ namespace YourRest.WebApi.Tests.Controllers
                 }
             };
 
-            var response = await fixture.Client.GetAsync($"api/accommodation/{accommodation.Id}/rooms");
+            var response = await fixture.Client.GetAsync($"api/accommodations/{accommodation.Id}/rooms");
 
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             var roomResponse = await response.Content.ReadFromJsonAsync<IEnumerable<RoomWithIdDto>>();
@@ -187,7 +187,7 @@ namespace YourRest.WebApi.Tests.Controllers
             var accommodation = await fixture.InsertObjectIntoDatabase(accommodationEntity);
             var accommodationId = accommodation.Id;
 
-            var response = await fixture.Client.GetAsync($"api/accommodation/{accommodation.Id}/rooms");
+            var response = await fixture.Client.GetAsync($"api/accommodations/{accommodation.Id}/rooms");
 
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             var content = await response.Content.ReadAsStringAsync();
@@ -206,7 +206,7 @@ namespace YourRest.WebApi.Tests.Controllers
 
             var roomEntity = new Room { Name = "Lyxar1", AccommodationId = accommodationId, Capacity = 20, SquareInMeter = 30, RoomType = "Lyx" };
             var content = new StringContent(JsonConvert.SerializeObject(roomEntity), Encoding.UTF8, "application/json");
-            var response = await fixture.Client.PostAsync($"api/accommodation/{accommodation.Id}/rooms", content);
+            var response = await fixture.Client.PostAsync($"api/accommodations/{accommodation.Id}/rooms", content);
 
             Assert.Equal(HttpStatusCode.Created, response.StatusCode);
 
@@ -231,7 +231,7 @@ namespace YourRest.WebApi.Tests.Controllers
 
             var roomEntity = new Room { Name = "Lyxar", Capacity = 20, SquareInMeter = 30, RoomType = "Lyx" };
             var content = new StringContent(JsonConvert.SerializeObject(roomEntity), Encoding.UTF8, "application/json");
-            var response = await fixture.Client.PostAsync($"api/accommodation/{accommodationId}/rooms", content);
+            var response = await fixture.Client.PostAsync($"api/accommodations/{accommodationId}/rooms", content);
 
             Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
 

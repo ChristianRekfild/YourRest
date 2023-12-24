@@ -1,13 +1,32 @@
 using Microsoft.EntityFrameworkCore;
 using Testcontainers.PostgreSql;
 using YourRest.Infrastructure.Core.DbContexts;
-using YourRest.Producer.Infrastructure;
 
-namespace YourRest.Infrastructure.Tests.Fixtures
+namespace YourRest.Producer.Infrastructure.Tests.Fixtures
 {
-    public class DatabaseFixture : IAsyncLifetime
+    public class DatabaseFixture : IDisposable
     {
-        public SharedDbContext? DbContext { get; private set; }
+        private static DatabaseFixture? instance = null;
+        private static readonly object syncObj = new object();
+
+        public string ConnectionString
+        {
+            get
+            {
+                if (_postgreSqlContainer.State != DotNet.Testcontainers.Containers.TestcontainersStates.Running)
+                {
+                    lock (syncObj)
+                    {
+                        if (_postgreSqlContainer.State != DotNet.Testcontainers.Containers.TestcontainersStates.Running)
+                        {
+                            _postgreSqlContainer.ConfigureAwait(false);
+                            Task.Run(() =>  _postgreSqlContainer.StartAsync()).GetAwaiter().GetResult();
+                        }
+                    }
+                }
+                return _postgreSqlContainer.GetConnectionString();
+            }
+        }
         private PostgreSqlContainer _postgreSqlContainer { get; }
         public DatabaseFixture()
         {
@@ -15,26 +34,44 @@ namespace YourRest.Infrastructure.Tests.Fixtures
                 .WithImage("postgres:15.4-alpine")
                 .WithUsername("admin")
                 .WithPassword("admin")
-            //.WithPortBinding("5432") // Для просмотра в PgAdmin
+            //.WithPortBinding("5432") // пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ PgAdmin
             .WithDatabase("db")
             .WithCleanUp(true)
                 .Build();
         }
 
-        public async Task InitializeAsync()
+        public static DatabaseFixture getInstance()
         {
-            await _postgreSqlContainer.StartAsync();
-
+            if (instance == null)
+            {
+                lock (syncObj)
+                {
+                    if (instance == null)
+                    {
+                        instance = new DatabaseFixture();
+                    }
+                }
+            }
+            return instance;
+        }
+        
+        public SharedDbContext GetDbContext(string connectionString)
+        {
             var builder = new DbContextOptionsBuilder<SharedDbContext>();
-            builder.UseNpgsql(_postgreSqlContainer.GetConnectionString(), 
-                sql => sql.MigrationsAssembly(typeof(ProducerInfrastructureDependencyInjections).Assembly.GetName().Name));
-            DbContext = new SharedDbContext(builder.Options);
-            DbContext.Database.Migrate();
+            var migrationsAssembly = typeof(ProducerInfrastructureDependencyInjections).Assembly.GetName().Name;
+            builder.UseNpgsql(connectionString, sql => sql.MigrationsAssembly(migrationsAssembly));
+            SharedDbContext defaultDbContext = new SharedDbContext(builder.Options);
+            defaultDbContext.Database.Migrate();
+            return defaultDbContext;
         }
 
-        public Task DisposeAsync()
+        public void Dispose()
         {
-            return _postgreSqlContainer.DisposeAsync().AsTask();
+            Task.Run(async () =>
+            {
+                await _postgreSqlContainer.StopAsync();
+                await _postgreSqlContainer.DisposeAsync();
+            }).Wait();
         }
     }
 }

@@ -13,5 +13,6 @@
         {
             RoomFacilities = new List<RoomFacility>();
         }
+        public ICollection<Booking> bookings { get; set; }
     }
 }
