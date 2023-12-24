@@ -13,7 +13,7 @@ namespace YourRest.Application.Dto.Models.Room
         public double SquareInMeter { get; set; }
 
         [Required]
-        public string RoomType { get; set; }
+        public int RoomTypeId { get; set; }
 
         [Required]
         [RegularExpression(@"^[1-9]\d*$", ErrorMessage = "Capacity should be more than zero.")]

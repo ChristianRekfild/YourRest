@@ -32,12 +32,13 @@ namespace YourRest.WebApi.Tests.Controllers
             };
 
             var accommodation = await fixture.InsertObjectIntoDatabase(accommodationEntity);
+            var roomType = new RoomType { Name = "Test Type" };
 
             Room firstRoomToInsert = new Room()
             {
                 AccommodationId = accommodation.Id,
                 Name = "DeluxeRoom",
-                RoomType = "ZBS",
+                RoomType = roomType,
                 SquareInMeter = 1,
                 Capacity = 20
             };
@@ -93,12 +94,12 @@ namespace YourRest.WebApi.Tests.Controllers
             };
 
             var accommodation = await fixture.InsertObjectIntoDatabase(accommodationEntity);
-
+            var roomType = new RoomType { Name = "Test Type" };
             Room firstRoomToInsert = new Room()
             {
                 AccommodationId = accommodation.Id,
                 Name = "DeluxeRoom",
-                RoomType = "ZBS",
+                RoomType = roomType,
                 SquareInMeter = 1,
                 Capacity = 20
             };
@@ -106,7 +107,7 @@ namespace YourRest.WebApi.Tests.Controllers
             {
                 AccommodationId = accommodation.Id,
                 Name = "SAA",
-                RoomType = "ss",
+                RoomType = roomType,
                 SquareInMeter = 2,
                 Capacity = 20
             };
@@ -205,12 +206,12 @@ namespace YourRest.WebApi.Tests.Controllers
             };
 
             var accommodation = await fixture.InsertObjectIntoDatabase(accommodationEntity);
-
+            var roomType = new RoomType { Name = "Test Type" };
             Room firstRoomToInsert = new Room()
             {
                 AccommodationId = accommodation.Id,
                 Name = "DeluxeRoom",
-                RoomType = "ZBS",
+                RoomType = roomType,
                 SquareInMeter = 1,
                 Capacity = 20
             };
@@ -218,7 +219,7 @@ namespace YourRest.WebApi.Tests.Controllers
             {
                 AccommodationId = accommodation.Id,
                 Name = "SAA",
-                RoomType = "ss",
+                RoomType = roomType,
                 SquareInMeter = 2,
                 Capacity = 20
             };
@@ -318,12 +319,12 @@ namespace YourRest.WebApi.Tests.Controllers
             };
 
             var accommodation = await fixture.InsertObjectIntoDatabase(accommodationEntity);
-
+            var roomType = new RoomType { Name = "Test Type" };
             Room firstRoomToInsert = new Room()
             {
                 AccommodationId = accommodation.Id,
                 Name = "DeluxeRoom",
-                RoomType = "ZBS",
+                RoomType = roomType,
                 SquareInMeter = 1,
                 Capacity = 20
             };
@@ -331,7 +332,7 @@ namespace YourRest.WebApi.Tests.Controllers
             {
                 AccommodationId = accommodation.Id,
                 Name = "SAA",
-                RoomType = "ss",
+                RoomType = roomType,
                 SquareInMeter = 2,
                 Capacity = 20
             };
@@ -432,12 +433,12 @@ namespace YourRest.WebApi.Tests.Controllers
             };
 
             var accommodation = await fixture.InsertObjectIntoDatabase(accommodationEntity);
-
+            var roomType = new RoomType { Name = "Test Type" };
             Room firstRoomToInsert = new Room()
             {
                 AccommodationId = accommodation.Id,
                 Name = "DeluxeRoom",
-                RoomType = "ZBS",
+                RoomType = roomType,
                 SquareInMeter = 1,
                 Capacity = 20
             };
@@ -445,7 +446,7 @@ namespace YourRest.WebApi.Tests.Controllers
             {
                 AccommodationId = accommodation.Id,
                 Name = "SAA",
-                RoomType = "ss",
+                RoomType = roomType,
                 SquareInMeter = 2,
                 Capacity = 20
             };
@@ -553,13 +554,13 @@ namespace YourRest.WebApi.Tests.Controllers
             };
 
             var testCustomer = await fixture.InsertObjectIntoDatabase(customerToInsert);
-
+            var roomType = new RoomType { Name = "Test Type" };
             Room roomToInsert = new Room()
             {
                 Accommodation = accommodation,
                 AccommodationId = accommodation.Id,
                 Name = "DeluxeRoom",
-                RoomType = "ZBS",
+                RoomType = roomType,
                 SquareInMeter = 1,
                 Capacity = 20
             };
@@ -1274,7 +1275,6 @@ namespace YourRest.WebApi.Tests.Controllers
             Assert.Empty(responseRoomsList);
         }
 
-
         [Fact]
         public async Task GetRoomsByAccomodation_WhenStartDateNewBookingEqualsEndDateBookingInDB_ReturnRoomsList()
         {
@@ -1925,17 +1925,112 @@ namespace YourRest.WebApi.Tests.Controllers
         }
         private async Task<Room> AddRoom(Accommodation accommodation, int DeluxeRoomId)
         {
+            var roomType = new RoomType { Name = "Test Type" };
             Room roomToInsert = new Room()
             {
                 Accommodation = accommodation,
                 AccommodationId = accommodation.Id,
                 Name = $"DeluxeRoom{DeluxeRoomId}",
-                RoomType = "ZBS",
+                RoomType = roomType,
                 SquareInMeter = 1,
                 Capacity = 20
             };
             Room resultRoom = await fixture.InsertObjectIntoDatabase(roomToInsert);
             return resultRoom;
+        }
+        
+        public static IEnumerable<object[]> BookingTestData()
+        {
+            // Example data: StartDate, EndDate, ExpectedStatusCode, ExpectedTotalAmount
+            yield return new object[] { new DateOnly(2025, 10, 5), new DateOnly(2025, 10, 15), HttpStatusCode.Created, 5000.0m };
+            yield return new object[] {
+                new DateOnly(2025, 10, 2),
+                new DateOnly(2025, 10, 12),
+                HttpStatusCode.BadRequest,
+                5000.0m,
+                true 
+            };
+        }
+        
+        [Theory]
+        [MemberData(nameof(BookingTestData))]
+        public async Task AddHotelBookingTest(DateOnly startDate, DateOnly endDate, HttpStatusCode expectedStatusCode, decimal expectedTotalAmount, bool createBookingClash = false)
+        {
+            var (accommodation, room, customer) = await CreateCommonEntities();
+            
+            if (createBookingClash)
+            {
+                var clashBooking = new Booking
+                {
+                    StartDate = new DateOnly(2025, 10, 5),
+                    EndDate = new DateOnly(2025, 10, 15),
+                    Rooms = new List<Room> { room },
+                    TotalAmount = 5000.0m,
+                    AdultNumber = 2,
+                    ChildrenNumber = 2,
+                    CustomerId = customer.Id
+                };
+                await fixture.InsertObjectIntoDatabase(clashBooking);
+            }
+
+            var bookingDto = new BookingDto()
+            {
+                StartDate = startDate,
+                EndDate = endDate,
+                Rooms = new List<int>() { room.Id },
+                TotalAmount = 5000.0m,
+                AdultNumber = 2,
+                ChildrenNumber = 2,
+                FirstName = "Test",
+                MiddleName = "Test",
+                LastName = "Test",
+                DateOfBirth = new DateTime(1950, 11, 5)
+            };
+
+            var content = new StringContent(JsonConvert.SerializeObject(bookingDto), Encoding.UTF8, "application/json");
+            var response = await fixture.Client.PostAsync($"api/bookings/", content);
+    
+            Assert.Equal(expectedStatusCode, response.StatusCode);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var actualBooking = JsonConvert.DeserializeObject<BookingDto>(await response.Content.ReadAsStringAsync());
+                AssertBooking(bookingDto, actualBooking);
+                Assert.Equal(expectedTotalAmount, actualBooking.TotalAmount);
+            }
+        }
+
+        private async Task<(Accommodation accommodation, Room room, Customer customer)> CreateCommonEntities()
+        {
+            var accommodationType = new AccommodationType { Name = "Test Type" };
+            var accommodation = await fixture.InsertObjectIntoDatabase(new Accommodation { Name = "Test", AccommodationType = accommodationType });
+            var roomType = new RoomType { Name = "Test Type" };
+            var room = await fixture.InsertObjectIntoDatabase(new Room { AccommodationId = accommodation.Id, Name = "DeluxeRoom", RoomType = roomType, SquareInMeter = 1, Capacity = 20 });
+            var customer = await fixture.InsertObjectIntoDatabase(new Customer { FirstName = "Test", MiddleName = "Test1", LastName = "Test2", DateOfBirth = new DateTime(1950, 11, 5) });
+
+            return (accommodation, room, customer);
+        }
+        
+        private void AssertBooking(BookingDto expected, BookingDto actual)
+        {
+            if (expected == null) // For BadRequest scenarios
+            {
+                Assert.Null(actual);
+            }
+            else // For successful booking scenarios
+            {
+                Assert.NotNull(actual);
+                Assert.Equal(expected.StartDate, actual.StartDate);
+                Assert.Equal(expected.EndDate, actual.EndDate);
+                Assert.Equal(expected.Rooms, actual.Rooms);
+                Assert.Equal(expected.TotalAmount, actual.TotalAmount);
+                Assert.Equal(expected.AdultNumber, actual.AdultNumber);
+                Assert.Equal(expected.ChildrenNumber, actual.ChildrenNumber);
+                Assert.Equal(expected.FirstName, actual.FirstName);
+                Assert.Equal(expected.MiddleName, actual.MiddleName);
+                Assert.Equal(expected.LastName, actual.LastName);
+                Assert.Equal(expected.DateOfBirth, actual.DateOfBirth);
+            }
         }
     }
 }

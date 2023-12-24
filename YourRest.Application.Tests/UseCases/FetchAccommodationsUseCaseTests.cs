@@ -52,8 +52,8 @@ namespace YourRest.Application.Tests.UseCases
                     AccommodationTypeId = 1,
                     Rooms = new List<Room>
                     {
-                        new Room { Id = 1, Name = "Room A1", SquareInMeter = 30, RoomType = "Deluxe" },
-                        new Room { Id = 2, Name = "Room A2", SquareInMeter = 50, RoomType = "Suite" }
+                        new Room { Id = 1, Name = "Room A1", SquareInMeter = 30, RoomType = new RoomType() { Name = "Deluxe" } },
+                        new Room { Id = 2, Name = "Room A2", SquareInMeter = 50, RoomType = new RoomType() { Name = "Suite" } }
                     }
                 },
                 new Accommodation 
@@ -77,8 +77,8 @@ namespace YourRest.Application.Tests.UseCases
                     AccommodationTypeId = 2,
                     Rooms = new List<Room>
                     {
-                        new Room { Id = 3, Name = "Room B1", SquareInMeter = 20, RoomType = "Standard" },
-                        new Room { Id = 4, Name = "Room B2", SquareInMeter = 25, RoomType = "Deluxe" }
+                        new Room { Id = 3, Name = "Room B1", SquareInMeter = 20, RoomType = new RoomType() { Name = "Standard" } },
+                        new Room { Id = 4, Name = "Room B2", SquareInMeter = 25, RoomType = new RoomType() { Name = "Deluxe" } }
                     }
                 }
             };

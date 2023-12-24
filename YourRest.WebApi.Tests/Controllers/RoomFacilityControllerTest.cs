@@ -101,6 +101,8 @@ namespace YourRest.WebApi.Tests.Controllers
             {
                 Name = "Test Type"
             };
+            var roomType = new RoomType { Name = "Test Type" };
+
             var accommodation = await fixture.InsertObjectIntoDatabase(
                 new Accommodation
                 {
@@ -112,7 +114,7 @@ namespace YourRest.WebApi.Tests.Controllers
             {
                 AccommodationId = accommodation.Id,
                 Name = "DeluxeRoom",
-                RoomType = "Lux"
+                RoomType = roomType
             });
            
             CityId = city.Id;

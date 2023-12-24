@@ -55,7 +55,7 @@ namespace YourRest.Application.UseCases
                     Id = r.Id,
                     Name = r.Name,
                     SquareInMeter = r.SquareInMeter,
-                    RoomType = r.RoomType
+                    RoomTypeId = r.RoomType.Id
                 }).ToList() ?? new List<RoomWithIdDto>()
             };
         }

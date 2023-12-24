@@ -29,10 +29,10 @@ namespace YourRest.WebApi.Tests.UnitTests
         public void Should_have_error_when_RoomType_is_null_or_empty()
         {
             var model = CreateRoomViewModel();
-            model.RoomType = null;
-            roomValidator.TestValidate(model).ShouldHaveValidationErrorFor(person => person.RoomType);
+            model.RoomTypeId = 0;
+            roomValidator.TestValidate(model).ShouldHaveValidationErrorFor(person => person.RoomTypeId);
             model.Name = string.Empty;
-            roomValidator.TestValidate(model).ShouldHaveValidationErrorFor(person => person.RoomType);
+            roomValidator.TestValidate(model).ShouldHaveValidationErrorFor(person => person.RoomTypeId);
         }
         [Fact]
         public void Should_have_error_when_Capacity_is_less_or_equal_Zero()
@@ -61,9 +61,9 @@ namespace YourRest.WebApi.Tests.UnitTests
             model.Name = null;
             model.Capacity = 0;
             model.SquareInMeter = 0;
-            model.RoomType = null;
+            model.RoomTypeId = 0;
             roomValidator.TestValidate(model).ShouldHaveValidationErrorFor(person => person.Name);
-            roomValidator.TestValidate(model).ShouldHaveValidationErrorFor(person => person.RoomType);
+            roomValidator.TestValidate(model).ShouldHaveValidationErrorFor(person => person.RoomTypeId);
             roomValidator.TestValidate(model).ShouldHaveValidationErrorFor(person => person.Capacity);
             roomValidator.TestValidate(model).ShouldHaveValidationErrorFor(person => person.SquareInMeter);
         }
@@ -73,7 +73,7 @@ namespace YourRest.WebApi.Tests.UnitTests
             Name = "305",
             Capacity = 10,
             SquareInMeter = 11,
-            RoomType = "Exclusive"
+            RoomTypeId = 3
         };
     }
 }
