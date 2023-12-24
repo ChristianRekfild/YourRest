@@ -17,7 +17,7 @@ namespace YourRest.Producer.Infrastructure.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "7.0.10")
+                .HasAnnotation("ProductVersion", "7.0.12")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
@@ -81,6 +81,49 @@ namespace YourRest.Producer.Infrastructure.Migrations
                         .IsUnique();
 
                     b.ToTable("Accommodations");
+                });
+
+            modelBuilder.Entity("YourRest.Domain.Entities.AccommodationFacility", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Description")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("AccommodationFacility");
+                });
+
+            modelBuilder.Entity("YourRest.Domain.Entities.AccommodationFacilityLink", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("AccommodationFacilityId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("AccommodationId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AccommodationFacilityId");
+
+                    b.HasIndex("AccommodationId");
+
+                    b.ToTable("AccommodationFacilities");
                 });
 
             modelBuilder.Entity("YourRest.Domain.Entities.AccommodationPhoto", b =>
@@ -572,6 +615,25 @@ namespace YourRest.Producer.Infrastructure.Migrations
                     b.Navigation("Address");
                 });
 
+            modelBuilder.Entity("YourRest.Domain.Entities.AccommodationFacilityLink", b =>
+                {
+                    b.HasOne("YourRest.Domain.Entities.AccommodationFacility", "AccommodationFacility")
+                        .WithMany("AccommodationFacilities")
+                        .HasForeignKey("AccommodationFacilityId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("YourRest.Domain.Entities.Accommodation", "Accommodation")
+                        .WithMany("AccommodationFacilities")
+                        .HasForeignKey("AccommodationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Accommodation");
+
+                    b.Navigation("AccommodationFacility");
+                });
+
             modelBuilder.Entity("YourRest.Domain.Entities.AccommodationPhoto", b =>
                 {
                     b.HasOne("YourRest.Domain.Entities.Accommodation", "Accommodation")
@@ -731,11 +793,18 @@ namespace YourRest.Producer.Infrastructure.Migrations
 
             modelBuilder.Entity("YourRest.Domain.Entities.Accommodation", b =>
                 {
+                    b.Navigation("AccommodationFacilities");
+
                     b.Navigation("Rooms");
 
                     b.Navigation("StarRating");
 
                     b.Navigation("UserAccommodations");
+                });
+
+            modelBuilder.Entity("YourRest.Domain.Entities.AccommodationFacility", b =>
+                {
+                    b.Navigation("AccommodationFacilities");
                 });
 
             modelBuilder.Entity("YourRest.Domain.Entities.City", b =>

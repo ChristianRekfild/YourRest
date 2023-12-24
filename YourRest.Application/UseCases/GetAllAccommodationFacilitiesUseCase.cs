@@ -22,7 +22,7 @@ namespace YourRest.Application.UseCases
             var accommodationFacilities = await accommodationFacilityRepository.GetAllAsync(cancellationToken);
             if (!accommodationFacilities.Any())
             {
-                throw new EntityNotFoundException("Not found any AccommodationFacility");
+                return new List<AccommodationFacilityWithIdDto>();
             }
             return mapper.Map<IEnumerable<AccommodationFacilityWithIdDto>>(accommodationFacilities);
         }

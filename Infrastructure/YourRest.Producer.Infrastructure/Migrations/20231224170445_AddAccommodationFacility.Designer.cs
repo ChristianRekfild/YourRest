@@ -12,7 +12,7 @@ using YourRest.Infrastructure.Core.DbContexts;
 namespace YourRest.Producer.Infrastructure.Migrations
 {
     [DbContext(typeof(SharedDbContext))]
-    [Migration("20231216231140_AddAccommodationFacility")]
+    [Migration("20231224170445_AddAccommodationFacility")]
     partial class AddAccommodationFacility
     {
         /// <inheritdoc />
@@ -24,6 +24,21 @@ namespace YourRest.Producer.Infrastructure.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
+
+            modelBuilder.Entity("BookingRoom", b =>
+                {
+                    b.Property<int>("RoomsId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("bookingsId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("RoomsId", "bookingsId");
+
+                    b.HasIndex("bookingsId");
+
+                    b.ToTable("BookingRoom");
+                });
 
             modelBuilder.Entity("RoomRoomFacility", b =>
                 {
@@ -246,11 +261,11 @@ namespace YourRest.Producer.Infrastructure.Migrations
                     b.Property<int>("CustomerId")
                         .HasColumnType("integer");
 
-                    b.Property<DateTime>("EndDate")
-                        .HasColumnType("timestamp without time zone");
+                    b.Property<DateOnly>("EndDate")
+                        .HasColumnType("date");
 
-                    b.Property<DateTime>("StartDate")
-                        .HasColumnType("timestamp without time zone");
+                    b.Property<DateOnly>("StartDate")
+                        .HasColumnType("date");
 
                     b.Property<int>("Status")
                         .HasColumnType("integer");
@@ -410,9 +425,6 @@ namespace YourRest.Producer.Infrastructure.Migrations
                     b.Property<int>("AccommodationId")
                         .HasColumnType("integer");
 
-                    b.Property<int?>("BookingId")
-                        .HasColumnType("integer");
-
                     b.Property<int>("Capacity")
                         .HasColumnType("integer");
 
@@ -430,8 +442,6 @@ namespace YourRest.Producer.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("AccommodationId");
-
-                    b.HasIndex("BookingId");
 
                     b.ToTable("Rooms");
                 });
@@ -559,6 +569,21 @@ namespace YourRest.Producer.Infrastructure.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("UserPhotos");
+                });
+
+            modelBuilder.Entity("BookingRoom", b =>
+                {
+                    b.HasOne("YourRest.Domain.Entities.Room", null)
+                        .WithMany()
+                        .HasForeignKey("RoomsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("YourRest.Domain.Entities.Booking", null)
+                        .WithMany()
+                        .HasForeignKey("bookingsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("RoomRoomFacility", b =>
@@ -725,10 +750,6 @@ namespace YourRest.Producer.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("YourRest.Domain.Entities.Booking", null)
-                        .WithMany("Rooms")
-                        .HasForeignKey("BookingId");
-
                     b.Navigation("Accommodation");
                 });
 
@@ -787,11 +808,6 @@ namespace YourRest.Producer.Infrastructure.Migrations
             modelBuilder.Entity("YourRest.Domain.Entities.AccommodationFacility", b =>
                 {
                     b.Navigation("AccommodationFacilities");
-                });
-
-            modelBuilder.Entity("YourRest.Domain.Entities.Booking", b =>
-                {
-                    b.Navigation("Rooms");
                 });
 
             modelBuilder.Entity("YourRest.Domain.Entities.City", b =>
