@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System.Text;
+using Microsoft.EntityFrameworkCore;
+using YourRest.Domain.Entities;
 using YourRest.Domain.Repositories;
 using YourRest.Infrastructure.Core.DbContexts;
 using YourRest.Producer.Infrastructure.Keycloak.Http;
@@ -111,5 +113,12 @@ namespace YourRest.WebApi.Tests.Fixtures
             Client = Server.CreateClient();
         }
 
+        public async Task<Accommodation?> GetAccommodationById(int createdAccommodationId)
+        {
+            return await DbContext
+                .Set<Accommodation>()
+                .Include(x => x.UserAccommodations) 
+                .FirstOrDefaultAsync(x => x.Id.Equals(createdAccommodationId));
+        }
     }
 }
