@@ -31,7 +31,7 @@ namespace YourRest.Application.UseCases
                 throw new EntityNotFoundException($"Accommodation Type with id {accommodationDto.AccommodationTypeId} not found");
             }
             
-            var users = await _userRepository.FindAsync(a => a.KeyCloakId == userKeyCloakId);
+            var users = await _userRepository.FindAsync(a => a.KeyCloakId == userKeyCloakId, cancellationToken);
             var user = users.FirstOrDefault();
 
             if (user == null)
