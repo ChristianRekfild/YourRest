@@ -2,9 +2,9 @@
 using YourRest.Application.Dto;
 using YourRest.Application.Dto.ViewModels;
 using YourRest.Application.Interfaces;
-using YourRest.Application.Exceptions;
-using YourRest.WebApi.Responses;
+using Microsoft.AspNetCore.Authorization;
 using SharpGrip.FluentValidation.AutoValidation.Mvc.Attributes;
+using System.Security.Claims;
 using YourRest.Application.Dto.Models;
 
 namespace YourRest.WebApi.Controllers
@@ -52,11 +52,21 @@ namespace YourRest.WebApi.Controllers
             return Ok(hotels);
         }
         
+        [Authorize]
         [HttpPost]
         [Route("api/accommodation")]
         public async Task<IActionResult> Post([FromBody] CreateAccommodationDto accommodationExtendedDto)
         {
-            var createdAccommodation = await _createAccommodationUseCase.ExecuteAsync(accommodationExtendedDto, HttpContext.RequestAborted);
+            var user = HttpContext.User;
+            var identity = user.Identity as ClaimsIdentity;
+            var sub = identity?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            if (sub == null)
+            {
+                return NotFound("User not found");
+            }
+            
+            var createdAccommodation = await _createAccommodationUseCase.ExecuteAsync(accommodationExtendedDto, sub, HttpContext.RequestAborted);
             return CreatedAtAction(nameof(Post), createdAccommodation);
         }
     }

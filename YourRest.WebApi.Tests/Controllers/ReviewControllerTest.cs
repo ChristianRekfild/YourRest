@@ -111,7 +111,7 @@ namespace YourRest.WebApi.Tests.Controllers
             fixture.Client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
             
             var invalidReview = new ReviewDto {
-                BookingId = 3,
+                BookingId = 999,
                 Comment = "test",
                 Rating = 1
             };
