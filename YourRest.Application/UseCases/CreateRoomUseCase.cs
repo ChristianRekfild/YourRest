@@ -9,16 +9,28 @@ namespace YourRest.Application.UseCases
     public class CreateRoomUseCase : ICreateRoomUseCase
     {
         private readonly IRoomRepository _roomRepository;
+        private readonly IRoomTypeRepository _roomTypeRepository;
         private readonly IAccommodationRepository _accommodationRepository;
 
-        public CreateRoomUseCase(IRoomRepository roomRepository, IAccommodationRepository accommodationRepository)
-        {
+        public CreateRoomUseCase(
+            IRoomRepository roomRepository,
+            IRoomTypeRepository roomTypeRepository,
+            IAccommodationRepository accommodationRepository
+        ) {
             _roomRepository = roomRepository;
+            _roomTypeRepository = roomTypeRepository;
             _accommodationRepository = accommodationRepository;
         }
 
         public async Task<RoomWithIdDto> Execute(RoomDto roomDto, int accommodationId, CancellationToken cancellationToken)
         {
+            var roomType = await _roomTypeRepository.GetAsync(roomDto.RoomTypeId, cancellationToken);
+
+            if (roomType == null)
+            {
+                throw new EntityNotFoundException($"Room Type with id {roomDto.RoomTypeId} not found");
+            }
+            
             var accommodation = await _accommodationRepository.GetAsync(accommodationId, cancellationToken);
 
             if (accommodation == null)
@@ -31,7 +43,7 @@ namespace YourRest.Application.UseCases
             room.Name = roomDto.Name;
             room.AccommodationId = accommodation.Id;
             room.Capacity = roomDto.Capacity;
-            room.RoomType = roomDto.RoomType;
+            room.RoomType = roomType;
 
             var savedRoom = await _roomRepository.AddAsync(room, cancellationToken:cancellationToken);
 
@@ -41,7 +53,7 @@ namespace YourRest.Application.UseCases
                 SquareInMeter = savedRoom.SquareInMeter,
                 Name = savedRoom.Name,
                 Capacity = savedRoom.Capacity,
-                RoomType = savedRoom.RoomType
+                RoomTypeId = savedRoom.RoomType.Id
             };
 
             return savedRoomDto;

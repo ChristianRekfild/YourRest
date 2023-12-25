@@ -179,7 +179,7 @@ namespace YourRest.Producer.Infrastructure.Tests.RepositoryTests
                 {
                     Name = "TestRoom",
                     AccommodationId = accommodation.Id,
-                    RoomType = roomType.Name
+                    RoomType = roomType
                 }, true, cancellationToken);
             var customer = await _customerTypeRepository.AddAsync(new Customer()
             {
@@ -243,7 +243,7 @@ namespace YourRest.Producer.Infrastructure.Tests.RepositoryTests
                 {
                     Name = "TestRoom",
                     AccommodationId = accommodation.Id,
-                    RoomType = roomType.Name
+                    RoomType = roomType
                 }, true, cancellationToken);
             var customer = await _customerTypeRepository.AddAsync(new Customer()
             {
@@ -307,7 +307,7 @@ namespace YourRest.Producer.Infrastructure.Tests.RepositoryTests
                 {
                     Name = "TestRoom",
                     AccommodationId = accommodation.Id,
-                    RoomType = roomType.Name
+                    RoomType = roomType
                 }, true, cancellationToken);
             var customer = await _customerTypeRepository.AddAsync(new Customer()
             {
@@ -370,7 +370,7 @@ namespace YourRest.Producer.Infrastructure.Tests.RepositoryTests
                 {
                     Name = "TestRoom",
                     AccommodationId = accommodation.Id,
-                    RoomType = roomType.Name
+                    RoomType = roomType
                 }, true, cancellationToken);
             var customer = await _customerTypeRepository.AddAsync(new Customer()
             {

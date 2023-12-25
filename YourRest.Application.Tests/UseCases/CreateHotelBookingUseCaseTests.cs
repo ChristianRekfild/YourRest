@@ -49,7 +49,7 @@ namespace YourRest.Application.Tests.UseCases
                     Id = 1,
                     AccommodationId = 1,
                     Name = "DeluxeRoom",
-                    RoomType = "ZBS",
+                    RoomType = new RoomType() { Name = "ZBS" },
                     SquareInMeter = 1,
                     Capacity = 20
                 }
@@ -93,7 +93,7 @@ namespace YourRest.Application.Tests.UseCases
                     Id = 1,
                     AccommodationId = 1,
                     Name = "DeluxeRoom",
-                    RoomType = "ZBS",
+                    RoomType = new RoomType() { Name = "ZBS" },
                     SquareInMeter = 1,
                     Capacity = 20
                 } }
