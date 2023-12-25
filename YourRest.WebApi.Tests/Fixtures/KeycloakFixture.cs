@@ -69,7 +69,7 @@ namespace YourRest.WebApi.Tests.Fixtures
                 .Build();
 
             _keycloakContainer = new ContainerBuilder()
-                .WithImage("keycloak_test:latest")
+                .WithImage("jboss/keycloak:latest")
                 .WithName("keycloak_test")
                 //.WithNetwork("yourrest_local-network")
                 .WithNetwork(_network)
@@ -84,6 +84,7 @@ namespace YourRest.WebApi.Tests.Fixtures
                 .WithPortBinding(8083, 8080)
                 .WithWaitStrategy(Wait.ForUnixContainer().UntilPortIsAvailable(8080/*WeatherForecastImage.HttpsPort*/))
                 .WithResourceMapping("../../../realm-export.json", "/opt/jboss/keycloak/")
+                .WithCommand("-b", "0.0.0.0", "-Dkeycloak.migration.action=import", "-Dkeycloak.migration.provider=singleFile", "-Dkeycloak.migration.file=/opt/jboss/keycloak/realm-export.json", "-Dkeycloak.migration.strategy=OVERWRITE_EXISTING")
                 //.WithWaitStrategy(Wait.ForUnixContainer().UntilContainerIsHealthy())
                 .Build();
         }
