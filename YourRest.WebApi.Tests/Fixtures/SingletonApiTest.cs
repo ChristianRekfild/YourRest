@@ -122,7 +122,8 @@ namespace YourRest.WebApi.Tests.Fixtures
         {
             return await DbContext
                 .Set<Accommodation>()
-                .Include(x => x.UserAccommodations) 
+                .Include(x => x.UserAccommodations)
+                .Include(x => x.AccommodationFacilities)
                 .FirstOrDefaultAsync(x => x.Id.Equals(createdAccommodationId));
         }
     }

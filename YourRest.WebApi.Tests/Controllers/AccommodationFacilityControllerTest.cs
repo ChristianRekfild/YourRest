@@ -68,6 +68,14 @@ namespace YourRest.WebApi.Tests.Controllers
 
             response.EnsureSuccessStatusCode();
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            
+            var retrievedAccommodation = await fixture.GetAccommodationById(accommodation.Id);
+            Assert.NotNull(retrievedAccommodation);
+
+            var facilityLinkedToAccommodation = retrievedAccommodation.AccommodationFacilities
+                .Any(ua => ua.AccommodationId == accommodation.Id);
+
+            Assert.True(facilityLinkedToAccommodation, "The facility is not linked to the accommodation.");
         }
         
         [Fact]

@@ -22,7 +22,7 @@ namespace YourRest.Application.UseCases
         public async Task ExecuteAsync(int accommodationId, AccommodationFacilityIdDto accommodationFacilityDto,
             CancellationToken cancellationToken)
         {
-            var accommodations = await _accommodationRepository.GetWithIncludeAsync(
+            var accommodations = await _accommodationRepository.GetWithIncludeAndTrackingAsync(
                 a => a.Id == accommodationId,
                 cancellationToken,
                 a => a.AccommodationFacilities
@@ -55,7 +55,7 @@ namespace YourRest.Application.UseCases
                 Accommodation = accommodation,
             });
 
-            await _accommodationRepository.SaveChangesAsync(cancellationToken);
+            await _accommodationRepository.UpdateAsync(accommodation, true, cancellationToken);
         }
     }
 }
