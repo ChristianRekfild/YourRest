@@ -1,5 +1,6 @@
 using DotNet.Testcontainers.Builders;
 using DotNet.Testcontainers.Containers;
+using DotNet.Testcontainers.Networks;
 using System.Diagnostics;
 using Testcontainers.PostgreSql;
 
@@ -7,6 +8,7 @@ namespace YourRest.WebApi.Tests.Fixtures
 {
     public class KeycloakFixture : IDisposable
     {
+        private INetwork _network;
         private PostgreSqlContainer _keycloakDbContainer;
         private IContainer _keycloakContainer;
 
@@ -47,7 +49,7 @@ namespace YourRest.WebApi.Tests.Fixtures
             //CreateNetwork("yourrest_local-network");
             //BuildDockerImage("../../../Dockerfile", "keycloak_test:latest");
 
-            var network = new NetworkBuilder()
+            _network = new NetworkBuilder()
                 //.WithName(Guid.NewGuid().ToString("D"))
                 .WithName("yourrest_local-network")
                 .WithCleanUp(true)
@@ -57,7 +59,8 @@ namespace YourRest.WebApi.Tests.Fixtures
                 //.WithImage("postgres:latest")
                 .WithImage("postgres:15.4-alpine")
                 .WithName("keycloakdb-test")
-                .WithNetwork("yourrest_local-network")
+                //.WithNetwork("yourrest_local-network")
+                .WithNetwork(_network)
                 .WithUsername("keycloak")
                 .WithPassword("keycloakpassword")
                 .WithDatabase("keycloak-test")
@@ -68,7 +71,8 @@ namespace YourRest.WebApi.Tests.Fixtures
             _keycloakContainer = new ContainerBuilder()
                 .WithImage("keycloak_test:latest")
                 .WithName("keycloak_test")
-                .WithNetwork("yourrest_local-network")
+                //.WithNetwork("yourrest_local-network")
+                .WithNetwork(_network)
                 .WithAutoRemove(true)
                 .WithEnvironment("DB_VENDOR", "postgres")
                 .WithEnvironment("DB_ADDR", "keycloakdb-test")
@@ -115,6 +119,7 @@ namespace YourRest.WebApi.Tests.Fixtures
         {
             Task.Run(async () =>
             {
+                await _network.CreateAsync();
                 await _keycloakDbContainer.StartAsync();
                 await _keycloakContainer.StartAsync();
                 //await Task.Delay(TimeSpan.FromSeconds(30));
