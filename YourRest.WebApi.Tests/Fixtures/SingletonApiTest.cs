@@ -66,10 +66,15 @@ namespace YourRest.WebApi.Tests.Fixtures
             await DbContext.SaveChangesAsync();
             return item.Entity;
         }
+        
+        public async Task SaveChangesAsync()
+        {
+            await DbContext.SaveChangesAsync();
+        }
 
         public void CleanDatabase()
         {
-            //DbContext.ClearAllTables();
+            DbContext.ClearAllTables();
         }
 
         public void Dispose()
@@ -117,7 +122,8 @@ namespace YourRest.WebApi.Tests.Fixtures
         {
             return await DbContext
                 .Set<Accommodation>()
-                .Include(x => x.UserAccommodations) 
+                .Include(x => x.UserAccommodations)
+                .Include(x => x.AccommodationFacilities)
                 .FirstOrDefaultAsync(x => x.Id.Equals(createdAccommodationId));
         }
     }

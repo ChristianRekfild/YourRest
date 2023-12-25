@@ -9,6 +9,8 @@ public class DatabaseSeeder
     private readonly CitySeeder _citySeeder;
     private readonly RoomTypeSeeder _roomTypeSeeder;
     private readonly AccommodationTypeSeeder _accommodationTypeSeeder;
+    private readonly RoomFacilitySeeder _roomFacilitySeeder;
+    private readonly AccommodationFacilitySeeder _accommodationFacilitySeeder;
 
     public DatabaseSeeder(SharedDbContext context)
     {
@@ -17,6 +19,8 @@ public class DatabaseSeeder
         _citySeeder = new CitySeeder(context);
         _roomTypeSeeder = new RoomTypeSeeder(context);
         _accommodationTypeSeeder = new AccommodationTypeSeeder(context);
+        _roomFacilitySeeder = new RoomFacilitySeeder(context);
+        _accommodationFacilitySeeder = new AccommodationFacilitySeeder(context);
     }
 
     public void Seed()
@@ -26,5 +30,7 @@ public class DatabaseSeeder
         _citySeeder.Seed();
         _roomTypeSeeder.Seed();
         _accommodationTypeSeeder.Seed();
+        _roomFacilitySeeder.Seed();
+        _accommodationFacilitySeeder.Seed();
     }
 }
