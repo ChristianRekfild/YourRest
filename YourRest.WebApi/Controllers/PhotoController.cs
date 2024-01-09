@@ -93,16 +93,20 @@ namespace YourRest.WebApi.Controllers
             {
                 return NotFound();
             }
+            using MemoryStream stream = new MemoryStream();
+            fileDto.Stream.CopyTo(stream);
+            var b = stream.ToArray();
+            var file = Convert.ToBase64String(b);
 
             //if (fileDto.Stream.CanSeek)
             //{
             //    fileDto.Stream.Seek(0, SeekOrigin.Begin);
             //}
-            var data = new byte[fileDto.Stream.Length];
-            await fileDto.Stream.ReadAsync(data);
+            //var data = new byte[fileDto.Stream.Length];
+            //await fileDto.Stream.ReadAsync(data);
             //return File(fileDto.Stream, fileDto.MimeType, fileDto.FileName);
-            string base64 = Convert.ToBase64String(data);
-            return Ok($"data:{fileDto.MimeType};base64,{base64}");
+            //string base64 = Convert.ToBase64String(data);
+            return Ok($"data:{fileDto.MimeType};base64,{file}");
         }
     }
 }

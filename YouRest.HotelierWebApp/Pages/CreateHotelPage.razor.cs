@@ -32,7 +32,7 @@ namespace YouRest.HotelierWebApp.Pages
             Regions = await RegionService.FetchRegionsAsync();
             Cities = await CityService.FetchCytiesAsync();
             HotelTypes = await HotelTypeService.FetchHotelTypesAsync();
-            Photo = await FileService.FetchImg("8f23968f-686a-4388-9922-08277cb00298.jpg", "Accomodation");
+            Photo = await FileService.FetchImg("b9bac2d9-0c83-429b-baa6-a44ed5db619d.jpg", "Accomodation");
         }
         public async Task CreateHotel()
         {
@@ -41,9 +41,9 @@ namespace YouRest.HotelierWebApp.Pages
             await HotelService.CreateHotel(new HotelViewModel()
             {
                 HotelTypeId = 1,
-                Name = "Radisson",
-                Stars = 5,
-                Description = "The best of Egypt"
+                Name = HotelName,
+                Stars = GetRatingValue(SelectedRating),
+                Description = "The oldest and most famous hotel in Moscow"
             });
         }
         public async Task LoadFiles(InputFileChangeEventArgs e)

@@ -31,12 +31,12 @@ namespace YouRest.HotelierWebApp.Data.Services
         public async Task Upload(IBrowserFile file)
         {
             var data = new byte[file.Size];
-            await file.OpenReadStream().ReadAsync(data);
+            await file.OpenReadStream(file.Size).ReadAsync(data);
             //MemoryStream stream = new MemoryStream(data);
             //IFormFile _file = new FormFile(stream, 0, file.Size, file.Name, file.Name);
             HotelImgViewModel hotel = new()
             {
-                AccommodationId = 3,
+                AccommodationId = 1,
                 Photo = $"{Convert.ToBase64String(data)}",
                 FileName = file.Name
             };

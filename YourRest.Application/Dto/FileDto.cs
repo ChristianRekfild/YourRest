@@ -7,4 +7,5 @@ public class FileDto
     public string MimeType { get; set; }
 
     public string FileName { get; set; }
+    public string Img { get; set; }
 }
