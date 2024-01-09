@@ -17,7 +17,8 @@ namespace YouRest.HotelierWebApp.Pages
         [Parameter] public IEnumerable<RegionViewModel> Regions { get; set; } = new List<RegionViewModel>();
         [Parameter] public IEnumerable<CityViewModel> Cities { get; set; } = new List<CityViewModel>();
         [Parameter] public IEnumerable<HotelTypeViewModel> HotelTypes { get; set; } = new List<HotelTypeViewModel>();
-        private string Photo { get; set; }
+        private string inputFileId = Guid.NewGuid().ToString();
+        private List<string> Images { get; set; } = new();
         private string SelectedCountry { get; set; }
         private string SelectedRegion { get; set; }
         private string SelectedCity { get; set; }
@@ -32,7 +33,8 @@ namespace YouRest.HotelierWebApp.Pages
             Regions = await RegionService.FetchRegionsAsync();
             Cities = await CityService.FetchCytiesAsync();
             HotelTypes = await HotelTypeService.FetchHotelTypesAsync();
-            Photo = await FileService.FetchImg("b9bac2d9-0c83-429b-baa6-a44ed5db619d.jpg", "Accomodation");
+            //Images.Add(await FileService.FetchImg("b9bac2d9-0c83-429b-baa6-a44ed5db619d.jpg", "Accomodation"));
+
         }
         public async Task CreateHotel()
         {
@@ -48,7 +50,16 @@ namespace YouRest.HotelierWebApp.Pages
         }
         public async Task LoadFiles(InputFileChangeEventArgs e)
         {
-          await FileService.Upload(e.File);
+            if(!Images.Any()) Images.Clear();
+            var files = e.GetMultipleFiles(maximumFileCount: 5);
+            foreach (var file in files)
+            {
+                using MemoryStream memoryStream = new();
+                await file.OpenReadStream(file.Size).CopyToAsync(memoryStream);
+                Images.Add($"data:{file.ContentType}; base64,{Convert.ToBase64String(memoryStream.ToArray())}");
+            }
+            //await FileService.Upload(e.File);
+            inputFileId = Guid.NewGuid().ToString();
         }
         private int GetRatingValue(string value) => value switch
         {

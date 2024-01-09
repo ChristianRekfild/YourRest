@@ -1,0 +1,21 @@
+﻿<div class="gallery">
+    @foreach (var img in Images)
+    {
+        <div class="img-wrapper">
+            <div class="removeBtn" 
+                @onmouseover="@MouseOverOfDeleteBtn"
+                @onmouseout="@MouseOutOfRemoveBtn"
+                @onclick="() => OnRemove(img)">
+                <span class="oi oi-trash"></span>
+            </div>
+            <img class="img-thumbnail img-content" src="@img" alt="image">
+        </div>
+    }
+</div>
+<style type="text/css">
+    .img-wrapper:hover {
+    @BorderStyle
+    }
+</style>
+
+

@@ -6,7 +6,7 @@
 <div class="input-group mb-3">
     <label class="input-group-text" for="Countries">Страна</label>
     <InputSelect class="form-select" id="Countries" @bind-Value="@SelectedCountry">
-        @if(string.IsNullOrEmpty(SelectedCountry))
+        @if (string.IsNullOrEmpty(SelectedCountry))
         {
             <option selected>Выберите страну</option>
         }
@@ -19,7 +19,7 @@
 
 <div class="input-group mb-3">
     <InputSelect class="form-select" id="Regions" @bind-Value="@SelectedRegion">
-        @if(string.IsNullOrEmpty(SelectedRegion))
+        @if (string.IsNullOrEmpty(SelectedRegion))
         {
             <option selected>Выберите регион</option>
         }
@@ -33,7 +33,7 @@
 <div class="input-group mb-3">
     <label class="input-group-text" for="Cities">Населенный пункт</label>
     <InputSelect class="form-select" id="Cities" @bind-Value="@SelectedCity">
-        @if(string.IsNullOrEmpty(SelectedCity))
+        @if (string.IsNullOrEmpty(SelectedCity))
         {
             <option selected>Выберите населенный пункт</option>
         }
@@ -62,7 +62,7 @@
         }
     </InputSelect>
     <label class="input-group-text" for="HotelRating">Уровень комфорта</label>
-    <InputSelect class="form-select" id="HotelRating" @bind-Value="SelectedRating" > 
+    <InputSelect class="form-select" id="HotelRating" @bind-Value="SelectedRating">
         <option selected>Без рейтинга</option>
         <option>Одна звезда</option>
         <option>Две звезды</option>
@@ -72,9 +72,15 @@
     </InputSelect>
 </div>
 <div class="input-group mb-3">
-    <InputFile OnChange="@LoadFiles" accept =".png,.jpg,.jpeg" type="file" class="form-control" id="inputGroupFile"></InputFile>
+    <InputFile @key=@(inputFileId) OnChange="@LoadFiles" multiple accept=".png,.jpg,.jpeg" type="file" class="form-control" id="inputGroupFile"></InputFile>
     <label class="input-group-text" for="inputGroupFile">Добавить фото</label>
 </div>
+@if (Images.Any())
+{
+    <PreviewImagesComponent @bind-Images="@Images" />
+}
 <div class="create_btn" @onclick="CreateHotel"> Создать Отель </div>
-<img style="width:250px; height: 250px; border: 1px solid red;" src="@Photo" alt="Photo" />
+
+
+
 
