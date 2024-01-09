@@ -13,7 +13,11 @@
         public ICollection<Room> Rooms { get; set; }
         public ICollection<UserAccommodation> UserAccommodations { get; set; } = new List<UserAccommodation>();
         public AccommodationStarRating? StarRating { get; set; }
-        public Accommodation() => Rooms = new List<Room>();
-
+        
+        public ICollection<AccommodationFacilityLink> AccommodationFacilities { get; set; } = new List<AccommodationFacilityLink>();
+        public Accommodation()
+        {
+            Rooms = new List<Room>();
+        }
     }
 }

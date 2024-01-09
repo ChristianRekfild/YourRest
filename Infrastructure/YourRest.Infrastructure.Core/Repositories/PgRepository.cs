@@ -57,12 +57,23 @@ namespace YourRest.Infrastructure.Core.Repositories
 
         public async Task<IEnumerable<T>> GetWithIncludeAsync(Expression<Func<T, bool>> predicate, CancellationToken cancellationToken = default, params Expression<Func<T, object>>[] includeProperties)
         {
-            return await Include(includeProperties).Where(predicate).ToListAsync(cancellationToken);
+            IQueryable<T> query = _dataContext.Set<T>().AsNoTracking();
+
+            return await Include(query, includeProperties).Where(predicate).ToListAsync(cancellationToken);
         }
-       
+        
+        public async Task<IEnumerable<T>> GetWithIncludeAndTrackingAsync(Expression<Func<T, bool>> predicate, CancellationToken cancellationToken = default, params Expression<Func<T, object>>[] includeProperties)
+        {
+            IQueryable<T> query = _dataContext.Set<T>().AsQueryable();
+
+            return await Include(query, includeProperties).Where(predicate).ToListAsync(cancellationToken);
+        }
+        
         public async Task<IEnumerable<T>> GetAllWithIncludeAsync(Expression<Func<T, object>> includeProperty, CancellationToken cancellationToken = default)
         {
-            return await Include(includeProperty).ToListAsync(cancellationToken);
+            IQueryable<T> query = _dataContext.Set<T>().AsNoTracking();
+
+            return await Include(query, includeProperty).ToListAsync(cancellationToken);
         }
        
         public async Task DeleteAsync(U id, bool saveChanges = true, CancellationToken cancellationToken = default)
@@ -101,10 +112,8 @@ namespace YourRest.Infrastructure.Core.Repositories
         {
             await _dataContext.SaveChangesAsync(cancellationToken);
         }
-
-        private IQueryable<T> Include(params Expression<Func<T, object>>[] includeProperties)
+        private IQueryable<T> Include(IQueryable<T> query, params Expression<Func<T, object>>[] includeProperties)
         {
-            IQueryable<T> query = _dataContext.Set<T>().AsNoTracking();
             return includeProperties
                 .Aggregate(query, (current, includeProperty) => current.Include(includeProperty));
         }

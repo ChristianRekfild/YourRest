@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System.Text;
+using Microsoft.EntityFrameworkCore;
+using YourRest.Domain.Entities;
 using YourRest.Domain.Repositories;
 using YourRest.Infrastructure.Core.DbContexts;
 using YourRest.Producer.Infrastructure.Keycloak.Http;
@@ -74,10 +76,15 @@ namespace YourRest.WebApi.Tests.Fixtures
             await DbContext.SaveChangesAsync();
             return item.Entity;
         }
+        
+        public async Task SaveChangesAsync()
+        {
+            await DbContext.SaveChangesAsync();
+        }
 
         public void CleanDatabase()
         {
-            //DbContext.ClearAllTables();
+            DbContext.ClearAllTables();
         }
 
         public void Dispose()
@@ -121,5 +128,13 @@ namespace YourRest.WebApi.Tests.Fixtures
             Client = Server.CreateClient();
         }
 
+        public async Task<Accommodation?> GetAccommodationById(int createdAccommodationId)
+        {
+            return await DbContext
+                .Set<Accommodation>()
+                .Include(x => x.UserAccommodations)
+                .Include(x => x.AccommodationFacilities)
+                .FirstOrDefaultAsync(x => x.Id.Equals(createdAccommodationId));
+        }
     }
 }

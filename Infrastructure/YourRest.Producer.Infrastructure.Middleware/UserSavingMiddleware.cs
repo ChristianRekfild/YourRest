@@ -26,35 +26,15 @@ public class UserSavingMiddleware
         var firstName = identity.FindFirst(ClaimTypes.GivenName)?.Value;
         var lastName = identity.FindFirst(ClaimTypes.Surname)?.Value;
         var email = identity.FindFirst(ClaimTypes.Email)?.Value;
-
-        // group related to accommodation is in the format: /accommodations/{accommodationId}
-        var allClaims = identity?.Claims;
-        var accommodationGroupPattern = "/accommodations/";
         
         if (!string.IsNullOrEmpty(sub))
         {
             var users = await userRepository.GetWithIncludeAsync(
                 a => a.KeyCloakId == sub, 
-                cancellationToken: default,
-                a => a.UserAccommodations
+                cancellationToken: default
             );
 
             var user = users.FirstOrDefault();
-
-            List<int> accommodationIds = new List<int>();
-            if (allClaims != null)
-            {
-                foreach (var claim in allClaims)
-                {
-                    if (claim.Value.StartsWith(accommodationGroupPattern)) {
-                        var accommodationIdStr = claim.Value.Substring(accommodationGroupPattern.Length);
-                        if (int.TryParse(accommodationIdStr, out int result))
-                        {
-                            accommodationIds.Add(result);
-                        }
-                    }                        
-                }            
-            }
 
             if (user == null)
             {
@@ -67,26 +47,6 @@ public class UserSavingMiddleware
                     UserAccommodations = new List<UserAccommodation>()
                 };
                 await userRepository.AddAsync(user);
-            }
-            
-            if (accommodationIds.Count > 0)
-            {
-                foreach (var accommodationId in accommodationIds)
-                {
-                    var accommodations = await accommodationRepository.GetWithIncludeAsync(a => a.Id == accommodationId);
-                    var accommodation = accommodations.FirstOrDefault();
-
-                    if (accommodation != null)
-                    {
-                        var existingUserAccommodation = user.UserAccommodations.FirstOrDefault(ua => ua.AccommodationId == accommodation.Id);
-                        if(existingUserAccommodation == null)
-                        {
-                            user.UserAccommodations.Add(new UserAccommodation { User = user, Accommodation = accommodation });
-                        }
-                    }
-                }
-
-                await userRepository.UpdateAsync(user);
             }
         }
 

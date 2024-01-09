@@ -20,9 +20,10 @@ using YourRest.Application.Services;
 using YourRest.Application.UseCases;
 using YourRest.Application.UseCases.AgeRangeUseCases;
 using YourRest.Application.UseCases.Facility;
+using YourRest.Application.UseCases.Room;
+using YourRest.Application.Interfaces.AccommodationFacility;
 using YourRest.Application.UseCases.HotelBookingUseCase;
 using YourRest.Application.UseCases.Photo;
-using YourRest.Application.UseCases.Room;
 
 namespace YourRest.Application
 {
@@ -76,6 +77,11 @@ namespace YourRest.Application
             services.AddScoped<IRemoveRoomFacilityUseCase, RemoveRoomFacilityUseCase>();
             services.AddScoped<IGetRoomTypeListUseCase, GetRoomTypeListUseCase>();
             services.AddScoped<IGetAllRoomFacilitiesUseCase, GetAllRoomFacilitiesUseCase>();
+            //AccommodationFacility
+            services.AddScoped<IAddAccommodationFacilityUseCase, AddAccommodationFacilityUseCase>();
+            services.AddScoped<IRemoveAccommodationFacilityUseCase, RemoveAccommodationFacilityUseCase>();
+            services.AddScoped<IGetAllAccommodationFacilitiesUseCase, GetAllAccommodationFacilitiesUseCase>();
+            services.AddScoped<IGetAccommodationFacilityByAccommodationIdUseCase, GetAccommodationFacilityByAccommodationIdUseCase>();
             //AgeRange
             services.AddScoped<ICreateAgeRangeUseCase, CreateAgeRangeUseCase>();
             services.AddScoped<IEditAgeRangeUseCase, EditAgeRangeUseCase>();

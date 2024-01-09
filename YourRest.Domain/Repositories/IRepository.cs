@@ -28,5 +28,8 @@ namespace YourRest.Domain.Repositories
 
         Task<IEnumerable<T>> GetWithIncludeAsync(Expression<Func<T, bool>> predicate,
             CancellationToken cancellationToken = default, params Expression<Func<T, object>>[] includeProperties);
+
+        Task<IEnumerable<T>> GetWithIncludeAndTrackingAsync(Expression<Func<T, bool>> predicate,
+            CancellationToken cancellationToken = default, params Expression<Func<T, object>>[] includeProperties);
     }
 }

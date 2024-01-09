@@ -15,14 +15,18 @@ namespace YourRest.Application.UseCases
 
         public async Task<IEnumerable<RoomWithIdDto>> Execute(int accommodationId, CancellationToken cancellationToken)
         {
-            var rooms = await _roomRepository.FindAsync(t => t.AccommodationId == accommodationId, cancellationToken);
+            var rooms = await _roomRepository.GetWithIncludeAsync(
+                room => room.AccommodationId == accommodationId,
+                cancellationToken,
+            include => include.RoomType
+                );
 
             return rooms.Select(r => new RoomWithIdDto   
             {
                 Id = r.Id,
                 Name = r.Name,
                 SquareInMeter = r.SquareInMeter,
-                RoomType = r.RoomType,
+                RoomTypeId = r.RoomType.Id,
                 Capacity = r.Capacity
 
             }).ToList();
