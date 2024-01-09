@@ -3,13 +3,31 @@
     justify-content: center;
     align-items: center;
     width: 150px;
-    height: 45px;
+    height: 40px;
     border: 1px solid #1751A6;
     border-radius: 5px;
 }
+
     .create_btn:hover {
         cursor: pointer;
-        background-color: rgba(226, 237, 255, 0.8);
-        border: 1px solid #1751A6;
-        color: #1751A6;
+        background-color: rgba(3, 3, 3, 0.02);
+        border: 1.5px solid #0d6efd;
+        color: #333;
     }
+    .hotel_empty{
+        padding:0;
+        margin:0;
+        margin-top: 10vh;
+        font-size: 16pt;
+        font-family: Roboto;
+        color: gray;
+        text-align: center;
+    }
+.hotel-empty_description {
+    padding: 0;
+    margin: 0.5vh 0 10vh 0;
+    text-align: center;
+    font-family: Roboto;
+    font-size: 14px;
+    color: gray;
+}

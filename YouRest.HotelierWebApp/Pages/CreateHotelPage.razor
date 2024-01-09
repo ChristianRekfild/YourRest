@@ -2,24 +2,79 @@
 
 <h3>Create Hotel</h3>
 
-<select class="form-select" aria-label="Default select example">
-    <option selected>Выберите страну</option>
-    @foreach (CountryViewModel country in Countries)
-    {
-        <option>@country.Name</option>
-    }
-</select>
-<select class="form-select" aria-label="Default select example">
-    <option selected>Выберите регион</option>
-    @foreach (RegionViewModel region in Regions)
-    {
-        <option>@region.Name</option>
-    }
-</select>
-<select class="form-select" aria-label="Default select example">
-    <option selected>Выберите город</option>
-    @foreach (CityViewModel city in Cities)
-    {
-        <option>@city.Name</option>
-    }
-</select>
+
+<div class="input-group mb-3">
+    <label class="input-group-text" for="Countries">Страна</label>
+    <InputSelect class="form-select" id="Countries" @bind-Value="@SelectedCountry">
+        @if(string.IsNullOrEmpty(SelectedCountry))
+        {
+            <option selected>Выберите страну</option>
+        }
+        @foreach (CountryViewModel country in Countries)
+        {
+            <option>@country.Name</option>
+        }
+    </InputSelect>
+</div>
+
+<div class="input-group mb-3">
+    <InputSelect class="form-select" id="Regions" @bind-Value="@SelectedRegion">
+        @if(string.IsNullOrEmpty(SelectedRegion))
+        {
+            <option selected>Выберите регион</option>
+        }
+        @foreach (RegionViewModel region in Regions)
+        {
+            <option>@region.Name</option>
+        }
+    </InputSelect>
+    <label class="input-group-text" for="Regions">Регион</label>
+</div>
+<div class="input-group mb-3">
+    <label class="input-group-text" for="Cities">Населенный пункт</label>
+    <InputSelect class="form-select" id="Cities" @bind-Value="@SelectedCity">
+        @if(string.IsNullOrEmpty(SelectedCity))
+        {
+            <option selected>Выберите населенный пункт</option>
+        }
+        @foreach (CityViewModel city in Cities)
+        {
+            <option>@city.Name</option>
+        }
+    </InputSelect>
+</div>
+<div class="input-group mb-3">
+    <label class="input-group-text" for="Address">Адрес</label>
+    <input id="Address" type="text" class="form-control" placeholder="Введите адрес">
+</div>
+<div class="input-group mb-3">
+    <label class="input-group-text" for="HotelName">Название объекта</label>
+    <InputText id="HotelName" type="text" @bind-Value="HotelName" class="form-control" placeholder="Введите название объекта"></InputText>
+    <label class="input-group-text" for="HotelType">Тип объекта</label>
+    <InputSelect class="form-select" id="HotelType" @bind-Value="@SelectedHotelType">
+        @if (string.IsNullOrEmpty(SelectedHotelType))
+        {
+            <option selected>Выберите тип</option>
+        }
+        @foreach (HotelTypeViewModel hotelType in HotelTypes)
+        {
+            <option>@hotelType.Name</option>
+        }
+    </InputSelect>
+    <label class="input-group-text" for="HotelRating">Уровень комфорта</label>
+    <InputSelect class="form-select" id="HotelRating" @bind-Value="SelectedRating" > 
+        <option selected>Без рейтинга</option>
+        <option>Одна звезда</option>
+        <option>Две звезды</option>
+        <option>Три звезды</option>
+        <option>Четыре звезды</option>
+        <option>Пять звезд</option>
+    </InputSelect>
+</div>
+<div class="input-group mb-3">
+    <InputFile OnChange="@LoadFiles" accept =".png,.jpg,.jpeg" type="file" class="form-control" id="inputGroupFile"></InputFile>
+    <label class="input-group-text" for="inputGroupFile">Добавить фото</label>
+</div>
+<div class="create_btn" @onclick="CreateHotel"> Создать Отель </div>
+<img style="width:250px; height: 250px; border: 1px solid red;" src="@Photo" alt="Photo" />
+

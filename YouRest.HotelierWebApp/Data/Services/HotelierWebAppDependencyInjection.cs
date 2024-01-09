@@ -9,6 +9,9 @@ namespace YouRest.HotelierWebApp.Data.Services
             services.AddScoped<ICountryService, CountryService>();
             services.AddScoped<IRegionService, RegionService>();
             services.AddScoped<ICityService, CityService>();
+            services.AddScoped<IHotelService, HotelService>();
+            services.AddScoped<IHotelTypeService, HotelTypeService>();
+            services.AddScoped<IFileService, FileService>();
             return services;
         }
     }

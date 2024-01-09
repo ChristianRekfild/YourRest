@@ -6,6 +6,7 @@ using YourRest.WebApi.Options;
 using SharpGrip.FluentValidation.AutoValidation.Mvc.Attributes;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Http;
 
 namespace YourRest.WebApi.Controllers
 {
@@ -36,9 +37,16 @@ namespace YourRest.WebApi.Controllers
 
         [HttpPost]
         [Route("api/accommodation-photo")]
-        public async Task<IActionResult> UploadAccommodationPhotoAsync([FromForm] PhotoUploadModel model)
+        public async Task<IActionResult> UploadAccommodationPhotoAsync([FromBody] AccomondationPhotoModel model)
         {
-            var dto = await _accommodationPhotoUploadUseCase.ExecuteAsync(model, _awsOptions.BucketNames.Accommodation, HttpContext.RequestAborted);
+
+            using MemoryStream stream = new MemoryStream(Convert.FromBase64String(model.Photo));
+            var _model = new PhotoUploadModel()
+            {
+                AccommodationId = model.AccommodationId,
+                Photo = new FormFile(stream, 0, stream.Length, model.FileName, model.FileName)
+            };
+            var dto = await _accommodationPhotoUploadUseCase.ExecuteAsync(_model, _awsOptions.BucketNames.Accommodation, HttpContext.RequestAborted);
             return Ok(dto);
         }
 
@@ -49,7 +57,7 @@ namespace YourRest.WebApi.Controllers
             var dto = await _roomPhotoUploadUseCase.ExecuteAsync(model, _awsOptions.BucketNames.Room, HttpContext.RequestAborted);
             return Ok(dto);
         }
-        
+
         [Authorize]
         [HttpPost]
         [Route("api/user-photo")]
@@ -63,7 +71,7 @@ namespace YourRest.WebApi.Controllers
             {
                 return NotFound("User not found");
             }
-            
+
             var dto = await _userPhotoUploadUseCase.ExecuteAsync(model, _awsOptions.BucketNames.User, sub, HttpContext.RequestAborted);
             return Ok(dto);
         }
@@ -86,12 +94,15 @@ namespace YourRest.WebApi.Controllers
                 return NotFound();
             }
 
-            if (fileDto.Stream.CanSeek)
-            {
-                fileDto.Stream.Seek(0, SeekOrigin.Begin);
-            }
-
-            return File(fileDto.Stream, fileDto.MimeType, fileDto.FileName);
+            //if (fileDto.Stream.CanSeek)
+            //{
+            //    fileDto.Stream.Seek(0, SeekOrigin.Begin);
+            //}
+            var data = new byte[fileDto.Stream.Length];
+            await fileDto.Stream.ReadAsync(data);
+            //return File(fileDto.Stream, fileDto.MimeType, fileDto.FileName);
+            string base64 = Convert.ToBase64String(data);
+            return Ok($"data:{fileDto.MimeType};base64,{base64}");
         }
     }
 }

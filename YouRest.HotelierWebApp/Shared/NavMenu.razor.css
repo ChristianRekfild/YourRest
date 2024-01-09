@@ -43,13 +43,15 @@
 
         .nav-item ::deep a.active {
             background-color: rgba(255,255,255,0.25);
-            color: #1751A6;
+            color: #333;
+            font-size: 13pt;
+            font-weight: bold;
         }
 
         .nav-item ::deep a:hover {
-            background-color: rgba(226, 237, 255, 0.8);
-            border: 1px solid #1751A6;
-            color: #1751A6;
+            background-color: rgba(3, 3, 3, 0.025);
+            border: 1.5px solid #0d6efd;
+            color: #333;
         }
 
 @media (min-width: 641px) {

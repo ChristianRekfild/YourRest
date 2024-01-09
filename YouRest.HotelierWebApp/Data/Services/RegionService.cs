@@ -6,14 +6,15 @@ namespace YouRest.HotelierWebApp.Data.Services
     public class RegionService : IRegionService
     {
         private readonly HttpClient httpClient;
-
-        public RegionService(IHttpClientFactory httpClientFactory)
+        private readonly string webApiUrl;
+        public RegionService(IHttpClientFactory httpClientFactory, IConfiguration configuration)
         {
             this.httpClient = httpClientFactory.CreateClient();
+            webApiUrl = configuration.GetSection("WebApiUrl").Value;
         }
         public async Task<IEnumerable<RegionViewModel>> FetchRegionsAsync(CancellationToken cancellationToken = default)
         {
-            var response = await httpClient.GetAsync("http://localhost:52893/api/regions", cancellationToken);
+            var response = await httpClient.GetAsync($"{webApiUrl}/api/regions", cancellationToken);
             var regions = await response.Content.ReadFromJsonAsync<IEnumerable<RegionViewModel>>();
             return regions;
         }

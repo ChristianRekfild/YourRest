@@ -1,7 +1,18 @@
 ﻿@page "/hotels"
 
-<h3>MyHotelPage</h3>
+<h3>Мои Отели</h3>
+@if (Hotels.Any())
+{
 
+    <HotelTableComponent @bind-Hotels="@Hotels" />
+}
+else
+{
+    <p class="hotel_empty">У Вас пока нет добавленных отелей</p>
+    <p class="hotel-empty_description">Для добавления отеля нажмите на кнопку "Добвить отель"</p>
+}
+
+       
 <div class="create_btn" @onclick="NavigateToCreate">
     Добавить отель
 </div>

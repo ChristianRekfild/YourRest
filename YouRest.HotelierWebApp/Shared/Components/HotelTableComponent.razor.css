@@ -1,0 +1,43 @@
+﻿th {
+    font-size: 13pt;
+    color: #333;
+}
+
+.hotel_name {
+    color: #0d6efd;
+}
+
+.control {
+    display: flex;
+    padding: 0;
+    margin: 0;
+    list-style-type: none;
+}
+
+.control_item {
+    text-align: center;
+    font-size: 15pt;
+    width: 30px;
+    height: 30px;
+    margin-right: 10px;
+}
+
+    .control_item:hover {
+        cursor: pointer;
+    }
+
+.edit:hover {
+    cursor: pointer;
+    color: hsl(38 90% 55%);
+}
+
+.remove:hover {
+    cursor: pointer;
+    color: #dc3545;
+}
+
+.tab_row:hover {
+    cursor: pointer;
+    background-color: rgba(3, 3, 3, 0.02);
+    border-bottom: 1.5px solid #0d6efd;
+}

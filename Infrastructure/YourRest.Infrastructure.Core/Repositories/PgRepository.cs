@@ -3,6 +3,8 @@ using YourRest.Domain.Entities;
 using YourRest.Domain.Repositories;
 using System.Linq.Expressions;
 using System.Linq;
+using System.Reflection.Metadata.Ecma335;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace YourRest.Infrastructure.Core.Repositories
 {
