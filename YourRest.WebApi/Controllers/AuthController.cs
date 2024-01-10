@@ -45,5 +45,13 @@ namespace YourRest.WebApi.Controllers
 
             return Ok(userDetails);
         }
+        
+        [HttpPost]
+        [Route("api/user-registration")]
+        public async Task<IActionResult> RegisterUserAsync([FromBody] ExtendedUserCredentialsViewModel credentials)
+        {
+            var tokenResponse = await _authenticationService.RegisterAsync(credentials, HttpContext.RequestAborted);
+            return Ok(tokenResponse);
+        }
     }
 }
