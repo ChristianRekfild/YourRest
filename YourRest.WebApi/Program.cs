@@ -156,7 +156,7 @@ public class Program
         app.UseRouting();
         app.UseAuthentication();
         app.UseAuthorization();
-        app.UseMiddleware<ErrorHandlingMiddleware>();
+        //app.UseMiddleware<ErrorHandlingMiddleware>();
         app.UseMiddleware<UserSavingMiddleware>();
         app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
 

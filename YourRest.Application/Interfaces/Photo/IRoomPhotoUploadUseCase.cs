@@ -5,6 +5,6 @@ namespace YourRest.Application.Interfaces.Photo
 {
     public interface IRoomPhotoUploadUseCase
     {
-        Task<PhotoUploadResponseDto> ExecuteAsync(RoomPhotoUploadModel request, string bucketName, CancellationToken cancellationToken);
+        Task<PhotoPathResponseDto> ExecuteAsync(RoomPhotoUploadModel request, string bucketName, CancellationToken cancellationToken);
     }
 }

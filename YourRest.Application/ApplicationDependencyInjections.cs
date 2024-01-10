@@ -102,6 +102,7 @@ namespace YourRest.Application
             services.AddScoped<IFileService, FileService>();
             services.AddScoped<IUserPhotoUploadUseCase, UserPhotoUploadUseCase>();
             services.AddScoped<IGetUserInfoUseCase, GetUserInfoUseCase>();
+            services.AddScoped<IGetUserPhotosUseCase, GetUserPhotosUseCase>();
             
             return services;
         }

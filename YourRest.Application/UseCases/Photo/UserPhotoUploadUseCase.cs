@@ -24,7 +24,7 @@ namespace YourRest.Application.UseCases.Photo
             _userRepository = userRepository;
             _fileService = fileService;
         }
-        public async Task<PhotoUploadResponseDto> ExecuteAsync(UserPhotoUploadModel request, string bucketName, string userKeyCloakId, CancellationToken cancellationToken)
+        public async Task<PhotoPathResponseDto> ExecuteAsync(UserPhotoUploadModel request, string bucketName, string userKeyCloakId, CancellationToken cancellationToken)
         {
             var users = await _userRepository.FindAsync(a => a.KeyCloakId == userKeyCloakId, cancellationToken);
             var user = users.FirstOrDefault();
@@ -51,7 +51,7 @@ namespace YourRest.Application.UseCases.Photo
             var savedPhoto = await _photoRepository.AddAsync(photo, false, cancellationToken);
             await _photoRepository.SaveChangesAsync(cancellationToken);
 
-            return new PhotoUploadResponseDto() { FilePath = savedPhoto.FilePath };
+            return new PhotoPathResponseDto() { FilePath = savedPhoto.FilePath };
         }
     }
 }
