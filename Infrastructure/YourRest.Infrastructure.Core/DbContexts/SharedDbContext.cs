@@ -103,7 +103,9 @@ namespace YourRest.Infrastructure.Core.DbContexts
             Regions.RemoveRange(Regions);
             Reviews.RemoveRange(Reviews);
             AccommodationStarRatings.RemoveRange(AccommodationStarRatings);
+            UserAccommodations.RemoveRange(UserAccommodations);
             Accommodations.RemoveRange(Accommodations);
+            Users.RemoveRange(Users);
             Addresses.RemoveRange(Addresses);
             Rooms.RemoveRange(Rooms);
             RoomFacilities.RemoveRange(RoomFacilities);
