@@ -44,10 +44,11 @@ namespace YourRest.WebApi.Tests.Fixtures
         }
         
         private KeycloakFixture()
-        {        
+        {
             //RemoveContainer("keycloakdb-test");
             //CreateNetwork("yourrest_local-network");
             //BuildDockerImage("../../../Dockerfile", "keycloak_test:latest");
+            RemoveNetwork("yourrest_local-network");
 
             _network = new NetworkBuilder()
                 //.WithName(Guid.NewGuid().ToString("D"))
