@@ -1,86 +1,97 @@
 ﻿@page "/hotels/create"
+<div class="container-fluid">
+    <div class="row">
+        <h4>Запоните форму для добавления Вашего отеля</h4>
+    </div>
+    <div class="row body">
+        <EditForm Model="@CreateHotelViewModel" OnSubmit="@CreateHotel">
+            <div class="input-group mb-3">
+                <label class="input-group-text" for="Countries">Страна</label>
+                <InputSelect class="form-select" id="Countries" @bind-Value="CreateHotelViewModel.Country">
+                    @if (string.IsNullOrEmpty(CreateHotelViewModel.Country))
+                    {
+                        <option selected>Выберите страну</option>
+                    }
+                    @foreach (CountryViewModel country in Countries)
+                    {
+                        <option>@country.Name</option>
+                    }
+                </InputSelect>
+            </div>
 
-<h3>Create Hotel</h3>
-
-
-<div class="input-group mb-3">
-    <label class="input-group-text" for="Countries">Страна</label>
-    <InputSelect class="form-select" id="Countries" @bind-Value="@SelectedCountry">
-        @if (string.IsNullOrEmpty(SelectedCountry))
-        {
-            <option selected>Выберите страну</option>
-        }
-        @foreach (CountryViewModel country in Countries)
-        {
-            <option>@country.Name</option>
-        }
-    </InputSelect>
+            <div class="input-group mb-3">
+                <InputSelect class="form-select" id="Regions" @bind-Value="@CreateHotelViewModel.Region">
+                    @if (string.IsNullOrEmpty(CreateHotelViewModel.Region))
+                    {
+                        <option selected>Выберите регион</option>
+                    }
+                    @foreach (RegionViewModel region in Regions)
+                    {
+                        <option>@region.Name</option>
+                    }
+                </InputSelect>
+                <label class="input-group-text" for="Regions">Регион</label>
+            </div>
+            <div class="input-group mb-3">
+                <label class="input-group-text" for="Cities">Населенный пункт</label>
+                <InputSelect class="form-select" id="Cities" @bind-Value="@CreateHotelViewModel.City">
+                    @if (string.IsNullOrEmpty(CreateHotelViewModel.City))
+                    {
+                        <option selected>Выберите населенный пункт</option>
+                    }
+                    @foreach (CityViewModel city in Cities)
+                    {
+                        <option>@city.Name</option>
+                    }
+                </InputSelect>
+            </div>
+            <div class="input-group mb-3">
+                <label class="input-group-text" for="Address">Адрес</label>
+                <InputText @bind-Value="@CreateHotelViewModel.Address" id="Address" type="text" class="form-control" placeholder="Введите адрес"></InputText>
+            </div>
+            <div class="input-group mb-3">
+                <label class="input-group-text" for="HotelName">Название объекта</label>
+                <InputText id="HotelName" type="text" @bind-Value="CreateHotelViewModel.HotelName"
+                           class="form-control" placeholder="Введите название объекта"></InputText>
+            </div>
+            <div class="input-group mb-3">
+                <span class="input-group-text">Описание объекта</span>
+                <InputTextArea @bind-Value="CreateHotelViewModel.HotelDescription" class="form-control" placeholder="Введите описание объекта"></InputTextArea>
+            </div>
+            <div class="input-group mb-3">
+                <label class="input-group-text" for="HotelType">Тип объекта</label>
+                <InputSelect class="form-select" id="HotelType" @bind-Value="@CreateHotelViewModel.HotelType">
+                    @if (string.IsNullOrEmpty(CreateHotelViewModel.HotelType))
+                    {
+                        <option selected>Выберите тип</option>
+                    }
+                    @foreach (HotelTypeViewModel hotelType in HotelTypes)
+                    {
+                        <option>@hotelType.Name</option>
+                    }
+                </InputSelect>
+                <label class="input-group-text" for="HotelRating">Уровень комфорта</label>
+                <InputSelect class="form-select" id="HotelRating" @bind-Value="@CreateHotelViewModel.HotelRating">
+                    <option selected>Без рейтинга</option>
+                    <option>Одна звезда</option>
+                    <option>Две звезды</option>
+                    <option>Три звезды</option>
+                    <option>Четыре звезды</option>
+                    <option>Пять звезд</option>
+                </InputSelect>
+            </div>
+            <div class="input-group mb-3">
+                <InputFile @key=@(inputFileId) OnChange="@LoadFiles"
+                           multiple accept=".png,.jpg,.jpeg" type="file" class="form-control" id="inputGroupFile"></InputFile>
+                <label class="input-group-text" for="inputGroupFile">Добавить фото</label>
+            </div>
+            @if (CreateHotelViewModel.Images.Any())
+            {
+                <PreviewImagesComponent @bind-Images="@CreateHotelViewModel.Images" />
+            }
+        </EditForm>
+    </div>
+    <div class="row justify-content-end">
+            <div class="create_btn" @onclick="CreateHotel"> Создать Отель </div>
+    </div>
 </div>
-
-<div class="input-group mb-3">
-    <InputSelect class="form-select" id="Regions" @bind-Value="@SelectedRegion">
-        @if (string.IsNullOrEmpty(SelectedRegion))
-        {
-            <option selected>Выберите регион</option>
-        }
-        @foreach (RegionViewModel region in Regions)
-        {
-            <option>@region.Name</option>
-        }
-    </InputSelect>
-    <label class="input-group-text" for="Regions">Регион</label>
-</div>
-<div class="input-group mb-3">
-    <label class="input-group-text" for="Cities">Населенный пункт</label>
-    <InputSelect class="form-select" id="Cities" @bind-Value="@SelectedCity">
-        @if (string.IsNullOrEmpty(SelectedCity))
-        {
-            <option selected>Выберите населенный пункт</option>
-        }
-        @foreach (CityViewModel city in Cities)
-        {
-            <option>@city.Name</option>
-        }
-    </InputSelect>
-</div>
-<div class="input-group mb-3">
-    <label class="input-group-text" for="Address">Адрес</label>
-    <input id="Address" type="text" class="form-control" placeholder="Введите адрес">
-</div>
-<div class="input-group mb-3">
-    <label class="input-group-text" for="HotelName">Название объекта</label>
-    <InputText id="HotelName" type="text" @bind-Value="HotelName" class="form-control" placeholder="Введите название объекта"></InputText>
-    <label class="input-group-text" for="HotelType">Тип объекта</label>
-    <InputSelect class="form-select" id="HotelType" @bind-Value="@SelectedHotelType">
-        @if (string.IsNullOrEmpty(SelectedHotelType))
-        {
-            <option selected>Выберите тип</option>
-        }
-        @foreach (HotelTypeViewModel hotelType in HotelTypes)
-        {
-            <option>@hotelType.Name</option>
-        }
-    </InputSelect>
-    <label class="input-group-text" for="HotelRating">Уровень комфорта</label>
-    <InputSelect class="form-select" id="HotelRating" @bind-Value="SelectedRating">
-        <option selected>Без рейтинга</option>
-        <option>Одна звезда</option>
-        <option>Две звезды</option>
-        <option>Три звезды</option>
-        <option>Четыре звезды</option>
-        <option>Пять звезд</option>
-    </InputSelect>
-</div>
-<div class="input-group mb-3">
-    <InputFile @key=@(inputFileId) OnChange="@LoadFiles" multiple accept=".png,.jpg,.jpeg" type="file" class="form-control" id="inputGroupFile"></InputFile>
-    <label class="input-group-text" for="inputGroupFile">Добавить фото</label>
-</div>
-@if (Images.Any())
-{
-    <PreviewImagesComponent @bind-Images="@Images" />
-}
-<div class="create_btn" @onclick="CreateHotel"> Создать Отель </div>
-
-
-
-

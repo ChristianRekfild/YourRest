@@ -15,7 +15,7 @@ namespace YouRest.HotelierWebApp.Shared.Components
         public void MouseOverOfEditBtn()
         {
             Edit = "edit";
-            RowHoverStyle = "border-bottom: 1.5px solid #fd7e14 !important;\r\n    background-color: RGBA(253,126,20,0.1) !important;\r\n    color: #333 !important;";
+            RowHoverStyle = "border-bottom: 1px solid #fd7e14 !important;\r\n    background-color: RGBA(253,126,20,0.1) !important;\r\n    color: #333 !important;";
 
         }
         public void MouseOutOfEditBtn()
@@ -26,7 +26,7 @@ namespace YouRest.HotelierWebApp.Shared.Components
         public void MouseOverOfRemoveBtn()
         {
             Remove = "remove";
-            RowHoverStyle = $"border-bottom: 1.5px solid RGBA(220,53,69,1) !important;\r\n    background-color: RGBA(220,53,69,0.09) !important;\r\n    color: #333 !important;";
+            RowHoverStyle = $"border-bottom: 1px solid RGBA(220,53,69,1) !important;\r\n    background-color: RGBA(220,53,69,0.09) !important;\r\n    color: #333 !important;";
         }
         public void MouseOutOfRemoveBtn()
         {

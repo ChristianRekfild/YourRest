@@ -1,6 +1,17 @@
 ﻿th {
     font-size: 13pt;
     color: #333;
+    text-align: center;
+}
+th:last-child{
+   
+    text-align:end;
+}
+td{
+    text-align:center;
+}
+tr:first-child {
+    height: 40px;
 }
 
 .hotel_name {
@@ -9,6 +20,8 @@
 
 .control {
     display: flex;
+    justify-content:end;
+    align-content:center;
     padding: 0;
     margin: 0;
     list-style-type: none;
@@ -21,6 +34,9 @@
     height: 30px;
     margin-right: 10px;
 }
+    .control_item:last-child {
+        margin-right: 0px;
+    }
 
     .control_item:hover {
         cursor: pointer;
@@ -39,5 +55,5 @@
 .tab_row:hover {
     cursor: pointer;
     background-color: rgba(3, 3, 3, 0.02);
-    border-bottom: 1.5px solid #0d6efd;
+    border-bottom: 1px solid #0d6efd;
 }

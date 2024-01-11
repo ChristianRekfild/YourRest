@@ -17,14 +17,9 @@ namespace YouRest.HotelierWebApp.Pages
         [Parameter] public IEnumerable<RegionViewModel> Regions { get; set; } = new List<RegionViewModel>();
         [Parameter] public IEnumerable<CityViewModel> Cities { get; set; } = new List<CityViewModel>();
         [Parameter] public IEnumerable<HotelTypeViewModel> HotelTypes { get; set; } = new List<HotelTypeViewModel>();
+        
         private string inputFileId = Guid.NewGuid().ToString();
-        private List<string> Images { get; set; } = new();
-        private string SelectedCountry { get; set; }
-        private string SelectedRegion { get; set; }
-        private string SelectedCity { get; set; }
-        private string HotelName { get; set; }
-        public string SelectedHotelType { get; set; }
-        public string SelectedRating { get; set; } = "Без рейтинга";
+        private CreateHotelViewModel CreateHotelViewModel { get; set; } = new();
 
         protected async override Task OnInitializedAsync()
         {
@@ -38,25 +33,24 @@ namespace YouRest.HotelierWebApp.Pages
         }
         public async Task CreateHotel()
         {
-            var a = GetRatingValue(SelectedRating);
-            var selectedCountry = Countries.SingleOrDefault(x => x.Name.Equals(SelectedCountry));
             await HotelService.CreateHotel(new HotelViewModel()
             {
-                HotelTypeId = 1,
-                Name = HotelName,
-                Stars = GetRatingValue(SelectedRating),
+                HotelTypeId = HotelTypes.Single(x => x.Name == CreateHotelViewModel.HotelType).Id,
+                Name = CreateHotelViewModel.HotelName,
+                Stars = GetRatingValue(CreateHotelViewModel.HotelRating),
                 Description = "The oldest and most famous hotel in Moscow"
             });
+            CreateHotelViewModel = new CreateHotelViewModel();
         }
         public async Task LoadFiles(InputFileChangeEventArgs e)
         {
-            if(!Images.Any()) Images.Clear();
+            if(!CreateHotelViewModel.Images.Any()) CreateHotelViewModel.Images.Clear();
             var files = e.GetMultipleFiles(maximumFileCount: 5);
             foreach (var file in files)
             {
                 using MemoryStream memoryStream = new();
                 await file.OpenReadStream(file.Size).CopyToAsync(memoryStream);
-                Images.Add($"data:{file.ContentType}; base64,{Convert.ToBase64String(memoryStream.ToArray())}");
+                CreateHotelViewModel.Images.Add($"data:{file.ContentType}; base64,{Convert.ToBase64String(memoryStream.ToArray())}");
             }
             //await FileService.Upload(e.File);
             inputFileId = Guid.NewGuid().ToString();
