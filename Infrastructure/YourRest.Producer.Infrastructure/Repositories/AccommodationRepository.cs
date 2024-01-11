@@ -18,10 +18,15 @@ namespace YourRest.Producer.Infrastructure.Repositories
             _context = context;
         }
 
-        public async Task<IEnumerable<Accommodation>> GetHotelsByFilter(AccommodationFilterCriteria filter, CancellationToken cancellationToken = default)
+        public async Task<IEnumerable<Accommodation>> GetHotelsByFilter(int userId, AccommodationFilterCriteria filter, CancellationToken cancellationToken = default)
         {
             Expression<Func<Accommodation, bool>> filterExpression = h => true;
-
+            
+            if (userId > 0)
+            {
+                filterExpression = filterExpression.And(h => h.UserAccommodations.Any(ua => ua.UserId == userId));
+            }
+            
             if (filter.CountryIds != null && filter.CountryIds.Any())
             {
                 filterExpression = filterExpression.And(h => h.Address != null && filter.CountryIds.Contains(h.Address.City.Region.CountryId));
@@ -37,10 +42,11 @@ namespace YourRest.Producer.Infrastructure.Repositories
                 filterExpression = filterExpression.And(h => filter.AccommodationTypesIds.Contains(h.AccommodationTypeId));
             }
 
-            return await GetWithIncludeAsync(filterExpression, cancellationToken,
+            return await GetWithIncludeAndTrackingAsync(filterExpression, cancellationToken,
                 h => h.Address,
                 h => h.StarRating,
-                h => h.AccommodationType
+                h => h.AccommodationType,
+                h => h.UserAccommodations
             );
         }
         

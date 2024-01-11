@@ -43,12 +43,16 @@ namespace YourRest.WebApi.Controllers
         [HttpPost("api/accommodations", Name = "FetchAccommodationsByFilter")]
         public async Task<IActionResult> FetchHotels([FromBody] FetchAccommodationsViewModel fetchHotelsViewModel)
         {
-            if (fetchHotelsViewModel.DateFrom == default || fetchHotelsViewModel.DateTo == default || fetchHotelsViewModel.Adults == default)
+            var user = HttpContext.User;
+            var identity = user.Identity as ClaimsIdentity;
+            var sub = identity?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            if (sub == null)
             {
-                return BadRequest("date_from, date_to, and adults are required fields.");
+                return NotFound("User not found");
             }
 
-            var hotels = await _fetchAccommodationsUseCase.ExecuteAsync(fetchHotelsViewModel, HttpContext.RequestAborted);
+            var hotels = await _fetchAccommodationsUseCase.ExecuteAsync(sub, fetchHotelsViewModel, HttpContext.RequestAborted);
             return Ok(hotels);
         }
         
