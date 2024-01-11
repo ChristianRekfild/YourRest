@@ -1,6 +1,6 @@
 ﻿namespace YourRest.Application.Dto.Models.Photo
 {
-    public class PhotoUploadResponseDto
+    public class PhotoPathResponseDto
     {
         public string FilePath { get; set; }
     }

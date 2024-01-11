@@ -16,6 +16,7 @@ namespace YourRest.WebApi.Controllers
         private readonly IAccommodationPhotoUploadUseCase _accommodationPhotoUploadUseCase;
         private readonly IRoomPhotoUploadUseCase _roomPhotoUploadUseCase;
         private readonly IUserPhotoUploadUseCase _userPhotoUploadUseCase;
+        private readonly IGetUserPhotosUseCase _getUserPhotosUseCase;
         private readonly AwsOptions _awsOptions;
         private readonly IFileService _fileService;
 
@@ -23,6 +24,7 @@ namespace YourRest.WebApi.Controllers
             IAccommodationPhotoUploadUseCase accommodationPhotoUploadUseCase,
             IRoomPhotoUploadUseCase roomPhotoUploadUseCase,
             IUserPhotoUploadUseCase userPhotoUploadUseCase,
+            IGetUserPhotosUseCase getUserPhotosUseCase,
             AwsOptions awsOptions,
             IFileService fileService
         )
@@ -30,6 +32,7 @@ namespace YourRest.WebApi.Controllers
             _accommodationPhotoUploadUseCase = accommodationPhotoUploadUseCase;
             _roomPhotoUploadUseCase = roomPhotoUploadUseCase;
             _userPhotoUploadUseCase = userPhotoUploadUseCase;
+            _getUserPhotosUseCase = getUserPhotosUseCase;
             _awsOptions = awsOptions;
             _fileService = fileService;
         }
@@ -65,6 +68,24 @@ namespace YourRest.WebApi.Controllers
             }
             
             var dto = await _userPhotoUploadUseCase.ExecuteAsync(model, _awsOptions.BucketNames.User, sub, HttpContext.RequestAborted);
+            return Ok(dto);
+        }
+        
+        [Authorize]
+        [HttpGet]
+        [Route("api/user-photos")]
+        public async Task<IActionResult> GetUserPhotosAsync()
+        {
+            var user = HttpContext.User;
+            var identity = user.Identity as ClaimsIdentity;
+            var sub = identity?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            if (sub == null)
+            {
+                return NotFound("User not found");
+            }
+            
+            var dto = await _getUserPhotosUseCase.ExecuteAsync(sub, HttpContext.RequestAborted);
             return Ok(dto);
         }
 
