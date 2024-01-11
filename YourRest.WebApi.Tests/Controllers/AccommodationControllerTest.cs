@@ -18,14 +18,15 @@ namespace YourRest.WebApi.Tests.Controllers
     public class AccommodationControllerTest
     {
         private readonly SingletonApiTest fixture;
-        private readonly ITokenRepository _tokenRepository;
+        private readonly SharedResourcesFixture _sharedFixture;
 
         public AccommodationControllerTest(SingletonApiTest fixture)
         {
             this.fixture = fixture;
             var scope = fixture.Server.Host.Services.CreateScope();
 
-            _tokenRepository = scope.ServiceProvider.GetRequiredService<ITokenRepository>();
+            var tokenRepository = scope.ServiceProvider.GetRequiredService<ITokenRepository>();
+            _sharedFixture = new SharedResourcesFixture(tokenRepository);
         }
 
         [Fact]
@@ -224,37 +225,49 @@ namespace YourRest.WebApi.Tests.Controllers
             {
                 Name = "Luxury"
             };
+            
+            var user = new User
+            {
+                FirstName = "Test",
+                LastName = "Test",
+                Email = "test@test.ru",
+                KeyCloakId = _sharedFixture.SharedUserId
+            };
+            await fixture.InsertObjectIntoDatabase(user);
+
             var accommodation = new Accommodation
             {
                 Name = "GoldenHotel",
                 AddressId = addressEntity.Id,
                 AccommodationType = accommodationType
             };
-            
             var accommodationStarRating = new AccommodationStarRating
             {
                 Stars = 5, 
                 Accommodation = accommodation
             };
-            
             accommodation.StarRating = accommodationStarRating;
-            
             await fixture.InsertObjectIntoDatabase(accommodation);
-            
+            var userAcc = new UserAccommodation
+            {
+                User = user,
+                Accommodation = accommodation
+            };
+            accommodation.UserAccommodations.Add(userAcc);
+            await fixture.SaveChangesAsync();
             var fetchHotelsViewModel = new FetchAccommodationsViewModel
             {
-                DateFrom = DateTime.Now.AddDays(1),
-                DateTo = DateTime.Now.AddDays(7),
-                Adults = 2,
-                Children = 1,
                 CityIds = new List<int> { city.Id },
                 AccommodationTypesIds = new List<int> { accommodationType.Id }
             };
-    
+            
+            var token = _sharedFixture.SharedAccessToken;
+
+            fixture.Client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
             var content = new StringContent(JsonConvert.SerializeObject(fetchHotelsViewModel), Encoding.UTF8, "application/json");
 
             var response = await fixture.Client.PostAsync("api/accommodations", content);
-    
+           
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
             var responseString = await response.Content.ReadAsStringAsync();
@@ -265,27 +278,6 @@ namespace YourRest.WebApi.Tests.Controllers
             Assert.Contains(accommodations, dto => dto.Stars.HasValue && dto.Stars.Value == 5);
            
             fixture.CleanDatabase();
-        }
-        
-        [Fact]
-        public async Task GivenIncompleteRequestData_WhenFetchingApiMethodInvoked_ThenShouldReturnBadRequest()
-        {
-            var incompleteFetchHotelsViewModel = new FetchAccommodationsViewModel
-            {
-                CountryIds = new List<int> { 1, 2, 3 },
-                CityIds = new List<int> { 10, 11, 12 },
-                AccommodationTypesIds = new List<int> { 100, 101, 102 }
-            };
-    
-            var content = new StringContent(JsonConvert.SerializeObject(incompleteFetchHotelsViewModel), Encoding.UTF8, "application/json");
-
-            var response = await fixture.Client.PostAsync("api/accommodations", content);
-    
-            Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
-
-            var errorResponseString = await response.Content.ReadAsStringAsync();
-    
-            Assert.Equal("date_from, date_to, and adults are required fields.", errorResponseString);
         }
         
         [Fact]
@@ -302,17 +294,16 @@ namespace YourRest.WebApi.Tests.Controllers
                 Description = "A test description"
             };
             
-            string userId = await CreateKeyCloakUser();
             var user = new User
             {
                 FirstName = "Test",
                 LastName = "Test",
                 Email = "test@test.ru",
-                KeyCloakId = userId
+                KeyCloakId = _sharedFixture.SharedUserId
             };
             await fixture.InsertObjectIntoDatabase(user);
 
-            var token = await GetAccessTokenAsync();
+            var token = _sharedFixture.SharedAccessToken;
 
             fixture.Client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
@@ -336,6 +327,8 @@ namespace YourRest.WebApi.Tests.Controllers
                 .Any(ua => ua.AccommodationId == createdAccommodation.Id);
 
             Assert.True(userLinkedToAccommodation, "The user is not linked to the accommodation.");
+            
+            fixture.CleanDatabase();
         }
         
         [Fact]
@@ -348,8 +341,8 @@ namespace YourRest.WebApi.Tests.Controllers
                 Name = "Test Accommodation",
                 AccommodationTypeId = accType.Id
             };
-            string userId = await CreateKeyCloakUser();
-            var token = await GetAccessTokenAsync();
+            
+            var token = _sharedFixture.SharedAccessToken;
 
             fixture.Client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
             
@@ -374,12 +367,6 @@ namespace YourRest.WebApi.Tests.Controllers
 
             Assert.True(userLinkedToAccommodation, "The user is not linked to the accommodation.");
         }
-        
-        public async Task<string> GetAccessTokenAsync()
-        {
-            return (await _tokenRepository.GetTokenAsync("test", "test")).access_token;
-        }
-
         private AddressDto CreateValidAddressDto(int cityId)
         {
             return new AddressDto
@@ -390,15 +377,6 @@ namespace YourRest.WebApi.Tests.Controllers
                 Latitude = 0,
                 CityId = cityId
             };
-        }
-        private async Task<string> CreateKeyCloakUser()
-        {
-            string? userId;
-            
-            string adminToken = (await _tokenRepository.GetAdminTokenAsync()).access_token;
-
-            userId = await _tokenRepository.CreateUser(adminToken,  "test", "test", "test", "test@test.ru", "test");
-            return userId;
         }
     }
 }

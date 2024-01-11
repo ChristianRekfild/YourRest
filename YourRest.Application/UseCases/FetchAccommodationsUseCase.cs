@@ -3,6 +3,7 @@ using YourRest.Application.Dto.Models.Room;
 using YourRest.Application.Dto.Models;
 using YourRest.Application.Dto.Mappers;
 using YourRest.Application.Dto.ViewModels;
+using YourRest.Application.Exceptions;
 using YourRest.Application.Interfaces;
 using YourRest.Domain.Entities;
 using YourRest.Domain.Repositories;
@@ -13,20 +14,40 @@ namespace YourRest.Application.UseCases
     {
         private readonly IAccommodationRepository _accommodationRepository;
         private readonly IAccommodationMapper _mapper;
+        private readonly IUserRepository _userRepository;
+
 
         public FetchAccommodationsUseCase(
             IAccommodationRepository accommodationRepository,
-            IAccommodationMapper mapper
+            IAccommodationMapper mapper,
+            IUserRepository userRepository
         ) {
             _accommodationRepository = accommodationRepository;
             _mapper = mapper;
+            _userRepository = userRepository;
         }
 
-        public async Task<IEnumerable<AccommodationExtendedDto>> ExecuteAsync(FetchAccommodationsViewModel viewModel, CancellationToken cancellationToken)
+        public async Task<IEnumerable<AccommodationExtendedDto>> ExecuteAsync(string sub, FetchAccommodationsViewModel viewModel, CancellationToken cancellationToken)
         {
+            var users = await _userRepository.FindAsync(a => a.KeyCloakId == sub, cancellationToken);
+            var user = users.FirstOrDefault();
+
+            if (user == null)
+            {
+                throw new EntityNotFoundException(sub);
+            }
+
             var domainFilterCriteria = _mapper.MapToFilterCriteria(viewModel);
 
-            var hotels = await _accommodationRepository.GetHotelsByFilter(domainFilterCriteria, cancellationToken);
+            var hotels = await _accommodationRepository.GetHotelsByFilter(user.Id, domainFilterCriteria, cancellationToken);
+            foreach (var hotel in hotels)
+            {
+                foreach (var userAccommodation in hotel.UserAccommodations)
+                {
+                    Console.WriteLine($"User ID: {user.Id}, User ID: {userAccommodation.UserId}");
+                }
+            }
+
             return hotels.Select(h => ConvertToDto(h)).ToList();
         }
 
