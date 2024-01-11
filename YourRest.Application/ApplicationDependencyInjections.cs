@@ -93,18 +93,22 @@ namespace YourRest.Application
             services.AddScoped<IGetBookingDatesByRoomIdUseCase, GetBookingDatesByRoomIdUseCase>();
             services.AddScoped<IGetRoomsByCityAndBookingDatesUseCase, GetRoomsByCityAndBookingDatesUseCase>();
             services.AddScoped<IGetRoomsByAccommodationAndBookingDatesUseCase, GetRoomsByAccommodationAndBookingDatesUseCase>();
+            
 
-            services.AddScoped<IAccommodationMapper, AccommodationMapper>();
-            services.AddScoped<IFetchAccommodationsUseCase, FetchAccommodationsUseCase>();
             services.AddScoped<IAuthenticationService, AuthenticationService>();
             services.AddScoped<IAccommodationPhotoUploadUseCase, AccommodationPhotoUploadUseCase>();
             services.AddScoped<IRoomPhotoUploadUseCase, RoomPhotoUploadUseCase>();
-            services.AddScoped<ICreateAccommodationUseCase, CreateAccommodationUseCase>();
             services.AddScoped<IGetAccommodationTypeListUseCase, GetAccommodationTypeListUseCase>();
             services.AddScoped<IFileService, FileService>();
             services.AddScoped<IUserPhotoUploadUseCase, UserPhotoUploadUseCase>();
             services.AddScoped<IGetUserInfoUseCase, GetUserInfoUseCase>();
-            
+            //Accommodation
+            services.AddScoped<ICreateAccommodationUseCase, CreateAccommodationUseCase>();
+            services.AddScoped<IAccommodationMapper, AccommodationMapper>();
+            services.AddScoped<IFetchAccommodationsUseCase, FetchAccommodationsUseCase>();
+            services.AddScoped<IRemoveAccommodationsUseCase, RemoveAccommodationsUseCase>();
+            services.AddScoped<IEditAccommodationsUseCase, EditAccommodationsUseCase>();
+
             return services;
         }
     }
