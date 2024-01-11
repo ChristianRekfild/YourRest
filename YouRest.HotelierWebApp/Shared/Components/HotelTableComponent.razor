@@ -1,15 +1,17 @@
 ﻿<table class="table">
+    <thead>
     <tr>
-        <th>№ п/п</th>
-        <th>Название отеля</th>
-        <th>Уровень комфорта</th>
-        <th>Управление</th>
+        <th scope="col">№</th>
+        <th scope="col">Название отеля</th>
+        <th scope="col">Уровень комфорта</th>
+        <th scope="col">Управление</th>
     </tr>
+    </thead>
     @foreach (HotelViewModel hotel in Hotels)
     {
         <tr class="tab_row">
-            
-            <td>@(Hotels.IndexOf(hotel) + 1)</td>
+
+            <th scope="row">@(Hotels.IndexOf(hotel) + 1)</th>
             <td>@hotel.Name</td>
             <td>
                 <RatingOfStarComponent CountOfStar="@hotel.Stars" />
@@ -22,7 +24,7 @@
                         @onclick="@NavigateToEdit"
                         @onmouseover="@MouseOverOfEditBtn"
                         @onmouseout="@MouseOutOfEditBtn">
-                        <span class="oi oi-pencil control_item @Edit"></span>
+                        <i class="oi oi-pencil control_item @Edit"></i>
                     </li>
                     <li data-bs-toggle="tooltip"
                         data-bs-placement="right"
@@ -30,7 +32,7 @@
                         @onclick="() => OnRemove(hotel)"
                         @onmouseover="@MouseOverOfRemoveBtn"
                         @onmouseout="@MouseOutOfRemoveBtn">
-                        <span class="oi oi-trash control_item @Remove"></span>
+                        <i class="oi oi-trash control_item @Remove"></i>
                     </li>
                 </ul>
             </td>

@@ -1,17 +1,27 @@
 ﻿th {
     font-size: 13pt;
     color: #333;
-    text-align: center;
 }
-th:last-child{
-   
-    text-align:end;
+
+    th:first-child {
+        padding-left: 8px;
+        text-align: start;
+    }
+
+    th:last-child {
+        text-align: end;
+    }
+
+td {
+    padding-left: 8px;
 }
-td{
-    text-align:center;
-}
+
 tr:first-child {
     height: 40px;
+}
+
+.tab_row {
+    border-bottom: 1px solid #dee2e6;
 }
 
 .hotel_name {
@@ -20,27 +30,26 @@ tr:first-child {
 
 .control {
     display: flex;
-    justify-content:end;
-    align-content:center;
+    justify-content: end;
+    align-items: center;
     padding: 0;
     margin: 0;
     list-style-type: none;
+    height: 40px;
 }
 
 .control_item {
     text-align: center;
-    font-size: 15pt;
-    width: 30px;
-    height: 30px;
-    margin-right: 10px;
+    font-size: 16pt;
 }
-    .control_item:last-child {
-        margin-right: 0px;
-    }
 
-    .control_item:hover {
-        cursor: pointer;
-    }
+li {
+    margin-right: 8px;
+}
+
+.control_item:hover {
+    cursor: pointer;
+}
 
 .edit:hover {
     cursor: pointer;
