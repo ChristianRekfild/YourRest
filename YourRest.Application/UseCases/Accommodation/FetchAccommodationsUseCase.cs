@@ -3,11 +3,11 @@ using YourRest.Application.Dto.Models.Room;
 using YourRest.Application.Dto.Models;
 using YourRest.Application.Dto.Mappers;
 using YourRest.Application.Dto.ViewModels;
-using YourRest.Application.Interfaces;
 using YourRest.Domain.Entities;
 using YourRest.Domain.Repositories;
+using YourRest.Application.Interfaces.Accommodation;
 
-namespace YourRest.Application.UseCases
+namespace YourRest.Application.UseCases.Accommodation
 {
     public class FetchAccommodationsUseCase : IFetchAccommodationsUseCase
     {
@@ -17,7 +17,8 @@ namespace YourRest.Application.UseCases
         public FetchAccommodationsUseCase(
             IAccommodationRepository accommodationRepository,
             IAccommodationMapper mapper
-        ) {
+        )
+        {
             _accommodationRepository = accommodationRepository;
             _mapper = mapper;
         }

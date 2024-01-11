@@ -2,7 +2,7 @@ using Moq;
 using System.Linq.Expressions;
 using YourRest.Application.Dto.Models;
 using YourRest.Application.Exceptions;
-using YourRest.Application.UseCases;
+using YourRest.Application.UseCases.Accommodation;
 using YourRest.Domain.Entities;
 using YourRest.Domain.Repositories;
 

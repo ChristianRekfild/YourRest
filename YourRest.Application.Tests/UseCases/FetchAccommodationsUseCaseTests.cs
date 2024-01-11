@@ -1,10 +1,10 @@
 using Moq;
-using YourRest.Application.UseCases;
 using YourRest.Domain.Entities;
 using YourRest.Domain.Repositories;
 using YourRest.Application.Dto.ViewModels;
 using YourRest.Application.Dto.Mappers;
 using YourRest.Domain.Models;
+using YourRest.Application.UseCases.Accommodation;
 
 namespace YourRest.Application.Tests.UseCases
 {

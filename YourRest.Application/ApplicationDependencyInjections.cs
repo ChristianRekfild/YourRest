@@ -24,6 +24,8 @@ using YourRest.Application.UseCases.Room;
 using YourRest.Application.Interfaces.AccommodationFacility;
 using YourRest.Application.UseCases.HotelBookingUseCase;
 using YourRest.Application.UseCases.Photo;
+using YourRest.Application.Interfaces.Accommodation;
+using YourRest.Application.UseCases.Accommodation;
 
 namespace YourRest.Application
 {
