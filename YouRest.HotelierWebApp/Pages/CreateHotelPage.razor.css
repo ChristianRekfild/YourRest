@@ -1,7 +1,4 @@
-﻿.body {
-    height: 80vh;
-}
-::deep .form-control {
+﻿::deep .form-control {
     background-color: #fff !important;
     border: 1px solid #ced4da !important;
     color: #212529 !important;
@@ -22,3 +19,6 @@
         border: 1.5px solid #0d6efd;
         color: #333;
     }
+.row_btn{
+    margin-top: 50px;
+}

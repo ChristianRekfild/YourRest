@@ -1,10 +1,12 @@
 ﻿@page "/hotels/create"
 <div class="container-fluid">
     <div class="row">
-        <h4>Запоните форму для добавления Вашего отеля</h4>
+        <h4> Добавление отеля в систему YouRest</h4>
     </div>
-    <div class="row body">
+    <div class="row">
         <EditForm Model="@CreateHotelViewModel" OnSubmit="@CreateHotel">
+            <FluentValidationValidator @ref="FluentValidationValidator" />
+            <ValidationSummary />
             <div class="input-group mb-3">
                 <label class="input-group-text" for="Countries">Страна</label>
                 <InputSelect class="form-select" id="Countries" @bind-Value="CreateHotelViewModel.Country">
@@ -91,7 +93,7 @@
             }
         </EditForm>
     </div>
-    <div class="row justify-content-end">
+    <div class="row row_btn justify-content-end">
             <div class="create_btn" @onclick="CreateHotel"> Создать Отель </div>
     </div>
 </div>

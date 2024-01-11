@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using Blazored.FluentValidation;
+using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
 using YouRest.HotelierWebApp.Data.Services.Abstractions;
 using YouRest.HotelierWebApp.Data.ViewModels;
@@ -17,7 +18,7 @@ namespace YouRest.HotelierWebApp.Pages
         [Parameter] public IEnumerable<RegionViewModel> Regions { get; set; } = new List<RegionViewModel>();
         [Parameter] public IEnumerable<CityViewModel> Cities { get; set; } = new List<CityViewModel>();
         [Parameter] public IEnumerable<HotelTypeViewModel> HotelTypes { get; set; } = new List<HotelTypeViewModel>();
-        
+        public FluentValidationValidator? FluentValidationValidator { get; set; }
         private string inputFileId = Guid.NewGuid().ToString();
         private CreateHotelViewModel CreateHotelViewModel { get; set; } = new();
 
@@ -33,14 +34,17 @@ namespace YouRest.HotelierWebApp.Pages
         }
         public async Task CreateHotel()
         {
-            await HotelService.CreateHotel(new HotelViewModel()
+            if (await FluentValidationValidator!.ValidateAsync()) 
             {
-                HotelTypeId = HotelTypes.Single(x => x.Name == CreateHotelViewModel.HotelType).Id,
-                Name = CreateHotelViewModel.HotelName,
-                Stars = GetRatingValue(CreateHotelViewModel.HotelRating),
-                Description = "The oldest and most famous hotel in Moscow"
-            });
-            CreateHotelViewModel = new CreateHotelViewModel();
+                await HotelService.CreateHotel(new HotelViewModel()
+                {
+                    HotelTypeId = HotelTypes.Single(x => x.Name == CreateHotelViewModel.HotelType).Id,
+                    Name = CreateHotelViewModel.HotelName,
+                    Stars = GetRatingValue(CreateHotelViewModel.HotelRating),
+                    Description = "The oldest and most famous hotel in Moscow"
+                });
+                CreateHotelViewModel = new CreateHotelViewModel();
+            }
         }
         public async Task LoadFiles(InputFileChangeEventArgs e)
         {
