@@ -19,7 +19,7 @@ namespace YourRest.Application.UseCases.AgeRangeUseCases
         {
             this._ageRangeRepository = ageRangeRepository;
         }
-        public async Task ExecuteAsync(AccommodationExtendedDto accommodationExtendedDto, CancellationToken token = default)
+        public async Task ExecuteAsync(AgeRangeWithIdDto ageRangeWithIdDto, CancellationToken token = default)
         {
             var ageRange = await _ageRangeRepository.GetAsync(ageRangeWithIdDto.Id , token);
 

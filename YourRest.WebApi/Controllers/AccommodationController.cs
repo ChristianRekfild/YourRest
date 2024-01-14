@@ -7,14 +7,11 @@ using System.Security.Claims;
 using YourRest.Application.Dto.Models;
 using YourRest.Application.Interfaces.Accommodation;
 using YourRest.Application.Interfaces;
-using AutoMapper;
 using Microsoft.AspNetCore.Routing;
 using YourRest.Application.Dto.Models.Room;
 using YourRest.Application.UseCases.Room;
 using YourRest.Domain.Entities;
 using YourRest.Application.Interfaces.Room;
-using System.Web.Http;
-using YourRest.Application.UseCases.Accommodation;
 
 namespace YourRest.WebApi.Controllers
 {
@@ -56,7 +53,7 @@ namespace YourRest.WebApi.Controllers
             return CreatedAtRoute(nameof(AddAddressToAccommodationAsync), result);
         }
 
-        [HttpPost("api/accommodations", Name = "FetchAccommodationsByFilter")]
+        [HttpPost("api/accommodations"  )]
         public async Task<IActionResult> FetchHotels([FromBody] FetchAccommodationsViewModel fetchHotelsViewModel)
         {
             var user = HttpContext.User;
@@ -101,15 +98,15 @@ namespace YourRest.WebApi.Controllers
 
 
 
-        //[HttpPut]
-        //[Route("api/accommodation/{accommodationId}")]
-        //public async Task<IActionResult> Put([FromBody] AccommodationDto accommodationDto, int accommodationId)
-        //{
+        [HttpPut]
+        [Route("api/accommodation/{accommodationId}")]
+        public async Task<IActionResult> Put([FromBody] AccommodationDto accommodationDto, int accommodationId)
+        {
 
-        //    roomWithId.Id = route.Id;
-        //    await editRoomUseCase.ExecuteAsync(roomWithId, accommodationId, HttpContext.RequestAborted);
-        //    return Ok("The room has been edited");
-        //}
+            roomWithId.Id = route.Id;
+            await editRoomUseCase.ExecuteAsync(roomWithId, accommodationId, HttpContext.RequestAborted);
+            return Ok("The room has been edited");
+        }
 
 
 

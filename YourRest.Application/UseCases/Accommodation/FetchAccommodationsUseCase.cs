@@ -53,7 +53,7 @@ namespace YourRest.Application.UseCases.Accommodation
         }
 
 
-        private AccommodationExtendedDto ConvertToDto(Accommodation accommodation)
+        private AccommodationExtendedDto ConvertToDto(Domain.Entities.Accommodation accommodation)
         {
             return new AccommodationExtendedDto
             {
