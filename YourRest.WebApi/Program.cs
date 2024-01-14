@@ -19,6 +19,7 @@ using YourRest.Producer.Infrastructure.Keycloak.Settings;
 using YourRest.WebApi.Options;
 using Amazon.S3;
 using Microsoft.AspNetCore.Http.Features;
+using YourRest.WebApi;
 
 public class Program
 {
@@ -27,7 +28,7 @@ public class Program
         var builder = WebApplication.CreateBuilder(args);
         ConfigureServices(builder.Services);
         var app = builder.Build();
-        
+
         Configure(app);
 
         app.Run();
@@ -37,7 +38,7 @@ public class Program
     {
 #pragma warning disable ASP0000 // Do not call 'IServiceCollection.BuildServiceProvider' in 'ConfigureServices'
         var configuration = services.BuildServiceProvider().GetService<IConfiguration>();
-        
+
         if (configuration == null)
         {
             throw new Exception("Not fountproget onfiguration.");
@@ -87,12 +88,13 @@ public class Program
                 }
             });
         });
-                
+
         services.Configure<KeycloakSetting>(configuration.GetSection("KeycloakSetting"));
         services.AddKeycloakInfrastructure();
         services.AddInfrastructure();
         services.AddApplication();
-               
+        services.AddWebApi();
+
         services.AddHttpClient();
         services.AddTransient<ICustomHttpClientFactory, CustomHttpClientFactory>();
 
@@ -118,26 +120,29 @@ public class Program
                 IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration.GetValue<string>("KeycloakSetting:ClientSecret"))),
             };
         });
-        
-        var awsOptions = configuration.GetSection("AWS").Get<AwsOptions>();
-        services.AddSingleton(awsOptions);
 
-        var s3Config = new AmazonS3Config
+        var awsOptions = configuration.GetSection("AWS").Get<AwsOptions>();
+        if (awsOptions != null)
         {
-            ServiceURL = awsOptions.ServiceURL,
-            ForcePathStyle = true
-        };
-        services.AddSingleton(s3Config);
-        services.AddSingleton<IAmazonS3>(sp =>
-        {
-            var config = sp.GetRequiredService<AmazonS3Config>();
-            var creds = new BasicAWSCredentials(
-                awsOptions.AccessKey,
-                awsOptions.SecretKey
-            );
-            return new AmazonS3Client(creds, config);
-        });
-        
+            services.AddSingleton(awsOptions);
+
+
+            var s3Config = new AmazonS3Config
+            {
+                ServiceURL = awsOptions.ServiceURL,
+                ForcePathStyle = true
+            };
+            services.AddSingleton(s3Config);
+            services.AddSingleton<IAmazonS3>(sp =>
+            {
+                var config = sp.GetRequiredService<AmazonS3Config>();
+                var creds = new BasicAWSCredentials(
+                    awsOptions.AccessKey,
+                    awsOptions.SecretKey
+                );
+                return new AmazonS3Client(creds, config);
+            });
+        }
     }
 
     public static void Configure(IApplicationBuilder app)
@@ -154,8 +159,9 @@ public class Program
         app.UseAuthentication();
         app.UseAuthorization();
         app.UseMiddleware<ErrorHandlingMiddleware>();
+        app.UseMiddleware<UserSavingMiddleware>();
         app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
-        
+
         using var serviceScope = app.ApplicationServices.CreateScope();
         var context = serviceScope.ServiceProvider.GetService<SharedDbContext>();
         if (context != null)

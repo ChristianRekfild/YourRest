@@ -1,17 +1,14 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using YourRest.Application.Interfaces;
-using YourRest.Application.Exceptions;
-using Microsoft.AspNetCore.Authorization;
-using System.Security.Claims;
-using YourRest.WebApi.Responses;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SharpGrip.FluentValidation.AutoValidation.Mvc.Attributes;
+using System.Security.Claims;
 using YourRest.Application.Dto.Models;
+using YourRest.Application.Interfaces;
 
 namespace YourRest.WebApi.Controllers
 {
     [ApiController]
-    [Route("api/operator/review")]
+    [Route("api/operators/reviews")]
     [FluentValidationAutoValidation]
     public class ReviewsController : ControllerBase
     {

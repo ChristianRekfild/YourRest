@@ -1,12 +1,14 @@
 using DotNet.Testcontainers.Builders;
 using DotNet.Testcontainers.Containers;
-using Testcontainers.PostgreSql;
+using DotNet.Testcontainers.Networks;
 using System.Diagnostics;
+using Testcontainers.PostgreSql;
 
 namespace YourRest.WebApi.Tests.Fixtures
 {
     public class KeycloakFixture : IDisposable
     {
+        private INetwork _network;
         private PostgreSqlContainer _keycloakDbContainer;
         private IContainer _keycloakContainer;
 
@@ -43,24 +45,35 @@ namespace YourRest.WebApi.Tests.Fixtures
         
         private KeycloakFixture()
         {        
-            RemoveContainer("keycloakdb-test");
-            CreateNetwork("yourrest_local-network");
-            BuildDockerImage("../../../Dockerfile", "keycloak_test:latest");
+            //RemoveContainer("keycloakdb-test");
+            //CreateNetwork("yourrest_local-network");
+            //BuildDockerImage("../../../Dockerfile", "keycloak_test:latest");
+
+            _network = new NetworkBuilder()
+                //.WithName(Guid.NewGuid().ToString("D"))
+                .WithName("yourrest_local-network")
+                .WithCleanUp(true)
+                .Build();
 
             _keycloakDbContainer = new PostgreSqlBuilder()
-                .WithImage("postgres:latest")
+                //.WithImage("postgres:latest")
+                .WithImage("postgres:15.4-alpine")
                 .WithName("keycloakdb-test")
-                .WithNetwork("yourrest_local-network")
+                //.WithNetwork("yourrest_local-network")
+                .WithNetwork(_network)
                 .WithUsername("keycloak")
                 .WithPassword("keycloakpassword")
                 .WithDatabase("keycloak-test")
                 .WithCleanUp(true)
+                .WithAutoRemove(true)
                 .Build();
 
             _keycloakContainer = new ContainerBuilder()
-                .WithImage("keycloak_test:latest")
+                .WithImage("jboss/keycloak:latest")
                 .WithName("keycloak_test")
-                .WithNetwork("yourrest_local-network")
+                //.WithNetwork("yourrest_local-network")
+                .WithNetwork(_network)
+                .WithAutoRemove(true)
                 .WithEnvironment("DB_VENDOR", "postgres")
                 .WithEnvironment("DB_ADDR", "keycloakdb-test")
                 .WithEnvironment("DB_DATABASE", "keycloak-test")
@@ -70,6 +83,8 @@ namespace YourRest.WebApi.Tests.Fixtures
                 .WithEnvironment("KEYCLOAK_PASSWORD", "admin")
                 .WithPortBinding(8083, 8080)
                 .WithWaitStrategy(Wait.ForUnixContainer().UntilPortIsAvailable(8080/*WeatherForecastImage.HttpsPort*/))
+                .WithResourceMapping("../../../realm-export.json", "/opt/jboss/keycloak/")
+                .WithCommand("-b", "0.0.0.0", "-Dkeycloak.migration.action=import", "-Dkeycloak.migration.provider=singleFile", "-Dkeycloak.migration.file=/opt/jboss/keycloak/realm-export.json", "-Dkeycloak.migration.strategy=OVERWRITE_EXISTING")
                 //.WithWaitStrategy(Wait.ForUnixContainer().UntilContainerIsHealthy())
                 .Build();
         }
@@ -105,6 +120,7 @@ namespace YourRest.WebApi.Tests.Fixtures
         {
             Task.Run(async () =>
             {
+                await _network.CreateAsync();
                 await _keycloakDbContainer.StartAsync();
                 await _keycloakContainer.StartAsync();
                 //await Task.Delay(TimeSpan.FromSeconds(30));
@@ -131,8 +147,8 @@ namespace YourRest.WebApi.Tests.Fixtures
             var stopContainer = Process.Start("docker", $"stop {containerName}");
             stopContainer?.WaitForExit();
 
-            var removeContainer = Process.Start("docker", $"rm {containerName}");
-            removeContainer?.WaitForExit();
+            //var removeContainer = Process.Start("docker", $"rm {containerName}");
+            //removeContainer?.WaitForExit();
         }
 
         public void Dispose()

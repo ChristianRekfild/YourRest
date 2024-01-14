@@ -1,12 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Routing;
-using Microsoft.Extensions.Hosting;
-using Newtonsoft.Json.Linq;
 using SharpGrip.FluentValidation.AutoValidation.Mvc.Attributes;
 using YourRest.Application.Dto;
 using YourRest.Application.Interfaces.Age;
-using YourRest.Application.UseCases.Room;
-using YourRest.Domain.Entities;
 
 namespace YourRest.WebApi.Controllers
 {
@@ -27,7 +22,7 @@ namespace YourRest.WebApi.Controllers
         }
 
         [HttpGet]
-        [Route("api/operator/AgeRange/{id}")]
+        [Route("api/operators/AgeRanges/{id}")]
         public async Task<IActionResult> GetAgeRange(int id)
         {
             var ageRangeResponse = await _getAgeRangeByIdUseCase.ExecuteAsync(id, HttpContext.RequestAborted);
@@ -35,7 +30,7 @@ namespace YourRest.WebApi.Controllers
         }
 
         [HttpPost]
-        [Route("api/operator/AgeRange/")]
+        [Route("api/operators/AgeRanges/")]
         public async Task<IActionResult> PostAgeRange([FromBody] AgeRangeDto ageRangeDto)
         {
             var createdRoom = await _createAgeRangeUseCase.ExecuteAsync(ageRangeDto, HttpContext.RequestAborted);
@@ -43,7 +38,7 @@ namespace YourRest.WebApi.Controllers
         }
 
         [HttpPut]
-        [Route("api/operator/AgeRange/")]
+        [Route("api/operators/AgeRanges/")]
         public async Task<IActionResult> EditAgeRange([FromBody] AgeRangeWithIdDto ageRangeWithId)
         {
             await _editAgeRangeUseCase.ExecuteAsync(ageRangeWithId, HttpContext.RequestAborted);

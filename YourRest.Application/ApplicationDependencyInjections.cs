@@ -7,25 +7,25 @@ using SharpGrip.FluentValidation.AutoValidation.Mvc.Extensions;
 using SharpGrip.FluentValidation.AutoValidation.Mvc.Results;
 using System.Globalization;
 using System.Reflection;
+using YourRest.Application.Dto.Mappers;
 using YourRest.Application.Dto.Validators;
 using YourRest.Application.Dto.ViewModels;
 using YourRest.Application.Interfaces;
 using YourRest.Application.Interfaces.Age;
-using YourRest.Application.Interfaces.Photo;
 using YourRest.Application.Interfaces.Facility;
+using YourRest.Application.Interfaces.HotelBooking;
+using YourRest.Application.Interfaces.Photo;
 using YourRest.Application.Interfaces.Room;
 using YourRest.Application.Services;
 using YourRest.Application.UseCases;
-using YourRest.Application.UseCases.Photo;
 using YourRest.Application.UseCases.AgeRangeUseCases;
 using YourRest.Application.UseCases.Facility;
 using YourRest.Application.UseCases.Room;
-using YourRest.Application.Dto.Mappers;
-using System.Globalization;
-using YourRest.Application.UseCases.AgeRangeUseCases;
-using YourRest.Application.Interfaces.Age;
-using YourRest.Application.Interfaces.HotelBooking;
+using YourRest.Application.Interfaces.AccommodationFacility;
 using YourRest.Application.UseCases.HotelBookingUseCase;
+using YourRest.Application.UseCases.Photo;
+using YourRest.Application.Interfaces.Addresses;
+using YourRest.Application.UseCases.Addresses;
 
 namespace YourRest.Application
 {
@@ -79,12 +79,20 @@ namespace YourRest.Application
             services.AddScoped<IRemoveRoomFacilityUseCase, RemoveRoomFacilityUseCase>();
             services.AddScoped<IGetRoomTypeListUseCase, GetRoomTypeListUseCase>();
             services.AddScoped<IGetAllRoomFacilitiesUseCase, GetAllRoomFacilitiesUseCase>();
+            //AccommodationFacility
+            services.AddScoped<IAddAccommodationFacilityUseCase, AddAccommodationFacilityUseCase>();
+            services.AddScoped<IRemoveAccommodationFacilityUseCase, RemoveAccommodationFacilityUseCase>();
+            services.AddScoped<IGetAllAccommodationFacilitiesUseCase, GetAllAccommodationFacilitiesUseCase>();
+            services.AddScoped<IGetAccommodationFacilityByAccommodationIdUseCase, GetAccommodationFacilityByAccommodationIdUseCase>();
             //AgeRange
             services.AddScoped<ICreateAgeRangeUseCase, CreateAgeRangeUseCase>();
             services.AddScoped<IEditAgeRangeUseCase, EditAgeRangeUseCase>();
             services.AddScoped<IGetAgeRangeByIdUseCase, GetAgeRangeByIdUseCase>();
             //HotelBooking
             services.AddScoped<ICreateBookingUseCase, CreateBookingUseCase>();
+            services.AddScoped<IGetBookingDatesByRoomIdUseCase, GetBookingDatesByRoomIdUseCase>();
+            services.AddScoped<IGetRoomsByCityAndBookingDatesUseCase, GetRoomsByCityAndBookingDatesUseCase>();
+            services.AddScoped<IGetRoomsByAccommodationAndBookingDatesUseCase, GetRoomsByAccommodationAndBookingDatesUseCase>();
 
             services.AddScoped<IAccommodationMapper, AccommodationMapper>();
             services.AddScoped<IFetchAccommodationsUseCase, FetchAccommodationsUseCase>();
@@ -96,7 +104,15 @@ namespace YourRest.Application
             services.AddScoped<IFileService, FileService>();
             services.AddScoped<IUserPhotoUploadUseCase, UserPhotoUploadUseCase>();
             services.AddScoped<IGetUserInfoUseCase, GetUserInfoUseCase>();
-            
+            services.AddScoped<IGetUserPhotosUseCase, GetUserPhotosUseCase>();
+            //Address
+            services.AddScoped<IAddAddressUseCase, AddAddressUseCase>();
+            services.AddScoped<IEditAddressUseCase, EditAddressUseCase>();
+            services.AddScoped<IGetAddressByCityIdUseCase, GetAddressByCityIdUseCase>();
+            services.AddScoped<IGetAddressByIdUseCase, GetAddressByIdUseCase>();
+            services.AddScoped<IGetAddressUseCase, GetAddressUseCase>();
+            services.AddScoped<IRemoveAddressUseCase, RemoveAddressUseCase>();
+
             return services;
         }
     }

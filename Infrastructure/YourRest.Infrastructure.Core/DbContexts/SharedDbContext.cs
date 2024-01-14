@@ -17,9 +17,12 @@ namespace YourRest.Infrastructure.Core.DbContexts
         public DbSet<AccommodationStarRating> AccommodationStarRatings { get; set; }
         public DbSet<Room> Rooms { get; set; }
         public DbSet<RoomFacility> RoomFacilities { get; set; }
+        
+        public DbSet<AccommodationFacility> AccommodationFacility { get; set; }
         public DbSet<RoomType> RoomTypes { get; set; }
         public DbSet<User> Users { get; set; }    
         public DbSet<UserAccommodation> UserAccommodations { get; set; }
+        public DbSet<AccommodationFacilityLink> AccommodationFacilities { get; set; }
         public DbSet<AccommodationType> AccommodationTypes { get; set; }
         public DbSet<AgeRange> AgeRanges { get; set; }
         
@@ -52,46 +55,45 @@ namespace YourRest.Infrastructure.Core.DbContexts
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Review>(r =>
+            // Review Entity Configuration
+            modelBuilder.Entity<Review>(review =>
             {
-                r.HasOne(r => r.Booking)
-                    .WithMany()
-                    .HasForeignKey(r => r.BookingId);
-            });       
+                review.HasOne(r => r.Booking)
+                      .WithMany()
+                      .HasForeignKey(r => r.BookingId);
 
-            modelBuilder.Entity<Accommodation>()
-                .HasOne(a => a.StarRating)
-                .WithOne(s => s.Accommodation)
-                .HasForeignKey<AccommodationStarRating>(s => s.AccommodationId);
-
-            modelBuilder.Entity<Review>().OwnsOne(
-                b => b.Rating,
-                sa =>
+                review.OwnsOne(r => r.Rating, rating =>
                 {
-                    sa.Property(p => p.Value).HasColumnName("Rating");
+                    rating.Property(p => p.Value).HasColumnName("Rating");
                 });
-            
-            modelBuilder.Entity<Accommodation>(r =>
+            });
+
+            // Accommodation Entity Configuration
+            modelBuilder.Entity<Accommodation>(accommodation =>
             {
-                r.HasOne(r => r.Address)
-                    .WithOne()
-                    .HasForeignKey<Accommodation>(r => r.AddressId);
-            }); 
-            
-            modelBuilder.Entity<UserAccommodation>()
-                .HasKey(ug => new { ug.UserId, ug.AccommodationId });
+                accommodation.HasOne(a => a.StarRating)
+                             .WithOne(s => s.Accommodation)
+                             .HasForeignKey<AccommodationStarRating>(s => s.AccommodationId);
 
-            modelBuilder.Entity<UserAccommodation>()
-                .HasOne(ug => ug.User)
-                .WithMany(u => u.UserAccommodations)
-                .HasForeignKey(ug => ug.UserId);
+                accommodation.HasOne(a => a.Address)
+                             .WithOne()
+                             .HasForeignKey<Accommodation>(a => a.AddressId);
+            });
 
-            modelBuilder.Entity<UserAccommodation>()
-                .HasOne(ug => ug.Accommodation)
-                .WithMany(g => g.UserAccommodations)
-                .HasForeignKey(ug => ug.AccommodationId);
+            // UserAccommodation Entity Configuration
+            modelBuilder.Entity<UserAccommodation>(userAccommodation =>
+            {
+                userAccommodation.HasKey(ua => new { ua.UserId, ua.AccommodationId });
+
+                userAccommodation.HasOne(ua => ua.User)
+                                 .WithMany(u => u.UserAccommodations)
+                                 .HasForeignKey(ua => ua.UserId);
+
+                userAccommodation.HasOne(ua => ua.Accommodation)
+                                 .WithMany(a => a.UserAccommodations)
+                                 .HasForeignKey(ua => ua.AccommodationId);
+            });
         }
-
         public void ClearAllTables()
         {
             Countries.RemoveRange(Countries);
@@ -101,10 +103,13 @@ namespace YourRest.Infrastructure.Core.DbContexts
             Regions.RemoveRange(Regions);
             Reviews.RemoveRange(Reviews);
             AccommodationStarRatings.RemoveRange(AccommodationStarRatings);
+            UserAccommodations.RemoveRange(UserAccommodations);
             Accommodations.RemoveRange(Accommodations);
+            Users.RemoveRange(Users);
             Addresses.RemoveRange(Addresses);
             Rooms.RemoveRange(Rooms);
             RoomFacilities.RemoveRange(RoomFacilities);
+            AccommodationFacility.RemoveRange(AccommodationFacility);
             RoomTypes.RemoveRange(RoomTypes);
             AccommodationTypes.RemoveRange(AccommodationTypes);
             AgeRanges.RemoveRange(AgeRanges);

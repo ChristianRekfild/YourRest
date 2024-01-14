@@ -4,7 +4,7 @@
     { 
         public string Name { get; set; }
         public double SquareInMeter { get; set; }
-        public string RoomType { get; set; }
+        public RoomType RoomType { get; set; }
         public int Capacity { get; set; }
         public Accommodation Accommodation { get; set; }
         public int AccommodationId { get; set; }
@@ -13,5 +13,6 @@
         {
             RoomFacilities = new List<RoomFacility>();
         }
+        public ICollection<Booking> bookings { get; set; }
     }
 }

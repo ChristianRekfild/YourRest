@@ -22,6 +22,21 @@ namespace YourRest.Producer.Infrastructure.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
+            modelBuilder.Entity("BookingRoom", b =>
+                {
+                    b.Property<int>("RoomsId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("bookingsId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("RoomsId", "bookingsId");
+
+                    b.HasIndex("bookingsId");
+
+                    b.ToTable("BookingRoom");
+                });
+
             modelBuilder.Entity("RoomRoomFacility", b =>
                 {
                     b.Property<int>("RoomFacilitiesId")
@@ -66,6 +81,49 @@ namespace YourRest.Producer.Infrastructure.Migrations
                         .IsUnique();
 
                     b.ToTable("Accommodations");
+                });
+
+            modelBuilder.Entity("YourRest.Domain.Entities.AccommodationFacility", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Description")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("AccommodationFacility");
+                });
+
+            modelBuilder.Entity("YourRest.Domain.Entities.AccommodationFacilityLink", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("AccommodationFacilityId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("AccommodationId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AccommodationFacilityId");
+
+                    b.HasIndex("AccommodationId");
+
+                    b.ToTable("AccommodationFacilities");
                 });
 
             modelBuilder.Entity("YourRest.Domain.Entities.AccommodationPhoto", b =>
@@ -200,11 +258,11 @@ namespace YourRest.Producer.Infrastructure.Migrations
                     b.Property<int>("CustomerId")
                         .HasColumnType("integer");
 
-                    b.Property<DateTime>("EndDate")
-                        .HasColumnType("timestamp without time zone");
+                    b.Property<DateOnly>("EndDate")
+                        .HasColumnType("date");
 
-                    b.Property<DateTime>("StartDate")
-                        .HasColumnType("timestamp without time zone");
+                    b.Property<DateOnly>("StartDate")
+                        .HasColumnType("date");
 
                     b.Property<int>("Status")
                         .HasColumnType("integer");
@@ -364,9 +422,6 @@ namespace YourRest.Producer.Infrastructure.Migrations
                     b.Property<int>("AccommodationId")
                         .HasColumnType("integer");
 
-                    b.Property<int?>("BookingId")
-                        .HasColumnType("integer");
-
                     b.Property<int>("Capacity")
                         .HasColumnType("integer");
 
@@ -374,9 +429,8 @@ namespace YourRest.Producer.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("RoomType")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.Property<int>("RoomTypeId")
+                        .HasColumnType("integer");
 
                     b.Property<double>("SquareInMeter")
                         .HasColumnType("double precision");
@@ -385,7 +439,7 @@ namespace YourRest.Producer.Infrastructure.Migrations
 
                     b.HasIndex("AccommodationId");
 
-                    b.HasIndex("BookingId");
+                    b.HasIndex("RoomTypeId");
 
                     b.ToTable("Rooms");
                 });
@@ -515,6 +569,21 @@ namespace YourRest.Producer.Infrastructure.Migrations
                     b.ToTable("UserPhotos");
                 });
 
+            modelBuilder.Entity("BookingRoom", b =>
+                {
+                    b.HasOne("YourRest.Domain.Entities.Room", null)
+                        .WithMany()
+                        .HasForeignKey("RoomsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("YourRest.Domain.Entities.Booking", null)
+                        .WithMany()
+                        .HasForeignKey("bookingsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("RoomRoomFacility", b =>
                 {
                     b.HasOne("YourRest.Domain.Entities.RoomFacility", null)
@@ -545,6 +614,25 @@ namespace YourRest.Producer.Infrastructure.Migrations
                     b.Navigation("AccommodationType");
 
                     b.Navigation("Address");
+                });
+
+            modelBuilder.Entity("YourRest.Domain.Entities.AccommodationFacilityLink", b =>
+                {
+                    b.HasOne("YourRest.Domain.Entities.AccommodationFacility", "AccommodationFacility")
+                        .WithMany("AccommodationFacilities")
+                        .HasForeignKey("AccommodationFacilityId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("YourRest.Domain.Entities.Accommodation", "Accommodation")
+                        .WithMany("AccommodationFacilities")
+                        .HasForeignKey("AccommodationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Accommodation");
+
+                    b.Navigation("AccommodationFacility");
                 });
 
             modelBuilder.Entity("YourRest.Domain.Entities.AccommodationPhoto", b =>
@@ -660,11 +748,15 @@ namespace YourRest.Producer.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("YourRest.Domain.Entities.Booking", null)
-                        .WithMany("Rooms")
-                        .HasForeignKey("BookingId");
+                    b.HasOne("YourRest.Domain.Entities.RoomType", "RoomType")
+                        .WithMany()
+                        .HasForeignKey("RoomTypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Accommodation");
+
+                    b.Navigation("RoomType");
                 });
 
             modelBuilder.Entity("YourRest.Domain.Entities.RoomPhoto", b =>
@@ -710,6 +802,8 @@ namespace YourRest.Producer.Infrastructure.Migrations
 
             modelBuilder.Entity("YourRest.Domain.Entities.Accommodation", b =>
                 {
+                    b.Navigation("AccommodationFacilities");
+
                     b.Navigation("Rooms");
 
                     b.Navigation("StarRating");
@@ -717,9 +811,9 @@ namespace YourRest.Producer.Infrastructure.Migrations
                     b.Navigation("UserAccommodations");
                 });
 
-            modelBuilder.Entity("YourRest.Domain.Entities.Booking", b =>
+            modelBuilder.Entity("YourRest.Domain.Entities.AccommodationFacility", b =>
                 {
-                    b.Navigation("Rooms");
+                    b.Navigation("AccommodationFacilities");
                 });
 
             modelBuilder.Entity("YourRest.Domain.Entities.City", b =>

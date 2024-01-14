@@ -3,8 +3,10 @@ using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System.Text;
-using YourRest.Infrastructure.Core.DbContexts;
+using Microsoft.EntityFrameworkCore;
+using YourRest.Domain.Entities;
 using YourRest.Domain.Repositories;
+using YourRest.Infrastructure.Core.DbContexts;
 using YourRest.Producer.Infrastructure.Keycloak.Http;
 using YourRest.Producer.Infrastructure.Keycloak.Repositories;
 
@@ -19,23 +21,33 @@ namespace YourRest.WebApi.Tests.Fixtures
         private DatabaseFixture dbFixture;
         private KeycloakFixture keycloakFixture;
 
-        public SingletonApiTest() { 
-            dbFixture = DatabaseFixture.getInstance();
-            Console.WriteLine($"dbFixture is {(dbFixture == null ? "null" : "not null")}");
+        public SingletonApiTest()
+        {
+            var projectTask = Task.Run(() =>
+            {
+                dbFixture = DatabaseFixture.getInstance();
+                Console.WriteLine($"dbFixture is {(dbFixture == null ? "null" : "not null")}");
 
-            var connectionString = BuildConnectionString();
-            Console.WriteLine($"connectionString is {(connectionString == null ? "null" : "not null")}");
+                var connectionString = BuildConnectionString();
+                Console.WriteLine($"connectionString is {(connectionString == null ? "null" : "not null")}");
 
-            DbContext = dbFixture.GetDbContext(connectionString);
-            Console.WriteLine($"DbContext is {(DbContext == null ? "null" : "not null")}");
+                DbContext = dbFixture.GetDbContext(connectionString);
+                Console.WriteLine($"DbContext is {(DbContext == null ? "null" : "not null")}");
 
-            keycloakFixture = KeycloakFixture.Instance();
-            Console.WriteLine($"keycloakFixture is {(keycloakFixture == null ? "null" : "not null")}");
-            
+                InitializeWebHost(connectionString);
+            });
+
+            var keycloakTask = Task.Run(() =>
+            {
+                keycloakFixture = KeycloakFixture.Instance();
+                Console.WriteLine($"keycloakFixture is {(keycloakFixture == null ? "null" : "not null")}");
+            });
+
+            Task.WaitAll(projectTask, keycloakTask);
             //keycloakFixture.EnsureInitialized();
             //keycloakFixture.Start();
-            
-            InitializeWebHost(connectionString);
+
+
         }
 
 
@@ -64,6 +76,12 @@ namespace YourRest.WebApi.Tests.Fixtures
             await DbContext.SaveChangesAsync();
             return item.Entity;
         }
+        
+        public async Task SaveChangesAsync()
+        {
+            await DbContext.SaveChangesAsync();
+        }
+
         public void CleanDatabase()
         {
             DbContext.ClearAllTables();
@@ -72,8 +90,8 @@ namespace YourRest.WebApi.Tests.Fixtures
         public void Dispose()
         {
             Server.Dispose();
-        }        
-       
+        }
+
         private void InitializeWebHost(string connectionString)
         {
             var builder = new WebHostBuilder()
@@ -110,5 +128,13 @@ namespace YourRest.WebApi.Tests.Fixtures
             Client = Server.CreateClient();
         }
 
+        public async Task<Accommodation?> GetAccommodationById(int createdAccommodationId)
+        {
+            return await DbContext
+                .Set<Accommodation>()
+                .Include(x => x.UserAccommodations)
+                .Include(x => x.AccommodationFacilities)
+                .FirstOrDefaultAsync(x => x.Id.Equals(createdAccommodationId));
+        }
     }
 }

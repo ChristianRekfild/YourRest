@@ -10,7 +10,7 @@ namespace YourRest.Domain.Repositories
         Task AddRangeAsync(T[] entites, bool saveChanges = true, CancellationToken cancellationToken = default);
 
         Task<IEnumerable<T>> FindAsync(Expression<Func<T, bool>> expression, CancellationToken cancellationToken = default);
-
+    
         Task<bool> FindAnyAsync(Expression<Func<T, bool>> expression, CancellationToken cancellationToken = default);
 
         Task<IEnumerable<T>> GetAllAsync(CancellationToken cancellationToken = default);
@@ -27,6 +27,9 @@ namespace YourRest.Domain.Repositories
         Task SaveChangesAsync(CancellationToken cancellationToken = default);
 
         Task<IEnumerable<T>> GetWithIncludeAsync(Expression<Func<T, bool>> predicate,
+            CancellationToken cancellationToken = default, params Expression<Func<T, object>>[] includeProperties);
+
+        Task<IEnumerable<T>> GetWithIncludeAndTrackingAsync(Expression<Func<T, bool>> predicate,
             CancellationToken cancellationToken = default, params Expression<Func<T, object>>[] includeProperties);
     }
 }

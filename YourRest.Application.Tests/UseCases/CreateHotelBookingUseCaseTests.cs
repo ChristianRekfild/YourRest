@@ -49,7 +49,7 @@ namespace YourRest.Application.Tests.UseCases
                     Id = 1,
                     AccommodationId = 1,
                     Name = "DeluxeRoom",
-                    RoomType = "ZBS",
+                    RoomType = new RoomType() { Name = "ZBS" },
                     SquareInMeter = 1,
                     Capacity = 20
                 }
@@ -57,8 +57,8 @@ namespace YourRest.Application.Tests.UseCases
 
             BookingDto newBooking = new BookingDto()
             {
-                StartDate = new DateTime(2025, 10, 2),
-                EndDate = new DateTime(2025, 10, 12),
+                StartDate = new DateOnly(2025, 10, 2),
+                EndDate = new DateOnly(2025, 10, 12),
                 Rooms = new List<int>() { 1, 2 },
                 TotalAmount = 5000.0m,
                 AdultNumber = 2,
@@ -93,7 +93,7 @@ namespace YourRest.Application.Tests.UseCases
                     Id = 1,
                     AccommodationId = 1,
                     Name = "DeluxeRoom",
-                    RoomType = "ZBS",
+                    RoomType = new RoomType() { Name = "ZBS" },
                     SquareInMeter = 1,
                     Capacity = 20
                 } }
@@ -101,8 +101,8 @@ namespace YourRest.Application.Tests.UseCases
 
             BookingDto newHotelBookingDateToIn = new BookingDto()
             {
-                StartDate = new DateTime(2025, 10, 2),
-                EndDate = new DateTime(2025, 10, 12),
+                StartDate = new DateOnly(2025, 10, 2),
+                EndDate = new DateOnly(2025, 10, 12),
                 Rooms = new List<int>() { 1 },
                 TotalAmount = 5000.0m,
                 AdultNumber = 2,

@@ -8,6 +8,9 @@ using YourRest.Application.Dto.ViewModels;
 using YourRest.Domain.Entities;
 using YourRest.WebApi.Responses;
 using YourRest.WebApi.Tests.Fixtures;
+using Microsoft.Extensions.DependencyInjection;
+using YourRest.Domain.Repositories;
+using System.Net.Http.Headers;
 
 namespace YourRest.WebApi.Tests.Controllers
 {
@@ -15,9 +18,15 @@ namespace YourRest.WebApi.Tests.Controllers
     public class AccommodationControllerTest
     {
         private readonly SingletonApiTest fixture;
+        private readonly SharedResourcesFixture _sharedFixture;
+
         public AccommodationControllerTest(SingletonApiTest fixture)
         {
             this.fixture = fixture;
+            var scope = fixture.Server.Host.Services.CreateScope();
+
+            var tokenRepository = scope.ServiceProvider.GetRequiredService<ITokenRepository>();
+            _sharedFixture = new SharedResourcesFixture(tokenRepository);
         }
 
         [Fact]
@@ -34,7 +43,7 @@ namespace YourRest.WebApi.Tests.Controllers
             var addressDto = CreateValidAddressDto(city.Id);
             
             var content = new StringContent(JsonConvert.SerializeObject(addressDto), Encoding.UTF8, "application/json");
-            var response = await fixture.Client.PostAsync($"api/operator/accommodation/{accommodation.Id}/address", content);
+            var response = await fixture.Client.PostAsync($"api/operators/accommodations/{accommodation.Id}/address", content);
             Assert.Equal(HttpStatusCode.Created, response.StatusCode);
 
             var responseString = await response.Content.ReadAsStringAsync();
@@ -67,7 +76,7 @@ namespace YourRest.WebApi.Tests.Controllers
             var addressDto = CreateValidAddressDto(city.Id);
             addressDto.Street = "Second street";
             var content = new StringContent(JsonConvert.SerializeObject(addressDto), Encoding.UTF8, "application/json");
-            var response = await fixture.Client.PostAsync($"api/operator/accommodation/{accommodation.Id}/address", content);
+            var response = await fixture.Client.PostAsync($"api/operators/accommodations/{accommodation.Id}/address", content);
             Assert.Equal(HttpStatusCode.Created, response.StatusCode);
 
             var createdAddress = await response.Content.ReadFromJsonAsync<ResultDto>();
@@ -87,7 +96,7 @@ namespace YourRest.WebApi.Tests.Controllers
             addressDto.Street = "Thrid street";
 
             var content = new StringContent(JsonConvert.SerializeObject(addressDto), Encoding.UTF8, "application/json");
-            var response = await fixture.Client.PostAsync($"api/operator/accommodation/{accommodationId}/address", content);
+            var response = await fixture.Client.PostAsync($"api/operators/accommodations/{accommodationId}/address", content);
            
             var errorMassage = await response.Content.ReadAsStringAsync();
             var expectedMessage = new { message = $"Accommodation with id {accommodationId} not found" };
@@ -116,7 +125,7 @@ namespace YourRest.WebApi.Tests.Controllers
             };
 
             var content = new StringContent(JsonConvert.SerializeObject(addressDto), Encoding.UTF8, "application/json");
-            var response = await fixture.Client.PostAsync($"api/operator/accommodation/{accommodation.Id}/address", content);
+            var response = await fixture.Client.PostAsync($"api/operators/accommodations/{accommodation.Id}/address", content);
 
             Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
 
@@ -146,7 +155,7 @@ namespace YourRest.WebApi.Tests.Controllers
                 CityId = -1
             };
             var content = new StringContent(JsonConvert.SerializeObject(addressDto), Encoding.UTF8, "application/json");
-            var response = await fixture.Client.PostAsync($"api/operator/accommodation/{accommodation.Id}/address", content);
+            var response = await fixture.Client.PostAsync($"api/operators/accommodations/{accommodation.Id}/address", content);
             var errorData = await response.Content.ReadFromJsonAsync<ErrorViewModel>();
 
             Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
@@ -187,7 +196,7 @@ namespace YourRest.WebApi.Tests.Controllers
             addressDto.Street = "Fifth street";
 
             var content = new StringContent(JsonConvert.SerializeObject(addressDto), Encoding.UTF8, "application/json");
-            var response = await fixture.Client.PostAsync($"api/operator/accommodation/{accommodation.Id}/address", content);
+            var response = await fixture.Client.PostAsync($"api/operators/accommodations/{accommodation.Id}/address", content);
 
             Assert.Equal(HttpStatusCode.UnprocessableEntity, response.StatusCode);
 
@@ -216,37 +225,49 @@ namespace YourRest.WebApi.Tests.Controllers
             {
                 Name = "Luxury"
             };
+            
+            var user = new User
+            {
+                FirstName = "Test",
+                LastName = "Test",
+                Email = "test@test.ru",
+                KeyCloakId = _sharedFixture.SharedUserId
+            };
+            await fixture.InsertObjectIntoDatabase(user);
+
             var accommodation = new Accommodation
             {
                 Name = "GoldenHotel",
                 AddressId = addressEntity.Id,
                 AccommodationType = accommodationType
             };
-            
             var accommodationStarRating = new AccommodationStarRating
             {
                 Stars = 5, 
                 Accommodation = accommodation
             };
-            
             accommodation.StarRating = accommodationStarRating;
-            
             await fixture.InsertObjectIntoDatabase(accommodation);
-            
+            var userAcc = new UserAccommodation
+            {
+                User = user,
+                Accommodation = accommodation
+            };
+            accommodation.UserAccommodations.Add(userAcc);
+            await fixture.SaveChangesAsync();
             var fetchHotelsViewModel = new FetchAccommodationsViewModel
             {
-                DateFrom = DateTime.Now.AddDays(1),
-                DateTo = DateTime.Now.AddDays(7),
-                Adults = 2,
-                Children = 1,
                 CityIds = new List<int> { city.Id },
                 AccommodationTypesIds = new List<int> { accommodationType.Id }
             };
-    
+            
+            var token = _sharedFixture.SharedAccessToken;
+
+            fixture.Client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
             var content = new StringContent(JsonConvert.SerializeObject(fetchHotelsViewModel), Encoding.UTF8, "application/json");
 
             var response = await fixture.Client.PostAsync("api/accommodations", content);
-    
+           
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
             var responseString = await response.Content.ReadAsStringAsync();
@@ -260,34 +281,9 @@ namespace YourRest.WebApi.Tests.Controllers
         }
         
         [Fact]
-        public async Task GivenIncompleteRequestData_WhenFetchingApiMethodInvoked_ThenShouldReturnBadRequest()
-        {
-            var incompleteFetchHotelsViewModel = new FetchAccommodationsViewModel
-            {
-                CountryIds = new List<int> { 1, 2, 3 },
-                CityIds = new List<int> { 10, 11, 12 },
-                AccommodationTypesIds = new List<int> { 100, 101, 102 }
-            };
-    
-            var content = new StringContent(JsonConvert.SerializeObject(incompleteFetchHotelsViewModel), Encoding.UTF8, "application/json");
-
-            var response = await fixture.Client.PostAsync("api/accommodations", content);
-    
-            Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
-
-            var errorResponseString = await response.Content.ReadAsStringAsync();
-    
-            Assert.Equal("date_from, date_to, and adults are required fields.", errorResponseString);
-        }
-        
-        [Fact]
         public async Task GivenValidAccommodationData_WhenCreateApiMethodInvoked_ThenShouldReturnCreatedResult()
         {
-            var accommodationType = new AccommodationType
-            {
-                Name = "Luxury"
-            };
-            
+            var accommodationType = new AccommodationType { Name = "Luxury" };
             var accType = await fixture.InsertObjectIntoDatabase(accommodationType);
             
             var validCreateAccommodationDto = new CreateAccommodationDto
@@ -297,6 +293,19 @@ namespace YourRest.WebApi.Tests.Controllers
                 Stars = 4,
                 Description = "A test description"
             };
+            
+            var user = new User
+            {
+                FirstName = "Test",
+                LastName = "Test",
+                Email = "test@test.ru",
+                KeyCloakId = _sharedFixture.SharedUserId
+            };
+            await fixture.InsertObjectIntoDatabase(user);
+
+            var token = _sharedFixture.SharedAccessToken;
+
+            fixture.Client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
             var content = new StringContent(JsonConvert.SerializeObject(validCreateAccommodationDto), Encoding.UTF8, "application/json");
 
@@ -310,24 +319,33 @@ namespace YourRest.WebApi.Tests.Controllers
             Assert.Equal(validCreateAccommodationDto.AccommodationTypeId, createdAccommodation.AccommodationType.Id);
             Assert.Equal(validCreateAccommodationDto.Stars, createdAccommodation.Stars);
             Assert.Equal(validCreateAccommodationDto.Description, createdAccommodation.Description);
+            
+            var retrievedAccommodation = await fixture.GetAccommodationById(createdAccommodation.Id);
+            Assert.NotNull(retrievedAccommodation);
+
+            var userLinkedToAccommodation = retrievedAccommodation.UserAccommodations
+                .Any(ua => ua.AccommodationId == createdAccommodation.Id);
+
+            Assert.True(userLinkedToAccommodation, "The user is not linked to the accommodation.");
+            
+            fixture.CleanDatabase();
         }
         
         [Fact]
         public async Task GivenAccommodationDataWithoutOptionalFields_WhenCreateApiMethodInvoked_ThenShouldReturnCreatedResult()
         {
-            var accommodationType = new AccommodationType
-            {
-                Name = "Luxury"
-            };
-            
+            var accommodationType = new AccommodationType { Name = "Luxury" };
             var accType = await fixture.InsertObjectIntoDatabase(accommodationType);
-            
             var validCreateAccommodationDto = new CreateAccommodationDto
             {
                 Name = "Test Accommodation",
                 AccommodationTypeId = accType.Id
             };
+            
+            var token = _sharedFixture.SharedAccessToken;
 
+            fixture.Client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            
             var content = new StringContent(JsonConvert.SerializeObject(validCreateAccommodationDto), Encoding.UTF8, "application/json");
 
             var response = await fixture.Client.PostAsync("api/accommodation", content);
@@ -340,8 +358,15 @@ namespace YourRest.WebApi.Tests.Controllers
             Assert.Equal(createdAccommodation.AccommodationType.Id, validCreateAccommodationDto.AccommodationTypeId);
             Assert.Null(validCreateAccommodationDto.Stars);
             Assert.Null(validCreateAccommodationDto.Description);
-        }
+            
+            var retrievedAccommodation = await fixture.GetAccommodationById(createdAccommodation.Id);
+            Assert.NotNull(retrievedAccommodation);
 
+            var userLinkedToAccommodation = retrievedAccommodation.UserAccommodations
+                .Any(ua => ua.AccommodationId == createdAccommodation.Id);
+
+            Assert.True(userLinkedToAccommodation, "The user is not linked to the accommodation.");
+        }
         private AddressDto CreateValidAddressDto(int cityId)
         {
             return new AddressDto
