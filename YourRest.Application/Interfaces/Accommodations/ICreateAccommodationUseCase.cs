@@ -1,6 +1,6 @@
 using YourRest.Application.Dto;
 
-namespace YourRest.Application.Interfaces.Accommodation
+namespace YourRest.Application.Interfaces.Accommodations
 {
     public interface ICreateAccommodationUseCase
     {

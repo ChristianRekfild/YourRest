@@ -5,14 +5,14 @@ using YourRest.Application.Dto.Mappers;
 using YourRest.Application.Dto.ViewModels;
 using YourRest.Domain.Entities;
 using YourRest.Domain.Repositories;
-using YourRest.Application.Interfaces.Accommodation;
-using YourRest.Application.Interfaces;
+using YourRest.Application.Interfaces.Accommodations;
 using YourRest.Application.Exceptions;
 using YourRest.Domain.Models;
 using System.Xml.Linq;
 using AutoMapper;
+using YourRest.Application.Interfaces.Accommodations;
 
-namespace YourRest.Application.UseCases.Accommodation
+namespace YourRest.Application.UseCases.Accommodations
 {
     public class EditAccommodationsUseCase : IEditAccommodationsUseCase
     {
@@ -39,12 +39,12 @@ namespace YourRest.Application.UseCases.Accommodation
             AccommodationStarRating sRating = new AccommodationStarRating();
             if (AccommodationExtendedDto.Stars != null)
             {
-                sRating.Stars = (int)AccommodationExtendedDto.Stars;              
+                sRating.Stars = (int)AccommodationExtendedDto.Stars;
             }
             sRating.AccommodationId = AccommodationExtendedDto.Id;
 
-                var accommodationUpdate = new YourRest.Domain.Entities.Accommodation 
-            { 
+            var accommodationUpdate = new Domain.Entities.Accommodation
+            {
                 Id = AccommodationExtendedDto.Id,
                 AddressId = AccommodationExtendedDto.Address.Id,
                 Name = AccommodationExtendedDto.Name,

@@ -2,9 +2,9 @@ using YourRest.Application.Exceptions;
 using YourRest.Domain.Repositories;
 using YourRest.Domain.Entities;
 using YourRest.Application.Dto;
-using YourRest.Application.Interfaces.Accommodation;
+using YourRest.Application.Interfaces.Accommodations;
 
-namespace YourRest.Application.UseCases.Accommodation
+namespace YourRest.Application.UseCases.Accommodations
 {
     public class CreateAccommodationUseCase : ICreateAccommodationUseCase
     {
@@ -40,7 +40,7 @@ namespace YourRest.Application.UseCases.Accommodation
                 throw new EntityNotFoundException(userKeyCloakId);
             }
 
-            var accommodation = new Accommodation();
+            var accommodation = new Domain.Entities.Accommodation();
             accommodation.Description = accommodationDto.Description;
             accommodation.Name = accommodationDto.Name;
             accommodation.AccommodationTypeId = accommodationDto.AccommodationTypeId;

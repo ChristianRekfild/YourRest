@@ -6,10 +6,10 @@ using YourRest.Application.Dto.ViewModels;
 using YourRest.Domain.Entities;
 using YourRest.Domain.Repositories;
 using YourRest.Application.Interfaces.Accommodation;
-using YourRest.Application.Interfaces;
 using YourRest.Application.Exceptions;
+using YourRest.Application.Interfaces.Accommodations;
 
-namespace YourRest.Application.UseCases.Accommodation
+namespace YourRest.Application.UseCases.Accommodations
 {
     public class RemoveAccommodationsUseCase : IRemoveAccommodationsUseCase
     {

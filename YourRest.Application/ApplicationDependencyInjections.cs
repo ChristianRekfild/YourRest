@@ -26,8 +26,8 @@ using YourRest.Application.UseCases.HotelBookingUseCase;
 using YourRest.Application.UseCases.Photo;
 using YourRest.Application.Interfaces.Addresses;
 using YourRest.Application.UseCases.Addresses;
-using YourRest.Application.Interfaces.Accommodation;
-using YourRest.Application.UseCases.Accommodation;
+using YourRest.Application.Interfaces.Accommodations;
+using YourRest.Application.UseCases.Accommodations;
 
 
 

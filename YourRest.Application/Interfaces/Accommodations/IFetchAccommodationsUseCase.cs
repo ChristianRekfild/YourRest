@@ -1,7 +1,7 @@
 using YourRest.Application.Dto;
 using YourRest.Application.Dto.ViewModels;
 
-namespace YourRest.Application.Interfaces.Accommodation
+namespace YourRest.Application.Interfaces.Accommodations
 {
     public interface IFetchAccommodationsUseCase
     {

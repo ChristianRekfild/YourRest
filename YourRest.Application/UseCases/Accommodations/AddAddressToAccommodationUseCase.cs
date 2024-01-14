@@ -2,9 +2,9 @@ using YourRest.Application.Exceptions;
 using YourRest.Domain.Entities;
 using YourRest.Domain.Repositories;
 using YourRest.Application.Dto.Models;
-using YourRest.Application.Interfaces.Accommodation;
+using YourRest.Application.Interfaces.Accommodations;
 
-namespace YourRest.Application.UseCases.Accommodation
+namespace YourRest.Application.UseCases.Accommodations
 {
     public class AddAddressToAccommodationUseCase : IAddAddressToAccommodationUseCase
     {

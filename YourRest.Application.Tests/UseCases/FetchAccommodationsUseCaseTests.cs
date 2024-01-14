@@ -6,8 +6,7 @@ using YourRest.Application.Dto.ViewModels;
 using YourRest.Application.Dto.Mappers;
 using YourRest.Domain.Models;
 using User = YourRest.Domain.Entities.User;
-using YourRest.Application.UseCases.Accommodation;
-using YourRest.Application.UseCases.Accommodation;
+using YourRest.Application.UseCases.Accommodations;
 
 
 namespace YourRest.Application.Tests.UseCases
