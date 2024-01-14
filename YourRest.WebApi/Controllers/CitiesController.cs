@@ -1,9 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SharpGrip.FluentValidation.AutoValidation.Mvc.Attributes;
-using System;
-using YourRest.Application.Exceptions;
 using YourRest.Application.Interfaces;
-using YourRest.Application.UseCases;
 
 namespace YourRest.WebApi.Controllers
 {
