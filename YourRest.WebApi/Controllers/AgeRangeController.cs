@@ -1,12 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Routing;
-using Microsoft.Extensions.Hosting;
-using Newtonsoft.Json.Linq;
 using SharpGrip.FluentValidation.AutoValidation.Mvc.Attributes;
 using YourRest.Application.Dto;
 using YourRest.Application.Interfaces.Age;
-using YourRest.Application.UseCases.Room;
-using YourRest.Domain.Entities;
 
 namespace YourRest.WebApi.Controllers
 {

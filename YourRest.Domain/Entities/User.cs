@@ -8,5 +8,7 @@
         public string KeyCloakId { get; set; }
         
         public ICollection<UserAccommodation> UserAccommodations { get; set; } = new List<UserAccommodation>();
+        
+        public ICollection<UserPhoto> UserPhotos { get; set; } = new List<UserPhoto>();
     }
 }

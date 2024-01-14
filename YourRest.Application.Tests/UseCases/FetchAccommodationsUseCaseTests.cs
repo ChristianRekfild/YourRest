@@ -1,10 +1,14 @@
+using System.Linq.Expressions;
 using Moq;
 using YourRest.Domain.Entities;
 using YourRest.Domain.Repositories;
 using YourRest.Application.Dto.ViewModels;
 using YourRest.Application.Dto.Mappers;
 using YourRest.Domain.Models;
+using User = YourRest.Domain.Entities.User;
 using YourRest.Application.UseCases.Accommodation;
+using YourRest.Application.UseCases.Accommodation;
+
 
 namespace YourRest.Application.Tests.UseCases
 {
@@ -12,6 +16,7 @@ namespace YourRest.Application.Tests.UseCases
     {
         private readonly Mock<IAccommodationRepository> _accommodationRepositoryMock;
         private readonly Mock<IAccommodationMapper> _mapperMock;
+        private readonly Mock<IUserRepository> _userRepositoryMock;
 
         private readonly FetchAccommodationsUseCase _fetchHotelsUseCase;
 
@@ -19,16 +24,22 @@ namespace YourRest.Application.Tests.UseCases
         {
             _accommodationRepositoryMock = new Mock<IAccommodationRepository>();
             _mapperMock = new Mock<IAccommodationMapper>();
+            _userRepositoryMock = new Mock<IUserRepository>();
 
             _fetchHotelsUseCase = new FetchAccommodationsUseCase(
                 _accommodationRepositoryMock.Object,
-                _mapperMock.Object
+                _mapperMock.Object,
+                _userRepositoryMock.Object
             );
         }
+
 
         [Fact]
         public async Task GivenValidViewModel_WhenExecutingUseCase_ThenShouldReturnCorrectDtos()
         {
+            var keyCloakId = "some-user-keycloak-id";
+            var user = new User { Id = 100, KeyCloakId = keyCloakId };
+            var users = new List<User> { user };
             var accommodations = new List<Accommodation>
             {
                 new Accommodation 
@@ -97,15 +108,25 @@ namespace YourRest.Application.Tests.UseCases
             };
 
             _mapperMock.Setup(mapper => mapper.MapToFilterCriteria(It.IsAny<FetchAccommodationsViewModel>())).Returns(mockFilterCriteria);
-            _accommodationRepositoryMock.Setup(repo => repo.GetHotelsByFilter(It.IsAny<AccommodationFilterCriteria>(), It.IsAny<CancellationToken>())).ReturnsAsync(accommodations);
+            _userRepositoryMock.Setup(repo => repo.FindAsync(
+                    It.Is<Expression<Func<User, bool>>>(expr => IsUserPredicateValid(expr, keyCloakId)),
+                    It.IsAny<CancellationToken>()))
+                .ReturnsAsync(users);
+            _accommodationRepositoryMock.Setup(repo => repo.GetHotelsByFilter(user.Id, It.IsAny<AccommodationFilterCriteria>(), It.IsAny<CancellationToken>())).ReturnsAsync(accommodations);
 
-            var result = await _fetchHotelsUseCase.ExecuteAsync(viewModel, default);
+            var result = await _fetchHotelsUseCase.ExecuteAsync(keyCloakId, viewModel, default);
 
             _mapperMock.Verify(mapper => mapper.MapToFilterCriteria(viewModel), Times.Once);
 
             Assert.Equal(accommodations.Count, result.Count());
             Assert.Contains(result, dto => dto.Name == "Hotel A");
             Assert.Contains(result, dto => dto.Name == "Hotel B");
+        }
+        
+        private bool IsUserPredicateValid(Expression<Func<User, bool>> predicate, string keyCloakId)
+        {
+            var func = predicate.Compile();
+            return func(new User { KeyCloakId = keyCloakId });
         }
     }
 }

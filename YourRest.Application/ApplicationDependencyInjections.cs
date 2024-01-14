@@ -24,8 +24,8 @@ using YourRest.Application.UseCases.Room;
 using YourRest.Application.Interfaces.AccommodationFacility;
 using YourRest.Application.UseCases.HotelBookingUseCase;
 using YourRest.Application.UseCases.Photo;
-using YourRest.Application.Interfaces.Accommodation;
-using YourRest.Application.UseCases.Accommodation;
+using YourRest.Application.Interfaces.Addresses;
+using YourRest.Application.UseCases.Addresses;
 
 namespace YourRest.Application
 {
@@ -93,22 +93,32 @@ namespace YourRest.Application
             services.AddScoped<IGetBookingDatesByRoomIdUseCase, GetBookingDatesByRoomIdUseCase>();
             services.AddScoped<IGetRoomsByCityAndBookingDatesUseCase, GetRoomsByCityAndBookingDatesUseCase>();
             services.AddScoped<IGetRoomsByAccommodationAndBookingDatesUseCase, GetRoomsByAccommodationAndBookingDatesUseCase>();
-            
 
+            services.AddScoped<IAccommodationMapper, AccommodationMapper>();
+            services.AddScoped<IFetchAccommodationsUseCase, FetchAccommodationsUseCase>();
             services.AddScoped<IAuthenticationService, AuthenticationService>();
             services.AddScoped<IAccommodationPhotoUploadUseCase, AccommodationPhotoUploadUseCase>();
             services.AddScoped<IRoomPhotoUploadUseCase, RoomPhotoUploadUseCase>();
+            services.AddScoped<ICreateAccommodationUseCase, CreateAccommodationUseCase>();
             services.AddScoped<IGetAccommodationTypeListUseCase, GetAccommodationTypeListUseCase>();
             services.AddScoped<IFileService, FileService>();
             services.AddScoped<IUserPhotoUploadUseCase, UserPhotoUploadUseCase>();
             services.AddScoped<IGetUserInfoUseCase, GetUserInfoUseCase>();
+            services.AddScoped<IGetUserPhotosUseCase, GetUserPhotosUseCase>();
+            //Address
+            services.AddScoped<IAddAddressUseCase, AddAddressUseCase>();
+            services.AddScoped<IEditAddressUseCase, EditAddressUseCase>();
+            services.AddScoped<IGetAddressByCityIdUseCase, GetAddressByCityIdUseCase>();
+            services.AddScoped<IGetAddressByIdUseCase, GetAddressByIdUseCase>();
+            services.AddScoped<IGetAddressUseCase, GetAddressUseCase>();
+            services.AddScoped<IRemoveAddressUseCase, RemoveAddressUseCase>();
+
             //Accommodation
             services.AddScoped<ICreateAccommodationUseCase, CreateAccommodationUseCase>();
             services.AddScoped<IAccommodationMapper, AccommodationMapper>();
             services.AddScoped<IFetchAccommodationsUseCase, FetchAccommodationsUseCase>();
             services.AddScoped<IRemoveAccommodationsUseCase, RemoveAccommodationsUseCase>();
             services.AddScoped<IEditAccommodationsUseCase, EditAccommodationsUseCase>();
-
             return services;
         }
     }
