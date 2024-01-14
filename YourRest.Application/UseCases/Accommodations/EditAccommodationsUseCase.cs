@@ -20,23 +20,26 @@ namespace YourRest.Application.UseCases.Accommodation
         {
             _accommodationRepository = accommodationRepository;
         }
-        public async Task ExecuteAsync(AccommodationDto accommodationDto, CancellationToken cancellationToken)
+        public async Task<AccommodationExtendedDto> ExecuteAsync(AccommodationExtendedDto AccommodationExtendedDto, CancellationToken cancellationToken)
         {
             var accommodationToEdit = await _accommodationRepository.GetAsync(accommodationDto.Id, cancellationToken);
 
             if (accommodationToEdit == null)
             {
-                throw new EntityNotFoundException($"Accommodation with id {accommodationDto.Id} not found");
+                throw new EntityNotFoundException($"Accommodation with id {AccommodationExtendedDto.Id} not found");
             }
 
             var accommodationUpdate = new YourRest.Domain.Entities.Accommodation 
             { 
-                Id = accommodationDto.Id,
-                AddressId = accommodationDto.A
+                Id = AccommodationExtendedDto.Id,
+                AddressId = AccommodationExtendedDto.Address,
+
             };
 
 
             await _accommodationRepository.UpdateAsync(accommodationUpdate, cancellationToken: cancellationToken);
+            
+            return 
         }
 
     }

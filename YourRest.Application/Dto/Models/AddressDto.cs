@@ -4,6 +4,7 @@ namespace YourRest.Application.Dto.Models
 {
     public class AddressDto
     {
+        public int Id { get; set; }
         //[Required]
         //[MaxLength(100)]
         public string Street { get; set; }
