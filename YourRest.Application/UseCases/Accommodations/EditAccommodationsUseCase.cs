@@ -43,7 +43,7 @@ namespace YourRest.Application.UseCases.Accommodations
             }
             sRating.AccommodationId = AccommodationExtendedDto.Id;
 
-            var accommodationUpdate = new Domain.Entities.Accommodation
+            var accommodationUpdate = new Accommodation
             {
                 Id = AccommodationExtendedDto.Id,
                 AddressId = AccommodationExtendedDto.Address.Id,

@@ -10,11 +10,11 @@ using YourRest.Application.Exceptions;
 
 namespace YourRest.Application.UseCases.Accommodations
 {
-    public class RemoveAccommodationsUseCase : IRemoveAccommodationsUseCase
+    public class GetAccommodationsByIdUseCase : IGetAccommodationsByIdUseCase
     {
         private readonly IAccommodationRepository _accommodationRepository;
 
-        public RemoveAccommodationsUseCase(IAccommodationRepository accommodationRepository)
+        public GetAccommodationsByIdUseCase(IAccommodationRepository accommodationRepository)
         {
             _accommodationRepository = accommodationRepository;
         }
@@ -25,7 +25,7 @@ namespace YourRest.Application.UseCases.Accommodations
             {
                 throw new EntityNotFoundException($"Accommodation with id number {id} not found");
             }
-            await _accommodationRepository.DeleteAsync(id, cancellationToken: cancellationToken);
+            return await _accommodationRepository.GetAsync(id, cancellationToken: cancellationToken);
         }
 
     }

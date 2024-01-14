@@ -23,6 +23,9 @@ namespace YourRest.WebApi.Controllers
         private readonly ICreateAccommodationUseCase _createAccommodationUseCase;
         private readonly IEditAccommodationsUseCase _editAccommodationUseCase;
         private readonly IRemoveAccommodationsUseCase _removeAccommodationUseCase;
+        private readonly IGetAccommodationsUseCase _getAccommodation;
+        private readonly IGetAccommodationsByIdUseCase _getAccommodationByIdUseCase;
+
 
 
         public AccommodationController(
@@ -30,7 +33,9 @@ namespace YourRest.WebApi.Controllers
             IFetchAccommodationsUseCase fetchAccommodationsUseCase,
             ICreateAccommodationUseCase createAccommodationUseCase,
             IEditAccommodationsUseCase editAccommodationUseCase,
-            IRemoveAccommodationsUseCase removeAccommodationUseCase
+            IRemoveAccommodationsUseCase removeAccommodationUseCase,
+            IGetAccommodationsUseCase getAccommodation,
+            IGetAccommodationsByIdUseCase getAccommodationByIdUseCase
             )
         {
             _addAddressToAccommodationUseCase = addAddressToAccommodationUseCase;
@@ -38,6 +43,8 @@ namespace YourRest.WebApi.Controllers
             _createAccommodationUseCase = createAccommodationUseCase;
             _editAccommodationUseCase = editAccommodationUseCase;
             _removeAccommodationUseCase = removeAccommodationUseCase;
+            _getAccommodation = getAccommodation;
+            _getAccommodationByIdUseCase = getAccommodationByIdUseCase;
         }
 
         [HttpPost("api/operators/accommodations/{accommodationId}/address", Name = "AddAddressToAccommodationAsync")]
@@ -68,15 +75,6 @@ namespace YourRest.WebApi.Controllers
             return Ok(hotels);
         }
 
-        [HttpDelete]
-        [Route("api/accommodation/{accommodationId}")]
-        public async Task<IActionResult> Delete([FromRoute] int accommodationId)
-        {
-
-            await _removeAccommodationUseCase.ExecuteAsync(accommodationId, HttpContext.RequestAborted);
-            return Ok("The Accommodation has been Deleted");
-        }
-
         [Authorize]
         [HttpPost]
         [Route("api/accommodation")]
@@ -95,19 +93,33 @@ namespace YourRest.WebApi.Controllers
             return CreatedAtAction(nameof(Post), createdAccommodation);
         }
 
+        [HttpDelete]
+        [Route("api/accommodation/{accommodationId}")]
+        public async Task<IActionResult> Delete([FromRoute] int accommodationId)
+        {
+
+            await _removeAccommodationUseCase.ExecuteAsync(accommodationId, HttpContext.RequestAborted);
+            return Ok("The Accommodation has been Deleted");
+        }
+
+        [HttpPut]
+        [Route("api/accommodation/{accommodationId}")]
+        public async Task<IActionResult> Put([FromBody] AccommodationExtendedDto accommodationExtendedDto, int accommodationId)
+        {
+            return Ok(await _editAccommodationUseCase.ExecuteAsync(accommodationExtendedDto, HttpContext.RequestAborted));
+        }
 
 
-        //[HttpPut]
-        //[Route("api/accommodation/{accommodationId}")]
-        //public async Task<IActionResult> Put([FromBody] AccommodationDto accommodationDto, int accommodationId)
-        //{
+        [HttpGet]
+        public async Task<IActionResult> GetAddresses()
+        {
+            return Ok(await _getAccommodation.ExecuteAsync(HttpContext.RequestAborted));
+        }
 
-        //    roomWithId.Id = route.Id;
-        //    await editRoomUseCase.ExecuteAsync(roomWithId, accommodationId, HttpContext.RequestAborted);
-        //    return Ok("The room has been edited");
-        //}
-
-
-
+        [Route("api/accommodation/{accommodationId}")]
+        public async Task<IActionResult> GetAddressById([FromRoute] int accommodationId)
+        {
+            return Ok(await _getAccommodationByIdUseCase.ExecuteAsync(accommodationId, HttpContext.RequestAborted));
+        }
     }
 }

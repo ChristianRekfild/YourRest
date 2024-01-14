@@ -10,7 +10,7 @@ using YourRest.Application.Exceptions;
 
 namespace YourRest.Application.UseCases.Accommodations
 {
-    public class RemoveAccommodationsUseCase : IRemoveAccommodationsUseCase
+    public class GetAccommodationsUseCase : IGetAccommodationsUseCase
     {
         private readonly IAccommodationRepository _accommodationRepository;
 
