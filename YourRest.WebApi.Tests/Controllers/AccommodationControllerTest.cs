@@ -371,6 +371,7 @@ namespace YourRest.WebApi.Tests.Controllers
         {
             return new AddressDto
             {
+                Id = 1,
                 Street = "Test Street",
                 ZipCode = "123456",
                 Longitude = 0,

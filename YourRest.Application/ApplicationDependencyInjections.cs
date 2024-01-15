@@ -66,7 +66,6 @@ namespace YourRest.Application
             services.AddScoped<IGetCityListUseCase, GetCityListUseCase>();
             services.AddScoped<IGetRegionListUseCase, GetRegionListUseCase>();
             services.AddScoped<ICreateReviewUseCase, CreateReviewUseCase>();
-            services.AddScoped<IAddAddressToAccommodationUseCase, AddAddressToAccommodationUseCase>();
             services.AddScoped<IGetCityByRegionIdUseCase, GetCityByRegionIdUseCase>();
             services.AddScoped<IGetCityByCountryIdUseCase, GetCityByCountryIdUseCase>();
             services.AddScoped<IGetRoomListUseCase, GetRoomListUseCase>();
@@ -98,7 +97,6 @@ namespace YourRest.Application
             services.AddScoped<IGetRoomsByCityAndBookingDatesUseCase, GetRoomsByCityAndBookingDatesUseCase>();
             services.AddScoped<IGetRoomsByAccommodationAndBookingDatesUseCase, GetRoomsByAccommodationAndBookingDatesUseCase>();
 
-            services.AddScoped<IAccommodationMapper, AccommodationMapper>();
             services.AddScoped<IAuthenticationService, AuthenticationService>();
             services.AddScoped<IAccommodationPhotoUploadUseCase, AccommodationPhotoUploadUseCase>();
             services.AddScoped<IRoomPhotoUploadUseCase, RoomPhotoUploadUseCase>();
@@ -117,10 +115,15 @@ namespace YourRest.Application
 
             //Accommodation
             services.AddScoped<ICreateAccommodationUseCase, CreateAccommodationUseCase>();
+            services.AddScoped<IAddAddressToAccommodationUseCase, AddAddressToAccommodationUseCase>();
             services.AddScoped<IAccommodationMapper, AccommodationMapper>();
             services.AddScoped<IFetchAccommodationsUseCase, FetchAccommodationsUseCase>();
             services.AddScoped<IRemoveAccommodationsUseCase, RemoveAccommodationsUseCase>();
             services.AddScoped<IEditAccommodationsUseCase, EditAccommodationsUseCase>();
+            services.AddScoped<IGetAccommodationsByIdUseCase, GetAccommodationsByIdUseCase>();
+            services.AddScoped<IGetAccommodationsUseCase, GetAccommodationsUseCase>();
+
+
             return services;
         }
     }

@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using YourRest.Application.Dto;
 using YourRest.Application.Dto.ViewModels;
+using YourRest.Application.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using SharpGrip.FluentValidation.AutoValidation.Mvc.Attributes;
 using System.Security.Claims;
@@ -11,6 +12,8 @@ using YourRest.Application.UseCases.Room;
 using YourRest.Domain.Entities;
 using YourRest.Application.Interfaces.Room;
 using YourRest.Application.Interfaces.Accommodations;
+using YourRest.WebApi.Models;
+
 
 namespace YourRest.WebApi.Controllers
 {
