@@ -7,26 +7,22 @@ using YourRest.Domain.Entities;
 using YourRest.Domain.Repositories;
 using YourRest.Application.Interfaces.Accommodations;
 using YourRest.Application.Exceptions;
+using AutoMapper;
 
 namespace YourRest.Application.UseCases.Accommodations
 {
     public class GetAccommodationsUseCase : IGetAccommodationsUseCase
     {
         private readonly IAccommodationRepository _accommodationRepository;
+        private readonly IMapper _mapper;
 
-        public RemoveAccommodationsUseCase(IAccommodationRepository accommodationRepository)
+
+        public GetAccommodationsUseCase(IAccommodationRepository accommodationRepository, IMapper mapper)
         {
             _accommodationRepository = accommodationRepository;
+            _mapper = mapper;
         }
-        public async Task ExecuteAsync(int id, CancellationToken cancellationToken)
-        {
-            var accommodation = await _accommodationRepository.GetAsync(id, cancellationToken);
-            if (accommodation == null)
-            {
-                throw new EntityNotFoundException($"Accommodation with id number {id} not found");
-            }
-            await _accommodationRepository.DeleteAsync(id, cancellationToken: cancellationToken);
-        }
-
+        public async Task<IEnumerable<AccommodationExtendedDto>> ExecuteAsync(CancellationToken cancellationToken)
+           => _mapper.Map<IEnumerable<AccommodationExtendedDto>>(await _accommodationRepository.GetAllAsync(cancellationToken));      
     }
 }
