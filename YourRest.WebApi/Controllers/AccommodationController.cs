@@ -109,15 +109,16 @@ namespace YourRest.WebApi.Controllers
             return Ok(await _editAccommodationUseCase.ExecuteAsync(accommodationExtendedDto, HttpContext.RequestAborted));
         }
 
-
         [HttpGet]
-        public async Task<IActionResult> GetAddresses()
+        [Route("api/accommodation")]
+        public async Task<IActionResult> GetAccommodation()
         {
             return Ok(await _getAccommodation.ExecuteAsync(HttpContext.RequestAborted));
         }
 
+        [HttpGet]
         [Route("api/accommodation/{accommodationId}")]
-        public async Task<IActionResult> GetAddressById([FromRoute] int accommodationId)
+        public async Task<IActionResult> GetAccommodationById([FromRoute] int accommodationId)
         {
             return Ok(await _getAccommodationByIdUseCase.ExecuteAsync(accommodationId, HttpContext.RequestAborted));
         }

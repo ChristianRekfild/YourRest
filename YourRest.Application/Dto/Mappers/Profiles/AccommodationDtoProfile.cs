@@ -25,7 +25,5 @@ namespace YourRest.Application.Dto.Mappers.Profiles
                 .ForMember(target => target.Rooms, opt => opt.MapFrom(src => src.Rooms))
                 .ForMember(target => target.Stars, opt => opt.MapFrom(src => src.StarRating.Stars));
         }
-    }
-
-    }
+    }  
 }
