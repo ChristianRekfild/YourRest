@@ -41,9 +41,9 @@ namespace YouRest.HotelierWebApp.Pages
                     HotelTypeId = HotelTypes.Single(x => x.Name == CreateHotelViewModel.HotelType).Id,
                     Name = CreateHotelViewModel.HotelName,
                     Stars = GetRatingValue(CreateHotelViewModel.HotelRating),
-                    Description = "The oldest and most famous hotel in Moscow"
+                    Description = CreateHotelViewModel.HotelDescription
                 });
-                CreateHotelViewModel = new CreateHotelViewModel();
+                //CreateHotelViewModel = new CreateHotelViewModel();
             }
         }
         public async Task LoadFiles(InputFileChangeEventArgs e)

@@ -12,11 +12,6 @@ namespace YouRest.HotelierWebApp.Shared.Components
         [Inject] public NavigationManager Navigation { get; set; }
         [Parameter] public List<HotelViewModel> Hotels { get; set; }
         [Parameter] public EventCallback<List<HotelViewModel>> HotelsChanged { get; set; }
-        protected override void OnAfterRender(bool firstRender)
-        {
-
-            base.OnAfterRender(firstRender);
-        }
         public void MouseOverOfEditBtn()
         {
             Edit = "edit";
@@ -44,7 +39,7 @@ namespace YouRest.HotelierWebApp.Shared.Components
             await HotelsChanged.InvokeAsync(Hotels);
         }
         public void NavigateToEdit() => Navigation.NavigateTo("hotels/edit");
-        protected void SelectedItem(HotelViewModel hotel)
+        public void SelectedItem(HotelViewModel hotel)
         {
             Navigation.NavigateTo($"/hotels/{hotel.Id}");
         }

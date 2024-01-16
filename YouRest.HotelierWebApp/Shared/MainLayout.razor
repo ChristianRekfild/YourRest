@@ -3,24 +3,24 @@
 <PageTitle>YouRest.HotelierWebApp</PageTitle>
 
 <div class="page">
-    @if (IsAuthorize)
-    {
-        <div class="sidebar">
-            <NavMenu />
-        </div>
-        <main>
-            <div class="top-row px-4">
-                <div class="logout" @onclick="@LogoutAsync">Выйти <span class="oi oi-account-logout"></span></div>
+        @if (IsAuthorize)
+        {
+            <div class="sidebar">
+                <NavMenu />
             </div>
-            <article class="content px-4">
+            <main>
+                <div class="top-row px-4">
+                    <div class="logout" @onclick="@LogoutAsync">Выйти <span class="oi oi-account-logout"></span></div>
+                </div>
+                <article class="content px-4">
+                    @Body
+                </article>
+            </main>
+        }
+        else
+        {
+            <main>
                 @Body
-            </article>
-        </main>
-    }
-    else
-    {
-        <main>
-            @Body
-        </main>
-    }
+            </main>
+        }
 </div>

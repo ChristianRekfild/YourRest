@@ -6,7 +6,6 @@ using YourRest.WebApi.Options;
 using SharpGrip.FluentValidation.AutoValidation.Mvc.Attributes;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
-using Microsoft.AspNetCore.Http;
 
 namespace YourRest.WebApi.Controllers
 {

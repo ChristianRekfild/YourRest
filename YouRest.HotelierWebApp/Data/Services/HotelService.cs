@@ -1,4 +1,7 @@
-﻿using Newtonsoft.Json;
+﻿using IdentityModel.Client;
+using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
+using Newtonsoft.Json;
+using System.Net.Http.Headers;
 using System.Text;
 using YouRest.HotelierWebApp.Data.Services.Abstractions;
 using YouRest.HotelierWebApp.Data.ViewModels;
@@ -9,16 +12,29 @@ namespace YouRest.HotelierWebApp.Data.Services
     {
         private readonly HttpClient httpClient;
         private readonly string WebApiUrl;
+        private readonly ProtectedSessionStorage storage;
+        private readonly IAuthorizationService authorizationService;
 
-        public HotelService(IHttpClientFactory httpClientFactory, IConfiguration configuration)
+        public HotelService(IHttpClientFactory httpClientFactory, IConfiguration configuration, ProtectedSessionStorage storage, IAuthorizationService authorizationService)
         {
-            this.httpClient = httpClientFactory.CreateClient();
+            this.authorizationService = authorizationService;
+            httpClient = httpClientFactory.CreateClient();
+            this.storage = storage;
             WebApiUrl = configuration.GetSection("webApiUrl").Value;
         }
         public async Task CreateHotel(HotelViewModel hotel)
         {
-            var content = new StringContent(JsonConvert.SerializeObject(hotel), Encoding.UTF8, "application/json");
-            await httpClient.PostAsync($"{WebApiUrl}/api/accommodation", content);
+            var responseMessage = await authorizationService.LoginAsync(new AuthorizationViewModel() { Password = "123456", Username = "grits@gmail.com" });
+            if (responseMessage.StatusCode == System.Net.HttpStatusCode.OK)
+            {
+                var token = await responseMessage.Content.ReadFromJsonAsync<TokenViewModel>();
+                httpClient.SetBearerToken(token.AccessToken);
+                var data = JsonConvert.SerializeObject(hotel);
+                var content = new StringContent(data, Encoding.UTF8, "application/json");
+                var res = await httpClient.PostAsync($"{WebApiUrl}/api/accommodation", content);
+            }
+            //var accessToken = (await storage.GetAsync<string>("accessToken")).Value;
+
         }
 
         public async Task<List<CountryViewModel>> FetchHotelsAsync()
