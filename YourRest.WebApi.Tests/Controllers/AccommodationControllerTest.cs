@@ -11,6 +11,8 @@ using YourRest.WebApi.Tests.Fixtures;
 using Microsoft.Extensions.DependencyInjection;
 using YourRest.Domain.Repositories;
 using System.Net.Http.Headers;
+using YourRest.Producer.Infrastructure.Migrations;
+using Docker.DotNet.Models;
 
 namespace YourRest.WebApi.Tests.Controllers
 {
@@ -60,7 +62,7 @@ namespace YourRest.WebApi.Tests.Controllers
             var country = await fixture.InsertObjectIntoDatabase(new Country { Name = "Russia" });
             var region = await fixture.InsertObjectIntoDatabase(new Region { Name = "Московская область", CountryId = country.Id });
             var city = await fixture.InsertObjectIntoDatabase(new City { Name = "Moscow", RegionId = region.Id });
-            var address = await fixture.InsertObjectIntoDatabase(new Address
+            var address = await fixture.InsertObjectIntoDatabase(new Domain.Entities.Address
             {
                 Street = "First street",
                 CityId = city.Id,
@@ -174,7 +176,7 @@ namespace YourRest.WebApi.Tests.Controllers
             var country = await fixture.InsertObjectIntoDatabase(new Country { Name = "Russia" });
             var region = await fixture.InsertObjectIntoDatabase(new Region { Name = "Московская область", CountryId = country.Id });
             var city = await fixture.InsertObjectIntoDatabase(new City { Name = "Moscow", RegionId = region.Id });
-            var addressEntity = await fixture.InsertObjectIntoDatabase(new Address
+            var addressEntity = await fixture.InsertObjectIntoDatabase(new Domain.Entities.Address
             {
                 Street = "Тестовая улица",
                 CityId = city.Id,
@@ -213,7 +215,7 @@ namespace YourRest.WebApi.Tests.Controllers
             var country = await fixture.InsertObjectIntoDatabase(new Country { Name = "Russia" });
             var region = await fixture.InsertObjectIntoDatabase(new Region { Name = "Moscow region", CountryId = country.Id });
             var city = await fixture.InsertObjectIntoDatabase(new City { Name = "Moscow", RegionId = region.Id });
-            var addressEntity = await fixture.InsertObjectIntoDatabase(new Address
+            var addressEntity = await fixture.InsertObjectIntoDatabase(new Domain.Entities.Address
             {
                 Street = "Test Street",
                 CityId = city.Id,
@@ -382,7 +384,7 @@ namespace YourRest.WebApi.Tests.Controllers
             var region = await fixture.InsertObjectIntoDatabase(new Region() { Name = "Московская область", CountryId = country.Id });
             var city = await fixture.InsertObjectIntoDatabase(new City { Name = "Moscow", RegionId = region.Id });
 
-            var address1 = await fixture.InsertObjectIntoDatabase(new Address
+            var address1 = await fixture.InsertObjectIntoDatabase(new Domain.Entities.Address
             {
                 Street = "Test Street",
                 ZipCode = "123456",
@@ -390,7 +392,7 @@ namespace YourRest.WebApi.Tests.Controllers
                 Latitude = 0,
                 CityId = city.Id
             });
-            var address2 = await fixture.InsertObjectIntoDatabase(new Address
+            var address2 = await fixture.InsertObjectIntoDatabase(new Domain.Entities.Address
             {
                 Street = "Test Street1",
                 ZipCode = "123458",
@@ -405,7 +407,12 @@ namespace YourRest.WebApi.Tests.Controllers
                 AccommodationType = accType,
                 AddressId = address1.Id,
                 Description = "testAccommodationDescription1",
-                StarRating = new AccommodationStarRating { Stars = 4 }
+                StarRating = new AccommodationStarRating { Stars = 4 },
+                Rooms = new List<Room>
+                {
+                    new Room { Name = "330", Capacity = 21, SquareInMeter = 230, RoomType = new RoomType { Name = "Test 1" } },
+                    new Room { Name = "340", Capacity = 21, SquareInMeter = 10, RoomType = new RoomType { Name = "Test 2" } }
+                }
             });
             var accommodation2 = await fixture.InsertObjectIntoDatabase(new Accommodation { 
                 Name = "SecondHotel",
@@ -413,9 +420,21 @@ namespace YourRest.WebApi.Tests.Controllers
                 AccommodationType = accType,
                 AddressId = address2.Id,
                 Description = "testAccommodationDescription2",
-                StarRating = new AccommodationStarRating { Stars = 4 }
+                StarRating = new AccommodationStarRating { Stars = 4 },
+                Rooms = new List<Room>
+                {
+                    new Room { Name = "310", Capacity = 1, SquareInMeter = 20, RoomType = new RoomType { Name = "Test 3" } },
+                    new Room { Name = "320", Capacity = 1, SquareInMeter = 20, RoomType = new RoomType { Name = "Test 4" } }
+                }
             });
 
+    //        var Room1 = await fixture.InsertObjectIntoDatabase(new Room { Name = "310", AccommodationId = accommodation1.Id, Capacity = 1, SquareInMeter = 20, RoomType = new RoomType { Name = "Test Type" }
+    //    });
+    //        var Room2 = await fixture.InsertObjectIntoDatabase(new Room { Name = "305", AccommodationId = accommodation1.Id, Capacity = 2, SquareInMeter = 30, RoomType = new RoomType { Name = "Test Type" }
+    //});
+    //        var Room3 = await fixture.InsertObjectIntoDatabase(new Room { Name = "320", AccommodationId = accommodation2.Id, Capacity = 2, SquareInMeter = 30, RoomType = new RoomType { Name = "Test Type" }
+    //});
+    //        var Room4 = await fixture.InsertObjectIntoDatabase(new Room { Name = "3330", AccommodationId = accommodation2.Id, Capacity = 2, SquareInMeter = 30, RoomType = new RoomType { Name = "Test Type" } });
 
             var response = await fixture.Client.GetAsync($"api/accommodation");
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
