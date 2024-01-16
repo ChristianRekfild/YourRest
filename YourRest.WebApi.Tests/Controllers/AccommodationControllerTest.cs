@@ -367,6 +367,64 @@ namespace YourRest.WebApi.Tests.Controllers
 
             Assert.True(userLinkedToAccommodation, "The user is not linked to the accommodation.");
         }
+
+
+        [Fact]
+        public async Task GetAll_ReturnsAccommodations_WhenAccommodationsInDB()
+        {
+            var accommodationType = new AccommodationType
+            {
+                Name = "Test Type"
+            };
+            var accType = await fixture.InsertObjectIntoDatabase(accommodationType);
+
+            var country = await fixture.InsertObjectIntoDatabase(new Country() { Name = "Russia" });
+            var region = await fixture.InsertObjectIntoDatabase(new Region() { Name = "Московская область", CountryId = country.Id });
+            var city = await fixture.InsertObjectIntoDatabase(new City { Name = "Moscow", RegionId = region.Id });
+
+            var address1 = await fixture.InsertObjectIntoDatabase(new Address
+            {
+                Street = "Test Street",
+                ZipCode = "123456",
+                Longitude = 0,
+                Latitude = 0,
+                CityId = city.Id
+            });
+            var address2 = await fixture.InsertObjectIntoDatabase(new Address
+            {
+                Street = "Test Street1",
+                ZipCode = "123458",
+                Longitude = 0,
+                Latitude = 0,
+                CityId = city.Id
+            });
+
+            var accommodation1 = await fixture.InsertObjectIntoDatabase(new Accommodation { 
+                Name = "FirstHotel", 
+                //AccommodationTypeId = accType.Id,
+                AccommodationType = accType,
+                AddressId = address1.Id,
+                Description = "testAccommodationDescription1",
+                StarRating = new AccommodationStarRating { Stars = 4 }
+            });
+            var accommodation2 = await fixture.InsertObjectIntoDatabase(new Accommodation { 
+                Name = "SecondHotel",
+                //AccommodationTypeId = accType.Id,
+                AccommodationType = accType,
+                AddressId = address2.Id,
+                Description = "testAccommodationDescription2",
+                StarRating = new AccommodationStarRating { Stars = 4 }
+            });
+
+
+            var response = await fixture.Client.GetAsync($"api/accommodation");
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+
+            var responseString = await response.Content.ReadAsStringAsync();
+            var accommodationsReturn = JsonConvert.DeserializeObject<List<Accommodation>>(responseString);
+
+            fixture.CleanDatabase();
+        }
         private AddressDto CreateValidAddressDto(int cityId)
         {
             return new AddressDto
