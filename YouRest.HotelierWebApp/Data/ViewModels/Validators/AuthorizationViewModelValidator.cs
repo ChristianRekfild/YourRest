@@ -7,8 +7,8 @@ namespace YouRest.HotelierWebApp.Data.ViewModels.Validators
     {
         public AuthorizationViewModelValidator()
         {
-            RuleFor(auth => auth.Login).NotNull().NotEmpty().WithName("Поле Email адрес").EmailAddress().WithMessage("Не верный email адрес.");
-            RuleFor(auth => auth.Password).NotNull().NotEmpty().WithName("Поле Пароль").MinimumLength(6);
+            RuleFor(auth => auth.Username).NotEmpty().WithName("Поле Email адрес").EmailAddress().WithMessage("Не верный email адрес.");
+            RuleFor(auth => auth.Password).NotEmpty().WithName("Поле Пароль").MinimumLength(6);
         }
     }
 }

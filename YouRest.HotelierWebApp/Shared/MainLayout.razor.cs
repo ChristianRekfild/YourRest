@@ -1,23 +1,17 @@
-﻿using Blazored.FluentValidation;
-using Microsoft.AspNetCore.Components;
-using YouRest.HotelierWebApp.Data.ViewModels;
+﻿using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
 
 namespace YouRest.HotelierWebApp.Shared
 {
     public partial class MainLayout
     {
-        public FluentValidationValidator? FluentValidationValidator {get;set;}
-        public AuthorizationViewModel Auth { get; set; } = new();
-        public bool IsAuthorize { get; set; } = true;
-        public void Login() => IsAuthorize = true;
-        public void Logout() => IsAuthorize = false;
-        public async Task SubmitFormAsync()
+        
+        [Inject] ProtectedSessionStorage ProtectedSessionStore { get; set; }
+        protected bool IsAuthorize { get; set; }
+        protected async Task LogoutAsync()
         {
-            if (await FluentValidationValidator!.ValidateAsync())
-            {
-                IsAuthorize = true;
-                Auth = new AuthorizationViewModel();
-            }
+            await ProtectedSessionStore.DeleteAsync("accessToken");
+            IsAuthorize = false;
         }
     }
 }

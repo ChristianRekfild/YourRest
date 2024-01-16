@@ -14,6 +14,7 @@ namespace YouRest.HotelierWebApp.Data.ViewModels.Validators
             RuleFor(hotel => hotel.HotelDescription).NotEmpty().WithName("Описание объекта");
             RuleFor(hotel => hotel.HotelType).NotEmpty().WithName("Поле Тип объекта");
             RuleFor(hotel => hotel.HotelRating).NotEmpty().WithName("Поле Уровень комфорта");
+            RuleFor(hotel => hotel.ZipCode).NotEmpty().WithName("Поле Индекс").MinimumLength(6).MaximumLength(6);
         }
     }
 }

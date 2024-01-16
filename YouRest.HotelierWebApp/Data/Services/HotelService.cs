@@ -17,9 +17,14 @@ namespace YouRest.HotelierWebApp.Data.Services
         }
         public async Task CreateHotel(HotelViewModel hotel)
         {
-            var data = JsonConvert.SerializeObject(hotel);
-            var content = new StringContent(data, Encoding.UTF8, "application/json");
-            await httpClient.PostAsync($"{WebApiUrl}/api/accommodation",content);
+            var content = new StringContent(JsonConvert.SerializeObject(hotel), Encoding.UTF8, "application/json");
+            await httpClient.PostAsync($"{WebApiUrl}/api/accommodation", content);
+        }
+
+        public async Task<List<CountryViewModel>> FetchHotelsAsync()
+        {
+            var response = await httpClient.GetAsync($"{WebApiUrl}/api/accommodation");
+            return await response.Content.ReadFromJsonAsync<List<CountryViewModel>>();
         }
     }
 }

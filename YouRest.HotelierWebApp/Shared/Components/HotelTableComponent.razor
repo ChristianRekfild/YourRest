@@ -9,7 +9,7 @@
     </thead>
     @foreach (HotelViewModel hotel in Hotels)
     {
-        <tr class="tab_row">
+        <tr class="tab_row" @onclick="@( () => SelectedItem(hotel))">
 
             <th scope="row">@(Hotels.IndexOf(hotel) + 1)</th>
             <td>@hotel.Name</td>

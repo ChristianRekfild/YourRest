@@ -10,6 +10,7 @@
         public string HotelType { get; set; }
         public string HotelRating { get; set; } = "Без рейтинга";
         public string HotelDescription { get; set; }
+        public string ZipCode { get; set; }
         public List<string> Images { get; set; } = new();
     }
 }

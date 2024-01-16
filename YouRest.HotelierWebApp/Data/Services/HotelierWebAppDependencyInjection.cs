@@ -12,6 +12,7 @@ namespace YouRest.HotelierWebApp.Data.Services
             services.AddScoped<IHotelService, HotelService>();
             services.AddScoped<IHotelTypeService, HotelTypeService>();
             services.AddScoped<IFileService, FileService>();
+            services.AddScoped<IAuthorizationService, AuthorizationService>();
             return services;
         }
     }

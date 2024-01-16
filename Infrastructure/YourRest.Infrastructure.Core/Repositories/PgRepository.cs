@@ -2,16 +2,12 @@
 using YourRest.Domain.Entities;
 using YourRest.Domain.Repositories;
 using System.Linq.Expressions;
-using System.Linq;
-using System.Reflection.Metadata.Ecma335;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace YourRest.Infrastructure.Core.Repositories
 {
     public class PgRepository<T, U> : IRepository<T, U> where T : BaseEntity<U> where U : notnull
     {
         protected readonly DbContext _dataContext;
-
         public PgRepository(DbContext dataContext)
         {
             _dataContext = dataContext;
