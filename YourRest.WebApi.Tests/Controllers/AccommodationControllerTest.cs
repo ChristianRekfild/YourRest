@@ -146,7 +146,7 @@ namespace YourRest.WebApi.Tests.Controllers
                 Name = "Test Type"
             };
             var accommodation = await fixture.InsertObjectIntoDatabase(new Accommodation { Name = "FourthHotel", AccommodationType = accommodationType });
-            var addressDto = new AddressWithIdDto
+            var addressDto = new AddressDto
             {
                 Street = "",
                 ZipCode = "",
