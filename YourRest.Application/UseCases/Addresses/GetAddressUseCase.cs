@@ -15,7 +15,7 @@ namespace YourRest.Application.UseCases.Addresses
             this.mapper = mapper;
         }
 
-        public async Task<IEnumerable<AddressDto>> ExecuteAsync(CancellationToken cancellationToken)
-            => mapper.Map<IEnumerable<AddressDto>>(await addressRepository.GetAllAsync(cancellationToken));
+        public async Task<IEnumerable<AddressWithIdDto>> ExecuteAsync(CancellationToken cancellationToken)
+            => mapper.Map<IEnumerable<AddressWithIdDto>>(await addressRepository.GetAllAsync(cancellationToken));
     }
 }

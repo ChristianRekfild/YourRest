@@ -35,7 +35,7 @@ namespace YourRest.Application.Tests.UseCases
             int accommodationId = 1;
 
             //Act
-            var act = async () => await addAddressToAccommodationUseCase.Execute(accommodationId, new AddressDto());
+            var act = async () => await addAddressToAccommodationUseCase.Execute(accommodationId, new AddressWithIdDto());
 
             //Assert
             var exception = await Assert.ThrowsAsync<EntityNotFoundException>(act);
@@ -60,7 +60,7 @@ namespace YourRest.Application.Tests.UseCases
             int accommodationId = 1;
 
             //Act
-            var act = async () => await addAddressToAccommodationUseCase.Execute(accommodationId, new AddressDto());
+            var act = async () => await addAddressToAccommodationUseCase.Execute(accommodationId, new AddressWithIdDto());
 
             //Assert
             var exception = await Assert.ThrowsAsync<ValidationException>(act);
@@ -82,7 +82,7 @@ namespace YourRest.Application.Tests.UseCases
                 .ReturnsAsync(new[] { new Accommodation() });
 
             int accommodationId = 1;
-            var addressDto = new AddressDto { CityId = 1 };
+            var addressDto = new AddressWithIdDto { CityId = 1 };
 
             //Act
             var act = async () => await addAddressToAccommodationUseCase.Execute(accommodationId, addressDto);
@@ -102,7 +102,7 @@ namespace YourRest.Application.Tests.UseCases
                 .Setup(r => r.GetWithIncludeAsync(It.IsAny<Expression<Func<Accommodation, bool>>>(), It.IsAny<CancellationToken>(), It.IsAny<Expression<Func<Accommodation, object>>>()))
                 .ReturnsAsync(new[] { new Accommodation() });
             
-            var addressDto = new AddressDto
+            var addressDto = new AddressWithIdDto
             {
                 CityId = 1,
                 Street = "Street",

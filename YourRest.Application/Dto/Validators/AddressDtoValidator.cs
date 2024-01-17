@@ -3,7 +3,7 @@ using YourRest.Application.Dto.Models;
 
 namespace YourRest.Application.Dto.Validators
 {
-    public class AddressDtoValidator: AbstractValidator<AddressDto>
+    public class AddressDtoValidator: AbstractValidator<AddressWithIdDto>
     {
         public AddressDtoValidator()
         {

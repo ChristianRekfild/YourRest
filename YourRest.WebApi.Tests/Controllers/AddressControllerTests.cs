@@ -100,9 +100,9 @@ namespace YourRest.WebApi.Tests.Controllers
             Assert.Equal(createdAddress?.Id, address.Id);
         }
 
-        private AddressDto CreateValidAddressDto(int cityId)
+        private AddressWithIdDto CreateValidAddressDto(int cityId)
         {
-            return new AddressDto
+            return new AddressWithIdDto
             {
                 Street = "Test Street",
                 ZipCode = "123456",

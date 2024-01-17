@@ -17,24 +17,24 @@ namespace YourRest.Application.UseCases.Addresses
             this.mapper = mapper;
         }
 
-        public async Task<AddressDto> ExecuteAsync(AddressDto addressDto, CancellationToken cancellationToken)
+        public async Task<AddressWithIdDto> ExecuteAsync(AddressWithIdDto addressWithIdDto, CancellationToken cancellationToken)
         {
-            var address = (await addressRepository.FindAsync(a => a.Id == addressDto.Id, cancellationToken)).FirstOrDefault();
+            var address = (await addressRepository.FindAsync(a => a.Id == addressWithIdDto.Id, cancellationToken)).FirstOrDefault();
 
             if(address == null)
             {
-                throw new Exception($"Адрес с Id {addressDto.Id} не найден.");
+                throw new Exception($"Адрес с Id {addressWithIdDto.Id} не найден.");
             }
 
             var addressProperties = typeof(Address).GetProperties();
             foreach(var property in addressProperties)
             {
-                property.SetValue(address, typeof(AddressDto).GetProperty(property.Name));
+                property.SetValue(address, typeof(AddressWithIdDto).GetProperty(property.Name));
             }
 
             address = await addressRepository.UpdateAsync(address, true, cancellationToken);
 
-            return mapper.Map<AddressDto>(address);
+            return mapper.Map<AddressWithIdDto>(address);
         }
     }
 }

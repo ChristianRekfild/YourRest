@@ -8,7 +8,7 @@ namespace YourRest.Application.Dto.Mappers.Profiles
     {
         public AddressDtoProfile()
         {
-            CreateMap<AddressDto, Address>()
+            CreateMap<AddressWithIdDto, Address>()
                 .ForMember(target => target.Id, opt => opt.MapFrom(src => src.Id))
                 .ForMember(target => target.Street, opt => opt.MapFrom(src => src.Street))
                 .ForMember(target => target.ZipCode, opt => opt.MapFrom(src => src.ZipCode))

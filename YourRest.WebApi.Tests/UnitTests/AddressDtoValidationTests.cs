@@ -27,9 +27,9 @@ namespace YourRest.WebApi.Tests.UnitTests
             addressValidator.TestValidate(model).ShouldHaveValidationErrorFor(address => address.Street);
         }
 
-        private AddressDto CreateAddressDto() 
+        private AddressWithIdDto CreateAddressDto() 
         {
-            return new AddressDto()
+            return new AddressWithIdDto()
             {
                 CityId = 1,
                 ZipCode = "123456",
