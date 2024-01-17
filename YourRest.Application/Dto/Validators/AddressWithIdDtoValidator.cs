@@ -3,9 +3,9 @@ using YourRest.Application.Dto.Models;
 
 namespace YourRest.Application.Dto.Validators
 {
-    public class AddressDtoValidator: AbstractValidator<AddressDto>
+    public class AddressWithIdDtoValidator: AbstractValidator<AddressWithIdDto>
     {
-        public AddressDtoValidator()
+        public AddressWithIdDtoValidator()
         {
             RuleFor(address => address.Street).NotNull().NotEmpty().MaximumLength(100);
             RuleFor(address => address.ZipCode).NotNull().NotEmpty().Matches(@"^\d{6}$");

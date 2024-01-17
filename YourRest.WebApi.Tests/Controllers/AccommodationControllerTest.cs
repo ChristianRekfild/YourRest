@@ -115,7 +115,7 @@ namespace YourRest.WebApi.Tests.Controllers
                 Name = "Test Type"
             };
             var accommodation = await fixture.InsertObjectIntoDatabase(new Accommodation  { Name = "ThirdHotel", AccommodationType = accommodationType });
-            var addressDto = new AddressWithIdDto
+            var addressDto = new AddressDto
             {
                 Street = "Fourth Street",
                 ZipCode = "123456",
@@ -367,9 +367,9 @@ namespace YourRest.WebApi.Tests.Controllers
 
             Assert.True(userLinkedToAccommodation, "The user is not linked to the accommodation.");
         }
-        private AddressWithIdDto CreateValidAddressDto(int cityId)
+        private AddressDto CreateValidAddressDto(int cityId)
         {
-            return new AddressWithIdDto
+            return new AddressDto
             {
                 Street = "Test Street",
                 ZipCode = "123456",
