@@ -250,7 +250,14 @@ namespace YourRest.WebApi.Tests.Controllers
                 Accommodation = accommodation
             };
             accommodation.StarRating = accommodationStarRating;
-            await fixture.InsertObjectIntoDatabase(accommodation);
+
+            accommodation.Rooms = new List<Room>
+                {
+                    new Room { Name = "310", Capacity = 1, SquareInMeter = 20, RoomType = new RoomType { Name = "Test 3" } },
+                    new Room { Name = "320", Capacity = 1, SquareInMeter = 20, RoomType = new RoomType { Name = "Test 4" } }
+                };
+
+            var acc = await fixture.InsertObjectIntoDatabase(accommodation);
             var userAcc = new UserAccommodation
             {
                 User = user,
@@ -263,7 +270,9 @@ namespace YourRest.WebApi.Tests.Controllers
                 CityIds = new List<int> { city.Id },
                 AccommodationTypesIds = new List<int> { accommodationType.Id }
             };
-            
+
+
+
             var token = _sharedFixture.SharedAccessToken;
 
             fixture.Client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);

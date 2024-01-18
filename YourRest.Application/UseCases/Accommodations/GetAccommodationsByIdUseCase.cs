@@ -18,14 +18,14 @@ namespace YourRest.Application.UseCases.Accommodations
     {
         private readonly IAccommodationRepository _accommodationRepository;
         private readonly IMapper _mapper;
-        private readonly IGetRoomListUseCase _getRoomListUseCase;
+        //private readonly IRoomRepository _roomRepository;
 
 
-        public GetAccommodationsByIdUseCase(IAccommodationRepository accommodationRepository, IMapper mapper, IGetRoomListUseCase getRoomListUseCase)
+        public GetAccommodationsByIdUseCase(IAccommodationRepository accommodationRepository, IMapper mapper/*, IRoomRepository roomRepository*/)
         {
             _accommodationRepository = accommodationRepository;
             _mapper = mapper;
-            _getRoomListUseCase = getRoomListUseCase;
+            //_roomRepository = roomRepository;
         }
         public async Task<AccommodationExtendedDto> ExecuteAsync(int id, CancellationToken cancellationToken)
         {
@@ -34,9 +34,14 @@ namespace YourRest.Application.UseCases.Accommodations
             {
                 throw new EntityNotFoundException($"Accommodation with id number {id} not found");
             }
-            var accommodationExtendedDto = _mapper.Map<AccommodationExtendedDto>(accommodation);
-            accommodationExtendedDto.Rooms = (await _getRoomListUseCase.Execute(accommodation.Id, cancellationToken)).ToList();
-            return accommodationExtendedDto;
+
+            //accommodation.Rooms = (await _roomRepository.GetWithIncludeAsync(
+            //    room => room.AccommodationId == accommodation.Id,
+            //    cancellationToken,
+            //include => include.RoomType
+            //    )).ToList();
+
+            return _mapper.Map<AccommodationExtendedDto>(accommodation);
         }
 
     }
