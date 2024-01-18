@@ -12,9 +12,9 @@ namespace YourRest.Producer.Infrastructure.Repositories
         {
         }
 
-        public Task<List<Room>> GetRoomsByCityAndDatesAsync(DateOnly startDate, DateOnly endDate, int cityId, CancellationToken cancellation = default)
+        public async Task<List<Room>> GetRoomsByCityAndDatesAsync(DateOnly startDate, DateOnly endDate, int cityId, CancellationToken cancellation = default)
         {
-            var roomsByCityId = this._dataContext.Set<Room>()
+            var roomsByCityId =  this._dataContext.Set<Room>()
                .Where(room => room.Accommodation.Address != null &&
                 room.Accommodation.Address.CityId == cityId);
 
@@ -25,12 +25,12 @@ namespace YourRest.Producer.Infrastructure.Repositories
                 (b.StartDate < endDate && endDate < b.EndDate) ||
                 (startDate <= b.StartDate && b.EndDate <= endDate)));
 
-            return roomsByCityId
+            return await roomsByCityId
                 .Except(roomsByCityIdInBooking)
                 .AsQueryable()
                 .ToListAsync(cancellation);
         }
-        public Task<List<Room>> GetRoomsByAccommodationAndDatesAsync(DateOnly startDate, DateOnly endDate, int accommodationId, CancellationToken cancellation = default)
+        public async Task<List<Room>> GetRoomsByAccommodationAndDatesAsync(DateOnly startDate, DateOnly endDate, int accommodationId, CancellationToken cancellation = default)
         {
             var roomsByAccommodationId = this._dataContext.Set<Room>()
                .Where(room => room.Accommodation.Address != null &&
@@ -43,7 +43,7 @@ namespace YourRest.Producer.Infrastructure.Repositories
                 (b.StartDate < endDate && endDate < b.EndDate) ||
                 (startDate <= b.StartDate && b.EndDate <= endDate)));
 
-            return roomsByAccommodationId
+            return await roomsByAccommodationId
                 .Except(roomsByAccommodationIdInBooking)
                 .AsQueryable()
                 .ToListAsync(cancellation);
