@@ -4,6 +4,6 @@ namespace YourRest.Application.Interfaces.Addresses
 {
     public interface IGetAddressByIdUseCase
     {
-        Task<AddressDto> ExecuteAsync(int id, CancellationToken cancellationToken);
+        Task<AddressWithIdDto> ExecuteAsync(int id, CancellationToken cancellationToken);
     }
 }

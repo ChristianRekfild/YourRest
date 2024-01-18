@@ -67,7 +67,7 @@ namespace YourRest.WebApi.Controllers
             if (authCheck is NotFoundObjectResult)
             { return authCheck; }
 
-            return CreatedAtAction(nameof(CreateAddress), _mapper.Map<AddressViewModel>(await _addAddressByIdUseCase.ExecuteAsync(_mapper.Map<AddressDto>(route), HttpContext.RequestAborted)));
+            return CreatedAtAction(nameof(CreateAddress), _mapper.Map<AddressViewModel>(await _addAddressByIdUseCase.ExecuteAsync(_mapper.Map<AddressWithIdDto>(route), HttpContext.RequestAborted)));
         }
 
         [Authorize]
@@ -78,7 +78,7 @@ namespace YourRest.WebApi.Controllers
             if (authCheck is NotFoundObjectResult)
             { return authCheck; }
 
-            return Ok(await _editAddressByIdUseCase.ExecuteAsync(_mapper.Map<AddressDto>(route), HttpContext.RequestAborted));
+            return Ok(await _editAddressByIdUseCase.ExecuteAsync(_mapper.Map<AddressWithIdDto>(route), HttpContext.RequestAborted));
         }
 
         [Authorize]

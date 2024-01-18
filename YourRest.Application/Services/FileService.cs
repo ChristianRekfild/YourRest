@@ -37,6 +37,25 @@ public class FileService: IFileService
         };
     }
 
+    public async Task<bool> DeleteFileAsync(string path, string bucketName, CancellationToken cancellationToken)
+    {
+        try
+        {
+            var deleteObjectRequest = new DeleteObjectRequest
+            {
+                BucketName = bucketName,
+                Key = path
+            };
+
+            var response = await _s3Client.DeleteObjectAsync(deleteObjectRequest, cancellationToken);
+            return response.HttpStatusCode == System.Net.HttpStatusCode.OK;
+        }
+        catch (AmazonS3Exception e)
+        {
+            throw new InvalidOperationException($"Error occurred while deleting file from S3: {e.Message}", e);
+        }
+    }
+
     public async Task<string> AddPhotoAsync(FileData fileData, string bucketName, CancellationToken cancellationToken)
     {
         bool bucketExists = true;

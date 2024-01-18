@@ -128,5 +128,23 @@ namespace YourRest.WebApi.Controllers
             //string base64 = Convert.ToBase64String(data);
             return Ok($"data:{fileDto.MimeType};base64,{file}");
         }
+        
+        [Authorize]
+        [HttpDelete]
+        [Route("api/photo/{path}")]
+        public async Task<IActionResult> DeletePhotoAsync(string path, [FromQuery] string bucketType)
+        {
+            string bucketName = bucketType switch
+            {
+                "Accommodation" => _awsOptions.BucketNames.Accommodation,
+                "Room" => _awsOptions.BucketNames.Room,
+                "User" => _awsOptions.BucketNames.User,
+                _ => throw new ArgumentException("Invalid bucket type")
+            };
+            
+            await _fileService.DeleteFileAsync(path, bucketName, HttpContext.RequestAborted);
+
+            return Ok($"Photo with ID {path} has been successfully deleted.");
+        }
     }
 }

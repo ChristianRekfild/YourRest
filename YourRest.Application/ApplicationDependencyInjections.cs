@@ -112,6 +112,7 @@ namespace YourRest.Application
             services.AddScoped<IGetAddressByIdUseCase, GetAddressByIdUseCase>();
             services.AddScoped<IGetAddressUseCase, GetAddressUseCase>();
             services.AddScoped<IRemoveAddressUseCase, RemoveAddressUseCase>();
+            services.AddScoped<IDeleteAddressFromAccommodationUseCase, DeleteAddressFromAccommodationUseCase>();
 
             return services;
         }

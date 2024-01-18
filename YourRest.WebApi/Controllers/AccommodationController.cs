@@ -16,28 +16,39 @@ namespace YourRest.WebApi.Controllers
         private readonly IAddAddressToAccommodationUseCase _addAddressToAccommodationUseCase;
         private readonly IFetchAccommodationsUseCase _fetchAccommodationsUseCase;
         private readonly ICreateAccommodationUseCase _createAccommodationUseCase;
+        private readonly IDeleteAddressFromAccommodationUseCase _deleteAddressFromAccommodationUseCase;
 
         public AccommodationController(
             IAddAddressToAccommodationUseCase addAddressToAccommodationUseCase,
             IFetchAccommodationsUseCase fetchAccommodationsUseCase,
-            ICreateAccommodationUseCase createAccommodationUseCase
+            ICreateAccommodationUseCase createAccommodationUseCase,
+            IDeleteAddressFromAccommodationUseCase deleteAddressFromAccommodationUseCase
             )
         {
             _addAddressToAccommodationUseCase = addAddressToAccommodationUseCase;
             _fetchAccommodationsUseCase = fetchAccommodationsUseCase;
             _createAccommodationUseCase = createAccommodationUseCase;
+            _deleteAddressFromAccommodationUseCase = deleteAddressFromAccommodationUseCase;
         }
 
         [HttpPost("api/operators/accommodations/{accommodationId}/address", Name = "AddAddressToAccommodationAsync")]
-        public async Task<IActionResult> AddAddressToAccommodationAsync([FromRoute] int accommodationId, [FromBody] AddressDto addressDto)
+        public async Task<IActionResult> AddAddressToAccommodationAsync([FromRoute] int accommodationId, [FromBody] AddressDto addressWithIdDto)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-            var result = await _addAddressToAccommodationUseCase.Execute(accommodationId, addressDto);
+            var result = await _addAddressToAccommodationUseCase.Execute(accommodationId, addressWithIdDto);
 
             return CreatedAtRoute(nameof(AddAddressToAccommodationAsync), result);
+        }
+        
+        [HttpDelete("api/operators/accommodations/{accommodationId}/address/{addressId}", Name = "DeleteAddressAccommodationLinkAsync")]
+        public async Task<IActionResult> DeleteAddressFromAccommodationAsync([FromRoute] int accommodationId, [FromRoute] int addressId)
+        {
+            await _deleteAddressFromAccommodationUseCase.Execute(accommodationId, addressId);
+
+            return Ok($"Address {addressId} from Accommodation {accommodationId} has been successfully deleted.");
         }
         
         [HttpPost("api/accommodations", Name = "FetchAccommodationsByFilter")]
