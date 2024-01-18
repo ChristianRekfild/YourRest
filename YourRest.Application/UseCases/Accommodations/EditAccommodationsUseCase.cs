@@ -32,8 +32,10 @@ namespace YourRest.Application.UseCases.Accommodations
             {
                 throw new EntityNotFoundException($"Accommodation with id {AccommodationExtendedDto.Id} not found");
             }
+            var accommodation = await _accommodationRepository.GetWithIncludeAndTrackingAsync(a => a.Id == AccommodationExtendedDto.Id, cancellationToken, include => include.StarRating , include => include.AccommodationType, include => include.Address, include => include.AccommodationFacilities);
 
-            var accommodationToReturn = await _accommodationRepository.UpdateAsync(_mapper.Map<Accommodation>(AccommodationExtendedDto), cancellationToken: cancellationToken);
+            var acco
+            //var accommodationToReturn = await _accommodationRepository.UpdateAsync(_mapper.Map<Accommodation>(AccommodationExtendedDto), cancellationToken: cancellationToken);
 
             //List<RoomWithIdDto> romsUpdateToReturn = new List<RoomWithIdDto>();
             //accommodationToReturn.Rooms.ToList().ForEach(r => romsUpdateToReturn.Add(_mapper.Map<RoomWithIdDto>(r)));
