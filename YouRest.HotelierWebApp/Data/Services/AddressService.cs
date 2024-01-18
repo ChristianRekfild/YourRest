@@ -15,7 +15,7 @@ namespace YouRest.HotelierWebApp.Data.Services
             this.httpClient = httpClientFactory.CreateClient();
             WebApiUrl = configuration.GetSection("webApiUrl").Value;
         }
-        public async Task<AddressViewModel> CreateAddress(AddressViewModel address, int hotelId)
+        public async Task<AddressViewModel> CreateAddressAsync(AddressViewModel address, int hotelId, CancellationToken cancellationToken = default)
         {
             var result = new AddressViewModel();
             var content = new StringContent(JsonConvert.SerializeObject(address), Encoding.UTF8, "application/json");
@@ -27,12 +27,12 @@ namespace YouRest.HotelierWebApp.Data.Services
             return result;
         }
 
-        public Task<AddressViewModel> FetchAddressByHotelId(int id)
+        public Task<AddressViewModel> FetchAddressByHotelIdAsync(int id, CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
         }
 
-        public Task<IEnumerable<AddressViewModel>> FetchAddresses()
+        public Task<IEnumerable<AddressViewModel>> FetchAddressesAsync(CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
         }

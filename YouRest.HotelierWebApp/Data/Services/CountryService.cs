@@ -14,7 +14,7 @@ namespace YouRest.HotelierWebApp.Data.Services
             this.httpClient = httpClientFactory.CreateClient();
             WebApiUrl = configuration.GetSection("webApiUrl").Value;
         }
-        public async Task<IEnumerable<CountryViewModel>> FetchCountriesAsync(CancellationToken cancellationToken)
+        public async Task<IEnumerable<CountryViewModel>> FetchCountriesAsync(CancellationToken cancellationToken = default)
         {
             
             var response = await httpClient.GetAsync($"{WebApiUrl}/api/countries", cancellationToken);
@@ -22,7 +22,7 @@ namespace YouRest.HotelierWebApp.Data.Services
             return countries;
         }
 
-        public async Task<CountryViewModel> FetchCountryAsync(int id, CancellationToken cancellationToken)
+        public async Task<CountryViewModel> FetchCountryAsync(int id, CancellationToken cancellationToken = default)
         {
             var countries = await FetchCountriesAsync(cancellationToken);
             return countries.FirstOrDefault(x => x.Id == id);

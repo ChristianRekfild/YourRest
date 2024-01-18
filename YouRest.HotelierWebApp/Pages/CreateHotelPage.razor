@@ -5,7 +5,7 @@
     </div>
     <div class="row">
         <EditForm Model="@CreateHotelViewModel" OnSubmit="@CreateHotel">
-            <FluentValidationValidator @ref="FluentValidationValidator" />
+            <FluentValidationValidator @ref="CreateFormValidator" />
             <ValidationSummary />
             <div class="input-group mb-3">
                 <label class="input-group-text" for="Countries">Страна</label>

@@ -4,7 +4,7 @@ namespace YouRest.HotelierWebApp.Data.Services.Abstractions
 {
     public interface IHotelService
     {
-        Task<HotelViewModel> CreateHotel(HotelViewModel hotel, CancellationToken cancellationToken);
-        Task<List<HotelViewModel>> FetchHotelsAsync(CancellationToken cancellationToken);
+        Task<HotelViewModel> CreateHotelAsync(HotelViewModel hotel, CancellationToken cancellationToken = default);
+        Task<List<HotelViewModel>> FetchHotelsAsync(CancellationToken cancellationToken = default);
     }
 }

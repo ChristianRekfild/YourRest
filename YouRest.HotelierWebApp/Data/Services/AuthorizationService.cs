@@ -1,6 +1,4 @@
 ﻿using Newtonsoft.Json;
-using System.Net;
-using System.Net.Http;
 using System.Text;
 using YouRest.HotelierWebApp.Data.Services.Abstractions;
 using YouRest.HotelierWebApp.Data.ViewModels;

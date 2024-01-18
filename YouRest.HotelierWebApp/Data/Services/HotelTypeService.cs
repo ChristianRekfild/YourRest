@@ -15,8 +15,8 @@ namespace YouRest.HotelierWebApp.Data.Services
         }
         public async Task<IEnumerable<HotelTypeViewModel>> FetchHotelTypesAsync(CancellationToken cancellationToken = default)
         {
-           var response = await httpClient.GetAsync($"{WebApiUrl}/api/accommodation-types");
-           var hotelTypes = await response.Content.ReadFromJsonAsync<IEnumerable<HotelTypeViewModel>>();
+           var response = await httpClient.GetAsync($"{WebApiUrl}/api/accommodation-types", cancellationToken);
+           var hotelTypes = await response.Content.ReadFromJsonAsync<IEnumerable<HotelTypeViewModel>>(cancellationToken: cancellationToken);
             return hotelTypes;
         }
     }

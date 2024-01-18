@@ -4,8 +4,8 @@ namespace YouRest.HotelierWebApp.Data.Services.Abstractions
 {
     public interface IAddressService
     {
-        Task<AddressViewModel> CreateAddress (AddressViewModel address, int hotelId);
-        Task<IEnumerable<AddressViewModel>> FetchAddresses();
-        Task<AddressViewModel> FetchAddressByHotelId(int id);
+        Task<AddressViewModel> CreateAddressAsync (AddressViewModel address, int hotelId, CancellationToken cancellationToken = default);
+        Task<IEnumerable<AddressViewModel>> FetchAddressesAsync(CancellationToken cancellationToken = default);
+        Task<AddressViewModel> FetchAddressByHotelIdAsync(int id, CancellationToken cancellationToken = default);
     }
 }

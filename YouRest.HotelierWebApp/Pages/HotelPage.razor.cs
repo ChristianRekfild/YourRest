@@ -6,22 +6,22 @@ namespace YouRest.HotelierWebApp.Pages
 {
     public partial class HotelPage : ComponentBase, IDisposable
     {
+        protected CancellationTokenSource tokenSource = new();
         [Inject] public NavigationManager Navigation { get; set; }
         [Inject] public IHotelService HotelService { get; set; }
-        protected CancellationTokenSource _cts = new ();
         public List<HotelViewModel> Hotels { get; set; } = new();
         protected override async Task OnInitializedAsync()
         {
-            Hotels = await HotelService.FetchHotelsAsync(_cts.Token);
             await base.OnInitializedAsync();
+            Hotels = await HotelService.FetchHotelsAsync(tokenSource.Token);
         }
 
         public void NavigateToCreate() => Navigation.NavigateTo("hotels/create");
 
         public void Dispose()
         {
-            _cts.Cancel();
-            _cts.Dispose();
+            tokenSource.Cancel();
+            tokenSource.Dispose();
         }
     }
 }

@@ -15,7 +15,7 @@ namespace YouRest.HotelierWebApp.Data.Services
         public async Task<IEnumerable<RegionViewModel>> FetchRegionsAsync(CancellationToken cancellationToken = default)
         {
             var response = await httpClient.GetAsync($"{webApiUrl}/api/regions", cancellationToken);
-            var regions = await response.Content.ReadFromJsonAsync<IEnumerable<RegionViewModel>>();
+            var regions = await response.Content.ReadFromJsonAsync<IEnumerable<RegionViewModel>>(cancellationToken: cancellationToken);
             return regions;
         }
 
