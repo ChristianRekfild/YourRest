@@ -1,17 +1,27 @@
 ﻿using Microsoft.AspNetCore.Components;
+using YouRest.HotelierWebApp.Data.Services.Abstractions;
 using YouRest.HotelierWebApp.Data.ViewModels;
 
 namespace YouRest.HotelierWebApp.Pages
 {
-    public partial class HotelPage : ComponentBase
+    public partial class HotelPage : ComponentBase, IDisposable
     {
         [Inject] public NavigationManager Navigation { get; set; }
-        public List<HotelViewModel> Hotels { get; set; } =
-            new List<HotelViewModel>()
-            {
-                new() { Id = 1, Name= "Four Seasons", Stars = 5},
-                new() { Id = 2, Name= "Руссотель", Stars = 3},
-            };
+        [Inject] public IHotelService HotelService { get; set; }
+        protected CancellationTokenSource _cts = new ();
+        public List<HotelViewModel> Hotels { get; set; } = new();
+        protected override async Task OnInitializedAsync()
+        {
+            Hotels = await HotelService.FetchHotelsAsync(_cts.Token);
+            await base.OnInitializedAsync();
+        }
+
         public void NavigateToCreate() => Navigation.NavigateTo("hotels/create");
+
+        public void Dispose()
+        {
+            _cts.Cancel();
+            _cts.Dispose();
+        }
     }
 }

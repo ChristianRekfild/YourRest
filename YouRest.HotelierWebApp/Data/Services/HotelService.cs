@@ -22,24 +22,32 @@ namespace YouRest.HotelierWebApp.Data.Services
             this.storage = storage;
             WebApiUrl = configuration.GetSection("webApiUrl").Value;
         }
-        public async Task<HotelViewModel> CreateHotel(HotelViewModel hotel)
+        public async Task<HotelViewModel> CreateHotel(HotelViewModel hotel, CancellationToken cancellationToken)
         {
             var result = new HotelViewModel();
             var accessToken = (await storage.GetAsync<string>("accessToken")).Value;
             httpClient.SetBearerToken(accessToken);
-            var data = JsonConvert.SerializeObject(hotel);
-            var content = new StringContent(data, Encoding.UTF8, "application/json");
-            var response = await httpClient.PostAsync($"{WebApiUrl}/api/accommodation", content);
-            result = await response.Content.ReadFromJsonAsync<HotelViewModel>();
+            var content = new StringContent(JsonConvert.SerializeObject(hotel), Encoding.UTF8, "application/json");
+            var response = await httpClient.PostAsync($"{WebApiUrl}/api/accommodation", content, cancellationToken);
+            result = await response.Content.ReadFromJsonAsync<HotelViewModel>(cancellationToken: cancellationToken);
 
 
             return result;
         }
 
-        public async Task<List<CountryViewModel>> FetchHotelsAsync()
+        public async Task<List<HotelViewModel>> FetchHotelsAsync(CancellationToken cancellationToken)
         {
-            var response = await httpClient.GetAsync($"{WebApiUrl}/api/accommodation");
-            return await response.Content.ReadFromJsonAsync<List<CountryViewModel>>();
+            List<HotelViewModel>? result = new();
+            var accessToken = (await storage.GetAsync<string>("accessToken")).Value;
+            httpClient.SetBearerToken(accessToken);
+            var data = JsonConvert.SerializeObject(new FetchHotelsViewModel());
+            var content = new StringContent(data, Encoding.UTF8, "application/json");
+            var response = await httpClient.PostAsync($"{WebApiUrl}/api/accommodations",content,cancellationToken);
+            if(response.StatusCode == System.Net.HttpStatusCode.OK) 
+            {
+              result = await response.Content.ReadFromJsonAsync<List<HotelViewModel>>(cancellationToken: cancellationToken);
+            }
+            return result;
         }
     }
 }

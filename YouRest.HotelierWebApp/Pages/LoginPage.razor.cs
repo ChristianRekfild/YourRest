@@ -26,20 +26,18 @@ namespace YouRest.HotelierWebApp.Pages
                 {
                     var accessToken = await response.Content.ReadFromJsonAsync<TokenViewModel>();
                     await ProtectedSessionStore.SetAsync("accessToken", accessToken.AccessToken);
-                    MainLayout.IsAuthorize = true; 
+                    MainLayout.IsAuthorize = true;
                     Navigation.NavigateTo("statistic");
-                    
-                }
-                else
-                {
-                    Auth = new AuthorizationViewModel();
                     MainLayout.IsAuthorize = true;
                 }
+                Auth = new AuthorizationViewModel();
+                //MainLayout.IsAuthorize = false;
+
             }
         }
         protected async Task LogoutAsync()
         {
             await ProtectedSessionStore.DeleteAsync("accessToken");
-        }   
+        }
     }
 }

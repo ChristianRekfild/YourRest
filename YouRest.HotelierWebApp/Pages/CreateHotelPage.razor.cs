@@ -6,7 +6,7 @@ using YouRest.HotelierWebApp.Data.ViewModels;
 
 namespace YouRest.HotelierWebApp.Pages
 {
-    public partial class CreateHotelPage : ComponentBase
+    public partial class CreateHotelPage : ComponentBase, IDisposable
     {
         [Inject] public IFileService FileService { get; set; }
         [Inject] public ICountryService CountryService { get; set; }
@@ -20,6 +20,7 @@ namespace YouRest.HotelierWebApp.Pages
         [Parameter] public IEnumerable<RegionViewModel> Regions { get; set; } = new List<RegionViewModel>();
         [Parameter] public IEnumerable<CityViewModel> Cities { get; set; } = new List<CityViewModel>();
         [Parameter] public IEnumerable<HotelTypeViewModel> HotelTypes { get; set; } = new List<HotelTypeViewModel>();
+        protected CancellationTokenSource _cts = new();
         public FluentValidationValidator? FluentValidationValidator { get; set; }
         private string inputFileId = Guid.NewGuid().ToString();
         private CreateHotelViewModel CreateHotelViewModel { get; set; } = new();
@@ -44,7 +45,7 @@ namespace YouRest.HotelierWebApp.Pages
                     Name = CreateHotelViewModel.HotelName,
                     Stars = GetRatingValue(CreateHotelViewModel.HotelRating),
                     Description = CreateHotelViewModel.HotelDescription
-                });
+                }, _cts.Token);
                 await AddressService.CreateAddress(new AddressViewModel()
                 {
                     CityId = Cities.Single(s => s.Name == CreateHotelViewModel.City).Id,
@@ -78,5 +79,11 @@ namespace YouRest.HotelierWebApp.Pages
             "Пять звезд" => 5,
             _ => 0
         };
+
+        public void Dispose()
+        {
+            _cts.Cancel();
+            _cts.Dispose();
+        }
     }
 }
