@@ -19,10 +19,10 @@ namespace YouRest.HotelierWebApp.Data.Services
         {
             var result = new AddressViewModel();
             var content = new StringContent(JsonConvert.SerializeObject(address), Encoding.UTF8, "application/json");
-            var response = await httpClient.PostAsync($"{WebApiUrl}/api/operators/accommodations/{hotelId}/address", content);
-            if (response.StatusCode == System.Net.HttpStatusCode.OK)
+            var response = await httpClient.PostAsync($"{WebApiUrl}/api/operators/accommodations/{hotelId}/address", content, cancellationToken);
+            if (response.StatusCode == System.Net.HttpStatusCode.Created)
             {
-                result = await response.Content.ReadFromJsonAsync<AddressViewModel>();
+                result = await response.Content.ReadFromJsonAsync<AddressViewModel>(cancellationToken: cancellationToken);
             }
             return result;
         }
