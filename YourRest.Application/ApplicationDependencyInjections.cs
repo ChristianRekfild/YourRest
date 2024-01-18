@@ -24,6 +24,8 @@ using YourRest.Application.UseCases.Room;
 using YourRest.Application.Interfaces.AccommodationFacility;
 using YourRest.Application.UseCases.HotelBookingUseCase;
 using YourRest.Application.UseCases.Photo;
+using YourRest.Application.Interfaces.Addresses;
+using YourRest.Application.UseCases.Addresses;
 
 namespace YourRest.Application
 {
@@ -103,7 +105,15 @@ namespace YourRest.Application
             services.AddScoped<IUserPhotoUploadUseCase, UserPhotoUploadUseCase>();
             services.AddScoped<IGetUserInfoUseCase, GetUserInfoUseCase>();
             services.AddScoped<IGetUserPhotosUseCase, GetUserPhotosUseCase>();
-            
+            //Address
+            services.AddScoped<IAddAddressUseCase, AddAddressUseCase>();
+            services.AddScoped<IEditAddressUseCase, EditAddressUseCase>();
+            services.AddScoped<IGetAddressByCityIdUseCase, GetAddressByCityIdUseCase>();
+            services.AddScoped<IGetAddressByIdUseCase, GetAddressByIdUseCase>();
+            services.AddScoped<IGetAddressUseCase, GetAddressUseCase>();
+            services.AddScoped<IRemoveAddressUseCase, RemoveAddressUseCase>();
+            services.AddScoped<IDeleteAddressFromAccommodationUseCase, DeleteAddressFromAccommodationUseCase>();
+
             return services;
         }
     }

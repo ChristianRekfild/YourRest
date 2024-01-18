@@ -19,6 +19,7 @@ using YourRest.Producer.Infrastructure.Keycloak.Settings;
 using YourRest.WebApi.Options;
 using Amazon.S3;
 using Microsoft.AspNetCore.Http.Features;
+using YourRest.WebApi;
 
 public class Program
 {
@@ -92,6 +93,7 @@ public class Program
         services.AddKeycloakInfrastructure();
         services.AddInfrastructure();
         services.AddApplication();
+        services.AddWebApi();
 
         services.AddHttpClient();
         services.AddTransient<ICustomHttpClientFactory, CustomHttpClientFactory>();
