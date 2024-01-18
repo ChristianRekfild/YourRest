@@ -8,6 +8,7 @@ using YourRest.Domain.Repositories;
 using YourRest.Application.Interfaces.Accommodations;
 using YourRest.Application.Exceptions;
 using AutoMapper;
+using YourRest.Application.Interfaces;
 
 namespace YourRest.Application.UseCases.Accommodations
 {
@@ -15,12 +16,14 @@ namespace YourRest.Application.UseCases.Accommodations
     {
         private readonly IAccommodationRepository _accommodationRepository;
         private readonly IMapper _mapper;
+        private readonly IGetRoomListUseCase _getRoomListUseCase;
 
 
-        public GetAccommodationsUseCase(IAccommodationRepository accommodationRepository, IMapper mapper)
+        public GetAccommodationsUseCase(IAccommodationRepository accommodationRepository, IMapper mapper, IGetRoomListUseCase getRoomListUseCase)
         {
             _accommodationRepository = accommodationRepository;
             _mapper = mapper;
+            _getRoomListUseCase = getRoomListUseCase;
         }
         public async Task<IEnumerable<AccommodationExtendedDto>> ExecuteAsync(CancellationToken cancellationToken)
         //{
@@ -68,6 +71,15 @@ namespace YourRest.Application.UseCases.Accommodations
         //    return resultAccExtDtoList;
         //}
 
-        => _mapper.Map<IEnumerable<AccommodationExtendedDto>>(await _accommodationRepository.GetAllAsync(cancellationToken));
+        {
+            var accAll = await _accommodationRepository.GetAllAsync(cancellationToken);
+
+            var accAllExtendedDto = _mapper.Map<IEnumerable<AccommodationExtendedDto>>(accAll);
+            foreach (var item in accAllExtendedDto)
+            {
+                item.Rooms = (await _getRoomListUseCase.Execute(item.Id, cancellationToken)).ToList();
+            }
+            return accAllExtendedDto;
+        }
     }
 }

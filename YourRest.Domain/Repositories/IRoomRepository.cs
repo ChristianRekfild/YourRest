@@ -6,5 +6,7 @@ namespace YourRest.Domain.Repositories
     {
         Task<List<Room>> GetRoomsByCityAndDatesAsync(DateOnly startDate, DateOnly endDate, int cityId, CancellationToken cancellation = default);
         Task<List<Room>> GetRoomsByAccommodationAndDatesAsync(DateOnly startDate, DateOnly endDate, int accommodationId, CancellationToken cancellation = default);
+        Task<List<Room>> GetRoomsByAccommodationId(int accommodationId, CancellationToken cancellation = default);
+
     }
 }

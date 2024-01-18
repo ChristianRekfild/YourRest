@@ -48,5 +48,17 @@ namespace YourRest.Producer.Infrastructure.Repositories
                 .AsQueryable()
                 .ToListAsync(cancellation);
         }
+
+        public Task<List<Room>> GetRoomsByAccommodationId(int accommodationId, CancellationToken cancellation = default)
+        {
+            var roomsByAccommodationId = this._dataContext.Set<Room>()
+               .Where(room => room.Accommodation.Address != null &&
+                room.Accommodation.Id == accommodationId);
+
+            return roomsByAccommodationId
+                .Except(roomsByAccommodationId)
+                .AsQueryable()
+                .ToListAsync(cancellation);
+        }
     }
 }

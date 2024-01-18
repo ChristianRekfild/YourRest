@@ -8,6 +8,9 @@ using YourRest.Domain.Repositories;
 using YourRest.Application.Interfaces.Accommodations;
 using YourRest.Application.Exceptions;
 using AutoMapper;
+using YourRest.Application.Interfaces.Room;
+using YourRest.Application.UseCases.Room;
+using YourRest.Application.Interfaces;
 
 namespace YourRest.Application.UseCases.Accommodations
 {
@@ -15,11 +18,14 @@ namespace YourRest.Application.UseCases.Accommodations
     {
         private readonly IAccommodationRepository _accommodationRepository;
         private readonly IMapper _mapper;
+        private readonly IGetRoomListUseCase _getRoomListUseCase;
 
-        public GetAccommodationsByIdUseCase(IAccommodationRepository accommodationRepository, IMapper mapper)
+
+        public GetAccommodationsByIdUseCase(IAccommodationRepository accommodationRepository, IMapper mapper, IGetRoomListUseCase getRoomListUseCase)
         {
             _accommodationRepository = accommodationRepository;
             _mapper = mapper;
+            _getRoomListUseCase = getRoomListUseCase;
         }
         public async Task<AccommodationExtendedDto> ExecuteAsync(int id, CancellationToken cancellationToken)
         {
@@ -28,7 +34,9 @@ namespace YourRest.Application.UseCases.Accommodations
             {
                 throw new EntityNotFoundException($"Accommodation with id number {id} not found");
             }
-            return _mapper.Map<AccommodationExtendedDto>(accommodation);
+            var accommodationExtendedDto = _mapper.Map<AccommodationExtendedDto>(accommodation);
+            accommodationExtendedDto.Rooms = (await _getRoomListUseCase.Execute(accommodation.Id, cancellationToken)).ToList();
+            return accommodationExtendedDto;
         }
 
     }

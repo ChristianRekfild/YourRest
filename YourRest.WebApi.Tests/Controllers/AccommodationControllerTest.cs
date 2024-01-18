@@ -437,7 +437,7 @@ namespace YourRest.WebApi.Tests.Controllers
     //});
     //        var Room4 = await fixture.InsertObjectIntoDatabase(new Room { Name = "3330", AccommodationId = accommodation2.Id, Capacity = 2, SquareInMeter = 30, RoomType = new RoomType { Name = "Test Type" } });
 
-            var response = await fixture.Client.GetAsync($"api/accommodation");
+            var response = await fixture.Client.GetAsync($"api/accommodations");
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
             var responseString = await response.Content.ReadAsStringAsync();
@@ -505,7 +505,7 @@ namespace YourRest.WebApi.Tests.Controllers
                 }
             });
 
-            var response = await fixture.Client.GetAsync($"api/accommodation/{accommodation2.Id}");
+            var response = await fixture.Client.GetAsync($"api/accommodations/{accommodation2.Id}");
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
             var responseString = await response.Content.ReadAsStringAsync();

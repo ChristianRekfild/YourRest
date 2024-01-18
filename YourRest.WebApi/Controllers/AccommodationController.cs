@@ -97,7 +97,7 @@ namespace YourRest.WebApi.Controllers
         }
 
         [HttpDelete]
-        [Route("api/accommodation/{accommodationId}")]
+        [Route("api/accommodations/{accommodationId}")]
         public async Task<IActionResult> Delete([FromRoute] int accommodationId)
         {
 
@@ -106,21 +106,21 @@ namespace YourRest.WebApi.Controllers
         }
 
         [HttpPut]
-        [Route("api/accommodation/{accommodationId}")]
+        [Route("api/accommodations/{accommodationId}")]
         public async Task<IActionResult> Put([FromBody] AccommodationExtendedDto accommodationExtendedDto, int accommodationId)
         {
             return Ok(await _editAccommodationUseCase.ExecuteAsync(accommodationExtendedDto, HttpContext.RequestAborted));
         }
 
         [HttpGet]
-        [Route("api/accommodation")]
+        [Route("api/accommodations")]
         public async Task<IActionResult> GetAccommodation()
         {
             return Ok(await _getAccommodation.ExecuteAsync(HttpContext.RequestAborted));
         }
 
         [HttpGet]
-        [Route("api/accommodation/{accommodationId}")]
+        [Route("api/accommodations/{accommodationId}")]
         public async Task<IActionResult> GetAccommodationById([FromRoute] int accommodationId)
         {
             return Ok(await _getAccommodationByIdUseCase.ExecuteAsync(accommodationId, HttpContext.RequestAborted));
