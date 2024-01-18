@@ -22,19 +22,18 @@ namespace YouRest.HotelierWebApp.Data.Services
             this.storage = storage;
             WebApiUrl = configuration.GetSection("webApiUrl").Value;
         }
-        public async Task CreateHotel(HotelViewModel hotel)
+        public async Task<HotelViewModel> CreateHotel(HotelViewModel hotel)
         {
-            var responseMessage = await authorizationService.LoginAsync(new AuthorizationViewModel() { Password = "123456", Username = "grits@gmail.com" });
-            if (responseMessage.StatusCode == System.Net.HttpStatusCode.OK)
-            {
-                var token = await responseMessage.Content.ReadFromJsonAsync<TokenViewModel>();
-                httpClient.SetBearerToken(token.AccessToken);
-                var data = JsonConvert.SerializeObject(hotel);
-                var content = new StringContent(data, Encoding.UTF8, "application/json");
-                var res = await httpClient.PostAsync($"{WebApiUrl}/api/accommodation", content);
-            }
-            //var accessToken = (await storage.GetAsync<string>("accessToken")).Value;
+            var result = new HotelViewModel();
+            var accessToken = (await storage.GetAsync<string>("accessToken")).Value;
+            httpClient.SetBearerToken(accessToken);
+            var data = JsonConvert.SerializeObject(hotel);
+            var content = new StringContent(data, Encoding.UTF8, "application/json");
+            var response = await httpClient.PostAsync($"{WebApiUrl}/api/accommodation", content);
+            result = await response.Content.ReadFromJsonAsync<HotelViewModel>();
 
+
+            return result;
         }
 
         public async Task<List<CountryViewModel>> FetchHotelsAsync()

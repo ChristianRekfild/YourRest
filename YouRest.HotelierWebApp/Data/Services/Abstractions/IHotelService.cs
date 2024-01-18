@@ -4,7 +4,7 @@ namespace YouRest.HotelierWebApp.Data.Services.Abstractions
 {
     public interface IHotelService
     {
-        Task CreateHotel(HotelViewModel hotel);
+        Task<HotelViewModel> CreateHotel(HotelViewModel hotel);
         Task<List<CountryViewModel>> FetchHotelsAsync();
     }
 }

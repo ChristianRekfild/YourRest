@@ -14,6 +14,8 @@ namespace YouRest.HotelierWebApp.Pages
         [Inject] public ICityService CityService { get; set; }
         [Inject] public IHotelService HotelService { get; set; }
         [Inject] public IHotelTypeService HotelTypeService { get; set; }
+        [Inject] public IAddressService AddressService { get; set; }
+        [Inject] public NavigationManager Navigation { get; set; }
         [Parameter] public IEnumerable<CountryViewModel> Countries { get; set; } = new List<CountryViewModel>();
         [Parameter] public IEnumerable<RegionViewModel> Regions { get; set; } = new List<RegionViewModel>();
         [Parameter] public IEnumerable<CityViewModel> Cities { get; set; } = new List<CityViewModel>();
@@ -34,21 +36,28 @@ namespace YouRest.HotelierWebApp.Pages
         }
         public async Task CreateHotel()
         {
-            if (await FluentValidationValidator!.ValidateAsync()) 
+            if (await FluentValidationValidator!.ValidateAsync())
             {
-                await HotelService.CreateHotel(new HotelViewModel()
+                var createdHotel = await HotelService.CreateHotel(new HotelViewModel()
                 {
-                    HotelTypeId = HotelTypes.Single(x => x.Name == CreateHotelViewModel.HotelType).Id,
+                    AccommodationTypeId = HotelTypes.Single(x => x.Name == CreateHotelViewModel.HotelType).Id,
                     Name = CreateHotelViewModel.HotelName,
                     Stars = GetRatingValue(CreateHotelViewModel.HotelRating),
                     Description = CreateHotelViewModel.HotelDescription
                 });
-                //CreateHotelViewModel = new CreateHotelViewModel();
+                await AddressService.CreateAddress(new AddressViewModel()
+                {
+                    CityId = Cities.Single(s => s.Name == CreateHotelViewModel.City).Id,
+                    Street = CreateHotelViewModel.Address,
+                    ZipCode = CreateHotelViewModel.ZipCode,
+                }, createdHotel.Id);
+                CreateHotelViewModel = new CreateHotelViewModel();
+                Navigation.NavigateTo("/hotels");
             }
         }
         public async Task LoadFiles(InputFileChangeEventArgs e)
         {
-            if(!CreateHotelViewModel.Images.Any()) CreateHotelViewModel.Images.Clear();
+            if (!CreateHotelViewModel.Images.Any()) CreateHotelViewModel.Images.Clear();
             var files = e.GetMultipleFiles(maximumFileCount: 5);
             foreach (var file in files)
             {
