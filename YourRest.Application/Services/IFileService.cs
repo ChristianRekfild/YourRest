@@ -7,5 +7,7 @@ public interface IFileService
     Task<FileDto> GetFileByPathAsync(string path, string bucketName, CancellationToken cancellationToken);
 
     Task<string> AddPhotoAsync(FileData fileData, string bucketName, CancellationToken cancellationToken);
+    
+    Task<bool> DeleteFileAsync(string path, string bucketName, CancellationToken cancellationToken);
 }
 
