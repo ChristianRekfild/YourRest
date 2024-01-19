@@ -10,6 +10,7 @@
 
     th:last-child {
         text-align: end;
+        width: 7%;
     }
 
 td {
@@ -30,7 +31,7 @@ tr:first-child {
 
 .control {
     display: flex;
-    justify-content: end;
+    justify-content: center;
     align-items: center;
     padding: 0;
     margin: 0;
