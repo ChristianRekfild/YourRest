@@ -1,11 +1,10 @@
-﻿@page "/"
-@page "/login"
+﻿@page "/login"
 
 <div class="container-fluid">
     <div class="row">
         <img src="/Images/2.jpg" />
         <div class="login_form">
-            <EditForm Model="@Auth" OnSubmit="@LoginAsync">
+            <EditForm Model="@AuthData" OnSubmit="@LoginAsync">
                 <div class="modal-content">
                     <div class="modal-header justify-content-center">
                         <svg id="loginModalLabel" width="100pt" height="50pt" version="1.0" xmlns="http://www.w3.org/2000/svg"
@@ -57,11 +56,11 @@
                         <FluentValidationValidator @ref="LoginValidator" />
                         <ValidationSummary />
                         <div class="form-floating mb-3">
-                            <InputText @bind-Value="@Auth.Username" class="form-control" id="floatingInput" placeholder="" autocomplete="disabled" />
+                            <InputText @bind-Value="@AuthData.Username" class="form-control" id="floatingInput" placeholder="" autocomplete="disabled" />
                             <label for="floatingInput">Email адрес</label>
                         </div>
                         <div class="form-floating">
-                            <InputText @bind-Value="@Auth.Password" type="password" class="form-control" id="floatingPassword" placeholder="" />
+                            <InputText @bind-Value="@AuthData.Password" type="password" class="form-control" id="floatingPassword" placeholder="" />
                             <label for="floatingPassword">Пароль</label>
                         </div>
                     </div>

@@ -29,13 +29,12 @@ namespace YouRest.HotelierWebApp.Pages
                 var response = await AuthorizationService.RegistrationAsync(RegistrationData, tokenSource.Token);
                 if (response.StatusCode == HttpStatusCode.OK)
                 {
-                    var accessToken = (await response.Content.ReadFromJsonAsync<TokenViewModel>(cancellationToken: tokenSource.Token))?.AccessToken;
+                    var accessToken = (await response.Content.ReadFromJsonAsync<SecurityTokenViewModel>(cancellationToken: tokenSource.Token))?.AccessToken;
                     if (!string.IsNullOrEmpty(accessToken))
                     {
                         await storage.SetAsync("accessToken", accessToken);
                         RegistrationData = new RegistrationViewModel();
-                        MainLayout.IsAuthorize = true;
-                        Navigation.NavigateTo("statistic");
+                        Navigation.NavigateTo("/");
                     }
                 }
             }

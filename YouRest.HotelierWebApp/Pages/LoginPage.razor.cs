@@ -14,39 +14,45 @@ namespace YouRest.HotelierWebApp.Pages
         protected CancellationTokenSource tokenSource = new();
         public FluentValidationValidator? LoginValidator { get; set; }
         public FluentValidationValidator? RegisterValidator { get; set; }
-        public AuthorizationViewModel Auth { get; set; } = new();
+        public AuthorizationViewModel AuthData { get; set; } = new();
         public RegistrationViewModel Registration { get; set; }
         #endregion
 
         #region Dependency Injection
         [Inject] IAuthorizationService AuthorizationService { get; set; }
-        [Inject] ProtectedSessionStorage ProtectedSessionStore { get; set; }
+        [Inject] ProtectedLocalStorage LocalStorage { get; set; }
         [Inject] NavigationManager Navigation { get; set; }
         #endregion
         public async Task LoginAsync()
         {
             if (await LoginValidator!.ValidateAsync())
             {
-                var response = await AuthorizationService.LoginAsync(Auth, tokenSource.Token);
-                if (response.StatusCode == HttpStatusCode.OK)
+                var securityToken = new SecurityTokenViewModel()
                 {
-                    var token = await response.Content.ReadFromJsonAsync<TokenViewModel>(cancellationToken: tokenSource.Token);
-                    if (token != null)
-                    {
-                        await ProtectedSessionStore.SetAsync("accessToken", token.AccessToken);
-                        MainLayout.IsAuthorize = true;
-                        Navigation.NavigateTo("statistic");
-                    }
-                }
-                Auth = new AuthorizationViewModel();
+                    UserName = AuthData.Username,
+                    AccessToken = AuthData.Password,
+                    ExpiredAt = DateTime.UtcNow.AddDays(1),
+                };
+                await LocalStorage.SetAsync(nameof(SecurityTokenViewModel), securityToken);
+                Navigation.NavigateTo("/", true);
+                //var response = await AuthorizationService.LoginAsync(AuthData, tokenSource.Token);
+                //if (response.StatusCode == HttpStatusCode.OK)
+                //{
+                //    var securityToken = await response.Content.ReadFromJsonAsync<SecurityTokenViewModel>(cancellationToken: tokenSource.Token);
+                //    if (securityToken != null)
+                //    {
+                //        await LocalStorage.SetAsync(nameof(SecurityTokenViewModel), securityToken);
+                //        Navigation.NavigateTo("/");
+                //    }
+                //}
+                AuthData = new AuthorizationViewModel();
             }
         }
 
         public async Task LogoutAsync()
         {
-            await ProtectedSessionStore.DeleteAsync("accessToken");
-            MainLayout.IsAuthorize = false;
-            Navigation.NavigateTo("/");
+            await LocalStorage.DeleteAsync(nameof(SecurityTokenViewModel));
+            Navigation.NavigateTo("/login");
         }
 
         public void Dispose()

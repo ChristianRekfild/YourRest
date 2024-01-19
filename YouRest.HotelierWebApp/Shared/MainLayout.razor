@@ -1,10 +1,9 @@
 ﻿@inherits LayoutComponentBase
 
 <PageTitle>YouRest.HotelierWebApp</PageTitle>
-
 <div class="page">
-        @if (IsAuthorize)
-        {
+    <AuthorizeView>
+        <Authorized>
             <div class="sidebar">
                 <NavMenu />
             </div>
@@ -16,11 +15,11 @@
                     @Body
                 </article>
             </main>
-        }
-        else
-        {
+        </Authorized>
+        <NotAuthorized>
             <main>
                 @Body
             </main>
-        }
+        </NotAuthorized>
+    </AuthorizeView>
 </div>
