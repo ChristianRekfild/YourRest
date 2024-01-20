@@ -411,8 +411,9 @@ namespace YourRest.WebApi.Tests.Controllers
                 CityId = city.Id
             });
 
-            var accommodation1 = await fixture.InsertObjectIntoDatabase(new Accommodation { 
-                Name = "FirstHotel", 
+            var accommodation1 = await fixture.InsertObjectIntoDatabase(new Accommodation
+            {
+                Name = "FirstHotel",
                 //AccommodationTypeId = accType.Id,
                 AccommodationType = accType,
                 AddressId = address1.Id,
@@ -424,7 +425,8 @@ namespace YourRest.WebApi.Tests.Controllers
                     new Room { Name = "340", Capacity = 21, SquareInMeter = 10, RoomType = new RoomType { Name = "Test 2" } }
                 }
             });
-            var accommodation2 = await fixture.InsertObjectIntoDatabase(new Accommodation { 
+            var accommodation2 = await fixture.InsertObjectIntoDatabase(new Accommodation
+            {
                 Name = "SecondHotel",
                 //AccommodationTypeId = accType.Id,
                 AccommodationType = accType,
@@ -438,19 +440,20 @@ namespace YourRest.WebApi.Tests.Controllers
                 }
             });
 
-    //        var Room1 = await fixture.InsertObjectIntoDatabase(new Room { Name = "310", AccommodationId = accommodation1.Id, Capacity = 1, SquareInMeter = 20, RoomType = new RoomType { Name = "Test Type" }
-    //    });
-    //        var Room2 = await fixture.InsertObjectIntoDatabase(new Room { Name = "305", AccommodationId = accommodation1.Id, Capacity = 2, SquareInMeter = 30, RoomType = new RoomType { Name = "Test Type" }
-    //});
-    //        var Room3 = await fixture.InsertObjectIntoDatabase(new Room { Name = "320", AccommodationId = accommodation2.Id, Capacity = 2, SquareInMeter = 30, RoomType = new RoomType { Name = "Test Type" }
-    //});
-    //        var Room4 = await fixture.InsertObjectIntoDatabase(new Room { Name = "3330", AccommodationId = accommodation2.Id, Capacity = 2, SquareInMeter = 30, RoomType = new RoomType { Name = "Test Type" } });
-
             var response = await fixture.Client.GetAsync($"api/accommodations");
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
             var responseString = await response.Content.ReadAsStringAsync();
-            var accommodationsReturn = JsonConvert.DeserializeObject<List<Accommodation>>(responseString);
+            var accommodationsReturn = JsonConvert.DeserializeObject<List<AccommodationExtendedDto>>(responseString);
+
+            Assert.Equal(accommodation1.Id, accommodationsReturn.First().Id);
+            Assert.Equal(accommodation2.Id, accommodationsReturn.Last().Id);
+            Assert.Equal(accommodation1.Address.Id, accommodationsReturn.First().Address.Id);
+            Assert.Equal(accommodation2.Address.Id, accommodationsReturn.Last().Address.Id);
+            Assert.Equal(accommodation1.Name, accommodationsReturn.First().Name);
+            Assert.Equal(accommodation2.Name, accommodationsReturn.Last().Name);
+            Assert.Equal(accommodation1.AccommodationTypeId, accommodationsReturn.First().AccommodationType.Id);
+            Assert.Equal(accommodation2.AccommodationTypeId, accommodationsReturn.Last().AccommodationType.Id);
 
             fixture.CleanDatabase();
         }
@@ -506,19 +509,19 @@ namespace YourRest.WebApi.Tests.Controllers
                 AccommodationType = accType,
                 AddressId = address2.Id,
                 Description = "testAccommodationDescription2",
-                StarRating = new AccommodationStarRating { Stars = 4 },
-                Rooms = new List<Room>
-                {
-                    new Room { Name = "310", Capacity = 1, SquareInMeter = 20, RoomType = new RoomType { Name = "Test 3" } },
-                    new Room { Name = "320", Capacity = 1, SquareInMeter = 20, RoomType = new RoomType { Name = "Test 4" } }
-                }
+                StarRating = new AccommodationStarRating { Stars = 4 }
             });
 
             var response = await fixture.Client.GetAsync($"api/accommodations/{accommodation2.Id}");
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
             var responseString = await response.Content.ReadAsStringAsync();
-            var accommodationsReturn = JsonConvert.DeserializeObject<List<Accommodation>>(responseString);
+            var accommodationsReturn = JsonConvert.DeserializeObject<AccommodationExtendedDto>(responseString);
+
+            Assert.Equal(accommodation2.Id, accommodationsReturn.Id);
+            Assert.Equal(accommodation2.Address.Id, accommodationsReturn.Address.Id);
+            Assert.Equal(accommodation2.Name, accommodationsReturn.Name);
+            Assert.Equal(accommodation2.AccommodationTypeId, accommodationsReturn.AccommodationType.Id);
 
             fixture.CleanDatabase();
         }
@@ -581,15 +584,17 @@ namespace YourRest.WebApi.Tests.Controllers
                     new Room { Name = "320", Capacity = 1, SquareInMeter = 20, RoomType = new RoomType { Name = "Test 4" } }
                 }
             });
-
-            var response = await fixture.Client.DeleteAsync($"api/accommodation/{accommodation2.Id}");
+            var accId = accommodation2.Id;
+            var response = await fixture.Client.DeleteAsync($"api/accommodations/{accId}");
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
-            //var responseString = await response.Content.ReadAsStringAsync();
-            //var accommodationsReturn = JsonConvert.DeserializeObject<List<Accommodation>>(responseString);
+            var responseGet = await fixture.Client.GetAsync($"api/accommodations/{accId}");
+
+            Assert.Equal(HttpStatusCode.NotFound, responseGet.StatusCode);
 
             fixture.CleanDatabase();
         }
+    }
 
         //[Fact]
         //public async Task Edit_ReturnsOk_WhenAccommodationsInDB()
@@ -688,7 +693,6 @@ namespace YourRest.WebApi.Tests.Controllers
         {
             return new AddressDto
             {
-                Id = 1,
                 Street = "Test Street",
                 ZipCode = "123456",
                 Longitude = 0,
