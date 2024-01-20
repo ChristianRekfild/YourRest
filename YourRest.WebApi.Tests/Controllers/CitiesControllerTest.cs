@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 using System.Net;
 using System.Text;
 using YourRest.Application.Dto.Models;
-using YourRest.Domain.Entities;
+using YourRest.Producer.Infrastructure.Entities;
 using YourRest.WebApi.Tests.Fixtures;
 using SystemJson = System.Text.Json;
 

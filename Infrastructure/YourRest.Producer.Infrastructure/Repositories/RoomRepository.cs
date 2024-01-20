@@ -1,18 +1,19 @@
-﻿using Microsoft.EntityFrameworkCore;
-using YourRest.Domain.Entities;
-using YourRest.Domain.Repositories;
-using YourRest.Infrastructure.Core.DbContexts;
-using YourRest.Infrastructure.Core.Repositories;
+﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
+using YourRest.Infrastructure.Core.Contracts.Models;
+using YourRest.Infrastructure.Core.Contracts.Repositories;
+using YourRest.Producer.Infrastructure.DbContexts;
+using YourRest.Producer.Infrastructure.Entities;
 
 namespace YourRest.Producer.Infrastructure.Repositories
 {
-    public class RoomRepository : PgRepository<Room, int>, IRoomRepository
+    public class RoomRepository : PgRepository<Room, int, RoomDto>, IRoomRepository
     {
-        public RoomRepository(SharedDbContext dataContext) : base(dataContext)
+        public RoomRepository(SharedDbContext dataContext, IMapper mapper) : base(dataContext, mapper)
         {
         }
 
-        public Task<List<Room>> GetRoomsByCityAndDatesAsync(DateOnly startDate, DateOnly endDate, int cityId, CancellationToken cancellation = default)
+        public async Task<List<RoomDto>> GetRoomsByCityAndDatesAsync(DateOnly startDate, DateOnly endDate, int cityId, CancellationToken cancellation = default)
         {
             var roomsByCityId = this._dataContext.Set<Room>()
                .Where(room => room.Accommodation.Address != null &&
@@ -25,12 +26,12 @@ namespace YourRest.Producer.Infrastructure.Repositories
                 (b.StartDate < endDate && endDate < b.EndDate) ||
                 (startDate <= b.StartDate && b.EndDate <= endDate)));
 
-            return roomsByCityId
+            return _mapper.Map<List<RoomDto>>(await roomsByCityId
                 .Except(roomsByCityIdInBooking)
                 .AsQueryable()
-                .ToListAsync(cancellation);
+                .ToListAsync(cancellation));
         }
-        public Task<List<Room>> GetRoomsByAccommodationAndDatesAsync(DateOnly startDate, DateOnly endDate, int accommodationId, CancellationToken cancellation = default)
+        public async Task<List<RoomDto>> GetRoomsByAccommodationAndDatesAsync(DateOnly startDate, DateOnly endDate, int accommodationId, CancellationToken cancellation = default)
         {
             var roomsByAccommodationId = this._dataContext.Set<Room>()
                .Where(room => room.Accommodation.Address != null &&
@@ -43,10 +44,10 @@ namespace YourRest.Producer.Infrastructure.Repositories
                 (b.StartDate < endDate && endDate < b.EndDate) ||
                 (startDate <= b.StartDate && b.EndDate <= endDate)));
 
-            return roomsByAccommodationId
+            return _mapper.Map<List<RoomDto>>(await roomsByAccommodationId
                 .Except(roomsByAccommodationIdInBooking)
                 .AsQueryable()
-                .ToListAsync(cancellation);
+                .ToListAsync(cancellation));
         }
     }
 }

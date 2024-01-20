@@ -1,4 +1,5 @@
-﻿using YourRest.Domain.Repositories;
+﻿
+using YourRest.Infrastructure.Core.Contracts.Repositories;
 
 namespace YourRest.WebApi.Tests.Fixtures
 {

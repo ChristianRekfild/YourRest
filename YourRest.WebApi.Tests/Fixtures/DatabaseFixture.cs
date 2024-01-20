@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Testcontainers.PostgreSql;
-using YourRest.Infrastructure.Core.DbContexts;
 using YourRest.Producer.Infrastructure;
+using YourRest.Producer.Infrastructure.DbContexts;
 
 namespace YourRest.WebApi.Tests.Fixtures
 {

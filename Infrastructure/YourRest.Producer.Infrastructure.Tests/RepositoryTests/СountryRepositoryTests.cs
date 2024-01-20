@@ -1,7 +1,8 @@
-using YourRest.Producer.Infrastructure.Tests.Fixtures;
+using AutoMapper;
+using YourRest.Infrastructure.Core.Contracts.Models;
+using YourRest.Infrastructure.Core.Contracts.Repositories;
 using YourRest.Producer.Infrastructure.Repositories;
-using YourRest.Domain.Entities;
-using YourRest.Domain.Repositories;
+using YourRest.Producer.Infrastructure.Tests.Fixtures;
 
 namespace YourRest.Producer.Infrastructure.Tests.RepositoryTests
 {
@@ -9,13 +10,17 @@ namespace YourRest.Producer.Infrastructure.Tests.RepositoryTests
     [Collection(nameof(SingletonApiTest))]
     public class CountryRepositoryTests
     {
-        private readonly IRepository<Country, int> _countryRepository;
+        private readonly ICountryRepository _countryRepository;
+        private readonly IMapper _mapper;
 
         private readonly SingletonApiTest fixture;
         public CountryRepositoryTests(SingletonApiTest fixture)
         {
+            var config = new MapperConfiguration(cfg => cfg.AddProfile<ProducerInfrastructureMapper>());
+            _mapper = config.CreateMapper();
+
             this.fixture = fixture;
-            _countryRepository = new CountryRepository(fixture.DbContext);
+            _countryRepository = new CountryRepository(fixture.DbContext, _mapper);
         }
 
         // public CountryRepositoryTests(DatabaseFixture databaseFixture)
@@ -34,7 +39,7 @@ namespace YourRest.Producer.Infrastructure.Tests.RepositoryTests
         [Fact]
         public async Task TestWithChangeProperty()
         {
-            await _countryRepository.AddAsync(new Country { Name = "First Country" });
+            await _countryRepository.AddAsync(new CountryDto { Name = "First Country" });
             var fc = await _countryRepository.GetAllAsync();
             int id = 0;
             string name = "Second Country";
@@ -53,14 +58,14 @@ namespace YourRest.Producer.Infrastructure.Tests.RepositoryTests
         [Fact]
         public async Task TestWithReplaceEntity()
         {
-            await _countryRepository.AddAsync(new Country { Name = "First Country" });
+            await _countryRepository.AddAsync(new CountryDto { Name = "First Country" });
             var fc = await _countryRepository.GetAllAsync();
             int id = 0;
             string name = "Third Country";
             foreach (var c in fc)
             {
                 id = c.Id;                
-                var thirdCountry = new Country { Id = c.Id, Name = name };
+                var thirdCountry = new CountryDto { Id = c.Id, Name = name };
                 await _countryRepository.UpdateAsync(thirdCountry);
             }
             var updatedCountry = await _countryRepository.GetAsync(id);

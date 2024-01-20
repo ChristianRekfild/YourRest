@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using YourRest.Domain.Repositories;
+using System.Reflection;
+using YourRest.Infrastructure.Core.Contracts.Repositories;
 using YourRest.Producer.Infrastructure.Repositories;
 
 namespace YourRest.Producer.Infrastructure
@@ -8,6 +9,7 @@ namespace YourRest.Producer.Infrastructure
     {
         public static IServiceCollection AddInfrastructure(this IServiceCollection services)
         {
+            services.AddAutoMapper(Assembly.GetExecutingAssembly());
             services.AddScoped<IBookingRepository, BookingRepository>();
             services.AddScoped<ICountryRepository, CountryRepository>();
             services.AddScoped<ICustomerRepository, CustomerRepository>();

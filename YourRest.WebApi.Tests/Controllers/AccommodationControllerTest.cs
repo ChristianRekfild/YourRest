@@ -1,16 +1,16 @@
+using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using System.Net;
+using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Text;
 using YourRest.Application.Dto;
 using YourRest.Application.Dto.Models;
 using YourRest.Application.Dto.ViewModels;
-using YourRest.Domain.Entities;
+using YourRest.Infrastructure.Core.Contracts.Repositories;
+using YourRest.Producer.Infrastructure.Entities;
 using YourRest.WebApi.Responses;
 using YourRest.WebApi.Tests.Fixtures;
-using Microsoft.Extensions.DependencyInjection;
-using YourRest.Domain.Repositories;
-using System.Net.Http.Headers;
 
 namespace YourRest.WebApi.Tests.Controllers
 {

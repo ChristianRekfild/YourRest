@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
-using YourRest.Domain.Entities;
+using YourRest.Producer.Infrastructure.Entities;
 
-namespace YourRest.Infrastructure.Core.DbContexts
+namespace YourRest.Producer.Infrastructure.DbContexts
 {
     public class SharedDbContext : DbContext
     {

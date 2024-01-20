@@ -1,13 +1,16 @@
-using YourRest.Domain.Entities;
-using YourRest.Domain.Repositories;
-using YourRest.Infrastructure.Core.DbContexts;
-using YourRest.Infrastructure.Core.Repositories;
+using AutoMapper;
+using YourRest.Infrastructure.Core.Contracts.Models;
+using YourRest.Infrastructure.Core.Contracts.Repositories;
+using YourRest.Producer.Infrastructure.DbContexts;
+using YourRest.Producer.Infrastructure.Entities;
 
-namespace YourRest.Producer.Infrastructure.Repositories;
-
-public class RoomTypeRepository : PgRepository<RoomType, int>, IRoomTypeRepository
+namespace YourRest.Producer.Infrastructure.Repositories
 {
-    public RoomTypeRepository(SharedDbContext dataContext) : base(dataContext)
+
+    public class RoomTypeRepository : PgRepository<RoomType, int, RoomTypeDto>, IRoomTypeRepository
     {
+        public RoomTypeRepository(SharedDbContext dataContext, IMapper mapper) : base(dataContext, mapper)
+        {
+        }
     }
 }

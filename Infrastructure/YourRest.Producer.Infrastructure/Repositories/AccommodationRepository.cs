@@ -1,26 +1,28 @@
-using System.Linq.Expressions;
+using AutoMapper;
 using Microsoft.EntityFrameworkCore;
-using YourRest.Domain.Entities;
-using YourRest.Domain.Models;
-using YourRest.Domain.Repositories;
-using YourRest.Infrastructure.Core.DbContexts;
-using YourRest.Infrastructure.Core.Repositories;
+using System.Linq.Expressions;
+using YourRest.Infrastructure.Core.Contracts.Models;
+using YourRest.Infrastructure.Core.Contracts.Repositories;
+using YourRest.Producer.Infrastructure.DbContexts;
+using YourRest.Producer.Infrastructure.Entities;
 using YourRest.Producer.Infrastructure.Repositories.Extensions;
 
 namespace YourRest.Producer.Infrastructure.Repositories
 {
-    public class AccommodationRepository : PgRepository<Accommodation, int>, IAccommodationRepository
+    public class AccommodationRepository : PgRepository<Accommodation, int, AccommodationDto>, IAccommodationRepository
     {
         private readonly SharedDbContext _context;
+        private readonly IMapper _mapper;
 
-        public AccommodationRepository(SharedDbContext context) : base(context)
+        public AccommodationRepository(SharedDbContext context, IMapper mapper) : base(context, mapper)
         {
-            _context = context;
+            this._context = context;
+            this._mapper = mapper;
         }
 
-        public async Task<IEnumerable<Accommodation>> GetHotelsByFilter(int userId, AccommodationFilterCriteria filter, CancellationToken cancellationToken = default)
+        public async Task<IEnumerable<AccommodationDto>> GetHotelsByFilter(int userId, AccommodationFilterCriteriaDto filter, CancellationToken cancellationToken = default)
         {
-            Expression<Func<Accommodation, bool>> filterExpression = h => true;
+            Expression<Func<AccommodationDto, bool>> filterExpression = h => true;
             
             if (userId > 0)
             {
@@ -42,21 +44,21 @@ namespace YourRest.Producer.Infrastructure.Repositories
                 filterExpression = filterExpression.And(h => filter.AccommodationTypesIds.Contains(h.AccommodationTypeId));
             }
 
-            return await GetWithIncludeAndTrackingAsync(filterExpression, cancellationToken,
+            return _mapper.Map<IEnumerable<AccommodationDto>>(await GetWithIncludeAndTrackingAsync(filterExpression, cancellationToken,
                 h => h.Address,
                 h => h.StarRating,
                 h => h.AccommodationType,
                 h => h.UserAccommodations
-            );
+            ));
         }
         
-        public async Task<IEnumerable<Accommodation>> GetAccommodationsWithFacilitiesAsync(int id, CancellationToken cancellationToken = default)
+        public async Task<IEnumerable<AccommodationDto>> GetAccommodationsWithFacilitiesAsync(int id, CancellationToken cancellationToken = default)
         {
-            return await _context.Accommodations
+            return _mapper.Map<IEnumerable<AccommodationDto>>(await _context.Accommodations
                 .Where(a => a.Id == id)
                 .Include(a => a.AccommodationFacilities)
                 .ThenInclude(af => af.AccommodationFacility)
-                .ToListAsync(cancellationToken);
+                .ToListAsync(cancellationToken));
         }
     }
 }

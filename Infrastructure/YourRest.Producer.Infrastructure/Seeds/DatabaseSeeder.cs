@@ -1,4 +1,4 @@
-using YourRest.Infrastructure.Core.DbContexts;
+using YourRest.Producer.Infrastructure.DbContexts;
 
 namespace YourRest.Producer.Infrastructure.Seeds;
 

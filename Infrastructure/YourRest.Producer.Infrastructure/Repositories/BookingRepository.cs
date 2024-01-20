@@ -1,13 +1,15 @@
-using YourRest.Domain.Entities;
-using YourRest.Domain.Repositories;
-using YourRest.Infrastructure.Core.DbContexts;
-using YourRest.Infrastructure.Core.Repositories;
+using AutoMapper;
+using YourRest.Infrastructure.Core.Contracts.Models;
+using YourRest.Infrastructure.Core.Contracts.Repositories;
+using YourRest.Producer.Infrastructure.DbContexts;
+using YourRest.Producer.Infrastructure.Entities;
 
-namespace YourRest.Producer.Infrastructure.Repositories;
-
-public class BookingRepository : PgRepository<Booking, int>, IBookingRepository
+namespace YourRest.Producer.Infrastructure.Repositories
 {
-    public BookingRepository(SharedDbContext context) : base(context)
+    public class BookingRepository : PgRepository<Booking, int, BookingDto>, IBookingRepository
     {
+        public BookingRepository(SharedDbContext context, IMapper mapper) : base(context, mapper)
+        {
+        }
     }
 }
