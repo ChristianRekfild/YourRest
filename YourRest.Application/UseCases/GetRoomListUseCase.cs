@@ -1,6 +1,6 @@
 using YourRest.Application.Dto.Models.Room;
 using YourRest.Application.Interfaces;
-using YourRest.Domain.Repositories;
+using YourRest.Infrastructure.Core.Contracts.Repositories;
 
 namespace YourRest.Application.UseCases
 {

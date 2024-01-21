@@ -1,12 +1,12 @@
+using System.Diagnostics;
 using YourRest.Application.Dto;
-using YourRest.Application.Dto.Models.Room;
-using YourRest.Application.Dto.Models;
 using YourRest.Application.Dto.Mappers;
+using YourRest.Application.Dto.Models;
+using YourRest.Application.Dto.Models.Room;
 using YourRest.Application.Dto.ViewModels;
 using YourRest.Application.Exceptions;
 using YourRest.Application.Interfaces;
-using YourRest.Domain.Entities;
-using YourRest.Domain.Repositories;
+using YourRest.Infrastructure.Core.Contracts.Repositories;
 
 namespace YourRest.Application.UseCases
 {
@@ -44,7 +44,7 @@ namespace YourRest.Application.UseCases
             {
                 foreach (var userAccommodation in hotel.UserAccommodations)
                 {
-                    Console.WriteLine($"User ID: {user.Id}, User ID: {userAccommodation.UserId}");
+                    Debug.WriteLine($"User ID: {user.Id}, User ID: {userAccommodation.UserId}");
                 }
             }
 
@@ -52,7 +52,7 @@ namespace YourRest.Application.UseCases
         }
 
 
-        private AccommodationExtendedDto ConvertToDto(Accommodation accommodation)
+        private AccommodationExtendedDto ConvertToDto(Infrastructure.Core.Contracts.Models.AccommodationDto accommodation)
         {
             return new AccommodationExtendedDto
             {
@@ -67,7 +67,7 @@ namespace YourRest.Application.UseCases
                     Street = accommodation.Address.Street,
                     CityId = accommodation.Address.CityId
                 } : null,
-                AccommodationType = new AccommodationTypeDto
+                AccommodationType = new Dto.AccommodationTypeDto
                 {
                     Id = accommodation.AccommodationTypeId,
                     Name = accommodation.AccommodationType.Name

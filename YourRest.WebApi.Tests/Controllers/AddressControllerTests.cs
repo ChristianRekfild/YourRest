@@ -7,6 +7,7 @@ using System.Text;
 using YourRest.Application.Dto.Mappers.Profiles;
 using YourRest.Application.Dto.Models;
 using YourRest.Infrastructure.Core.Contracts.Repositories;
+using YourRest.Producer.Infrastructure;
 using YourRest.Producer.Infrastructure.Entities;
 using YourRest.WebApi.Models;
 using YourRest.WebApi.Tests.Fixtures;
@@ -28,7 +29,12 @@ namespace YourRest.WebApi.Tests.Controllers
             var tokenRepository = scope.ServiceProvider.GetRequiredService<ITokenRepository>();
             _sharedFixture = new SharedResourcesFixture(tokenRepository);
 
-            var config = new MapperConfiguration(cfg => cfg.AddProfile<AddressDtoProfile>());
+            var config = new MapperConfiguration(
+                cfg => {
+                    cfg.AddProfile<AddressDtoProfile>();
+                    cfg.AddProfile<ProducerInfrastructureMapper>();
+                }
+            );
             mapper = config.CreateMapper();
         }
 
@@ -95,9 +101,9 @@ namespace YourRest.WebApi.Tests.Controllers
             Assert.Equal(createdAddress?.Id, address.Id);
         }
 
-        private AddressWithIdDto CreateValidAddressDto(int cityId)
+        private AddressDto CreateValidAddressDto(int cityId)
         {
-            return new AddressWithIdDto
+            return new AddressDto
             {
                 Street = "Test Street",
                 ZipCode = "123456",

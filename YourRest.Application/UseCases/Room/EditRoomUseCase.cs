@@ -2,8 +2,7 @@
 using YourRest.Application.Dto.Models.Room;
 using YourRest.Application.Exceptions;
 using YourRest.Application.Interfaces.Room;
-using YourRest.Domain.Repositories;
-using RoomEntity = YourRest.Domain.Entities.Room;
+using YourRest.Infrastructure.Core.Contracts.Repositories;
 
 namespace YourRest.Application.UseCases.Room
 {
@@ -25,7 +24,7 @@ namespace YourRest.Application.UseCases.Room
                 throw new EntityNotFoundException($"Room with Id:{reviewDto.Id} not found");
             }
 
-            var roomEntity = mapper.Map<RoomEntity>(reviewDto);
+            var roomEntity = mapper.Map<Infrastructure.Core.Contracts.Models.RoomDto>(reviewDto);
             roomEntity.AccommodationId = accommodationId;
             
             await roomRepository.UpdateAsync(roomEntity, cancellationToken: cancellationToken);

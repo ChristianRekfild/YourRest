@@ -1,9 +1,6 @@
-using YourRest.Application.Exceptions;
-using YourRest.Application.Interfaces;
-using YourRest.Domain.Entities;
-using YourRest.Domain.ValueObjects.Reviews;
-using YourRest.Domain.Repositories;
 using YourRest.Application.Dto.Models;
+using YourRest.Application.Interfaces;
+using YourRest.Infrastructure.Core.Contracts.Repositories;
 
 namespace YourRest.Application.UseCases
 {

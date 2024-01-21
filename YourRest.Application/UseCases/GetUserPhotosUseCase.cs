@@ -2,7 +2,7 @@
 using YourRest.Application.Dto.Models.Photo;
 using YourRest.Application.Exceptions;
 using YourRest.Application.Interfaces.Photo;
-using YourRest.Domain.Repositories;
+using YourRest.Infrastructure.Core.Contracts.Repositories;
 
 namespace YourRest.Application.UseCases
 {

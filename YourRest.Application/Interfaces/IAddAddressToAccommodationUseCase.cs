@@ -4,6 +4,6 @@ namespace YourRest.Application.Interfaces
 {
     public interface IAddAddressToAccommodationUseCase
     {
-        Task<ResultDto> Execute(int accommodationId, AddressDto addressWithIdDto);
+        Task<ResultDto> ExecuteAsync(int accommodationId, AddressDto addressWithIdDto);
     }
 }

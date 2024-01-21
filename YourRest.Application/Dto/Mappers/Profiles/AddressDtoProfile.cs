@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using YourRest.Application.Dto.Models;
-using YourRest.Domain.Entities;
 
 namespace YourRest.Application.Dto.Mappers.Profiles
 {
@@ -8,7 +7,7 @@ namespace YourRest.Application.Dto.Mappers.Profiles
     {
         public AddressDtoProfile()
         {
-            CreateMap<AddressWithIdDto, Address>()
+            CreateMap<AddressWithIdDto, Infrastructure.Core.Contracts.Models.AddressDto>()
                 .ForMember(target => target.Id, opt => opt.MapFrom(src => src.Id))
                 .ForMember(target => target.Street, opt => opt.MapFrom(src => src.Street))
                 .ForMember(target => target.ZipCode, opt => opt.MapFrom(src => src.ZipCode))

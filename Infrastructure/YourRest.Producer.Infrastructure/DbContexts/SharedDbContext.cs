@@ -47,10 +47,10 @@ namespace YourRest.Producer.Infrastructure.DbContexts
             if (!optionsBuilder.IsConfigured)
             {
                 string conn = "Host=localhost;Database=your_rest;Username=admin;Password=admin;Port=5433";
-                optionsBuilder.UseNpgsql(conn, sql => sql.MigrationsAssembly("YourRest.Producer.Infrastructure"));
+                optionsBuilder.UseNpgsql(conn, sql => sql.MigrationsAssembly("YourRest.Producer.Infrastructure"))
+                    .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
             }
-            base.OnConfiguring(optionsBuilder);
-            
+            base.OnConfiguring(optionsBuilder);            
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

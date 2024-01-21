@@ -44,8 +44,11 @@ public class Program
         connectionString = configuration?.GetConnectionString("DefaultConnection");
         var migrationsAssembly = typeof(ProducerInfrastructureDependencyInjections).Assembly.GetName().Name;
 
-        services.AddDbContext<SharedDbContext>(options => options.UseNpgsql(connectionString,
-            sql => sql.MigrationsAssembly(migrationsAssembly)));
+        services.AddDbContext<SharedDbContext>(
+            options => options
+            .UseNpgsql(connectionString,sql => sql.MigrationsAssembly(migrationsAssembly))
+            .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking)
+            );
 
         services.AddCors();
         services.AddControllers();

@@ -2,8 +2,7 @@
 using YourRest.Application.Dto.Models.RoomFacility;
 using YourRest.Application.Exceptions;
 using YourRest.Application.Interfaces.Facility;
-using YourRest.Domain.Entities;
-using YourRest.Domain.Repositories;
+using YourRest.Infrastructure.Core.Contracts.Repositories;
 
 namespace YourRest.Application.UseCases.Facility
 {
@@ -17,7 +16,7 @@ namespace YourRest.Application.UseCases.Facility
             this.roomFacilityRepository = roomFacilityRepository;
             this.mapper = mapper;
         }
-        public async Task ExecuteAsync(int roomFacilityId, RoomFacilityDto reviewDto, CancellationToken cancellationToken)
+        public async Task ExecuteAsync(int roomFacilityId, Dto.Models.RoomFacility.RoomFacilityDto reviewDto, CancellationToken cancellationToken)
         {
             var roomFacilityWithDto = mapper.Map<RoomFacilityWithIdDto>(reviewDto);
             roomFacilityWithDto.Id = roomFacilityId;
@@ -26,7 +25,7 @@ namespace YourRest.Application.UseCases.Facility
             {
                 throw new EntityNotFoundException($"RoomFacility with id number {roomFacilityId} not found");
             }
-            await roomFacilityRepository.UpdateAsync(mapper.Map<RoomFacility>(roomFacilityWithDto), cancellationToken: cancellationToken);
+            await roomFacilityRepository.UpdateAsync(mapper.Map<Infrastructure.Core.Contracts.Models.RoomFacilityDto>(roomFacilityWithDto), cancellationToken: cancellationToken);
         }
     }
 }

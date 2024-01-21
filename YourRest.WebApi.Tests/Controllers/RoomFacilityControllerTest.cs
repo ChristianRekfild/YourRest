@@ -5,7 +5,7 @@ using System.Net.Http.Json;
 using System.Text;
 using YourRest.Application.Dto.Mappers.Profiles;
 using YourRest.Application.Dto.Models.RoomFacility;
-using YourRest.Domain.Entities;
+using YourRest.Producer.Infrastructure.Entities;
 using YourRest.WebApi.Tests.Fixtures;
 
 namespace YourRest.WebApi.Tests.Controllers
@@ -27,7 +27,7 @@ namespace YourRest.WebApi.Tests.Controllers
         public async Task UpdatedRoomFacilityTest_WhenPutCalledEditMethod_ReturnsMessageOfSuccsessfulyEdited()
         {
             var roomFacility = await fixture.InsertObjectIntoDatabase(await CreateRoomFacilityAsync());
-            var editedRoomFacility = new RoomFacility
+            var editedRoomFacility = new Infrastructure.Core.Contracts.Models.RoomFacilityDto
             {
                 Name = "Minibar"
             };

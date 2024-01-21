@@ -1,17 +1,9 @@
 ﻿using AutoMapper;
 using Moq;
-using System;
-using System.Linq.Expressions;
-using YourRest.Application.Dto.Mappers;
-using YourRest.Application.Dto.Models;
-using YourRest.Application.Dto.Models.HotelBooking;
-using YourRest.Application.Dto.Models.Room;
 using YourRest.Application.Exceptions;
-using YourRest.Application.Interfaces.HotelBooking;
-using YourRest.Application.UseCases;
 using YourRest.Application.UseCases.HotelBookingUseCase;
-using YourRest.Domain.Entities;
-using YourRest.Domain.Repositories;
+using YourRest.Infrastructure.Core.Contracts.Models;
+using YourRest.Infrastructure.Core.Contracts.Repositories;
 
 namespace YourRest.Application.Tests.UseCases
 {
@@ -44,7 +36,7 @@ namespace YourRest.Application.Tests.UseCases
             //Arrange
             _cityRepositoryMock
                 .Setup(r => r.GetAsync(It.IsAny<int>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(new City() 
+                .ReturnsAsync(new CityDto() 
                 {
                     Id = 1,
                     Name = "Moscow",
@@ -53,7 +45,7 @@ namespace YourRest.Application.Tests.UseCases
                 
              );
 
-            BookingDto newBooking = new BookingDto()
+            var newBooking = new Dto.Models.HotelBooking.BookingDto()
             {
                 StartDate = new DateOnly(2025, 10, 2),
                 EndDate = new DateOnly(2025, 10, 12),

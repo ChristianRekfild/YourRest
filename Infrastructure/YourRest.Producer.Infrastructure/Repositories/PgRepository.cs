@@ -1,6 +1,9 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using System.Diagnostics;
 using System.Linq.Expressions;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using YourRest.Infrastructure.Core.Contracts.Entities;
 using YourRest.Infrastructure.Core.Contracts.Models;
 using YourRest.Infrastructure.Core.Contracts.Repositories;
@@ -8,10 +11,10 @@ using YourRest.Producer.Infrastructure.ExpressionHelper;
 
 namespace YourRest.Producer.Infrastructure.Repositories
 {
-    public abstract class PgRepository<TEntity, U, TSourse> : IRepository<TSourse, U>
+    public abstract class PgRepository<TEntity, U, TSource> : IRepository<TSource, U>
         where TEntity : BaseEntity<U>
         where U : notnull
-        where TSourse : BaseEntityDto<U>
+        where TSource : BaseEntityDto<U>
     {
         protected readonly DbContext _dataContext;
         protected readonly IMapper _mapper;
@@ -22,25 +25,36 @@ namespace YourRest.Producer.Infrastructure.Repositories
             _mapper = mapper;
         }
 
-        public async Task<TSourse> AddAsync(
-            TSourse entity,
+        public async Task<TSource> AddAsync(
+            TSource entity,
             bool saveChanges = true,
             CancellationToken cancellationToken = default)
         {
-
+            JsonSerializerOptions options = new()
+            {
+                ReferenceHandler = ReferenceHandler.IgnoreCycles,
+                WriteIndented = true
+            };
+            Debug.WriteLine("Dto сущность {0}: {1}", typeof(TSource), JsonSerializer.Serialize<TSource>(entity, options));
+            var dbEntity = _mapper.Map<TEntity>(entity);
+            Debug.WriteLine("Db сущность до вставки {0}: {1}", typeof(TEntity), JsonSerializer.Serialize<TEntity>(dbEntity, options));
             var result = await _dataContext
                 .Set<TEntity>()
-                .AddAsync(_mapper.Map<TEntity>(entity), cancellationToken);
-
+                .AddAsync(dbEntity, cancellationToken);
+            Debug.WriteLine("Тип result.Entity после вставки {0}: {1}", result.Entity.GetType(), JsonSerializer.Serialize<TEntity>((TEntity)result.Entity, options));
+            Debug.WriteLine("Тип dbEntity после вставки {0}: {1}", dbEntity.GetType(), JsonSerializer.Serialize<TEntity>(dbEntity, options));
             if (saveChanges)
             {
                 await _dataContext.SaveChangesAsync(cancellationToken);
+                //result.State = EntityState.Detached;
             }
-            return _mapper.Map<TSourse>(result.Entity);
+            entity = _mapper.Map<TSource>(result.Entity);
+            Debug.WriteLine("Dto сущность на выходе из метода {0}: {1}", typeof(TSource), JsonSerializer.Serialize<TSource>(entity, options));
+            return entity;
         }
 
         public async Task AddRangeAsync(
-            TSourse[] entites,
+            TSource[] entites,
             bool saveChanges = true,
             CancellationToken cancellationToken = default)
         {
@@ -54,80 +68,80 @@ namespace YourRest.Producer.Infrastructure.Repositories
             }
         }
 
-        public async Task<IEnumerable<TSourse>> FindAsync(
-            Expression<Func<TSourse, bool>> expression,
+        public async Task<IEnumerable<TSource>> FindAsync(
+            Expression<Func<TSource, bool>> expression,
             CancellationToken cancellationToken = default)
         {
-            return _mapper.Map<IEnumerable<TSourse>>(
+            return _mapper.Map<IEnumerable<TSource>>(
                 await _dataContext
                 .Set<TEntity>()
-                .Where(expression.ToEntityExpression<TSourse, TEntity>())
+                .Where(expression.ToEntityExpression<TSource, TEntity>())
                 .ToListAsync(cancellationToken)
                 );
         }
 
         public async Task<bool> FindAnyAsync(
-            Expression<Func<TSourse, bool>> expression,
+            Expression<Func<TSource, bool>> expression,
             CancellationToken cancellationToken = default)
         {
             return await _dataContext
                 .Set<TEntity>()
-                .Where(expression.ToEntityExpression<TSourse, TEntity>())
+                .Where(expression.ToEntityExpression<TSource, TEntity>())
                 .AnyAsync(cancellationToken);
         }
 
-        public async Task<IEnumerable<TSourse>> GetAllAsync(CancellationToken cancellationToken = default)
+        public async Task<IEnumerable<TSource>> GetAllAsync(CancellationToken cancellationToken = default)
         {
-            return _mapper.Map<IEnumerable<TSourse>>(
+            return _mapper.Map<IEnumerable<TSource>>(
                 await _dataContext
                 .Set<TEntity>()
                 .ToListAsync(cancellationToken)
                 );
         }
 
-        public async Task<TSourse?> GetAsync(U id, CancellationToken cancellationToken = default)
+        public async Task<TSource?> GetAsync(U id, CancellationToken cancellationToken = default)
         {
-            return _mapper.Map<TSourse>(
+            return _mapper.Map<TSource>(
                 await _dataContext
                 .Set<TEntity>()
                 .FirstOrDefaultAsync(x => x.Id.Equals(id), cancellationToken)
                 );
         }
 
-        public async Task<IEnumerable<TSourse>> GetWithIncludeAsync(
-            Expression<Func<TSourse, bool>> predicate,
+        public async Task<IEnumerable<TSource>> GetWithIncludeAsync(
+            Expression<Func<TSource, bool>> predicate,
             CancellationToken cancellationToken = default,
-            params Expression<Func<TSourse, object>>[] includeProperties)
+            params Expression<Func<TSource, object>>[] includeProperties)
         {
             IQueryable<TEntity> query = _dataContext.Set<TEntity>().AsNoTracking();
 
-            return _mapper.Map<IEnumerable<TSourse>>(
-                await Include(query, includeProperties.ToEntityExpression<TSourse, TEntity>())
-                .Where(predicate.ToEntityExpression<TSourse, TEntity>())
+            return _mapper.Map<IEnumerable<TSource>>(
+                await Include(query, includeProperties.ToEntityExpression<TSource, TEntity>())
+                .Where(predicate.ToEntityExpression<TSource, TEntity>())
                 .ToListAsync(cancellationToken));
         }
 
-        public async Task<IEnumerable<TSourse>> GetWithIncludeAndTrackingAsync(
-            Expression<Func<TSourse, bool>> predicate,
+        public async Task<IEnumerable<TSource>> GetWithIncludeAndTrackingAsync(
+            Expression<Func<TSource, bool>> predicate,
             CancellationToken cancellationToken = default,
-            params Expression<Func<TSourse, object>>[] includeProperties)
+            params Expression<Func<TSource, object>>[] includeProperties)
         {
             IQueryable<TEntity> query = _dataContext.Set<TEntity>().AsQueryable();
 
-            return _mapper.Map<IEnumerable<TSourse>>(
-                await Include(query, includeProperties.ToEntityExpression<TSourse, TEntity>())
-                .Where(predicate.ToEntityExpression<TSourse, TEntity>())
+            return _mapper.Map<IEnumerable<TSource>>(
+                await Include(query, includeProperties.ToEntityExpression<TSource, TEntity>())
+                .Where(predicate.ToEntityExpression<TSource, TEntity>())
                 .ToListAsync(cancellationToken));
         }
 
-        public async Task<IEnumerable<TSourse>> GetAllWithIncludeAsync(
-            Expression<Func<TSourse, object>> includeProperty,
+        public async Task<IEnumerable<TSource>> GetAllWithIncludeAsync(
+            Expression<Func<TSource, object>> includeProperty,
             CancellationToken cancellationToken = default)
         {
             IQueryable<TEntity> query = _dataContext.Set<TEntity>().AsNoTracking();
 
-            return _mapper.Map<IEnumerable<TSourse>>(
-                await Include(query, includeProperty.ToEntityExpression<TSourse, TEntity>())
+            return _mapper.Map<IEnumerable<TSource>>(
+                await Include(query, includeProperty.ToEntityExpression<TSource, TEntity>())
                 .ToListAsync(cancellationToken)
                 );
         }
@@ -137,11 +151,11 @@ namespace YourRest.Producer.Infrastructure.Repositories
             bool saveChanges = true,
             CancellationToken cancellationToken = default)
         {
-            var entity = await _dataContext.Set<TSourse>().FindAsync(id, cancellationToken);
+            var entity = await _dataContext.Set<TSource>().FindAsync(id, cancellationToken);
 
             if (entity != null)
             {
-                _dataContext.Set<TSourse>().Remove(entity);
+                _dataContext.Set<TSource>().Remove(entity);
 
                 if (saveChanges)
                 {
@@ -150,16 +164,16 @@ namespace YourRest.Producer.Infrastructure.Repositories
             }
         }
 
-        public async Task<TSourse> UpdateAsync(
-            TSourse entity,
+        public async Task<TSource> UpdateAsync(
+            TSource entity,
             bool saveChanges = true,
             CancellationToken cancellationToken = default)
         {
-            var oldEntity = await _dataContext.Set<TSourse>().FindAsync(entity.Id, cancellationToken);
+            var oldEntity = await _dataContext.Set<TEntity>().FindAsync(entity.Id, cancellationToken);
 
             if (oldEntity != null)
             {
-                _dataContext.Entry(oldEntity).CurrentValues.SetValues(entity);
+                _dataContext.Entry(oldEntity).CurrentValues.SetValues(_mapper.Map<TEntity>(entity));
 
                 if (saveChanges)
                 {
@@ -167,7 +181,7 @@ namespace YourRest.Producer.Infrastructure.Repositories
                 }
             }
 
-            return _mapper.Map<TSourse>(oldEntity);
+            return _mapper.Map<TSource>(oldEntity);
         }
 
         public async Task SaveChangesAsync(CancellationToken cancellationToken = default)

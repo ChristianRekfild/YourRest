@@ -3,8 +3,8 @@ using System.Linq.Expressions;
 using YourRest.Application.Dto.Models;
 using YourRest.Application.Exceptions;
 using YourRest.Application.UseCases;
-using YourRest.Domain.Entities;
-using YourRest.Domain.Repositories;
+using YourRest.Infrastructure.Core.Contracts.Models;
+using YourRest.Infrastructure.Core.Contracts.Repositories;
 
 namespace YourRest.Application.Tests.UseCases
 {
@@ -35,7 +35,7 @@ namespace YourRest.Application.Tests.UseCases
             int accommodationId = 1;
 
             //Act
-            var act = async () => await addAddressToAccommodationUseCase.Execute(accommodationId, new AddressWithIdDto());
+            var act = async () => await addAddressToAccommodationUseCase.ExecuteAsync(accommodationId, new AddressWithIdDto());
 
             //Assert
             var exception = await Assert.ThrowsAsync<EntityNotFoundException>(act);
@@ -44,7 +44,7 @@ namespace YourRest.Application.Tests.UseCases
             Assert.Equal($"Accommodation with id {accommodationId} not found", exception.Message);
 
             _accommodationRepositoryMock
-                .Verify(r => r.GetWithIncludeAsync(It.IsAny<Expression<Func<Accommodation, bool>>>(), It.IsAny<CancellationToken>(), It.IsAny<Expression<Func<Accommodation, object>>>()),
+                .Verify(r => r.GetWithIncludeAsync(It.IsAny<Expression<Func<AccommodationDto, bool>>>(), It.IsAny<CancellationToken>(), It.IsAny<Expression<Func<AccommodationDto, object>>>()),
                 Times.Once);
         }
 
@@ -54,13 +54,16 @@ namespace YourRest.Application.Tests.UseCases
         {
             //Arrange
             _accommodationRepositoryMock
-                .Setup(r => r.GetWithIncludeAsync(It.IsAny<Expression<Func<Accommodation, bool>>>(), It.IsAny<CancellationToken>(), It.IsAny<Expression<Func<Accommodation, object>>>()))
-                .ReturnsAsync(new[] { new Accommodation() { Address = new Address() } });
+                .Setup(r => r.GetWithIncludeAsync(
+                    It.IsAny<Expression<Func<AccommodationDto, bool>>>(),
+                    It.IsAny<CancellationToken>(),
+                    It.IsAny<Expression<Func<AccommodationDto, object>>>()))
+                .ReturnsAsync(new[] { new AccommodationDto() { Address = new Infrastructure.Core.Contracts.Models.AddressDto() } });
 
             int accommodationId = 1;
 
             //Act
-            var act = async () => await addAddressToAccommodationUseCase.Execute(accommodationId, new AddressWithIdDto());
+            var act = async () => await addAddressToAccommodationUseCase.ExecuteAsync(accommodationId, new AddressWithIdDto());
 
             //Assert
             var exception = await Assert.ThrowsAsync<ValidationException>(act);
@@ -69,7 +72,10 @@ namespace YourRest.Application.Tests.UseCases
             Assert.Equal($"Address for accommodation with id {accommodationId} already exists", exception.Message);
 
             _accommodationRepositoryMock
-                .Verify(r => r.GetWithIncludeAsync(It.IsAny<Expression<Func<Accommodation, bool>>>(), It.IsAny<CancellationToken>(), It.IsAny<Expression<Func<Accommodation, object>>>()),
+                .Verify(r => r.GetWithIncludeAsync(
+                    It.IsAny<Expression<Func<AccommodationDto, bool>>>(),
+                    It.IsAny<CancellationToken>(),
+                    It.IsAny<Expression<Func<AccommodationDto, object>>>()),
                 Times.Once);
         }
 
@@ -78,14 +84,17 @@ namespace YourRest.Application.Tests.UseCases
         {
             //Arrange
             _accommodationRepositoryMock
-                .Setup(r => r.GetWithIncludeAsync(It.IsAny<Expression<Func<Accommodation, bool>>>(), It.IsAny<CancellationToken>(), It.IsAny<Expression<Func<Accommodation, object>>>()))
-                .ReturnsAsync(new[] { new Accommodation() });
+                .Setup(r => r.GetWithIncludeAsync(
+                    It.IsAny<Expression<Func<AccommodationDto, bool>>>(),
+                    It.IsAny<CancellationToken>(),
+                    It.IsAny<Expression<Func<AccommodationDto, object>>>()))
+                .ReturnsAsync(new[] { new AccommodationDto() });
 
             int accommodationId = 1;
             var addressDto = new AddressWithIdDto { CityId = 1 };
 
             //Act
-            var act = async () => await addAddressToAccommodationUseCase.Execute(accommodationId, addressDto);
+            var act = async () => await addAddressToAccommodationUseCase.ExecuteAsync(accommodationId, addressDto);
 
             //Assert
             var exception = await Assert.ThrowsAsync<EntityNotFoundException>(act);
@@ -99,8 +108,11 @@ namespace YourRest.Application.Tests.UseCases
         {
             //Arrange
             _accommodationRepositoryMock
-                .Setup(r => r.GetWithIncludeAsync(It.IsAny<Expression<Func<Accommodation, bool>>>(), It.IsAny<CancellationToken>(), It.IsAny<Expression<Func<Accommodation, object>>>()))
-                .ReturnsAsync(new[] { new Accommodation() });
+                .Setup(r => r.GetWithIncludeAsync(
+                    It.IsAny<Expression<Func<AccommodationDto, bool>>>(),
+                    It.IsAny<CancellationToken>(),
+                    It.IsAny<Expression<Func<AccommodationDto, object>>>()))
+                .ReturnsAsync(new[] { new AccommodationDto() });
             
             var addressDto = new AddressWithIdDto
             {
@@ -113,11 +125,12 @@ namespace YourRest.Application.Tests.UseCases
 
             _cityRepositoryMock
                 .Setup(r => r.GetAsync(It.IsAny<int>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(new City { Id = addressDto.CityId });
+                .ReturnsAsync(new CityDto { Id = addressDto.CityId });
 
             _addressRepositoryMock
-                .Setup(r => r.AddAsync(It.IsAny<Address>(), It.IsAny<bool>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(new Address {
+                .Setup(r => r.AddAsync(It.IsAny<Infrastructure.Core.Contracts.Models.AddressDto>(), It.IsAny<bool>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(new Infrastructure.Core.Contracts.Models.AddressDto
+                {
                     Id = 1,
                     CityId = addressDto.CityId,
                     Street = addressDto.Street,
@@ -128,7 +141,7 @@ namespace YourRest.Application.Tests.UseCases
             int accommodationId = 1;            
 
             //Act
-            var resultDto = await addAddressToAccommodationUseCase.Execute(accommodationId, addressDto);
+            var resultDto = await addAddressToAccommodationUseCase.ExecuteAsync(accommodationId, addressDto);
 
             //Assert
             Assert.Equal(1, resultDto.Id);          

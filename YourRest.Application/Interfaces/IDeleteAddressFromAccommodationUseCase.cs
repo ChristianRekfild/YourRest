@@ -4,6 +4,6 @@ namespace YourRest.Application.Interfaces
 {
     public interface IDeleteAddressFromAccommodationUseCase
     {
-        Task<bool> Execute(int accommodationId, int addressId);
+        Task<bool> ExecuteAsync(int accommodationId, int addressId);
     }
 }

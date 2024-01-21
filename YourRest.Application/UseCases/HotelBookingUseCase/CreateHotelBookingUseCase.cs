@@ -1,19 +1,9 @@
 ﻿using AutoMapper;
-using System;
-using System.Collections.Generic;
-using System.Collections.Immutable;
-using System.Linq;
-using System.Net.Http.Headers;
-using System.Text;
-using System.Threading.Tasks;
-using YourRest.Application.Dto;
 using YourRest.Application.Dto.Models.HotelBooking;
-using YourRest.Application.Dto.Models.Room;
 using YourRest.Application.Exceptions;
 using YourRest.Application.Interfaces.HotelBooking;
-using YourRest.Domain.Entities;
-using YourRest.Domain.Repositories;
-
+using YourRest.Infrastructure.Core.Contracts.Models;
+using YourRest.Infrastructure.Core.Contracts.Repositories;
 
 namespace YourRest.Application.UseCases.HotelBookingUseCase
 {
@@ -37,7 +27,7 @@ namespace YourRest.Application.UseCases.HotelBookingUseCase
             this.customerRepository = customerRepository;
         }
 
-        public async Task<BookingWithIdDto> ExecuteAsync(BookingDto bookingDto, CancellationToken token = default)
+        public async Task<BookingWithIdDto> ExecuteAsync(Dto.Models.HotelBooking.BookingDto bookingDto, CancellationToken token = default)
         {
 
             //Booking hotelBookingToInsert = mapper.Map<Booking>(bookingDto);                              // Вот для чего нужен AutoMapper
@@ -68,7 +58,7 @@ namespace YourRest.Application.UseCases.HotelBookingUseCase
             }
 
             var customer = await customerRepository.AddAsync(
-                new Customer() 
+                new CustomerDto() 
                     {
                         FirstName = bookingDto.FirstName,
                         MiddleName = bookingDto.MiddleName,
@@ -79,7 +69,7 @@ namespace YourRest.Application.UseCases.HotelBookingUseCase
                         PhoneNumber = bookingDto.PhoneNumber
                     });
 
-            Booking hotelBookingToInsert = new Booking() 
+            var hotelBookingToInsert = new Infrastructure.Core.Contracts.Models.BookingDto() 
             { 
                 StartDate = bookingDto.StartDate,
                 EndDate = bookingDto.EndDate,
@@ -87,13 +77,13 @@ namespace YourRest.Application.UseCases.HotelBookingUseCase
                 AdultNumber = bookingDto.AdultNumber,
                 ChildrenNumber = bookingDto.ChildrenNumber,
                 TotalAmount = bookingDto.TotalAmount,
-                Status = BookingStatus.Pending,
+                Status = BookingStatusDto.Pending,
                 CustomerId = customer.Id,
                     
             };
            
             var savedHotelBooking = await bookingRepository.AddAsync(hotelBookingToInsert, true, token);
-            BookingWithIdDto bookingWithIdDto = new BookingWithIdDto()
+            var bookingWithIdDto = new BookingWithIdDto()
             {
                 Id = savedHotelBooking.Id,
                 StartDate = savedHotelBooking.StartDate,

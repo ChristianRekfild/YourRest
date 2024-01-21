@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using YourRest.Application.Dto;
 using YourRest.Application.Dto.ViewModels;
-using YourRest.Domain.Repositories;
+using YourRest.Infrastructure.Core.Contracts.Repositories;
 using ValidationException = YourRest.Application.Exceptions.ValidationException;
 
 namespace YourRest.Application.Services;

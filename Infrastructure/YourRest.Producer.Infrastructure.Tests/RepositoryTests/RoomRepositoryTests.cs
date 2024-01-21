@@ -1,4 +1,7 @@
 using AutoMapper;
+using System.Diagnostics;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using YourRest.Infrastructure.Core.Contracts.Models;
 using YourRest.Infrastructure.Core.Contracts.Repositories;
 using YourRest.Producer.Infrastructure.Repositories;
@@ -113,8 +116,17 @@ namespace YourRest.Producer.Infrastructure.Tests.RepositoryTests
         public async Task GetRoomsByAccomodationAndDatesAsyncWithFreeRoomTest()
         {
             // Arrange
+            JsonSerializerOptions options = new()
+            {
+                ReferenceHandler = ReferenceHandler.IgnoreCycles,
+                WriteIndented = true
+            };           
+
             var country = await _countryRepository.AddAsync(new CountryDto { Name = "TestCountry" }, true, CancellationToken.None);
+            Debug.WriteLine("Country {0}: {1}", country.GetType(), JsonSerializer.Serialize(country, options));
             var region = await _regionRepository.AddAsync(new RegionDto { Name = "TestRegion", CountryId = country.Id }, true, CancellationToken.None);
+            Debug.WriteLine("Region {0}: {1}", region.GetType(), JsonSerializer.Serialize(region, options));
+
             var accommodation = await PrepareData3Async(new CityDto { Name = "TestCity", RegionId = region.Id }, CancellationToken.None);
 
             // Act
@@ -184,7 +196,7 @@ namespace YourRest.Producer.Infrastructure.Tests.RepositoryTests
                 {
                     Name = "TestRoom",
                     AccommodationId = accommodation.Id,
-                    RoomType = roomType
+                    RoomTypeId = roomType.Id
                 }, true, cancellationToken);
             var customer = await _customerTypeRepository.AddAsync(new CustomerDto()
             {
@@ -248,7 +260,7 @@ namespace YourRest.Producer.Infrastructure.Tests.RepositoryTests
                 {
                     Name = "TestRoom",
                     AccommodationId = accommodation.Id,
-                    RoomType = roomType
+                    RoomTypeId = roomType.Id
                 }, true, cancellationToken);
             var customer = await _customerTypeRepository.AddAsync(new CustomerDto()
             {
@@ -311,8 +323,8 @@ namespace YourRest.Producer.Infrastructure.Tests.RepositoryTests
                 new RoomDto
                 {
                     Name = "TestRoom",
-                    AccommodationId = accommodation.Id,
-                    RoomType = roomType
+                    AccommodationId = accommodation.Id,                    
+                    RoomTypeId = roomType.Id
                 }, true, cancellationToken);
             var customer = await _customerTypeRepository.AddAsync(new CustomerDto()
             {
@@ -327,7 +339,7 @@ namespace YourRest.Producer.Infrastructure.Tests.RepositoryTests
                 {
                     StartDate = new DateOnly(2025, 10, 5),
                     EndDate = new DateOnly(2025, 10, 15),
-                    Rooms = new List<RoomDto> { room },
+                    //Rooms = new List<RoomDto> { room },
                     TotalAmount = 5000.0m,
                     AdultNumber = 2,
                     ChildrenNumber = 2,
@@ -375,7 +387,7 @@ namespace YourRest.Producer.Infrastructure.Tests.RepositoryTests
                 {
                     Name = "TestRoom",
                     AccommodationId = accommodation.Id,
-                    RoomType = roomType
+                    RoomTypeId = roomType.Id
                 }, true, cancellationToken);
             var customer = await _customerTypeRepository.AddAsync(new CustomerDto()
             {

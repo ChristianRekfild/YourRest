@@ -1,12 +1,10 @@
-using Amazon.S3;
-using Amazon.S3.Model;
-using YourRest.Application.Interfaces.Photo;
-using YourRest.Domain.Repositories;
-using YourRest.Application.Dto.Models.Photo;
-using YourRest.Domain.Entities;
-using YourRest.Application.Exceptions;
-using YourRest.Application.Services;
 using YourRest.Application.Dto.Models;
+using YourRest.Application.Dto.Models.Photo;
+using YourRest.Application.Exceptions;
+using YourRest.Application.Interfaces.Photo;
+using YourRest.Application.Services;
+using YourRest.Infrastructure.Core.Contracts.Models;
+using YourRest.Infrastructure.Core.Contracts.Repositories;
 
 namespace YourRest.Application.UseCases.Photo
 {
@@ -43,7 +41,7 @@ namespace YourRest.Application.UseCases.Photo
 
             var photoPath = await _fileService.AddPhotoAsync(fileData, bucketName, cancellationToken);
             
-            var photo = new RoomPhoto()
+            var photo = new RoomPhotoDto()
             {
                 Room = room,
                 FilePath = photoPath

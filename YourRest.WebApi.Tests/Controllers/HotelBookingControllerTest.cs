@@ -3,7 +3,7 @@ using System.Net;
 using System.Text;
 using YourRest.Application.Dto.Models.HotelBooking;
 using YourRest.Application.Dto.Models.Room;
-using YourRest.Domain.Entities;
+using YourRest.Producer.Infrastructure.Entities;
 using YourRest.WebApi.Tests.Fixtures;
 
 namespace YourRest.WebApi.Tests.Controllers

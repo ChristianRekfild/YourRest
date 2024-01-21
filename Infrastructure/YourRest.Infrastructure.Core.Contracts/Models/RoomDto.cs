@@ -4,6 +4,7 @@
     { 
         public string Name { get; set; }
         public double SquareInMeter { get; set; }
+        public int RoomTypeId { get; set; }
         public RoomTypeDto RoomType { get; set; }
         public int Capacity { get; set; }
         public AccommodationDto Accommodation { get; set; }

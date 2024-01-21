@@ -1,8 +1,7 @@
 ﻿using AutoMapper;
 using YourRest.Application.Dto.Models.AccommodationFacility;
-using YourRest.Application.Exceptions;
 using YourRest.Application.Interfaces.AccommodationFacility;
-using YourRest.Domain.Repositories;
+using YourRest.Infrastructure.Core.Contracts.Repositories;
 
 namespace YourRest.Application.UseCases
 {

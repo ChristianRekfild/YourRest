@@ -3,8 +3,8 @@ using System.Net;
 using System.Text;
 using SystemJson = System.Text.Json;
 using YourRest.Application.Dto.Models.AccommodationFacility;
-using YourRest.Domain.Entities;
 using YourRest.WebApi.Tests.Fixtures;
+using YourRest.Producer.Infrastructure.Entities;
 
 namespace YourRest.WebApi.Tests.Controllers
 {

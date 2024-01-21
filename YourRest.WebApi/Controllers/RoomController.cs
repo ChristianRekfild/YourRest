@@ -59,7 +59,7 @@ namespace YourRest.WebApi.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var createdRoom = await _createtRoomUseCase.Execute(roomDto, accommodationId, HttpContext.RequestAborted);
+            var createdRoom = await _createtRoomUseCase.ExecuteAsync(roomDto, accommodationId, HttpContext.RequestAborted);
             return CreatedAtAction(nameof(Post), createdRoom);
         }
 

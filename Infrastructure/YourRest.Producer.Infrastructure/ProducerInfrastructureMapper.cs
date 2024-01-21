@@ -24,7 +24,7 @@ namespace YourRest.Producer.Infrastructure
             CreateMap<AccommodationStarRatingDto, AccommodationStarRating>()
                 .ReverseMap();
 
-            CreateMap<AccommodationTypeDto, Accommodation>()
+            CreateMap<AccommodationTypeDto, AccommodationType>()
                .ReverseMap();
 
             CreateMap<AgeRangeDto, AgeRange>()
@@ -33,8 +33,9 @@ namespace YourRest.Producer.Infrastructure
             CreateMap<AddressDto, Address>()
                 .ReverseMap();
 
-            CreateMap<BookingDto, Booking>()
-                 .ReverseMap();
+            CreateMap<Booking, BookingDto>()
+                 .ReverseMap()
+                 .ForMember(dest => dest.Rooms, opt => opt.Ignore());
 
             CreateMap<BookingStatusDto, BookingStatus>()
                  .ReverseMap();
@@ -54,8 +55,11 @@ namespace YourRest.Producer.Infrastructure
             CreateMap<ReviewDto, Review>()
                 .ReverseMap();
 
-            CreateMap<RoomDto, Room>()
-                .ReverseMap();
+            CreateMap<Room, RoomDto>()
+                .ReverseMap()
+                .ForMember(dest => dest.Accommodation, opt => opt.Ignore())
+                .ForMember(dest => dest.RoomType, opt => opt.Ignore())
+                .ForMember(dest => dest.RoomFacilities, opt => opt.Ignore());
 
             CreateMap<RoomFacilityDto, RoomFacility>()
                 .ReverseMap();
