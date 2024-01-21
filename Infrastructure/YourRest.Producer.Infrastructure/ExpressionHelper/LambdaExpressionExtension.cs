@@ -1,5 +1,8 @@
 ﻿using System.Diagnostics;
 using System.Linq.Expressions;
+using System.Runtime.CompilerServices;
+
+[assembly: InternalsVisibleTo("YourRest.Producer.Infrastructure.Tests")]
 
 namespace YourRest.Producer.Infrastructure.ExpressionHelper
 {
@@ -33,7 +36,21 @@ namespace YourRest.Producer.Infrastructure.ExpressionHelper
 
         internal static Expression<Func<TDestination, object>> ToEntityExpression<TSource, TDestination>(this Expression<Func<TSource, object>> expression)
         {
-            throw new NotImplementedException();
+            if (expression.NodeType == ExpressionType.Lambda && expression.Body.NodeType == ExpressionType.MemberAccess)
+            {
+                Debug.WriteLine("Поступившее выражение: {0}", expression.Body);
+                foreach(var parameter in expression.Parameters)
+                {
+                    Debug.WriteLine("{0}", parameter);
+                    //parameter.Name
+                    var parameterExpression = Expression.Parameter(typeof(TDestination), parameter.Name);
+                    var propertyInfo = parameterExpression.Type.GetProperty(((MemberExpression)expression.Body).Member.Name);
+                    var memberExpression = Expression.Property(parameterExpression, propertyInfo);
+                    var result1 = Expression.Lambda<Func<TDestination, object>>(memberExpression, parameterExpression);
+                    return result1;
+                }                
+            }
+            throw new NotSupportedException($"ExpressionType: \"{expression.NodeType}\" пока не поддерживатеся.");
         }
 
         private static BinaryExpression getBE(BinaryExpression expression, ParameterExpression parameterExpression)

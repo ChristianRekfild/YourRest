@@ -39,11 +39,12 @@ namespace YourRest.Producer.Infrastructure.Tests.RepositoryTests
         [Fact]
         public async Task TestWithChangeProperty()
         {
-            await _countryRepository.AddAsync(new CountryDto { Name = "First Country" });
+            var currentCountry = await _countryRepository.AddAsync(new CountryDto { Name = "First Country" });
+            
             var fc = await _countryRepository.GetAllAsync();
             int id = 0;
             string name = "Second Country";
-            foreach (var c in fc)
+            foreach (var c in fc.Where(c => c.Id == currentCountry.Id))
             {
                 id = c.Id;
                 c.Name = name;

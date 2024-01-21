@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using System.Net;
 using System.Text;
 using YourRest.Application.Dto.Models.HotelBooking;
@@ -620,7 +621,7 @@ namespace YourRest.WebApi.Tests.Controllers
             var responseContent = await response.Content.ReadAsStringAsync();
             var occupiedDateResponse = JsonConvert.DeserializeObject<List<RoomOccupiedDateDto>>(responseContent);
 
-            Assert.NotNull( occupiedDateResponse );
+            Assert.NotNull(occupiedDateResponse);
             Assert.Equal(occupiedDateResult.First().StartDate, occupiedDateResponse.Last().StartDate);
             Assert.Equal(occupiedDateResult.Last().StartDate, occupiedDateResponse.First().StartDate);
             Assert.Equal(occupiedDateResult.First().EndDate, occupiedDateResponse.Last().EndDate);
@@ -795,7 +796,7 @@ namespace YourRest.WebApi.Tests.Controllers
 
             Assert.NotNull(responseRoomsList);
             var responseRoomsIdList = responseRoomsList.Select(x => x.Id).ToList();
-       
+
             Assert.True(responseRoomsIdList.Contains(roomMskLyx2.Id));
             Assert.True(responseRoomsIdList.Contains(roomMskHern1.Id));
             Assert.True(responseRoomsIdList.Contains(roomMskHern2.Id));
@@ -962,7 +963,7 @@ namespace YourRest.WebApi.Tests.Controllers
             //Make request
             //var response = await fixture.Client.GetAsync($"api/cities/{cityMoscow.Id}/rooms/{startDate}/{endDate}");
             var response = await fixture.Client.GetAsync($"api/cities/rooms?startDate={startDate}&endDate={endDate}&cityId={cityMoscow.Id}");
-            
+
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
             var responseContent = await response.Content.ReadAsStringAsync();
@@ -970,7 +971,7 @@ namespace YourRest.WebApi.Tests.Controllers
 
             Assert.NotNull(responseRoomsList);
             var responseRoomsIdList = responseRoomsList.Select(x => x.Id).ToList();
-       
+
             Assert.False(responseRoomsIdList.Contains(roomMskLyx1.Id));
             Assert.True(responseRoomsIdList.Contains(roomMskLyx2.Id));
             Assert.True(responseRoomsIdList.Contains(roomMskHern1.Id));
@@ -1102,7 +1103,7 @@ namespace YourRest.WebApi.Tests.Controllers
             {
                 StartDate = new DateOnly(2021, 10, 5),
                 EndDate = DateOnly.FromDateTime(DateTime.Now.AddDays(5)),
-                Rooms = new List<Room>() { roomMskLyx1, roomMskLyx2, roomMskHern1 , roomMskHern2 },
+                Rooms = new List<Room>() { roomMskLyx1, roomMskLyx2, roomMskHern1, roomMskHern2 },
                 TotalAmount = 5000.0m,
                 AdultNumber = 2,
                 ChildrenNumber = 2,
@@ -1116,7 +1117,7 @@ namespace YourRest.WebApi.Tests.Controllers
             //Make request
             //var response = await fixture.Client.GetAsync($"api/cities/{cityMoscow.Id}/rooms/{startDate}/{endDate}");
             var response = await fixture.Client.GetAsync($"api/cities/rooms?startDate={startDate}&endDate={endDate}&cityId={cityMoscow.Id}");
-            
+
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
             var responseContent = await response.Content.ReadAsStringAsync();
@@ -1240,23 +1241,27 @@ namespace YourRest.WebApi.Tests.Controllers
             {
                 StartDate = DateOnly.FromDateTime(DateTime.Now.AddDays(50)),
                 EndDate = DateOnly.FromDateTime(DateTime.Now.AddDays(60)),
-                Rooms = new List<Room>() { roomMskLyx2 },
+                //Rooms = new List<Room>() { roomMskLyx2 },
                 TotalAmount = 5000.0m,
                 AdultNumber = 2,
                 ChildrenNumber = 2,
                 CustomerId = testCustomer.Id
             });
 
+            await AddRoomToBooking(bookingInMskLyxFuture, new Room[] { roomMskLyx2 });
+
             Booking bookingInMskLyxCurrent = await fixture.InsertObjectIntoDatabase(new Booking()
             {
                 StartDate = DateOnly.FromDateTime(DateTime.Now.AddDays(8)),
                 EndDate = DateOnly.FromDateTime(DateTime.Now.AddDays(12)),
-                Rooms = new List<Room>() { roomMskLyx1, roomMskLyx2, roomMskHern1, roomMskHern2 },
+                //Rooms = new List<Room>() { roomMskLyx1, roomMskLyx2, roomMskHern1, roomMskHern2 },
                 TotalAmount = 5000.0m,
                 AdultNumber = 2,
                 ChildrenNumber = 2,
                 CustomerId = testCustomer.Id
             });
+
+            await AddRoomToBooking(bookingInMskLyxCurrent, new Room[] { roomMskLyx1, roomMskLyx2, roomMskHern1, roomMskHern2 });
 
             //New booking dates
             var startDate = DateOnly.FromDateTime(DateTime.Now.AddDays(4));
@@ -1265,7 +1270,7 @@ namespace YourRest.WebApi.Tests.Controllers
             //Make request
             //var response = await fixture.Client.GetAsync($"api/cities/{cityMoscow.Id}/rooms/{startDate}/{endDate}");
             var response = await fixture.Client.GetAsync($"api/cities/rooms?startDate={startDate}&endDate={endDate}&cityId={cityMoscow.Id}");
-            
+
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
             var responseContent = await response.Content.ReadAsStringAsync();
@@ -1273,6 +1278,24 @@ namespace YourRest.WebApi.Tests.Controllers
 
             Assert.NotNull(responseRoomsList);
             Assert.Empty(responseRoomsList);
+        }
+
+        private async Task AddRoomToBooking(Booking bookingInMskLyxFuture, params Room[] rooms)
+        {
+            if (fixture.DbContext.Entry(bookingInMskLyxFuture).State == EntityState.Detached)
+            {
+                fixture.DbContext.Attach(bookingInMskLyxFuture);
+            }
+            if (bookingInMskLyxFuture.Rooms == null)
+            {
+                bookingInMskLyxFuture.Rooms = new List<Room>();
+            }
+            foreach (var room in rooms)
+            {
+                bookingInMskLyxFuture.Rooms.Add(room);
+            }
+            await fixture.DbContext.SaveChangesAsync();
+            fixture.DbContext.Entry(bookingInMskLyxFuture).State = EntityState.Detached;
         }
 
         [Fact]
@@ -1436,7 +1459,7 @@ namespace YourRest.WebApi.Tests.Controllers
             //Make request
             //var response = await fixture.Client.GetAsync($"api/accommodations/{accommodationMskLyx.Id}/rooms/{startDate}/{endDate}");
             var response = await fixture.Client.GetAsync($"api/accommodations/rooms?startDate={startDate}&endDate={endDate}&accommodationId={accommodationMskLyx.Id}");
-            
+
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
             var responseContent = await response.Content.ReadAsStringAsync();
@@ -1765,7 +1788,7 @@ namespace YourRest.WebApi.Tests.Controllers
             //Make request                                 
             //var response = await fixture.Client.GetAsync($"api/accommodations/{accommodationMskLyx.Id}/rooms/{startDate}/{endDate}");
             var response = await fixture.Client.GetAsync($"api/accommodations/rooms?startDate={startDate}&endDate={endDate}&accommodationId={accommodationMskLyx.Id}");
-           
+
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
             var responseContent = await response.Content.ReadAsStringAsync();
@@ -1914,7 +1937,7 @@ namespace YourRest.WebApi.Tests.Controllers
             //Make request
             //var response = await fixture.Client.GetAsync($"api/accommodations/{accommodationMskLyx.Id}/rooms/{startDate}/{endDate}");
             var response = await fixture.Client.GetAsync($"api/accommodations/rooms?startDate={startDate}&endDate={endDate}&accommodationId={accommodationMskLyx.Id}");
-            
+
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
             var responseContent = await response.Content.ReadAsStringAsync();
@@ -1928,7 +1951,7 @@ namespace YourRest.WebApi.Tests.Controllers
             var roomType = new RoomType { Name = "Test Type" };
             Room roomToInsert = new Room()
             {
-                Accommodation = accommodation,
+                //Accommodation = accommodation,
                 AccommodationId = accommodation.Id,
                 Name = $"DeluxeRoom{DeluxeRoomId}",
                 RoomType = roomType,
@@ -1938,7 +1961,7 @@ namespace YourRest.WebApi.Tests.Controllers
             Room resultRoom = await fixture.InsertObjectIntoDatabase(roomToInsert);
             return resultRoom;
         }
-        
+
         public static IEnumerable<object[]> BookingTestData()
         {
             // Example data: StartDate, EndDate, ExpectedStatusCode, ExpectedTotalAmount
@@ -1948,16 +1971,16 @@ namespace YourRest.WebApi.Tests.Controllers
                 new DateOnly(2025, 10, 12),
                 HttpStatusCode.BadRequest,
                 5000.0m,
-                true 
+                true
             };
         }
-        
+
         [Theory]
         [MemberData(nameof(BookingTestData))]
         public async Task AddHotelBookingTest(DateOnly startDate, DateOnly endDate, HttpStatusCode expectedStatusCode, decimal expectedTotalAmount, bool createBookingClash = false)
         {
             var (accommodation, room, customer) = await CreateCommonEntities();
-            
+
             if (createBookingClash)
             {
                 var clashBooking = new Booking
@@ -1989,7 +2012,7 @@ namespace YourRest.WebApi.Tests.Controllers
 
             var content = new StringContent(JsonConvert.SerializeObject(bookingDto), Encoding.UTF8, "application/json");
             var response = await fixture.Client.PostAsync($"api/bookings/", content);
-    
+
             Assert.Equal(expectedStatusCode, response.StatusCode);
 
             if (response.IsSuccessStatusCode)
@@ -2010,7 +2033,7 @@ namespace YourRest.WebApi.Tests.Controllers
 
             return (accommodation, room, customer);
         }
-        
+
         private void AssertBooking(BookingDto expected, BookingDto actual)
         {
             if (expected == null) // For BadRequest scenarios

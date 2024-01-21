@@ -9,20 +9,30 @@ namespace YourRest.Producer.Infrastructure
     {
         public ProducerInfrastructureMapper()
         {
-            CreateMap<AccommodationDto, Accommodation>()
-                .ReverseMap();
-            
-            CreateMap<AccommodationFacilityDto, AccommodationFacility>()
-                .ReverseMap();
+            CreateMap<Accommodation, AccommodationDto>()
+                .ReverseMap()
+                .ForMember(dest => dest.AccommodationFacilities, opt => opt.Ignore())
+                .ForMember(dest => dest.AccommodationType, opt => opt.Ignore())
+                .ForMember(dest => dest.Address, opt => opt.Ignore())
+                .ForMember(dest => dest.Rooms, opt => opt.Ignore())
+                .ForMember(dest => dest.StarRating, opt => opt.Ignore());
+
+            CreateMap<AccommodationFacility, AccommodationFacilityDto>()
+                .ReverseMap()
+                .ForMember(dest => dest.AccommodationFacilities, opt => opt.Ignore());
 
             CreateMap<AccommodationFacilityLinkDto, AccommodationFacilityLink>()
-                .ReverseMap();
+                .ReverseMap()
+                .ForMember(dest => dest.Accommodation, opt => opt.Ignore())
+                .ForMember(dest => dest.AccommodationFacility, opt => opt.Ignore());
 
-            CreateMap<AccommodationPhotoDto, AccommodationPhoto>()
-                .ReverseMap();
+            CreateMap<AccommodationPhoto, AccommodationPhotoDto>()
+                .ReverseMap()
+                .ForMember(dest => dest.Accommodation, opt => opt.Ignore());
 
-            CreateMap<AccommodationStarRatingDto, AccommodationStarRating>()
-                .ReverseMap();
+            CreateMap<AccommodationStarRating, AccommodationStarRatingDto>()
+                .ReverseMap()
+                .ForMember(dest => dest.Accommodation, opt => opt.Ignore());
 
             CreateMap<AccommodationTypeDto, AccommodationType>()
                .ReverseMap();
@@ -30,46 +40,56 @@ namespace YourRest.Producer.Infrastructure
             CreateMap<AgeRangeDto, AgeRange>()
                .ReverseMap();
 
-            CreateMap<AddressDto, Address>()
-                .ReverseMap();
+            CreateMap<Address, AddressDto>()
+                .ReverseMap()
+                .ForMember(dest => dest.City, opt => opt.Ignore());
 
             CreateMap<Booking, BookingDto>()
-                 .ReverseMap()
-                 .ForMember(dest => dest.Rooms, opt => opt.Ignore());
+                 .ReverseMap();
 
             CreateMap<BookingStatusDto, BookingStatus>()
                  .ReverseMap();
 
-            CreateMap<CityDto, City>()
-                .ReverseMap();
+            CreateMap<City, CityDto>()
+                .ReverseMap()
+                .ForMember(dest => dest.Addresses, opt => opt.Ignore())
+                .ForMember(dest => dest.Region, opt => opt.Ignore());
 
-            CreateMap<CountryDto, Country>()
-                .ReverseMap();
+            CreateMap<Country, CountryDto>()
+                .ReverseMap()
+                .ForMember(dest => dest.Regions, opt => opt.Ignore());
 
             CreateMap<CustomerDto, Customer>()
                 .ReverseMap();
 
-            CreateMap<RegionDto, Region>()
-                .ReverseMap();
+            CreateMap<Region, RegionDto>()
+                .ReverseMap()
+                .ForMember(dest => dest.Cities, opt => opt.Ignore())
+                .ForMember(dest => dest.Country, opt => opt.Ignore());
 
-            CreateMap<ReviewDto, Review>()
-                .ReverseMap();
+            CreateMap<Review, ReviewDto>()
+                .ReverseMap()
+                .ForMember(dest => dest.Booking, opt => opt.Ignore())
+                .ForMember(dest => dest.Rating, opt => opt.Ignore())
+                .ForMember(dest => dest.User, opt => opt.Ignore());
 
             CreateMap<Room, RoomDto>()
-                .ReverseMap()
+                .ReverseMap()/*
                 .ForMember(dest => dest.Accommodation, opt => opt.Ignore())
                 .ForMember(dest => dest.RoomType, opt => opt.Ignore())
-                .ForMember(dest => dest.RoomFacilities, opt => opt.Ignore());
+                .ForMember(dest => dest.RoomFacilities, opt => opt.Ignore())*/;
 
-            CreateMap<RoomFacilityDto, RoomFacility>()
-                .ReverseMap();
+            CreateMap<RoomFacility, RoomFacilityDto>()
+                .ReverseMap()
+                .ForMember(dest => dest.Rooms, opt => opt.Ignore());
 
-            CreateMap<RoomPhotoDto, RoomPhoto>()
-                .ReverseMap();
+            CreateMap<RoomPhoto, RoomPhotoDto>()
+                .ReverseMap()
+                .ForMember(dest => dest.Room, opt => opt.Ignore());
 
             CreateMap<RoomTypeDto, RoomType>()
                 .ReverseMap();
-                        
+
             // TODO: Добавить сортировку
             /*
               UserPhotos = user.UserPhotos.OrderByDescending(photo => photo.Id).ToList()
@@ -82,13 +102,18 @@ namespace YourRest.Producer.Infrastructure
                 .ForMember(dest => dest.KeyCloakId, opt => opt.MapFrom(src => src.KeyCloakId))
                 .ForMember(dest => dest.UserAccommodations, opt => opt.MapFrom(src => src.UserAccommodations))
                 .ForMember(dest => dest.UserPhotos, opt => opt.MapFrom(src => src.UserPhotos))
-                .ReverseMap();
+                .ReverseMap()
+                .ForMember(dest => dest.UserAccommodations, opt => opt.Ignore())
+                .ForMember(dest => dest.UserPhotos, opt => opt.Ignore());
 
-            CreateMap<UserAccommodationDto, UserAccommodation>()
-                .ReverseMap();
+            CreateMap<UserAccommodation, UserAccommodationDto>()
+                .ReverseMap()
+                .ForMember(dest => dest.Accommodation, opt => opt.Ignore())
+                .ForMember(dest => dest.User, opt => opt.Ignore());
 
             CreateMap<UserPhotoDto, UserPhoto>()
-                .ReverseMap();
+                .ReverseMap()
+                .ForMember(dest => dest.User, opt => opt.Ignore());
 
             //configuration.AssertConfigurationIsValid();
         }

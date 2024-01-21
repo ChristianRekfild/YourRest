@@ -37,20 +37,36 @@ namespace YourRest.Producer.Infrastructure.Repositories
             };
             Debug.WriteLine("Dto сущность {0}: {1}", typeof(TSource), JsonSerializer.Serialize<TSource>(entity, options));
             var dbEntity = _mapper.Map<TEntity>(entity);
+
+            var linkedEntity = DetachLinkedEntityAsync(dbEntity);
+
             Debug.WriteLine("Db сущность до вставки {0}: {1}", typeof(TEntity), JsonSerializer.Serialize<TEntity>(dbEntity, options));
             var result = await _dataContext
                 .Set<TEntity>()
                 .AddAsync(dbEntity, cancellationToken);
+
+            await AttachLinkedEntityAsync(dbEntity, linkedEntity, cancellationToken);
+
             Debug.WriteLine("Тип result.Entity после вставки {0}: {1}", result.Entity.GetType(), JsonSerializer.Serialize<TEntity>((TEntity)result.Entity, options));
             Debug.WriteLine("Тип dbEntity после вставки {0}: {1}", dbEntity.GetType(), JsonSerializer.Serialize<TEntity>(dbEntity, options));
             if (saveChanges)
             {
                 await _dataContext.SaveChangesAsync(cancellationToken);
-                //result.State = EntityState.Detached;
+                result.State = EntityState.Detached;
             }
             entity = _mapper.Map<TSource>(result.Entity);
             Debug.WriteLine("Dto сущность на выходе из метода {0}: {1}", typeof(TSource), JsonSerializer.Serialize<TSource>(entity, options));
             return entity;
+        }
+
+        protected virtual IReadOnlyDictionary<string, object> DetachLinkedEntityAsync(TEntity entity)
+        {
+            return (IReadOnlyDictionary<string, object>)(new Dictionary<string, object>());
+        }
+
+        protected virtual Task AttachLinkedEntityAsync(TEntity dbEntity, IReadOnlyDictionary<string, object> linkedEntity, CancellationToken cancellationToken)
+        {
+            return Task.CompletedTask;
         }
 
         public async Task AddRangeAsync(
@@ -165,19 +181,25 @@ namespace YourRest.Producer.Infrastructure.Repositories
         }
 
         public async Task<TSource> UpdateAsync(
-            TSource entity,
+            TSource entityDto,
             bool saveChanges = true,
             CancellationToken cancellationToken = default)
         {
-            var oldEntity = await _dataContext.Set<TEntity>().FindAsync(entity.Id, cancellationToken);
+            var oldEntity = await _dataContext.Set<TEntity>().FindAsync(entityDto.Id, cancellationToken);
 
             if (oldEntity != null)
             {
-                _dataContext.Entry(oldEntity).CurrentValues.SetValues(_mapper.Map<TEntity>(entity));
-
+                if(_dataContext.Entry(oldEntity).State == EntityState.Detached)
+                {
+                    _dataContext.Attach(oldEntity);
+                }
+                _dataContext.Entry(oldEntity).CurrentValues.SetValues(_mapper.Map<TEntity>(entityDto));
+                Debug.WriteLine("_dataContext.Entry(oldEntity).State: {0}", _dataContext.Entry(oldEntity).State);
                 if (saveChanges)
                 {
                     await _dataContext.SaveChangesAsync(cancellationToken);
+                    _dataContext.Entry(oldEntity).State = EntityState.Detached;
+                    Debug.WriteLine("_dataContext.Entry(oldEntity).State: {0}", _dataContext.Entry(oldEntity).State);
                 }
             }
 

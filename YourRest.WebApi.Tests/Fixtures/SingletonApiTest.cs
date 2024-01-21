@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.TestHost;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using System.Diagnostics;
 using System.Text;
 using YourRest.Infrastructure.Core.Contracts.Repositories;
 using YourRest.Producer.Infrastructure.DbContexts;
@@ -73,10 +74,18 @@ namespace YourRest.WebApi.Tests.Fixtures
         public async Task<T> InsertObjectIntoDatabase<T>(T entity) where T : class
         {
             var item = await DbContext.AddAsync(entity);
-            await DbContext.SaveChangesAsync();
+            try
+            {
+                await DbContext.SaveChangesAsync();
+                item.State = EntityState.Detached;
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("Произошла ошибка: {0} \nStackTrace: {1}", ex.Message, ex.StackTrace);
+            }
             return item.Entity;
         }
-        
+
         public async Task SaveChangesAsync()
         {
             await DbContext.SaveChangesAsync();
