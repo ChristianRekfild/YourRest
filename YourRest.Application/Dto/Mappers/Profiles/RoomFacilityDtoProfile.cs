@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using YourRest.Producer.Infrastructure.Entities;
 
 namespace YourRest.Application.Dto.Mappers.Profiles
 {
@@ -6,7 +7,7 @@ namespace YourRest.Application.Dto.Mappers.Profiles
     {
         public RoomFacilityDtoProfile()
         {
-            CreateMap<Infrastructure.Core.Contracts.Models.RoomFacilityDto, Models.RoomFacility.RoomFacilityDto>()
+            CreateMap<RoomFacility, Models.RoomFacility.RoomFacilityDto>()
                 .ForMember(destination => destination.Name, opt => opt.MapFrom(src => src.Name))
                 .ReverseMap();
             CreateMap<Models.RoomFacility.RoomFacilityDto, Infrastructure.Core.Contracts.Models.RoomFacilityDto>()

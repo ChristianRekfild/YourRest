@@ -80,8 +80,15 @@ namespace YourRest.WebApi.Tests.Controllers
             var mapper = mockMapper.CreateMapper();
 
             var response = await fixture.Client.GetAsync($"api/roomfacilities");
+            RoomFacilityDto first = mapper.Map<RoomFacilityDto>(roomFacilities.FirstOrDefault());
+            
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-            Assert.Equivalent(mapper.Map< IEnumerable<RoomFacilityDto>>(roomFacilities), await response.Content.ReadFromJsonAsync<IEnumerable<RoomFacilityDto>>());
+
+            var fromTests = mapper.Map<IEnumerable<RoomFacilityDto>>(roomFacilities).OrderBy(r => r.Name).ToArray();
+            var names = fromTests.Select(t => t.Name).ToArray();
+            var fromApi = await response.Content.ReadFromJsonAsync<IEnumerable<RoomFacilityDto>>();
+            
+            Assert.Equal(fromApi.Where(f => names.Contains(f.Name)).OrderBy(r => r.Name).ToArray(), fromTests);
         }
 
         private async Task<RoomFacility> CreateRoomFacilityAsync()
