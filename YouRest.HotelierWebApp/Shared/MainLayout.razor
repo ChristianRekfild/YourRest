@@ -9,7 +9,7 @@
             </div>
             <main>
                 <div class="top-row px-4">
-                    <div class="logout" @onclick="@LogoutAsync">Выйти <span class="oi oi-account-logout"></span></div>
+                    <div class="logout" @onclick="@LogoutAsync"><span class="oi oi-account-logout"></span></div>
                 </div>
                 <article class="content px-4">
                     @Body
@@ -17,9 +17,7 @@
             </main>
         </Authorized>
         <NotAuthorized>
-            <main>
-                @Body
-            </main>
+            <YouRest.HotelierWebApp.Pages.LoginPage/>
         </NotAuthorized>
     </AuthorizeView>
 </div>

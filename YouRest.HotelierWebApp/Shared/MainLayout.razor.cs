@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
+using YouRest.HotelierWebApp.Data.Providers;
 
 namespace YouRest.HotelierWebApp.Shared
 {
@@ -7,21 +8,10 @@ namespace YouRest.HotelierWebApp.Shared
     {
         [Inject] NavigationManager NavigationManager { get; set; }
         [Inject] AuthenticationStateProvider Provider { get; set; }
-        [CascadingParameter] public Task<AuthenticationState> AuthStat { get; set; }
-        
-        protected async override Task OnInitializedAsync()
-        {
-            base.OnInitialized();
-            var user = (await AuthStat).User;
-            if (!user.Identity.IsAuthenticated)
-            {
-                NavigationManager.NavigateTo($"/login");
-            }
-        }
 
         public async Task LogoutAsync()
         {
-            await ((TokenAuthenticationStateProvider)Provider).MakeUserAnonymous();
+            await ((CustomAuthValidateProvider)Provider).MakeUserAnonymous();
             NavigationManager.NavigateTo("/login");
         }
     }

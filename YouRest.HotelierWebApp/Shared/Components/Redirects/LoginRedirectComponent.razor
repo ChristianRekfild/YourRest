@@ -1,9 +1,7 @@
 ﻿@code {
     [Inject] NavigationManager NavigationManager { get; set; }
-    protected override Task OnInitializedAsync()
+    protected override void OnInitialized()
     {
-        return base.OnInitializedAsync();
-        NavigationManager.NavigateTo("/login");
+        NavigationManager.NavigateTo("/login", true);
     }
-
 }
