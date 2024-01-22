@@ -6,6 +6,7 @@ using System.Net.Http.Headers;
 using System.Text;
 using YourRest.Application.Dto.Mappers.Profiles;
 using YourRest.Application.Dto.Models;
+using YourRest.Infrastructure.Core.Contracts.Models;
 using YourRest.Infrastructure.Core.Contracts.Repositories;
 using YourRest.Producer.Infrastructure;
 using YourRest.Producer.Infrastructure.Entities;
@@ -75,6 +76,7 @@ namespace YourRest.WebApi.Tests.Controllers
         public async Task GetAddress_WhenApiMethodInvokedId_ThenReturns200Ok()
         {
             var country = fixture.DbContext.Countries.FirstOrDefault(c => c.Name == "Russia");
+            var countryDto = mapper.Map<Infrastructure.Core.Contracts.Models.CountryDto>(country);
             if (country == null)
             {
                 country = await fixture.InsertObjectIntoDatabase(new Country() { Name = "Russia" });
@@ -90,6 +92,7 @@ namespace YourRest.WebApi.Tests.Controllers
                 city = await fixture.InsertObjectIntoDatabase(new City { Name = "Moscow", RegionId = region.Id });
             }
             var addressDto = CreateValidAddressDto(city.Id);
+            var t = mapper.Map<Address>(addressDto);
             var address = await fixture.InsertObjectIntoDatabase(mapper.Map<Address>(addressDto));
            
             var response = await fixture.Client.GetAsync($"api/addresses/{address.Id}");
@@ -101,9 +104,9 @@ namespace YourRest.WebApi.Tests.Controllers
             Assert.Equal(createdAddress?.Id, address.Id);
         }
 
-        private AddressDto CreateValidAddressDto(int cityId)
+        private Infrastructure.Core.Contracts.Models.AddressDto CreateValidAddressDto(int cityId)
         {
-            return new AddressDto
+            return new Infrastructure.Core.Contracts.Models.AddressDto
             {
                 Street = "Test Street",
                 ZipCode = "123456",

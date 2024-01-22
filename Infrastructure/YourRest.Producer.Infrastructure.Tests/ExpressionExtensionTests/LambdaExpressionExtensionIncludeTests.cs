@@ -10,7 +10,7 @@ namespace YourRest.Producer.Infrastructure.Tests.ExpressionExtensionTests
     {
         [Theory]
         [MemberData(nameof(IncludeFunctionDataData))]
-        public void adsfasfd<TSource, TDestination>(TSource source, TDestination destination, Expression<Func<TSource, object>> income, Expression<Func<TDestination, object>> outcome)
+        public void ConvertTest<TSource, TDestination>(TSource source, TDestination destination, Expression<Func<TSource, object>> income, Expression<Func<TDestination, object>> outcome)
         {
             // Act
             var qwe = income.ToEntityExpression<TSource, TDestination>();

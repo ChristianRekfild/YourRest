@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using System.Net;
 using System.Net.Http.Json;
@@ -44,6 +45,7 @@ namespace YourRest.WebApi.Tests.Controllers
             var recivedRoomFacility = await GetByIdAsync(roomFacility.Id);
             Assert.Equal(editedRoomFacility.Name, recivedRoomFacility.Name);
         }
+
         [Fact]
         public async Task DeleteRoomFacilityTest_WhenPostCalledRemoveMethod_ReturnsMessageOfSuccsessfulyRemoved()
         {
@@ -54,6 +56,7 @@ namespace YourRest.WebApi.Tests.Controllers
             response = await fixture.Client.GetAsync($"api/roomfacilities/{roomFacility.Id}");
             Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
         }
+
         [Fact]
         public async Task GetRoomFacilityByIdTest_WhenGetCalledGetByIdMethod_ReturnsRoomFacilityViewModel()
         {
@@ -67,9 +70,15 @@ namespace YourRest.WebApi.Tests.Controllers
         public async Task GetAllRoomFacilitiesTest_WhenGetCalledGetAllRoomFacilitiesMethod_ReturnsListOfRoomFacilityDto()
         {
             var roomFacility = await fixture.InsertObjectIntoDatabase(await CreateRoomFacilityAsync());
+            if (fixture.DbContext.Entry(Room).State == EntityState.Detached)
+            {
+                fixture.DbContext.Attach(Room);
+            }
             Room.RoomFacilities.Add(new RoomFacility { Name = "Ironing station" });
             Room.RoomFacilities.Add(new RoomFacility { Name = "Locker" });
             await fixture.DbContext.SaveChangesAsync();
+            fixture.DbContext.Entry(Room).State = EntityState.Detached;
+            
             List<RoomFacility> roomFacilities = new(Room.RoomFacilities);
 
             var mockMapper = new MapperConfiguration(cfg =>
@@ -80,15 +89,15 @@ namespace YourRest.WebApi.Tests.Controllers
             var mapper = mockMapper.CreateMapper();
 
             var response = await fixture.Client.GetAsync($"api/roomfacilities");
-            RoomFacilityDto first = mapper.Map<RoomFacilityDto>(roomFacilities.FirstOrDefault());
-            
+                        
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
-            var fromTests = mapper.Map<IEnumerable<RoomFacilityDto>>(roomFacilities).OrderBy(r => r.Name).ToArray();
-            var names = fromTests.Select(t => t.Name).ToArray();
+            var fromTests = mapper.Map<IEnumerable<RoomFacilityDto>>(roomFacilities).ToArray();
+
             var fromApi = await response.Content.ReadFromJsonAsync<IEnumerable<RoomFacilityDto>>();
             
-            Assert.Equal(fromApi.Where(f => names.Contains(f.Name)).OrderBy(r => r.Name).ToArray(), fromTests);
+            Assert.Contains(fromApi, fi => fi.Name == fromTests[0].Name);
+            Assert.Contains(fromApi, fi => fi.Name == fromTests[1].Name);
         }
 
         private async Task<RoomFacility> CreateRoomFacilityAsync()

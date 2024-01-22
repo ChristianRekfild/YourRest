@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq.Expressions;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using System.Threading;
 using YourRest.Infrastructure.Core.Contracts.Entities;
 using YourRest.Infrastructure.Core.Contracts.Models;
 using YourRest.Infrastructure.Core.Contracts.Repositories;
@@ -25,6 +26,7 @@ namespace YourRest.Producer.Infrastructure.Repositories
             _mapper = mapper;
         }
 
+        #region AddAsync
         public async Task<TSource> AddAsync(
             TSource entity,
             bool saveChanges = true,
@@ -69,6 +71,73 @@ namespace YourRest.Producer.Infrastructure.Repositories
             return Task.CompletedTask;
         }
 
+        protected void SaveLinkedEntityProperty<TField>(TField field, string key, Dictionary<string, object> linkedEntity)
+            where TField : BaseEntity<int>
+        {
+            if (field != null)
+            {
+                linkedEntity[key] = field;
+                field = null;
+            }
+        }
+
+        protected void SaveLinkedEntityCollection<TField>(ICollection<TField> collection, string key, Dictionary<string, object> linkedEntity)
+            where TField : BaseEntity<int>
+        {
+            if (collection.Any())
+            {
+                linkedEntity[key] = collection;
+                collection = null;
+            }
+        }
+
+        protected async Task FillEntityCollection<TField>(Action<TField> addAction, string key, IReadOnlyDictionary<string, object> linkedEntity, CancellationToken cancellationToken)
+            where TField : BaseEntity<int>
+        {
+            if (linkedEntity.ContainsKey(key) && linkedEntity[key] != null)
+            {
+                await _dataContext.SaveChangesAsync(cancellationToken);
+
+                if (linkedEntity[key] is ICollection<TField> linkedCollection)
+                {                    
+                    var existedLinkedItemIds = linkedCollection
+                        .Where(r => r.Id > 0)
+                        .Select(r => r.Id);
+
+                    var existedRoomFacilities = await this._dataContext.Set<TField>()
+                        //.AsNoTracking()
+                        .Where(r => existedLinkedItemIds.Contains(r.Id))
+                        .ToListAsync();
+
+                    foreach (var room in existedRoomFacilities)
+                    {
+                        addAction(room);
+                    }
+                    foreach (var room in linkedCollection.Where(room => room.Id <= 0))
+                    {
+                        addAction(room);
+                    }
+                }
+            }
+        }
+
+        protected async Task FillEntityField<TField>(TField entityField, int entityFieldId, string key, IReadOnlyDictionary<string, object> linkedEntity, CancellationToken cancellationToken)
+             where TField : BaseEntity<int>
+        {
+            if (linkedEntity.ContainsKey(key) && linkedEntity[key] != null)
+            {
+                await _dataContext.SaveChangesAsync(cancellationToken);
+
+                if (linkedEntity[key] is TField item)
+                {
+                    if (entityFieldId <= 0 && item.Id <= 0)
+                    {
+                        entityField = item;
+                    }
+                }
+            }
+        }
+        #endregion
         public async Task AddRangeAsync(
             TSource[] entites,
             bool saveChanges = true,
@@ -87,12 +156,14 @@ namespace YourRest.Producer.Infrastructure.Repositories
         public async Task<IEnumerable<TSource>> FindAsync(
             Expression<Func<TSource, bool>> expression,
             CancellationToken cancellationToken = default)
-        {
-            return _mapper.Map<IEnumerable<TSource>>(
-                await _dataContext
+        {            
+            var expressionByEntity = expression.ToEntityExpression<TSource, TEntity>();
+            var entities = await _dataContext
                 .Set<TEntity>()
-                .Where(expression.ToEntityExpression<TSource, TEntity>())
-                .ToListAsync(cancellationToken)
+                .Where(expressionByEntity)
+                .ToListAsync(cancellationToken);
+            return _mapper.Map<IEnumerable<TSource>>(
+                entities
                 );
         }
 
@@ -167,11 +238,11 @@ namespace YourRest.Producer.Infrastructure.Repositories
             bool saveChanges = true,
             CancellationToken cancellationToken = default)
         {
-            var entity = await _dataContext.Set<TSource>().FindAsync(id, cancellationToken);
+            var entity = await _dataContext.Set<TEntity>().FindAsync(id, cancellationToken);
 
             if (entity != null)
             {
-                _dataContext.Set<TSource>().Remove(entity);
+                _dataContext.Set<TEntity>().Remove(entity);
 
                 if (saveChanges)
                 {

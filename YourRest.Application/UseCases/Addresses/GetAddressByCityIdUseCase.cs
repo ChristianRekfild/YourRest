@@ -17,6 +17,9 @@ namespace YourRest.Application.UseCases.Addresses
         }
 
         public async Task<IEnumerable<AddressWithIdDto>> ExecuteAsync(int cityId, CancellationToken cancellationToken)
-            => mapper.Map<IEnumerable<AddressWithIdDto>>(await addressRepository.FindAsync(a => a.CityId == cityId, cancellationToken));
+        {
+            var addresses = await addressRepository.FindAsync(a => a.CityId == cityId, cancellationToken);
+            return mapper.Map<IEnumerable<AddressWithIdDto>>(addresses);
+        }
     }
 }

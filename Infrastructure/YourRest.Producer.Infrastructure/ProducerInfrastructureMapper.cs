@@ -10,12 +10,12 @@ namespace YourRest.Producer.Infrastructure
         public ProducerInfrastructureMapper()
         {
             CreateMap<Accommodation, AccommodationDto>()
-                .ReverseMap()
+                .ReverseMap()/*
                 .ForMember(dest => dest.AccommodationFacilities, opt => opt.Ignore())
                 .ForMember(dest => dest.AccommodationType, opt => opt.Ignore())
                 .ForMember(dest => dest.Address, opt => opt.Ignore())
                 .ForMember(dest => dest.Rooms, opt => opt.Ignore())
-                .ForMember(dest => dest.StarRating, opt => opt.Ignore());
+                .ForMember(dest => dest.StarRating, opt => opt.Ignore())*/;
 
             CreateMap<AccommodationFacility, AccommodationFacilityDto>()
                 .ReverseMap()
@@ -41,8 +41,12 @@ namespace YourRest.Producer.Infrastructure
                .ReverseMap();
 
             CreateMap<Address, AddressDto>()
-                .ReverseMap()
-                .ForMember(dest => dest.City, opt => opt.Ignore());
+                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
+                .ReverseMap();
+
+                //.ForMember(dest => dest.City, opt => opt.Ignore())
+                //.ReverseMap()
+                //.ForMember(dest => dest.City, opt => opt.Ignore());
 
             CreateMap<Booking, BookingDto>()
                  .ReverseMap();
@@ -56,8 +60,8 @@ namespace YourRest.Producer.Infrastructure
                 .ForMember(dest => dest.Region, opt => opt.Ignore());
 
             CreateMap<Country, CountryDto>()
-                .ReverseMap()
-                .ForMember(dest => dest.Regions, opt => opt.Ignore());
+                .ReverseMap()/*
+                .ForMember(dest => dest.Regions, opt => opt.Ignore())*/;
 
             CreateMap<CustomerDto, Customer>()
                 .ReverseMap();
