@@ -111,6 +111,7 @@ namespace YourRest.Producer.Infrastructure.DbContexts
             RoomFacilities.RemoveRange(RoomFacilities);
             AccommodationFacility.RemoveRange(AccommodationFacility);
             RoomTypes.RemoveRange(RoomTypes);
+            // √де-то тут падает по ошибке
             AccommodationTypes.RemoveRange(AccommodationTypes);
             AgeRanges.RemoveRange(AgeRanges);
             AccommodationPhotos.RemoveRange(AccommodationPhotos);
