@@ -11,15 +11,18 @@ namespace YourRest.Application.UseCases
         private readonly IAccommodationTypeRepository _accommodationTypeRepository;
         private readonly IAccommodationRepository _accommodationRepository;
         private readonly IUserRepository _userRepository;
+        private readonly IUserAccommodationRepository _userAccommodationRepository;
 
         public CreateAccommodationUseCase(
             IAccommodationTypeRepository accommodationTypeRepository,
             IAccommodationRepository accommodationRepository,
-            IUserRepository userRepository
+            IUserRepository userRepository,
+            IUserAccommodationRepository userAccommodationRepository
         ) {
             _accommodationTypeRepository = accommodationTypeRepository;
             _accommodationRepository = accommodationRepository;
             _userRepository = userRepository;
+            _userAccommodationRepository = userAccommodationRepository;
         }
 
         public async Task<Dto.AccommodationDto> ExecuteAsync(CreateAccommodationDto accommodationDto, string userKeyCloakId, CancellationToken cancellationToken)
@@ -53,10 +56,10 @@ namespace YourRest.Application.UseCases
                 };
                 accommodation.StarRating = accommodationStarRating;
             }
-            
-            accommodation.UserAccommodations.Add(new UserAccommodationDto { User = user, Accommodation = accommodation });
 
-            var savedAccommodation = await _accommodationRepository.AddAsync(accommodation, cancellationToken:cancellationToken);
+            accommodation = await _accommodationRepository.AddAsync(accommodation, cancellationToken: cancellationToken);
+
+            var userAccommodationDto = await _userAccommodationRepository.AddAsync(new UserAccommodationDto { User = user, Accommodation = accommodation });
 
             var accommodationTypeDto = new Dto.AccommodationTypeDto()
             {
@@ -65,11 +68,11 @@ namespace YourRest.Application.UseCases
             };
             var savedAccommodationDto = new Dto.AccommodationDto()
             {
-                Id = savedAccommodation.Id,
-                Description = savedAccommodation.Description,
-                Name = savedAccommodation.Name,
+                Id = accommodation.Id,
+                Description = accommodation.Description,
+                Name = accommodation.Name,
                 AccommodationType = accommodationTypeDto,
-                Stars = savedAccommodation.StarRating?.Stars
+                Stars = accommodation.StarRating?.Stars
             };
 
             return savedAccommodationDto;

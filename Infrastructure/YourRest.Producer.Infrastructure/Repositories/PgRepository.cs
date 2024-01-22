@@ -86,8 +86,10 @@ namespace YourRest.Producer.Infrastructure.Repositories
         {
             if (collection.Any())
             {
-                linkedEntity[key] = collection;
-                collection = null;
+                var temp = new List<TField>();
+                temp.AddRange(collection);
+                linkedEntity[key] = temp;
+                collection.Clear();
             }
         }
 
@@ -101,21 +103,21 @@ namespace YourRest.Producer.Infrastructure.Repositories
                 if (linkedEntity[key] is ICollection<TField> linkedCollection)
                 {                    
                     var existedLinkedItemIds = linkedCollection
-                        .Where(r => r.Id > 0)
-                        .Select(r => r.Id);
+                        .Where(i => i.Id > 0)
+                        .Select(i => i.Id);
 
                     var existedRoomFacilities = await this._dataContext.Set<TField>()
                         //.AsNoTracking()
-                        .Where(r => existedLinkedItemIds.Contains(r.Id))
+                        .Where(i => existedLinkedItemIds.Contains(i.Id))
                         .ToListAsync();
 
-                    foreach (var room in existedRoomFacilities)
+                    foreach (var item in existedRoomFacilities)
                     {
-                        addAction(room);
+                        addAction(item);
                     }
-                    foreach (var room in linkedCollection.Where(room => room.Id <= 0))
+                    foreach (var item in linkedCollection.Where(i => i.Id <= 0))
                     {
-                        addAction(room);
+                        addAction(item);
                     }
                 }
             }

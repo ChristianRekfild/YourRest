@@ -51,7 +51,7 @@ namespace YourRest.Producer.Infrastructure.Repositories
                 h => h.UserAccommodations
             ));
         }
-
+                
         public async Task<IEnumerable<AccommodationDto>> GetAccommodationsWithFacilitiesAsync(int id, CancellationToken cancellationToken = default)
         {
             return _mapper.Map<IEnumerable<AccommodationDto>>(await _context.Accommodations

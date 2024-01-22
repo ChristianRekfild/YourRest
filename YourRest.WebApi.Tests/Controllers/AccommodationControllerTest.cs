@@ -155,6 +155,7 @@ namespace YourRest.WebApi.Tests.Controllers
                 CityId = -1
             };
             var content = new StringContent(JsonConvert.SerializeObject(addressDto), Encoding.UTF8, "application/json");
+           
             var response = await fixture.Client.PostAsync($"api/operators/accommodations/{accommodation.Id}/address", content);
             var errorData = await response.Content.ReadFromJsonAsync<ErrorViewModel>();
 
