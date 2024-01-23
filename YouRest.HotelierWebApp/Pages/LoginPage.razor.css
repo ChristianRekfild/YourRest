@@ -1,0 +1,68 @@
+﻿.row {
+    justify-content: center;
+    align-items: center;
+    object-fit: none;
+    overflow: hidden;
+}
+
+    .row img {
+        min-width: 100%;
+        height: 100vh;
+        padding: 0;
+        object-fit: cover;
+    }
+
+.login_form {
+    position: absolute;
+    width: 400px;
+    border-radius: 20px;
+}
+
+.modal-content {
+    border-radius: 20px;
+    border-color: rgba(80,80,80,0.5);
+    background-color: rgba(0,0,0,0.65);
+}
+
+::deep .form-control {
+    background-color: rgba(0,0,0,0.3);
+    border-color: rgba(110,110,110,0.9);
+    border-radius: 5px;
+    color: whitesmoke;
+}
+
+.form-floating label {
+    color: whitesmoke;
+}
+
+.modal-header, .modal-footer {
+    border-color: transparent;
+}
+
+.register_btn {
+    margin-right: 10px;
+    text-decoration: none;
+    color: whitesmoke;
+}
+
+    .register_btn:hover {
+        cursor: pointer;
+        text-decoration: underline;
+    }
+
+.enter_btn {
+    height: 40px;
+    width: 80px;
+    background-color: transparent;
+    color: whitesmoke;
+    border: 1px solid rgba(110,110,110,0.9);
+    border-radius: 5px;
+}
+
+    .enter_btn:hover {
+        border: 1px solid whitesmoke;
+    }
+
+.logout:hover {
+    cursor: pointer;
+}

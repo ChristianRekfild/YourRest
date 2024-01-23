@@ -66,7 +66,7 @@ namespace YourRest.WebApi.Controllers
             var hotels = await _fetchAccommodationsUseCase.ExecuteAsync(sub, fetchHotelsViewModel, HttpContext.RequestAborted);
             return Ok(hotels);
         }
-        
+
         [Authorize]
         [HttpPost]
         [Route("api/accommodation")]
@@ -80,7 +80,7 @@ namespace YourRest.WebApi.Controllers
             {
                 return NotFound("User not found");
             }
-            
+
             var createdAccommodation = await _createAccommodationUseCase.ExecuteAsync(accommodationExtendedDto, sub, HttpContext.RequestAborted);
             return CreatedAtAction(nameof(Post), createdAccommodation);
         }

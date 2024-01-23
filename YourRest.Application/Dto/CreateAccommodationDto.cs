@@ -7,7 +7,6 @@ namespace YourRest.Application.Dto
     {
         public string Name { get; set; }
         public int AccommodationTypeId { get; set; }
-        
         public int? Stars { get; set; }
         public string Description { get; set; }
     }

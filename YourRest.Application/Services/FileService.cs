@@ -2,6 +2,7 @@ using YourRest.Application.Dto;
 using YourRest.Application.Dto.Models;
 using Amazon.S3;
 using Amazon.S3.Model;
+using System.Text;
 
 namespace YourRest.Application.Services;
 
@@ -21,12 +22,18 @@ public class FileService: IFileService
         {
             return null;
         }
-
+        
+        //using MemoryStream stream = new MemoryStream();
+        //response.ResponseStream.CopyTo(stream);
+        //var b = stream.ToArray();
+        //var file = Convert.ToBase64String(b);
+        
         return new FileDto
         {
             Stream = response.ResponseStream,
             MimeType = response.Headers.ContentType,
-            FileName = Path.GetFileName(filePath)
+            FileName = Path.GetFileName(filePath),
+            Img = string.Empty
         };
     }
 
