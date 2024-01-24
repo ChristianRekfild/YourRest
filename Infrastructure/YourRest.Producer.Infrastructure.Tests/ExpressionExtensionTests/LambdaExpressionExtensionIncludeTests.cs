@@ -17,7 +17,7 @@ namespace YourRest.Producer.Infrastructure.Tests.ExpressionExtensionTests
             Debug.WriteLine("outcome: {0}, afterConvert: {1}", outcome.ToString(), qwe.ToString());
             Assert.Equal(outcome.ToString(), qwe.ToString());
         }
-
+        
         public static IEnumerable<object[]> IncludeFunctionDataData => new List<object[]>
         {
             new object[] { new AccommodationDto(), new Accommodation(), (Expression<Func<AccommodationDto, object>>)((AccommodationDto a) => a.Address), (Expression<Func<Accommodation, object>>)((Accommodation a) => a.Address) },

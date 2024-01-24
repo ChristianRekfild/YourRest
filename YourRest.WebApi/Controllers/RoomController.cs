@@ -47,7 +47,7 @@ namespace YourRest.WebApi.Controllers
         [Route("api/accommodations/{accommodationId}/rooms")]
         public async Task<IActionResult> GetAllRooms(int accommodationId)
         {
-            var regions = await _getRoomListUseCase.Execute(accommodationId, HttpContext.RequestAborted);
+            var regions = await _getRoomListUseCase.ExecuteAsync(accommodationId, HttpContext.RequestAborted);
             return Ok(regions);
         }
 

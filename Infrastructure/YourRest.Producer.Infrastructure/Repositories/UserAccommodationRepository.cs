@@ -17,9 +17,9 @@ namespace YourRest.Producer.Infrastructure.Repositories
         {
             Dictionary<string, object> linkedEntity = new();
                         
-            SaveLinkedEntityProperty(entity.Accommodation, "Accommodation", linkedEntity);
+            entity.Accommodation = SaveLinkedEntityProperty(entity.Accommodation, "Accommodation", linkedEntity);
 
-            SaveLinkedEntityProperty(entity.User, "User", linkedEntity);
+            entity.User = SaveLinkedEntityProperty(entity.User, "User", linkedEntity);
             
             IReadOnlyDictionary<string, object> result = linkedEntity;
             return result;

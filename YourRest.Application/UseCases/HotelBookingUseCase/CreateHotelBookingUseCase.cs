@@ -44,18 +44,32 @@ namespace YourRest.Application.UseCases.HotelBookingUseCase
                 }
             }
 
-            foreach (var room in rooms)
-            {
-                var alreadyHaveBooking = await bookingRepository.FindAnyAsync(x => x.Rooms.Contains(room) && 
+            //foreach (var room in rooms)
+            //{
+            //    var alreadyHaveBooking = await bookingRepository.FindAnyAsync(x => //x.Rooms.Contains(room) && 
+            //        ((x.StartDate <= bookingDto.StartDate && bookingDto.StartDate < x.EndDate) ||
+            //        (x.StartDate < bookingDto.EndDate && bookingDto.EndDate < x.EndDate) ||
+            //        (bookingDto.StartDate <= x.StartDate && x.EndDate <= bookingDto.EndDate)), token);
+
+            //    if (alreadyHaveBooking)
+            //    {
+            //        throw new InvalidParameterException("Бронирование на выбранные даты невозможно. Комната занята.");
+            //    }
+            //}
+
+                var bookings = await bookingRepository.FindAsync(x => //x.Rooms.Contains(room) && 
                     ((x.StartDate <= bookingDto.StartDate && bookingDto.StartDate < x.EndDate) ||
                     (x.StartDate < bookingDto.EndDate && bookingDto.EndDate < x.EndDate) ||
                     (bookingDto.StartDate <= x.StartDate && x.EndDate <= bookingDto.EndDate)), token);
+            var roomIds = bookings.SelectMany(b => b.Rooms).Select(r => r.Id);
 
-                if (alreadyHaveBooking)
+            foreach (var roomId in bookingDto.Rooms)
+            {
+                if (roomIds.Contains(roomId))
                 {
                     throw new InvalidParameterException("Бронирование на выбранные даты невозможно. Комната занята.");
                 }
-            }
+            }            
 
             var customer = await customerRepository.AddAsync(
                 new CustomerDto() 
@@ -82,7 +96,8 @@ namespace YourRest.Application.UseCases.HotelBookingUseCase
                     
             };
            
-            var savedHotelBooking = await bookingRepository.AddAsync(hotelBookingToInsert, true, token);
+            var savedHotelBooking1 = await bookingRepository.AddAsync(hotelBookingToInsert, true, token);
+            var savedHotelBooking = (await bookingRepository.GetWithIncludeAsync(b => b.Id == savedHotelBooking1.Id, token, b => b.Customer, b => b.Rooms)).FirstOrDefault();
             var bookingWithIdDto = new BookingWithIdDto()
             {
                 Id = savedHotelBooking.Id,

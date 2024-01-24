@@ -71,14 +71,14 @@ namespace YourRest.Producer.Infrastructure.Repositories
             return Task.CompletedTask;
         }
 
-        protected void SaveLinkedEntityProperty<TField>(TField field, string key, Dictionary<string, object> linkedEntity)
+        protected TField SaveLinkedEntityProperty<TField>(TField field, string key, Dictionary<string, object> linkedEntity)
             where TField : BaseEntity<int>
         {
             if (field != null)
             {
                 linkedEntity[key] = field;
-                field = null;
             }
+            return null;
         }
 
         protected void SaveLinkedEntityCollection<TField>(ICollection<TField> collection, string key, Dictionary<string, object> linkedEntity)

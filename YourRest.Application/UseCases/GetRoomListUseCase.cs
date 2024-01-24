@@ -13,7 +13,7 @@ namespace YourRest.Application.UseCases
             _roomRepository = roomRepository;
         }
 
-        public async Task<IEnumerable<RoomWithIdDto>> Execute(int accommodationId, CancellationToken cancellationToken)
+        public async Task<IEnumerable<RoomWithIdDto>> ExecuteAsync(int accommodationId, CancellationToken cancellationToken)
         {
             var rooms = await _roomRepository.GetWithIncludeAsync(
                 room => room.AccommodationId == accommodationId,
@@ -26,7 +26,7 @@ namespace YourRest.Application.UseCases
                 Id = r.Id,
                 Name = r.Name,
                 SquareInMeter = r.SquareInMeter,
-                RoomTypeId = r.RoomType.Id,
+                RoomTypeId = r.RoomTypeId,
                 Capacity = r.Capacity
 
             }).ToList();

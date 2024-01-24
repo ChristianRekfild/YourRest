@@ -17,80 +17,25 @@ namespace YourRest.Producer.Infrastructure.Repositories
         protected override IReadOnlyDictionary<string, object> DetachLinkedEntityAsync(Room entity)
         {
             Dictionary<string, object> linkedEntity = new();
-           
-            if (entity.Accommodation != null)
-            {
-                linkedEntity["Accommodation"] = entity.Accommodation;
-                entity.Accommodation = null;
-            }
 
-            if (entity.RoomFacilities.Any())
-            {
-                linkedEntity["RoomFacilities"] = entity.RoomFacilities;
-                entity.RoomFacilities = null;
-            }
+            entity.Accommodation = SaveLinkedEntityProperty(entity.Accommodation, "Accommodation", linkedEntity);
+
+            SaveLinkedEntityCollection(entity.RoomFacilities, "RoomFacilities", linkedEntity);
+
+            entity.RoomType = SaveLinkedEntityProperty(entity.RoomType, "RoomType", linkedEntity);
             
-            if (entity.RoomType != null)
-            {
-                linkedEntity["RoomType"] = entity.RoomType;
-                entity.RoomType = null;
-            }
             IReadOnlyDictionary<string, object> result = linkedEntity;
             return result;
         }
 
         protected override async Task AttachLinkedEntityAsync(Room entity, IReadOnlyDictionary<string, object> linkedEntity, CancellationToken cancellationToken)
         {
-            if (linkedEntity.ContainsKey("Accommodation") && linkedEntity["Accommodation"] != null)
-            {
-                await _dataContext.SaveChangesAsync(cancellationToken);
-                if (linkedEntity["Accommodation"] is Accommodation accommodation)
-                {
-                    if (entity.AccommodationId <= 0 && accommodation.Id <= 0)
-                    {
-                        entity.Accommodation = accommodation;
-                    }
-                }
-            }
+            await FillEntityField(entity.Accommodation, entity.AccommodationId, "Accommodation", linkedEntity, cancellationToken);
 
-            if (linkedEntity.ContainsKey("RoomFacilities") && linkedEntity["RoomFacilities"] != null)
-            {
-                await _dataContext.SaveChangesAsync(cancellationToken);
+            entity.RoomFacilities = new List<RoomFacility>();
+            await FillEntityCollection(delegate (RoomFacility item) { entity.RoomFacilities.Add(item); }, "RoomFacilities", linkedEntity, cancellationToken);
 
-                if (linkedEntity["RoomFacilities"] is ICollection<RoomFacility> roomFacilities)
-                {
-                    entity.RoomFacilities = new List<RoomFacility>();
-                    var existedRoomFacilityIds = roomFacilities
-                        .Where(r => r.Id > 0)
-                        .Select(r => r.Id);
-
-                    var existedRoomFacilities = await this._dataContext.Set<RoomFacility>()
-                        //.AsNoTracking()
-                        .Where(r => existedRoomFacilityIds.Contains(r.Id))
-                        .ToListAsync();
-
-                    foreach (var room in existedRoomFacilities)
-                    {
-                        entity.RoomFacilities.Add(room);
-                    }
-                    foreach (var room in roomFacilities.Where(room => room.Id <= 0))
-                    {
-                        entity.RoomFacilities.Add(room);
-                    }
-                }
-            }
-
-            if (linkedEntity.ContainsKey("RoomType") && linkedEntity["RoomType"] != null)
-            {
-                await _dataContext.SaveChangesAsync(cancellationToken);
-                if (linkedEntity["RoomType"] is RoomType roomType)
-                {
-                    if(entity.RoomTypeId <= 0 && roomType.Id <= 0)
-                    {
-                        entity.RoomType = roomType;
-                    }
-                }
-            }
+            await FillEntityField(entity.RoomType, entity.RoomTypeId, "RoomType", linkedEntity, cancellationToken);            
         }
         #endregion
 

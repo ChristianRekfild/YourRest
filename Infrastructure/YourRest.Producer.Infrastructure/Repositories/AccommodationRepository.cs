@@ -68,13 +68,13 @@ namespace YourRest.Producer.Infrastructure.Repositories
 
             SaveLinkedEntityCollection(entity.AccommodationFacilities, "AccommodationFacilities", linkedEntity);
 
-            SaveLinkedEntityProperty(entity.AccommodationType, "AccommodationType", linkedEntity);
+            entity.AccommodationType = SaveLinkedEntityProperty(entity.AccommodationType, "AccommodationType", linkedEntity);
 
-            SaveLinkedEntityProperty(entity.Address, "Address", linkedEntity);
+            entity.Address = SaveLinkedEntityProperty(entity.Address, "Address", linkedEntity);
 
             SaveLinkedEntityCollection(entity.Rooms, "Rooms", linkedEntity);
 
-            SaveLinkedEntityProperty(entity.StarRating, "StarRating", linkedEntity);
+            entity.StarRating = SaveLinkedEntityProperty(entity.StarRating, "StarRating", linkedEntity);
 
             SaveLinkedEntityCollection(entity.UserAccommodations, "UserAccommodations", linkedEntity);
            
