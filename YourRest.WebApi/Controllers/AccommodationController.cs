@@ -13,6 +13,7 @@ using YourRest.Domain.Entities;
 using YourRest.Application.Interfaces.Room;
 using YourRest.Application.Interfaces.Accommodations;
 using YourRest.WebApi.Models;
+using NpgsqlTypes;
 
 
 namespace YourRest.WebApi.Controllers
@@ -106,8 +107,8 @@ namespace YourRest.WebApi.Controllers
         }
 
         [HttpPut]
-        [Route("api/accommodations/{accommodationId}")]
-        public async Task<IActionResult> Put([FromBody] CreateAccommodationDto accommodationEdit, [FromRoute] int accommodationId)
+        [Route("api/accommodations/{accommodationId}", Name = "EditAccommodation")]
+        public async Task<IActionResult> Put([FromRoute] int accommodationId , [FromBody] CreateAccommodationDto accommodationEdit)
         {
             return Ok(await _editAccommodationUseCase.ExecuteAsync(accommodationEdit, accommodationId, HttpContext.RequestAborted));
         }

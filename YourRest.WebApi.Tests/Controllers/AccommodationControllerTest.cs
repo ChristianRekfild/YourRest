@@ -647,7 +647,7 @@ namespace YourRest.WebApi.Tests.Controllers
                 CityId = city.Id
             });
 
-            var accommodation1 = await fixture.InsertObjectIntoDatabase(new Accommodation
+            Accommodation accommodation1 = await fixture.InsertObjectIntoDatabase(new Accommodation
             {
                 Name = "FirstHotel",
                 AccommodationTypeId = accType.Id,
@@ -661,7 +661,7 @@ namespace YourRest.WebApi.Tests.Controllers
                     new Room { Name = "340", Capacity = 21, SquareInMeter = 10, RoomType = new RoomType { Name = "Test 2" } }
                 }
             });
-            var accommodation2 = await fixture.InsertObjectIntoDatabase(new Accommodation
+            Accommodation accommodation2 = await fixture.InsertObjectIntoDatabase(new Accommodation
             {
                 Name = "SecondHotel",
                 AccommodationTypeId = accType.Id,
@@ -685,10 +685,11 @@ namespace YourRest.WebApi.Tests.Controllers
             };
 
             var content = new StringContent(JsonConvert.SerializeObject(accommodationChanges), Encoding.UTF8, "application/json");
-            var responsePut = await fixture.Client.PutAsync($"api/accommodations/{accommodation1.Id}", content);
+            var responsePut = await fixture.Client.PutAsync($"api/accommodations/{accommodation2.Id}", content);
+
             Assert.Equal(HttpStatusCode.OK, responsePut.StatusCode);
 
-            var responseGet1 = await fixture.Client.GetAsync($"api/accommodations/{accommodation1.Id}");
+            var responseGet1 = await fixture.Client.GetAsync($"api/accommodations/{accommodation2.Id}");
             Assert.Equal(HttpStatusCode.OK, responseGet1.StatusCode);
 
             var responseString1 = await responseGet1.Content.ReadAsStringAsync();
