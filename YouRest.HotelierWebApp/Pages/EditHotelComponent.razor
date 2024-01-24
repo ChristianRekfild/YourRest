@@ -1,4 +1,5 @@
 ﻿@page "/hotels/edit"
+@attribute [Authorize]
 <div class="container-fluid">
     <div class="row">
         <h4> Редактирование отеля в системе YouRest</h4>
@@ -18,7 +19,7 @@
                     {
                         <option selected>@EditHotelViewModel.Country</option>
                     }
-                    @foreach (CountryViewModel country in Countries)
+                    @foreach (CountryModel country in Countries)
                     {
                         <option>@country.Name</option>
                     }
@@ -35,7 +36,7 @@
                     {
                         <option selected>@EditHotelViewModel.Region</option>
                     }
-                    @foreach (RegionViewModel region in Regions)
+                    @foreach (RegionModel region in Regions)
                     {
                         <option>@region.Name</option>
                     }
@@ -53,7 +54,7 @@
                     {
                         <option selected>@EditHotelViewModel.City</option>
                     }
-                    @foreach (CityViewModel city in Cities)
+                    @foreach (CityModel city in Cities)
                     {
                         <option>@city.Name</option>
                     }
@@ -85,7 +86,7 @@
                     {
                         <option selected>@EditHotelViewModel.HotelType</option>
                     }
-                    @foreach (HotelTypeViewModel hotelType in HotelTypes)
+                    @foreach (HotelTypeModel hotelType in HotelTypes)
                     {
                         <option>@hotelType.Name</option>
                     }

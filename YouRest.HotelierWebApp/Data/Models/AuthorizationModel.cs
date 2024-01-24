@@ -1,8 +1,8 @@
 ﻿using FluentValidation;
 
-namespace YouRest.HotelierWebApp.Data.ViewModels
+namespace YouRest.HotelierWebApp.Data.Models
 {
-    public class AuthorizationViewModel
+    public class AuthorizationModel
     {
         public string Username { get; set; }
         public string Password { get; set; }

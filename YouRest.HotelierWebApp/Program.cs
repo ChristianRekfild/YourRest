@@ -1,21 +1,24 @@
 using FluentValidation;
 using Microsoft.AspNetCore.Components.Authorization;
 using System.Globalization;
+using YouRest.HotelierWebApp.Data.Models.Validators;
 using YouRest.HotelierWebApp.Data.Providers;
 using YouRest.HotelierWebApp.Data.Services;
-using YouRest.HotelierWebApp.Data.ViewModels.Validators;
+using YouRest.HotelierWebApp.Data.ViewModels;
 
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddHttpClient();
+builder.Services.AddHotelierViewModels();
 builder.Services.AddHotelierWebAppServices();
 ValidatorOptions.Global.LanguageManager.Culture = new CultureInfo("ru");
-builder.Services.AddValidatorsFromAssemblyContaining<AuthorizationViewModelValidator>();
+builder.Services.AddValidatorsFromAssemblyContaining<AuthorizationModelValidator>();
 
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
+builder.Services.AddBlazorBootstrap();
 builder.Services.AddOptions();
 builder.Services.AddAuthorizationCore();
 builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthValidateProvider>();

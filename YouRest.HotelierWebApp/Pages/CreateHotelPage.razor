@@ -1,4 +1,5 @@
 ﻿@page "/hotels/create"
+@attribute [Authorize]
 <div class="container-fluid">
     <div class="row">
         <h4> Добавление отеля в систему YouRest</h4>
@@ -14,7 +15,7 @@
                     {
                         <option selected>Выберите страну</option>
                     }
-                    @foreach (CountryViewModel country in Countries)
+                    @foreach (CountryModel country in Countries)
                     {
                         <option>@country.Name</option>
                     }
@@ -27,7 +28,7 @@
                     {
                         <option selected>Выберите регион</option>
                     }
-                    @foreach (RegionViewModel region in Regions)
+                    @foreach (RegionModel region in Regions)
                     {
                         <option>@region.Name</option>
                     }
@@ -41,7 +42,7 @@
                     {
                         <option selected>Выберите населенный пункт</option>
                     }
-                    @foreach (CityViewModel city in Cities)
+                    @foreach (CityModel city in Cities)
                     {
                         <option>@city.Name</option>
                     }
@@ -69,7 +70,7 @@
                     {
                         <option selected>Выберите тип</option>
                     }
-                    @foreach (HotelTypeViewModel hotelType in HotelTypes)
+                    @foreach (HotelTypeModel hotelType in HotelTypes)
                     {
                         <option>@hotelType.Name</option>
                     }
@@ -95,7 +96,11 @@
             }
         </EditForm>
     </div>
-    <div class="row row_btn justify-content-end">
-            <div class="create_btn" @onclick="CreateHotel"> Создать Отель </div>
+    <div class="row">
+        <div class="col-12 d-flex justify-content-end">
+            <Button class="create_btn" @onclick="CreateHotel" Color="ButtonColor.Primary" Size="Size.Medium" Outline="true">
+                <Icon Name="IconName.PlusLg" /> Создать Отель
+            </Button>
+        </div>
     </div>
 </div>

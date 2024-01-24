@@ -1,6 +1,6 @@
 ﻿@page "/hotels/{CurrentHotelId:int}"
-<h3>CurrentHotelPage</h3>
+@attribute [Authorize]
 
-@code {
-    [Parameter] public int CurrentHotelId { get; set; }
-}
+<h3>CurrentHotelPage</h3>
+<h5>@HotelViewModel.CurrentHotel.Name</h5>
+<h5>@HotelViewModel.CurrentHotel.Address?.Street</h5>

@@ -1,8 +1,9 @@
-﻿using Blazored.FluentValidation;
+﻿using BlazorBootstrap;
+using Blazored.FluentValidation;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
+using YouRest.HotelierWebApp.Data.Models;
 using YouRest.HotelierWebApp.Data.Services.Abstractions;
-using YouRest.HotelierWebApp.Data.ViewModels;
 
 namespace YouRest.HotelierWebApp.Pages
 {
@@ -12,7 +13,7 @@ namespace YouRest.HotelierWebApp.Pages
         protected CancellationTokenSource _tokenSource = new();
         protected string inputFileId = Guid.NewGuid().ToString();
         public FluentValidationValidator? CreateFormValidator { get; set; }
-        public CreateHotelViewModel CreateHotelViewModel { get; set; } = new();
+        public CreateHotelModel CreateHotelViewModel { get; set; } = new();
         #endregion
 
         #region Dependeny Injections
@@ -26,10 +27,12 @@ namespace YouRest.HotelierWebApp.Pages
         [Inject] public NavigationManager Navigation { get; set; }
         #endregion
 
-        [Parameter] public IEnumerable<CountryViewModel> Countries { get; set; } = new List<CountryViewModel>();
-        [Parameter] public IEnumerable<RegionViewModel> Regions { get; set; } = new List<RegionViewModel>();
-        [Parameter] public IEnumerable<CityViewModel> Cities { get; set; } = new List<CityViewModel>();
-        [Parameter] public IEnumerable<HotelTypeViewModel> HotelTypes { get; set; } = new List<HotelTypeViewModel>();
+        [Parameter] public IEnumerable<CountryModel> Countries { get; set; } = new List<CountryModel>();
+        [Parameter] public IEnumerable<RegionModel> Regions { get; set; } = new List<RegionModel>();
+        [Parameter] public IEnumerable<CityModel> Cities { get; set; } = new List<CityModel>();
+        [Parameter] public IEnumerable<HotelTypeModel> HotelTypes { get; set; } = new List<HotelTypeModel>();
+
+        
 
         protected async override Task OnInitializedAsync()
         {
@@ -46,7 +49,7 @@ namespace YouRest.HotelierWebApp.Pages
             if (await CreateFormValidator!.ValidateAsync())
             {
                 var createdHotel = await HotelService.CreateHotelAsync(
-                    new HotelViewModel()
+                    new HotelModel()
                     {
                         AccommodationTypeId = HotelTypes.Single(x => x.Name == CreateHotelViewModel.HotelType).Id,
                         Name = CreateHotelViewModel.HotelName,
@@ -56,7 +59,7 @@ namespace YouRest.HotelierWebApp.Pages
                 _tokenSource.Token);
 
                 await AddressService.CreateAddressAsync(
-                    new AddressViewModel()
+                    new AddressModel()
                     {
                         CityId = Cities.Single(s => s.Name == CreateHotelViewModel.City).Id,
                         Street = CreateHotelViewModel.Address,
@@ -64,7 +67,7 @@ namespace YouRest.HotelierWebApp.Pages
                     }, createdHotel.Id,
                 _tokenSource.Token);
 
-                CreateHotelViewModel = new CreateHotelViewModel();
+                CreateHotelViewModel = new CreateHotelModel();
                 Navigation.NavigateTo("/hotels");
             }
         }

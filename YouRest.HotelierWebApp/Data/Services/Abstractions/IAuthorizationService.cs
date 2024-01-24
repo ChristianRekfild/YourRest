@@ -1,10 +1,10 @@
-﻿using YouRest.HotelierWebApp.Data.ViewModels;
+﻿using YouRest.HotelierWebApp.Data.Models;
 
 namespace YouRest.HotelierWebApp.Data.Services.Abstractions
 {
     public interface IAuthorizationService
     {
-        Task<HttpResponseMessage> LoginAsync(AuthorizationViewModel login, CancellationToken cancellationToken = default);
-        Task<HttpResponseMessage> RegistrationAsync(RegistrationViewModel registration, CancellationToken cancellationToken = default);
+        Task<HttpResponseMessage> LoginAsync(AuthorizationModel login, CancellationToken cancellationToken = default);
+        Task<HttpResponseMessage> RegistrationAsync(RegistrationModel registration, CancellationToken cancellationToken = default);
     }
 }

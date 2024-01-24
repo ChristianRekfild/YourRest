@@ -1,4 +1,4 @@
-.page {
+/*.page {
     position: relative;
     display: flex;
     flex-direction: column;
@@ -72,6 +72,13 @@ main {
 }
 .oi-account-logout{
     font-size: 16pt;
+}*/
+.bb-top-row {
+    background-color: white;
+    border-bottom-color: rgb(194,192,192);
 }
-
+::deep .navBtn :first-child{
+    
+    background-color:red;
+}
 

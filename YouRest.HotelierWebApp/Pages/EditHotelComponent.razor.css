@@ -21,6 +21,6 @@
     color: #333;
 }
 
-.row_btn {
-    margin-top: 50px;
+::deep .row {
+    margin-top: 2%;
 }

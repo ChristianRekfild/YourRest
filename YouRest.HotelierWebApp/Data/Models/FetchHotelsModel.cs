@@ -1,6 +1,6 @@
-﻿namespace YouRest.HotelierWebApp.Data.ViewModels
+﻿namespace YouRest.HotelierWebApp.Data.Models
 {
-    public class FetchHotelsViewModel
+    public class FetchHotelsModel
     {
         public List<int>? CountryIds { get; set; } = null;
         public List<int>? CityIds { get; set; } = null;

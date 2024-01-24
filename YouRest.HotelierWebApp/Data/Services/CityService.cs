@@ -1,6 +1,6 @@
 ﻿using System.Net.Http;
+using YouRest.HotelierWebApp.Data.Models;
 using YouRest.HotelierWebApp.Data.Services.Abstractions;
-using YouRest.HotelierWebApp.Data.ViewModels;
 
 namespace YouRest.HotelierWebApp.Data.Services
 {
@@ -14,16 +14,16 @@ namespace YouRest.HotelierWebApp.Data.Services
             httpClient = httpClientFactory.CreateClient();
             WebApiUrl = configuration.GetSection("webApiUrl").Value;
         }
-        public async Task<CityViewModel> FetchCytiAsync(int id, CancellationToken cancellationToken = default)
+        public async Task<CityModel> FetchCytiAsync(int id, CancellationToken cancellationToken = default)
         {
             var response = await httpClient.GetAsync($"{WebApiUrl}/api/cities/{id}", cancellationToken);
-            return await response.Content.ReadFromJsonAsync<CityViewModel>();
+            return await response.Content.ReadFromJsonAsync<CityModel>();
         }
 
-        public async Task<IEnumerable<CityViewModel>> FetchCytiesAsync(CancellationToken cancellationToken = default)
+        public async Task<IEnumerable<CityModel>> FetchCytiesAsync(CancellationToken cancellationToken = default)
         {
             var response = await httpClient.GetAsync($"{WebApiUrl}/api/cities", cancellationToken);
-            return await response.Content.ReadFromJsonAsync<IEnumerable<CityViewModel>>();
+            return await response.Content.ReadFromJsonAsync<IEnumerable<CityModel>>();
         }
     }
 }

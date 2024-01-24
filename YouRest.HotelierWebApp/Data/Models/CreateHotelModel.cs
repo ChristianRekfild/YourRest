@@ -1,6 +1,6 @@
-﻿namespace YouRest.HotelierWebApp.Data.ViewModels
+﻿namespace YouRest.HotelierWebApp.Data.Models
 {
-    public class CreateHotelViewModel
+    public class CreateHotelModel
     {
         public string Country { get; set; }
         public string Region { get; set; }

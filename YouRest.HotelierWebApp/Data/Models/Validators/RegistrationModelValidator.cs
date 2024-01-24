@@ -1,10 +1,10 @@
 ﻿using FluentValidation;
 
-namespace YouRest.HotelierWebApp.Data.ViewModels.Validators
+namespace YouRest.HotelierWebApp.Data.Models.Validators
 {
-    public class RegistrationViewModelValidator: AbstractValidator<RegistrationViewModel>
+    public class RegistrationModelValidator : AbstractValidator<RegistrationModel>
     {
-        public RegistrationViewModelValidator()
+        public RegistrationModelValidator()
         {
             RuleFor(r => r.Email).NotEmpty().EmailAddress();
             RuleFor(r => r.Password).NotEmpty().Length(6);

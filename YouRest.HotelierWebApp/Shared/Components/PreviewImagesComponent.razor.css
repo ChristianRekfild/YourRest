@@ -33,14 +33,8 @@
     border-top-right-radius:5px
 }
 
-span {
-    margin-top: 5px;
-    display: none;
-    font-size: 18px;
-}
 
-.removeBtn:hover span {
-    display: block;
+::deep .removeBtn:hover .icon  {
     cursor: pointer;
-    color: red;
+    color: red !important;
 }

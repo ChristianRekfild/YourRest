@@ -7,7 +7,7 @@
         <th scope="col">Управление</th>
     </tr>
     </thead>
-    @foreach (HotelViewModel hotel in Hotels)
+    @foreach (HotelModel hotel in Hotels)
     {
         <tr class="tab_row">
 
@@ -24,7 +24,7 @@
                         @onclick="@NavigateToEdit"
                         @onmouseover="@MouseOverOfEditBtn"
                         @onmouseout="@MouseOutOfEditBtn">
-                        <i class="oi oi-pencil control_item @Edit"></i>
+                        <Icon class="@Edit" Size="IconSize.x4" Name="IconName.PencilFill" />
                     </li>
                     <li data-bs-toggle="tooltip"
                         data-bs-placement="right"
@@ -32,7 +32,7 @@
                         @onclick="() => OnRemove(hotel)"
                         @onmouseover="@MouseOverOfRemoveBtn"
                         @onmouseout="@MouseOutOfRemoveBtn">
-                        <i class="oi oi-trash control_item @Remove"></i>
+                        <Icon class="@Remove" Size="IconSize.x4" Name="IconName.TrashFill" />
                     </li>
                 </ul>
             </td>

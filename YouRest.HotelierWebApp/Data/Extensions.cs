@@ -3,7 +3,7 @@ using IdentityModel.Client;
 using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
 using System.IdentityModel.Tokens.Jwt;
 using System.Runtime.CompilerServices;
-using YouRest.HotelierWebApp.Data.ViewModels;
+using YouRest.HotelierWebApp.Data.Models;
 
 namespace YouRest.HotelierWebApp.Data
 {
@@ -11,7 +11,7 @@ namespace YouRest.HotelierWebApp.Data
     {
         public static async Task<HttpClient> SetAccessToken(this HttpClient client, ProtectedLocalStorage localStorage)
         {
-            var securityToken = await localStorage.GetAsync<SecurityTokenViewModel>(nameof(SecurityTokenViewModel));
+            var securityToken = await localStorage.GetAsync<SecurityTokenModel>(nameof(SecurityTokenModel));
             if (securityToken.Success && !string.IsNullOrEmpty(securityToken.Value?.AccessToken))
                 client.SetBearerToken(securityToken.Value.AccessToken);
             return client;

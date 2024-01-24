@@ -5,8 +5,8 @@ using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
 using System.IdentityModel.Tokens.Jwt;
 using System.Net;
 using YouRest.HotelierWebApp.Data;
+using YouRest.HotelierWebApp.Data.Models;
 using YouRest.HotelierWebApp.Data.Services.Abstractions;
-using YouRest.HotelierWebApp.Data.ViewModels;
 
 namespace YouRest.HotelierWebApp.Pages
 {
@@ -14,7 +14,7 @@ namespace YouRest.HotelierWebApp.Pages
     {
         #region Fields and Properties
         protected CancellationTokenSource tokenSource = new();
-        public RegistrationViewModel RegistrationData { get; set; } = new();
+        public RegistrationModel RegistrationData { get; set; } = new();
         public FluentValidationValidator? RegisterFormValidator { get; set; }
         [Parameter] public EventCallback OnLoginPage { get; set; }  
         #endregion
@@ -32,14 +32,14 @@ namespace YouRest.HotelierWebApp.Pages
                 var response = await AuthorizationService.RegistrationAsync(RegistrationData, tokenSource.Token);
                 if (response.StatusCode == HttpStatusCode.OK)
                 {
-                    var securityToken = (await response.Content.ReadFromJsonAsync<SecurityTokenViewModel>(cancellationToken: tokenSource.Token));
+                    var securityToken = (await response.Content.ReadFromJsonAsync<SecurityTokenModel>(cancellationToken: tokenSource.Token));
                     if (!string.IsNullOrEmpty(securityToken.AccessToken))
                     {
                         var jwtSecurity = new JwtSecurityToken(securityToken.AccessToken);
                         securityToken.UserName = jwtSecurity.GetJWTClaim(JwtClaimTypes.Subject);
                         securityToken.ExpiredAt = jwtSecurity.GetJWTClaim(JwtClaimTypes.Expiration)?.UnixExpirationTimeToLocalDateTime();
-                        await LocalStorage.SetAsync(nameof(SecurityTokenViewModel), securityToken);
-                        RegistrationData = new RegistrationViewModel();
+                        await LocalStorage.SetAsync(nameof(SecurityTokenModel), securityToken);
+                        RegistrationData = new RegistrationModel();
                         Navigation.NavigateTo("/", true);
                     }
                 }

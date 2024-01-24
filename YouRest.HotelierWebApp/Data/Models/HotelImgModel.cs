@@ -1,6 +1,6 @@
-﻿namespace YouRest.HotelierWebApp.Data.ViewModels
+﻿namespace YouRest.HotelierWebApp.Data.Models
 {
-    public class HotelImgViewModel
+    public class HotelImgModel
     {
         public int AccommodationId { get; set; }
         public string Photo { get; set; }

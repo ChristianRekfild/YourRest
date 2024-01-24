@@ -1,4 +1,5 @@
 ﻿using YouRest.HotelierWebApp.Data.Services.Abstractions;
+using YouRest.HotelierWebApp.Data.ViewModels;
 
 namespace YouRest.HotelierWebApp.Data.Services
 {
