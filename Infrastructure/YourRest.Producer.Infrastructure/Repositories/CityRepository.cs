@@ -1,12 +1,13 @@
-﻿using YourRest.Domain.Entities;
-using YourRest.Domain.Repositories;
-using YourRest.Infrastructure.Core.DbContexts;
-using YourRest.Infrastructure.Core.Repositories;
+﻿using AutoMapper;
+using YourRest.Infrastructure.Core.Contracts.Models;
+using YourRest.Infrastructure.Core.Contracts.Repositories;
+using YourRest.Producer.Infrastructure.DbContexts;
+using YourRest.Producer.Infrastructure.Entities;
 
 namespace YourRest.Producer.Infrastructure.Repositories
 {
-    public class CityRepository : PgRepository<City, int>, ICityRepository
+    public class CityRepository : PgRepository<City, int, CityDto>, ICityRepository
     {
-        public CityRepository(SharedDbContext dataContext) : base(dataContext) { }
+        public CityRepository(SharedDbContext dataContext, IMapper mapper) : base(dataContext, mapper) { }
     }
 }

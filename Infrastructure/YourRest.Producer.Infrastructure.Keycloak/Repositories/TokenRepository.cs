@@ -1,9 +1,9 @@
+using Microsoft.Extensions.Options;
+using Newtonsoft.Json;
 using System.Net.Http.Headers;
 using System.Text;
-using Microsoft.Extensions.Options;
-using YourRest.Domain.Repositories;
-using YourRest.Domain.Models;
-using Newtonsoft.Json;
+using YourRest.Infrastructure.Core.Contracts.AuthModels;
+using YourRest.Infrastructure.Core.Contracts.Repositories;
 using YourRest.Producer.Infrastructure.Keycloak.Http;
 using YourRest.Producer.Infrastructure.Keycloak.Settings;
 
@@ -25,7 +25,7 @@ namespace YourRest.Producer.Infrastructure.Keycloak.Repositories
             _clientSecret = settings.Value.ClientSecret;
             _realmName = settings.Value.RealmName;
         }
-        public async Task<Token> GetTokenAsync(string username, string password)
+        public async Task<TokenDto> GetTokenAsync(string username, string password)
         {
             using var httpClient = GetConfiguredHttpClient();
 
@@ -42,10 +42,10 @@ namespace YourRest.Producer.Infrastructure.Keycloak.Repositories
             response.EnsureSuccessStatusCode();
 
             var result = await response.Content.ReadAsStringAsync();
-            return JsonConvert.DeserializeObject<Token>(result);
+            return JsonConvert.DeserializeObject<TokenDto>(result);
         }
         
-        public async Task<Token> GetAdminTokenAsync(CancellationToken cancellationToken = default)
+        public async Task<TokenDto> GetAdminTokenAsync(CancellationToken cancellationToken = default)
         {
             using var httpClient = GetConfiguredHttpClient();
 
@@ -60,7 +60,7 @@ namespace YourRest.Producer.Infrastructure.Keycloak.Repositories
             response.EnsureSuccessStatusCode();
 
             var result = await response.Content.ReadAsStringAsync();
-            return JsonConvert.DeserializeObject<Token>(result);
+            return JsonConvert.DeserializeObject<TokenDto>(result);
         }
         
         public async Task CreateRealm(string adminToken, string realmName)
@@ -128,7 +128,7 @@ namespace YourRest.Producer.Infrastructure.Keycloak.Repositories
             var searchResponse = await httpClient.GetAsync(searchUrl);
             searchResponse.EnsureSuccessStatusCode();
 
-            var users = JsonConvert.DeserializeObject<List<User>>(await searchResponse.Content.ReadAsStringAsync());
+            var users = JsonConvert.DeserializeObject<List<UserDto>>(await searchResponse.Content.ReadAsStringAsync());
             
             if (users == null || users.Count == 0)
             {
@@ -153,7 +153,7 @@ namespace YourRest.Producer.Infrastructure.Keycloak.Repositories
             return userId;
         }
         
-        public async Task<User> GetUser(string userId, CancellationToken cancellationToken)
+        public async Task<UserDto> GetUser(string userId, CancellationToken cancellationToken)
         {
             string adminToken = (await GetAdminTokenAsync()).access_token;
             using var httpClient = GetConfiguredHttpClient(adminToken);
@@ -163,7 +163,7 @@ namespace YourRest.Producer.Infrastructure.Keycloak.Repositories
             var response = await httpClient.GetAsync(url, cancellationToken);
             response.EnsureSuccessStatusCode();
 
-            var user = JsonConvert.DeserializeObject<User>(await response.Content.ReadAsStringAsync());
+            var user = JsonConvert.DeserializeObject<UserDto>(await response.Content.ReadAsStringAsync());
 
             if (user == null)
             {
@@ -191,7 +191,7 @@ namespace YourRest.Producer.Infrastructure.Keycloak.Repositories
             var searchResponse = await httpClient.GetAsync(searchUrl);
             searchResponse.EnsureSuccessStatusCode();
 
-            var groups = JsonConvert.DeserializeObject<List<Group>>(await searchResponse.Content.ReadAsStringAsync());
+            var groups = JsonConvert.DeserializeObject<List<GroupDto>>(await searchResponse.Content.ReadAsStringAsync());
             
             if (groups == null || groups.Count == 0)
             {

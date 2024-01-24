@@ -1,5 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using YourRest.Domain.Repositories;
+using YourRest.Infrastructure.Core.Contracts.Repositories;
 using YourRest.Producer.Infrastructure.Keycloak.Repositories;
 
 namespace YourRest.Producer.Infrastructure.Keycloak

@@ -1,12 +1,13 @@
-﻿using YourRest.Domain.Entities;
-using YourRest.Domain.Repositories;
-using YourRest.Infrastructure.Core.DbContexts;
-using YourRest.Infrastructure.Core.Repositories;
+﻿using AutoMapper;
+using YourRest.Infrastructure.Core.Contracts.Models;
+using YourRest.Infrastructure.Core.Contracts.Repositories;
+using YourRest.Producer.Infrastructure.DbContexts;
+using YourRest.Producer.Infrastructure.Entities;
 
 namespace YourRest.Producer.Infrastructure.Repositories
 {
-    public class CustomerRepository : PgRepository<Customer, int>, ICustomerRepository
+    public class CustomerRepository : PgRepository<Customer, int, CustomerDto>, ICustomerRepository
     {
-        public CustomerRepository(SharedDbContext dbContext) : base(dbContext) { }
+        public CustomerRepository(SharedDbContext dbContext, IMapper mapper) : base(dbContext, mapper) { }
     }
 }

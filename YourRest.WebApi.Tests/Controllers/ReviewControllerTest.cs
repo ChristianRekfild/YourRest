@@ -3,10 +3,10 @@ using System.Net;
 using System.Net.Http.Headers;
 using System.Text;
 using YourRest.Application.Dto.Models;
-using YourRest.Domain.Entities;
 using YourRest.WebApi.Tests.Fixtures;
 using Microsoft.Extensions.DependencyInjection;
-using YourRest.Domain.Repositories;
+using YourRest.Infrastructure.Core.Contracts.Repositories;
+using YourRest.Producer.Infrastructure.Entities;
 
 namespace YourRest.WebApi.Tests.Controllers
 {
@@ -61,7 +61,7 @@ namespace YourRest.WebApi.Tests.Controllers
             var booking = new Booking {
                 StartDate = new DateOnly(2023, 10, 1),
                 EndDate = new DateOnly(2023, 10, 5),
-                Status = YourRest.Domain.Entities.BookingStatus.Pending,
+                Status = BookingStatus.Pending,
                 Comment = "test",
                 Customer = customer
             };

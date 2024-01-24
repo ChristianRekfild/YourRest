@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using YourRest.Application.Dto;
+﻿using YourRest.Application.Dto;
 using YourRest.Application.Interfaces.Age;
-using YourRest.Domain.Entities;
-using YourRest.Domain.Repositories;
+using YourRest.Infrastructure.Core.Contracts.Repositories;
 
 namespace YourRest.Application.UseCases.AgeRangeUseCases
 {
@@ -20,14 +14,15 @@ namespace YourRest.Application.UseCases.AgeRangeUseCases
 
         public async Task<AgeRangeWithIdDto> ExecuteAsync(AgeRangeDto ageRangeDto, CancellationToken token = default) 
         {
-            var ageRange = new AgeRange()
+            var ageRange = new Infrastructure.Core.Contracts.Models.AgeRangeDto()
             { 
                 AgeFrom = ageRangeDto.AgeFrom,  
                 AgeTo = ageRangeDto.AgeTo 
             };
             var savedAgeRange = await _ageRangeRepository.AddAsync(ageRange , true,  token);
 
-            AgeRangeWithIdDto ageRangeWithId = new AgeRangeWithIdDto()
+            // TODO: Заменить на Automapper
+            var ageRangeWithId = new AgeRangeWithIdDto()
             {
                 Id = savedAgeRange.Id,
                 AgeFrom = savedAgeRange.AgeFrom,

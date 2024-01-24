@@ -1,13 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using YourRest.Application.Dto;
+﻿using YourRest.Application.Dto;
 using YourRest.Application.Exceptions;
 using YourRest.Application.Interfaces.Age;
-using YourRest.Domain.Entities;
-using YourRest.Domain.Repositories;
+using YourRest.Infrastructure.Core.Contracts.Repositories;
 
 namespace YourRest.Application.UseCases.AgeRangeUseCases
 {
@@ -26,7 +20,9 @@ namespace YourRest.Application.UseCases.AgeRangeUseCases
             {
                 throw new EntityNotFoundException($"AgeRange with id {ageRangeId} not found"); 
             }
-            AgeRangeWithIdDto ageRangeWithId = new AgeRangeWithIdDto() 
+
+            // TODO: Заменить на использование Automapper
+            var ageRangeWithId = new AgeRangeWithIdDto() 
             {
                 Id = ageRange.Id,
                 AgeFrom = ageRange.AgeFrom,

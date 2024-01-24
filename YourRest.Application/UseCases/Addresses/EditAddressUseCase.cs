@@ -1,8 +1,7 @@
 ﻿using AutoMapper;
 using YourRest.Application.Dto.Models;
 using YourRest.Application.Interfaces.Addresses;
-using YourRest.Domain.Entities;
-using YourRest.Domain.Repositories;
+using YourRest.Infrastructure.Core.Contracts.Repositories;
 
 namespace YourRest.Application.UseCases.Addresses
 {
@@ -26,7 +25,7 @@ namespace YourRest.Application.UseCases.Addresses
                 throw new Exception($"Адрес с Id {addressWithIdDto.Id} не найден.");
             }
 
-            var addressProperties = typeof(Address).GetProperties();
+            var addressProperties = typeof(Infrastructure.Core.Contracts.Models.AddressDto).GetProperties();
             foreach(var property in addressProperties)
             {
                 property.SetValue(address, typeof(AddressWithIdDto).GetProperty(property.Name));

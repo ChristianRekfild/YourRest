@@ -1,8 +1,7 @@
 ﻿using AutoMapper;
 using YourRest.Application.Dto.Models;
 using YourRest.Application.Interfaces.Addresses;
-using YourRest.Domain.Entities;
-using YourRest.Domain.Repositories;
+using YourRest.Infrastructure.Core.Contracts.Repositories;
 
 namespace YourRest.Application.UseCases.Addresses
 {
@@ -25,7 +24,7 @@ namespace YourRest.Application.UseCases.Addresses
                 throw new ArgumentNullException("AddressDto");
             }
 
-            var address = await addressRepository.AddAsync(mapper.Map<Address>(addressWithIdDto), true, cancellationToken);
+            var address = await addressRepository.AddAsync(mapper.Map<Infrastructure.Core.Contracts.Models.AddressDto>(addressWithIdDto), true, cancellationToken);
 
             return mapper.Map<AddressWithIdDto>(address);
         }

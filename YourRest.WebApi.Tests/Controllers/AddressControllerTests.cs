@@ -1,18 +1,15 @@
-﻿using Amazon;
-using AutoMapper;
+﻿using AutoMapper;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Net.Http.Headers;
 using System.Text;
-using System.Threading.Tasks;
 using YourRest.Application.Dto.Mappers.Profiles;
 using YourRest.Application.Dto.Models;
-using YourRest.Domain.Entities;
-using YourRest.Domain.Repositories;
+using YourRest.Infrastructure.Core.Contracts.Models;
+using YourRest.Infrastructure.Core.Contracts.Repositories;
+using YourRest.Producer.Infrastructure;
+using YourRest.Producer.Infrastructure.Entities;
 using YourRest.WebApi.Models;
 using YourRest.WebApi.Tests.Fixtures;
 
@@ -33,7 +30,12 @@ namespace YourRest.WebApi.Tests.Controllers
             var tokenRepository = scope.ServiceProvider.GetRequiredService<ITokenRepository>();
             _sharedFixture = new SharedResourcesFixture(tokenRepository);
 
-            var config = new MapperConfiguration(cfg => cfg.AddProfile<AddressDtoProfile>());
+            var config = new MapperConfiguration(
+                cfg => {
+                    cfg.AddProfile<AddressDtoProfile>();
+                    cfg.AddProfile<ProducerInfrastructureMapper>();
+                }
+            );
             mapper = config.CreateMapper();
         }
 
@@ -74,6 +76,7 @@ namespace YourRest.WebApi.Tests.Controllers
         public async Task GetAddress_WhenApiMethodInvokedId_ThenReturns200Ok()
         {
             var country = fixture.DbContext.Countries.FirstOrDefault(c => c.Name == "Russia");
+            var countryDto = mapper.Map<Infrastructure.Core.Contracts.Models.CountryDto>(country);
             if (country == null)
             {
                 country = await fixture.InsertObjectIntoDatabase(new Country() { Name = "Russia" });
@@ -89,6 +92,7 @@ namespace YourRest.WebApi.Tests.Controllers
                 city = await fixture.InsertObjectIntoDatabase(new City { Name = "Moscow", RegionId = region.Id });
             }
             var addressDto = CreateValidAddressDto(city.Id);
+            var t = mapper.Map<Address>(addressDto);
             var address = await fixture.InsertObjectIntoDatabase(mapper.Map<Address>(addressDto));
            
             var response = await fixture.Client.GetAsync($"api/addresses/{address.Id}");
@@ -100,9 +104,9 @@ namespace YourRest.WebApi.Tests.Controllers
             Assert.Equal(createdAddress?.Id, address.Id);
         }
 
-        private AddressWithIdDto CreateValidAddressDto(int cityId)
+        private Infrastructure.Core.Contracts.Models.AddressDto CreateValidAddressDto(int cityId)
         {
-            return new AddressWithIdDto
+            return new Infrastructure.Core.Contracts.Models.AddressDto
             {
                 Street = "Test Street",
                 ZipCode = "123456",

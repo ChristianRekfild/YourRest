@@ -1,16 +1,16 @@
+using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using System.Net;
+using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Text;
 using YourRest.Application.Dto;
 using YourRest.Application.Dto.Models;
 using YourRest.Application.Dto.ViewModels;
-using YourRest.Domain.Entities;
+using YourRest.Infrastructure.Core.Contracts.Repositories;
+using YourRest.Producer.Infrastructure.Entities;
 using YourRest.WebApi.Responses;
 using YourRest.WebApi.Tests.Fixtures;
-using Microsoft.Extensions.DependencyInjection;
-using YourRest.Domain.Repositories;
-using System.Net.Http.Headers;
 
 namespace YourRest.WebApi.Tests.Controllers
 {
@@ -50,7 +50,7 @@ namespace YourRest.WebApi.Tests.Controllers
             var createdAddress = JsonConvert.DeserializeObject<ResultDto>(responseString);
             
             Assert.True(createdAddress?.Id > 0);
-            fixture.CleanDatabase();
+            //fixture.CleanDatabase();
         }
 
         [Fact]
@@ -82,7 +82,7 @@ namespace YourRest.WebApi.Tests.Controllers
             var createdAddress = await response.Content.ReadFromJsonAsync<ResultDto>();
 
             Assert.True(createdAddress?.Id > 0);
-            fixture.CleanDatabase();
+            //fixture.CleanDatabase();
         }
 
         [Fact]
@@ -104,7 +104,7 @@ namespace YourRest.WebApi.Tests.Controllers
 
             Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
             Assert.Equal(errorMassage, expectedMessageJson);
-            fixture.CleanDatabase();
+            //fixture.CleanDatabase();
         }
 
         [Fact]
@@ -135,7 +135,7 @@ namespace YourRest.WebApi.Tests.Controllers
 
             Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
             Assert.Equal(errorResponseString, expectedMessageJson);
-            fixture.CleanDatabase();
+            //fixture.CleanDatabase();
         }
 
         [Fact]
@@ -155,6 +155,7 @@ namespace YourRest.WebApi.Tests.Controllers
                 CityId = -1
             };
             var content = new StringContent(JsonConvert.SerializeObject(addressDto), Encoding.UTF8, "application/json");
+           
             var response = await fixture.Client.PostAsync($"api/operators/accommodations/{accommodation.Id}/address", content);
             var errorData = await response.Content.ReadFromJsonAsync<ErrorViewModel>();
 
@@ -165,7 +166,7 @@ namespace YourRest.WebApi.Tests.Controllers
             Assert.Equal("'Latitude' должно быть в диапазоне от -90 до 90. Введенное значение: 190.", errorData?.ValidationErrors[nameof(addressDto.Latitude)][0]);
             Assert.Equal("'Longitude' должно быть в диапазоне от -180 до 180. Введенное значение: 190.", errorData?.ValidationErrors[nameof(addressDto.Longitude)][0]);
             Assert.Equal("'City Id' должно быть больше '0'.", errorData?.ValidationErrors[nameof(addressDto.CityId)][0]);
-            fixture.CleanDatabase();
+            //fixture.CleanDatabase();
         }
 
         [Fact]
@@ -204,7 +205,7 @@ namespace YourRest.WebApi.Tests.Controllers
             var errorResponse = JsonConvert.DeserializeObject<ErrorResponse>(errorResponseString);
 
             Assert.Equal($"Address for accommodation with id {accommodation.Id} already exists", errorResponse?.Message);
-            fixture.CleanDatabase();
+            //fixture.CleanDatabase();
         }
         
         [Fact]
@@ -277,7 +278,7 @@ namespace YourRest.WebApi.Tests.Controllers
             Assert.Contains(accommodations, dto => dto.Name == "GoldenHotel");
             Assert.Contains(accommodations, dto => dto.Stars.HasValue && dto.Stars.Value == 5);
            
-            fixture.CleanDatabase();
+            //fixture.CleanDatabase();
         }
         
         [Fact]
@@ -328,7 +329,7 @@ namespace YourRest.WebApi.Tests.Controllers
 
             Assert.True(userLinkedToAccommodation, "The user is not linked to the accommodation.");
             
-            fixture.CleanDatabase();
+            //fixture.CleanDatabase();
         }
         
         [Fact]

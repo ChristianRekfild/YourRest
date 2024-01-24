@@ -47,7 +47,7 @@ namespace YourRest.WebApi.Controllers
         [Route("api/accommodations/{accommodationId}/rooms")]
         public async Task<IActionResult> GetAllRooms(int accommodationId)
         {
-            var regions = await _getRoomListUseCase.Execute(accommodationId, HttpContext.RequestAborted);
+            var regions = await _getRoomListUseCase.ExecuteAsync(accommodationId, HttpContext.RequestAborted);
             return Ok(regions);
         }
 
@@ -59,7 +59,7 @@ namespace YourRest.WebApi.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var createdRoom = await _createtRoomUseCase.Execute(roomDto, accommodationId, HttpContext.RequestAborted);
+            var createdRoom = await _createtRoomUseCase.ExecuteAsync(roomDto, accommodationId, HttpContext.RequestAborted);
             return CreatedAtAction(nameof(Post), createdRoom);
         }
 

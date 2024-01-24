@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using YourRest.Domain.Repositories;
+using System.Reflection;
+using YourRest.Infrastructure.Core.Contracts.Repositories;
 using YourRest.Producer.Infrastructure.Repositories;
 
 namespace YourRest.Producer.Infrastructure
@@ -8,6 +9,7 @@ namespace YourRest.Producer.Infrastructure
     {
         public static IServiceCollection AddInfrastructure(this IServiceCollection services)
         {
+            services.AddAutoMapper(Assembly.GetExecutingAssembly());
             services.AddScoped<IBookingRepository, BookingRepository>();
             services.AddScoped<ICountryRepository, CountryRepository>();
             services.AddScoped<ICustomerRepository, CustomerRepository>();
@@ -26,8 +28,9 @@ namespace YourRest.Producer.Infrastructure
             services.AddScoped<IAccommodationPhotoRepository, AccommodationPhotoRepository>();
             services.AddScoped<IRoomPhotoRepository, RoomPhotoRepository>();
             services.AddScoped<IAccommodationTypeRepository, AccommodationTypeRepository>();
-            services.AddScoped<IBookingRepository, BookingRepository>();
+            //services.AddScoped<IBookingRepository, BookingRepository>();
             services.AddScoped<IUserPhotoRepository, UserPhotoRepository>();
+            services.AddScoped<IUserAccommodationRepository, UserAccommodationRepository>();
 
             return services;
         }

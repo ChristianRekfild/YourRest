@@ -1,5 +1,5 @@
-using YourRest.Infrastructure.Core.DbContexts;
-using YourRest.Domain.Entities;
+using YourRest.Producer.Infrastructure.DbContexts;
+using YourRest.Producer.Infrastructure.Entities;
 
 namespace YourRest.Producer.Infrastructure.Seeds;
 

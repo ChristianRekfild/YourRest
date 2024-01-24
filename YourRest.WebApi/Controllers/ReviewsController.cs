@@ -38,7 +38,7 @@ namespace YourRest.WebApi.Controllers
                 return NotFound("User not found");
             }
 
-            var createdReview = await _useCase.Execute(reviewDto, sub);
+            var createdReview = await _useCase.ExecuteAsync(reviewDto, sub);
 
             return CreatedAtAction(nameof(Post), createdReview);
         }

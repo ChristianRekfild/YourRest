@@ -1,19 +1,8 @@
 ﻿using AutoMapper;
-using System;
-using System.Collections.Generic;
-using System.Collections.Immutable;
-using System.Linq;
-using System.Net.Http.Headers;
-using System.Text;
-using System.Threading.Tasks;
-using YourRest.Application.Dto;
-using YourRest.Application.Dto.Models.HotelBooking;
 using YourRest.Application.Dto.Models.Room;
 using YourRest.Application.Exceptions;
 using YourRest.Application.Interfaces.HotelBooking;
-using YourRest.Domain.Entities;
-using YourRest.Domain.Repositories;
-using YourRest.Domain.ValueObjects.Bookings;
+using YourRest.Infrastructure.Core.Contracts.Repositories;
 
 
 namespace YourRest.Application.UseCases.HotelBookingUseCase

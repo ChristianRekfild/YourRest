@@ -1,12 +1,11 @@
 using System.Linq.Expressions;
 using Moq;
 using YourRest.Application.UseCases;
-using YourRest.Domain.Entities;
-using YourRest.Domain.Repositories;
 using YourRest.Application.Dto.ViewModels;
 using YourRest.Application.Dto.Mappers;
-using YourRest.Domain.Models;
-using User = YourRest.Domain.Entities.User;
+using YourRest.Infrastructure.Core.Contracts.Repositories;
+using YourRest.Producer.Infrastructure.Entities;
+using YourRest.Infrastructure.Core.Contracts.Models;
 
 namespace YourRest.Application.Tests.UseCases
 {
@@ -36,16 +35,16 @@ namespace YourRest.Application.Tests.UseCases
         public async Task GivenValidViewModel_WhenExecutingUseCase_ThenShouldReturnCorrectDtos()
         {
             var keyCloakId = "some-user-keycloak-id";
-            var user = new User { Id = 100, KeyCloakId = keyCloakId };
-            var users = new List<User> { user };
-            var accommodations = new List<Accommodation>
+            var user = new UserDto { Id = 100, KeyCloakId = keyCloakId };
+            var users = new List<UserDto> { user };
+            var accommodations = new List<AccommodationDto>
             {
-                new Accommodation 
+                new AccommodationDto
                 { 
                     Id = 1, 
                     Name = "Hotel A",
                     Description = "A luxury hotel",
-                    Address = new Address
+                    Address = new AddressDto
                     {
                         Id = 1,
                         Street = "123 A Street",
@@ -53,24 +52,24 @@ namespace YourRest.Application.Tests.UseCases
                         CityId = 1
                     },
                     AddressId = 1,
-                    AccommodationType = new AccommodationType 
+                    AccommodationType = new AccommodationTypeDto 
                     {
                         Id = 1,
                         Name = "5 Star"
                     },
                     AccommodationTypeId = 1,
-                    Rooms = new List<Room>
+                    Rooms = new List<RoomDto>
                     {
-                        new Room { Id = 1, Name = "Room A1", SquareInMeter = 30, RoomType = new RoomType() { Name = "Deluxe" } },
-                        new Room { Id = 2, Name = "Room A2", SquareInMeter = 50, RoomType = new RoomType() { Name = "Suite" } }
+                        new RoomDto { Id = 1, Name = "Room A1", SquareInMeter = 30, RoomType = new RoomTypeDto() { Name = "Deluxe" } },
+                        new RoomDto { Id = 2, Name = "Room A2", SquareInMeter = 50, RoomType = new RoomTypeDto() { Name = "Suite" } }
                     }
                 },
-                new Accommodation 
+                new AccommodationDto 
                 { 
                     Id = 2, 
                     Name = "Hotel B",
                     Description = "A budget hotel",
-                    Address = new Address
+                    Address = new AddressDto
                     {
                         Id = 2,
                         Street = "456 B Blvd",
@@ -78,16 +77,16 @@ namespace YourRest.Application.Tests.UseCases
                         CityId = 2
                     },
                     AddressId = 2,
-                    AccommodationType = new AccommodationType 
+                    AccommodationType = new AccommodationTypeDto
                     {
                         Id = 2,
                         Name = "3 Star"
                     },
                     AccommodationTypeId = 2,
-                    Rooms = new List<Room>
+                    Rooms = new List<RoomDto>
                     {
-                        new Room { Id = 3, Name = "Room B1", SquareInMeter = 20, RoomType = new RoomType() { Name = "Standard" } },
-                        new Room { Id = 4, Name = "Room B2", SquareInMeter = 25, RoomType = new RoomType() { Name = "Deluxe" } }
+                        new RoomDto { Id = 3, Name = "Room B1", SquareInMeter = 20, RoomType = new RoomTypeDto() { Name = "Standard" } },
+                        new RoomDto { Id = 4, Name = "Room B2", SquareInMeter = 25, RoomType = new RoomTypeDto() { Name = "Deluxe" } }
                     }
                 }
             };
@@ -98,7 +97,7 @@ namespace YourRest.Application.Tests.UseCases
                 CityIds = new List<int> { 10, 11, 12 },
                 AccommodationTypesIds = new List<int> { 100, 101, 102 }
             };
-            var mockFilterCriteria = new AccommodationFilterCriteria
+            var mockFilterCriteria = new AccommodationFilterCriteriaDto
             {
                 CountryIds = new List<int> { 1, 2 },
                 CityIds = new List<int> { 10, 11 },
@@ -107,10 +106,10 @@ namespace YourRest.Application.Tests.UseCases
 
             _mapperMock.Setup(mapper => mapper.MapToFilterCriteria(It.IsAny<FetchAccommodationsViewModel>())).Returns(mockFilterCriteria);
             _userRepositoryMock.Setup(repo => repo.FindAsync(
-                    It.Is<Expression<Func<User, bool>>>(expr => IsUserPredicateValid(expr, keyCloakId)),
+                    It.Is<Expression<Func<UserDto, bool>>>(expr => IsUserPredicateValid(expr, keyCloakId)),
                     It.IsAny<CancellationToken>()))
                 .ReturnsAsync(users);
-            _accommodationRepositoryMock.Setup(repo => repo.GetHotelsByFilter(user.Id, It.IsAny<AccommodationFilterCriteria>(), It.IsAny<CancellationToken>())).ReturnsAsync(accommodations);
+            _accommodationRepositoryMock.Setup(repo => repo.GetHotelsByFilter(user.Id, It.IsAny<AccommodationFilterCriteriaDto>(), It.IsAny<CancellationToken>())).ReturnsAsync(accommodations);
 
             var result = await _fetchHotelsUseCase.ExecuteAsync(keyCloakId, viewModel, default);
 
@@ -121,10 +120,10 @@ namespace YourRest.Application.Tests.UseCases
             Assert.Contains(result, dto => dto.Name == "Hotel B");
         }
         
-        private bool IsUserPredicateValid(Expression<Func<User, bool>> predicate, string keyCloakId)
+        private bool IsUserPredicateValid(Expression<Func<UserDto, bool>> predicate, string keyCloakId)
         {
             var func = predicate.Compile();
-            return func(new User { KeyCloakId = keyCloakId });
+            return func(new UserDto { KeyCloakId = keyCloakId });
         }
     }
 }

@@ -1,9 +1,8 @@
 ﻿using AutoMapper;
-using YourRest.Application.Dto.Models.RoomFacility;
 using YourRest.Application.Exceptions;
 using YourRest.Application.Interfaces.Facility;
-using YourRest.Domain.Entities;
-using YourRest.Domain.Repositories;
+using YourRest.Infrastructure.Core.Contracts.Models;
+using YourRest.Infrastructure.Core.Contracts.Repositories;
 
 namespace YourRest.Application.UseCases.Facility
 {
@@ -22,7 +21,7 @@ namespace YourRest.Application.UseCases.Facility
             this.roomFacilityRepository = roomFacilityRepository;
             this.roomRepository = roomRepository;
         }
-        public async Task ExecuteAsync(int roomId, IEnumerable<RoomFacilityDto> roomFacilities, CancellationToken cancellationToken)
+        public async Task ExecuteAsync(int roomId, IEnumerable<Dto.Models.RoomFacility.RoomFacilityDto> roomFacilities, CancellationToken cancellationToken)
         {
             var room = (await roomRepository.GetWithIncludeAsync(room => room.Id == roomId, cancellationToken, include => include.RoomFacilities)).FirstOrDefault();
             if (room == null)
@@ -35,7 +34,7 @@ namespace YourRest.Application.UseCases.Facility
                 {
                     throw new EntityConflictException($"Room Facility \"{roomFacility.Name}\" has been in process");
                 }
-                room.RoomFacilities.Add(mapper.Map<RoomFacility>(roomFacilities));
+                room.RoomFacilities.Add(mapper.Map<RoomFacilityDto>(roomFacilities));
             }
             await roomFacilityRepository.SaveChangesAsync(cancellationToken);
         }

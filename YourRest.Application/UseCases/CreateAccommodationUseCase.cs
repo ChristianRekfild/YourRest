@@ -1,8 +1,8 @@
+using YourRest.Application.Dto;
 using YourRest.Application.Exceptions;
 using YourRest.Application.Interfaces;
-using YourRest.Domain.Repositories;
-using YourRest.Domain.Entities;
-using YourRest.Application.Dto;
+using YourRest.Infrastructure.Core.Contracts.Models;
+using YourRest.Infrastructure.Core.Contracts.Repositories;
 
 namespace YourRest.Application.UseCases
 {
@@ -11,18 +11,21 @@ namespace YourRest.Application.UseCases
         private readonly IAccommodationTypeRepository _accommodationTypeRepository;
         private readonly IAccommodationRepository _accommodationRepository;
         private readonly IUserRepository _userRepository;
+        private readonly IUserAccommodationRepository _userAccommodationRepository;
 
         public CreateAccommodationUseCase(
             IAccommodationTypeRepository accommodationTypeRepository,
             IAccommodationRepository accommodationRepository,
-            IUserRepository userRepository
+            IUserRepository userRepository,
+            IUserAccommodationRepository userAccommodationRepository
         ) {
             _accommodationTypeRepository = accommodationTypeRepository;
             _accommodationRepository = accommodationRepository;
             _userRepository = userRepository;
+            _userAccommodationRepository = userAccommodationRepository;
         }
 
-        public async Task<AccommodationDto> ExecuteAsync(CreateAccommodationDto accommodationDto, string userKeyCloakId, CancellationToken cancellationToken)
+        public async Task<Dto.AccommodationDto> ExecuteAsync(CreateAccommodationDto accommodationDto, string userKeyCloakId, CancellationToken cancellationToken)
         {
             var accommodationType = await _accommodationTypeRepository.GetAsync(accommodationDto.AccommodationTypeId, cancellationToken);
 
@@ -39,37 +42,37 @@ namespace YourRest.Application.UseCases
                 throw new EntityNotFoundException(userKeyCloakId);
             }
 
-            var accommodation = new Accommodation();
+            var accommodation = new Infrastructure.Core.Contracts.Models.AccommodationDto();
             accommodation.Description = accommodationDto.Description;
             accommodation.Name = accommodationDto.Name;
             accommodation.AccommodationTypeId = accommodationDto.AccommodationTypeId;
             
             if (accommodationDto.Stars >= 1 && accommodationDto.Stars <= 5)
             {
-                var accommodationStarRating = new AccommodationStarRating
+                var accommodationStarRating = new AccommodationStarRatingDto
                 {
                     Stars = accommodationDto.Stars.Value, 
                     Accommodation = accommodation
                 };
                 accommodation.StarRating = accommodationStarRating;
             }
-            
-            accommodation.UserAccommodations.Add(new UserAccommodation { User = user, Accommodation = accommodation });
 
-            var savedAccommodation = await _accommodationRepository.AddAsync(accommodation, cancellationToken:cancellationToken);
+            accommodation = await _accommodationRepository.AddAsync(accommodation, cancellationToken: cancellationToken);
 
-            var accommodationTypeDto = new AccommodationTypeDto()
+            var userAccommodationDto = await _userAccommodationRepository.AddAsync(new UserAccommodationDto { User = user, Accommodation = accommodation });
+
+            var accommodationTypeDto = new Dto.AccommodationTypeDto()
             {
                 Id = accommodationType.Id,
                 Name = accommodationType.Name
             };
-            var savedAccommodationDto = new AccommodationDto()
+            var savedAccommodationDto = new Dto.AccommodationDto()
             {
-                Id = savedAccommodation.Id,
-                Description = savedAccommodation.Description,
-                Name = savedAccommodation.Name,
+                Id = accommodation.Id,
+                Description = accommodation.Description,
+                Name = accommodation.Name,
                 AccommodationType = accommodationTypeDto,
-                Stars = savedAccommodation.StarRating?.Stars
+                Stars = accommodation.StarRating?.Stars
             };
 
             return savedAccommodationDto;

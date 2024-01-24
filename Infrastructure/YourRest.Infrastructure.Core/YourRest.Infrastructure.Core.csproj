@@ -18,8 +18,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\YourRest.Domain\YourRest.Domain.csproj" />
     <ProjectReference Include="..\YourRest.ClientIdentity.Infrastructure.Contracts\YourRest.ClientIdentity.Infrastructure.Contracts.csproj" />
+    <ProjectReference Include="..\YourRest.Infrastructure.Core.Contracts\YourRest.Infrastructure.Core.Contracts.csproj" />
+    <ProjectReference Include="..\YourRest.Producer.Infrastructure\YourRest.Producer.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

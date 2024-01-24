@@ -1,13 +1,14 @@
-using YourRest.Domain.Entities;
-using YourRest.Domain.Repositories;
-using YourRest.Infrastructure.Core.DbContexts;
-using YourRest.Infrastructure.Core.Repositories;
+using AutoMapper;
+using YourRest.Infrastructure.Core.Contracts.Models;
+using YourRest.Infrastructure.Core.Contracts.Repositories;
+using YourRest.Producer.Infrastructure.DbContexts;
+using YourRest.Producer.Infrastructure.Entities;
 
 namespace YourRest.Producer.Infrastructure.Repositories;
 
-public class AddressRepository : PgRepository<Address, int>, IAddressRepository
+public class AddressRepository : PgRepository<Address, int, AddressDto>, IAddressRepository
 {
-    public AddressRepository(SharedDbContext context) : base(context)
+    public AddressRepository(SharedDbContext context, IMapper mapper) : base(context, mapper)
     {
     }
 }

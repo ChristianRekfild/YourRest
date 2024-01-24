@@ -1,12 +1,13 @@
-using YourRest.Domain.Entities;
-using YourRest.Infrastructure.Core.DbContexts;
-using YourRest.Domain.Repositories;
-using YourRest.Infrastructure.Core.Repositories;
+using AutoMapper;
+using YourRest.Infrastructure.Core.Contracts.Models;
+using YourRest.Infrastructure.Core.Contracts.Repositories;
+using YourRest.Producer.Infrastructure.DbContexts;
+using YourRest.Producer.Infrastructure.Entities;
 
 namespace YourRest.Producer.Infrastructure.Repositories
 {
-    public class CountryRepository : PgRepository<Country, int>, ICountryRepository
+    public class CountryRepository : PgRepository<Country, int, CountryDto>, ICountryRepository
     {
-        public CountryRepository(SharedDbContext dataContext) : base(dataContext) { }
+        public CountryRepository(SharedDbContext dataContext, IMapper mapper) : base(dataContext, mapper) { }
     }
 }

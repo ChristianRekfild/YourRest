@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Http;
 using System.Security.Claims;
-using YourRest.Domain.Entities;
-using YourRest.Domain.Repositories;
+using YourRest.Infrastructure.Core.Contracts.Models;
+using YourRest.Infrastructure.Core.Contracts.Repositories;
 
 namespace YourRest.Producer.Infrastructure.Middleware;
 public class UserSavingMiddleware
@@ -38,13 +38,13 @@ public class UserSavingMiddleware
 
             if (user == null)
             {
-                user = new User
+                user = new UserDto
                 {
                     KeyCloakId = sub,
                     FirstName = firstName,
                     LastName = lastName,
                     Email = email,
-                    UserAccommodations = new List<UserAccommodation>()
+                    UserAccommodations = new List<UserAccommodationDto>()
                 };
                 await userRepository.AddAsync(user);
             }

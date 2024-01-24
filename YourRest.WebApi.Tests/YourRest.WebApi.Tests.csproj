@@ -26,6 +26,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Infrastructure\YourRest.Infrastructure.Core.Contracts\YourRest.Infrastructure.Core.Contracts.csproj" />
     <ProjectReference Include="..\YourRest.WebApi\YourRest.WebApi.csproj" />
     <ProjectReference Include="..\Infrastructure\YourRest.Producer.Infrastructure\YourRest.Producer.Infrastructure.csproj" />
   </ItemGroup>

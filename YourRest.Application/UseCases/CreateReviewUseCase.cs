@@ -1,9 +1,8 @@
+using YourRest.Application.Dto.Models;
 using YourRest.Application.Exceptions;
 using YourRest.Application.Interfaces;
-using YourRest.Domain.Entities;
-using YourRest.Domain.ValueObjects.Reviews;
-using YourRest.Domain.Repositories;
-using YourRest.Application.Dto.Models;
+using YourRest.Infrastructure.Core.Contracts.Repositories;
+using YourRest.Infrastructure.Core.Contracts.ValueObjects.Reviews;
 
 namespace YourRest.Application.UseCases
 {
@@ -20,7 +19,7 @@ namespace YourRest.Application.UseCases
             _userRepository = userRepository;
         }
 
-        public async Task<SavedReviewDto> Execute(ReviewDto reviewDto, string userKeyCloakId)
+        public async Task<SavedReviewDto> ExecuteAsync(Dto.Models.ReviewDto reviewDto, string userKeyCloakId)
         {
             var users = await _userRepository.FindAsync(a => a.KeyCloakId == userKeyCloakId);
             var user = users.FirstOrDefault();
@@ -45,7 +44,7 @@ namespace YourRest.Application.UseCases
             //    throw new ValidationException($"User with id {user.Id} cannot create a review for booking {booking.Id}.");
             //}
 
-            var review = new Review
+            var review = new Infrastructure.Core.Contracts.Models.ReviewDto
             {
                 Booking = booking,
                 Rating = rating,

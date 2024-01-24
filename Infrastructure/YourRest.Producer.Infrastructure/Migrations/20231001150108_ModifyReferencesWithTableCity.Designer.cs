@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
-using YourRest.Infrastructure.Core.DbContexts;
+using YourRest.Producer.Infrastructure.DbContexts;
 
 #nullable disable
 
@@ -25,7 +25,7 @@ namespace YourRest.Producer.Infrastructure.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("YourRest.Domain.Entities.Booking", b =>
+            modelBuilder.Entity("YourRest.Producer.Infrastructure.Entities.Booking", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -56,7 +56,7 @@ namespace YourRest.Producer.Infrastructure.Migrations
                     b.ToTable("Bookings");
                 });
 
-            modelBuilder.Entity("YourRest.Domain.Entities.City", b =>
+            modelBuilder.Entity("YourRest.Producer.Infrastructure.Entities.City", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -78,7 +78,7 @@ namespace YourRest.Producer.Infrastructure.Migrations
                     b.ToTable("Cities");
                 });
 
-            modelBuilder.Entity("YourRest.Domain.Entities.Country", b =>
+            modelBuilder.Entity("YourRest.Producer.Infrastructure.Entities.Country", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -95,7 +95,7 @@ namespace YourRest.Producer.Infrastructure.Migrations
                     b.ToTable("Countries");
                 });
 
-            modelBuilder.Entity("YourRest.Domain.Entities.Customer", b =>
+            modelBuilder.Entity("YourRest.Producer.Infrastructure.Entities.Customer", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -134,7 +134,7 @@ namespace YourRest.Producer.Infrastructure.Migrations
                     b.ToTable("Customers");
                 });
 
-            modelBuilder.Entity("YourRest.Domain.Entities.Region", b =>
+            modelBuilder.Entity("YourRest.Producer.Infrastructure.Entities.Region", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -156,7 +156,7 @@ namespace YourRest.Producer.Infrastructure.Migrations
                     b.ToTable("Regions");
                 });
 
-            modelBuilder.Entity("YourRest.Domain.Entities.Review", b =>
+            modelBuilder.Entity("YourRest.Producer.Infrastructure.Entities.Review", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -181,9 +181,9 @@ namespace YourRest.Producer.Infrastructure.Migrations
                     b.ToTable("Reviews");
                 });
 
-            modelBuilder.Entity("YourRest.Domain.Entities.Booking", b =>
+            modelBuilder.Entity("YourRest.Producer.Infrastructure.Entities.Booking", b =>
                 {
-                    b.HasOne("YourRest.Domain.Entities.Customer", "Customer")
+                    b.HasOne("YourRest.Producer.Infrastructure.Entities.Customer", "Customer")
                         .WithMany()
                         .HasForeignKey("CustomerId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -192,9 +192,9 @@ namespace YourRest.Producer.Infrastructure.Migrations
                     b.Navigation("Customer");
                 });
 
-            modelBuilder.Entity("YourRest.Domain.Entities.City", b =>
+            modelBuilder.Entity("YourRest.Producer.Infrastructure.Entities.City", b =>
                 {
-                    b.HasOne("YourRest.Domain.Entities.Region", "Region")
+                    b.HasOne("YourRest.Producer.Infrastructure.Entities.Region", "Region")
                         .WithMany("Cities")
                         .HasForeignKey("RegionId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -203,9 +203,9 @@ namespace YourRest.Producer.Infrastructure.Migrations
                     b.Navigation("Region");
                 });
 
-            modelBuilder.Entity("YourRest.Domain.Entities.Region", b =>
+            modelBuilder.Entity("YourRest.Producer.Infrastructure.Entities.Region", b =>
                 {
-                    b.HasOne("YourRest.Domain.Entities.Country", "Country")
+                    b.HasOne("YourRest.Producer.Infrastructure.Entities.Country", "Country")
                         .WithMany("Regions")
                         .HasForeignKey("CountryId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -214,9 +214,9 @@ namespace YourRest.Producer.Infrastructure.Migrations
                     b.Navigation("Country");
                 });
 
-            modelBuilder.Entity("YourRest.Domain.Entities.Review", b =>
+            modelBuilder.Entity("YourRest.Producer.Infrastructure.Entities.Review", b =>
                 {
-                    b.HasOne("YourRest.Domain.Entities.Booking", "Booking")
+                    b.HasOne("YourRest.Producer.Infrastructure.Entities.Booking", "Booking")
                         .WithMany()
                         .HasForeignKey("BookingId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -225,12 +225,12 @@ namespace YourRest.Producer.Infrastructure.Migrations
                     b.Navigation("Booking");
                 });
 
-            modelBuilder.Entity("YourRest.Domain.Entities.Country", b =>
+            modelBuilder.Entity("YourRest.Producer.Infrastructure.Entities.Country", b =>
                 {
                     b.Navigation("Regions");
                 });
 
-            modelBuilder.Entity("YourRest.Domain.Entities.Region", b =>
+            modelBuilder.Entity("YourRest.Producer.Infrastructure.Entities.Region", b =>
                 {
                     b.Navigation("Cities");
                 });

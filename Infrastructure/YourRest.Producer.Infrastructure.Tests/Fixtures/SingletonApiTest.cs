@@ -1,9 +1,9 @@
 using System.Text;
-using YourRest.Infrastructure.Core.DbContexts;
+using YourRest.Producer.Infrastructure.DbContexts;
 
 namespace YourRest.Producer.Infrastructure.Tests.Fixtures
 {
-public class SingletonApiTest : IDisposable
+    public class SingletonApiTest : IDisposable
     {
         public SharedDbContext DbContext { get; private set; }
 

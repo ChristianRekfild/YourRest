@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using YourRest.Producer.Infrastructure.DbContexts;
 
 namespace YourRest.Infrastructure.Core.DbContexts
 {
@@ -22,7 +23,8 @@ namespace YourRest.Infrastructure.Core.DbContexts
             if (!optionsBuilder.IsConfigured)
             {
                 string conn = "Host=localhost;Database=your_rest_client_identity;Username=admin;Password=admin;Port=5433";
-                optionsBuilder.UseNpgsql(conn, sql => sql.MigrationsAssembly("YourRest.ClientIdentity.Infrastructure"));
+                optionsBuilder.UseNpgsql(conn, sql => sql.MigrationsAssembly("YourRest.ClientIdentity.Infrastructure"))
+                    .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
             }
             base.OnConfiguring(optionsBuilder);
         }

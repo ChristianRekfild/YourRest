@@ -1,8 +1,7 @@
+using YourRest.Application.Dto.Models;
 using YourRest.Application.Exceptions;
 using YourRest.Application.Interfaces;
-using YourRest.Domain.Entities;
-using YourRest.Domain.Repositories;
-using YourRest.Application.Dto.Models;
+using YourRest.Infrastructure.Core.Contracts.Repositories;
 
 namespace YourRest.Application.UseCases
 {
@@ -22,7 +21,7 @@ namespace YourRest.Application.UseCases
             _cityRepository = cityRepository;
         }
 
-        public async Task<ResultDto> Execute(int accommodationId, AddressDto addressWithIdDto)
+        public async Task<ResultDto> ExecuteAsync(int accommodationId, Dto.Models.AddressDto addressWithIdDto)
         {
             var accommodations = await _accommodationRepository.GetWithIncludeAsync(
                 a => a.Id == accommodationId,
@@ -57,7 +56,7 @@ namespace YourRest.Application.UseCases
 
             if (address == null)
             {
-                address = new Address
+                address = new Infrastructure.Core.Contracts.Models.AddressDto
                 {
                     Street = addressWithIdDto.Street,
                     CityId = city.Id,

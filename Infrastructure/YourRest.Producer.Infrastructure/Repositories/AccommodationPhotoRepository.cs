@@ -1,13 +1,14 @@
-using YourRest.Infrastructure.Core.DbContexts;
-using YourRest.Infrastructure.Core.Repositories;
-using YourRest.Domain.Entities;
-using YourRest.Domain.Repositories;
+using AutoMapper;
+using YourRest.Infrastructure.Core.Contracts.Models;
+using YourRest.Infrastructure.Core.Contracts.Repositories;
+using YourRest.Producer.Infrastructure.DbContexts;
+using YourRest.Producer.Infrastructure.Entities;
 
 namespace YourRest.Producer.Infrastructure.Repositories
 {
-    public class AccommodationPhotoRepository : PgRepository<AccommodationPhoto, int>, IAccommodationPhotoRepository
+    public class AccommodationPhotoRepository : PgRepository<AccommodationPhoto, int, AccommodationPhotoDto>, IAccommodationPhotoRepository
     {
-        public AccommodationPhotoRepository(SharedDbContext context) : base(context)
+        public AccommodationPhotoRepository(SharedDbContext context, IMapper mapper) : base(context, mapper)
         {
         }
     }

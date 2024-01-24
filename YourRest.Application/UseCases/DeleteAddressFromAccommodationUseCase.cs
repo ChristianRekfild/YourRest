@@ -1,6 +1,6 @@
 using YourRest.Application.Exceptions;
 using YourRest.Application.Interfaces;
-using YourRest.Domain.Repositories;
+using YourRest.Infrastructure.Core.Contracts.Repositories;
 
 namespace YourRest.Application.UseCases
 {
@@ -13,7 +13,7 @@ namespace YourRest.Application.UseCases
             _accommodationRepository = accommodationRepository;
         }
 
-        public async Task<bool> Execute(int accommodationId, int addressId)
+        public async Task<bool> ExecuteAsync(int accommodationId, int addressId)
         {
             var accommodations = await _accommodationRepository.GetWithIncludeAndTrackingAsync(
                 a => a.Id == accommodationId,

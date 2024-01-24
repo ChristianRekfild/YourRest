@@ -1,8 +1,8 @@
 ﻿using YourRest.Application.Dto.Models.AccommodationFacility;
 using YourRest.Application.Exceptions;
 using YourRest.Application.Interfaces.AccommodationFacility;
-using YourRest.Domain.Entities;
-using YourRest.Domain.Repositories;
+using YourRest.Infrastructure.Core.Contracts.Models;
+using YourRest.Infrastructure.Core.Contracts.Repositories;
 
 namespace YourRest.Application.UseCases
 {
@@ -49,7 +49,7 @@ namespace YourRest.Application.UseCases
                 throw new EntityNotFoundException($"AccommodationFacility with id {facilityId} not found");
             }
 
-            accommodation.AccommodationFacilities.Add(new AccommodationFacilityLink
+            accommodation.AccommodationFacilities.Add(new AccommodationFacilityLinkDto
             {
                 AccommodationFacility = facility,
                 Accommodation = accommodation,

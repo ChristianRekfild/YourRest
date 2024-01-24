@@ -1,7 +1,6 @@
-﻿using System.Threading;
-using YourRest.Application.Exceptions;
+﻿using YourRest.Application.Exceptions;
 using YourRest.Application.Interfaces.Room;
-using YourRest.Domain.Repositories;
+using YourRest.Infrastructure.Core.Contracts.Repositories;
 
 namespace YourRest.Application.UseCases.Room
 {

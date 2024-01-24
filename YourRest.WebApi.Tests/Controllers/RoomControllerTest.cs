@@ -3,12 +3,10 @@ using Newtonsoft.Json;
 using System.Net;
 using System.Net.Http.Json;
 using System.Text;
-using Amazon.Runtime.Internal;
 using YourRest.Application.Dto.Mappers.Profiles;
-using YourRest.Application.Dto.Models;
 using YourRest.Application.Dto.Models.Room;
 using YourRest.Application.Dto.Models.RoomFacility;
-using YourRest.Domain.Entities;
+using YourRest.Producer.Infrastructure.Entities;
 using YourRest.WebApi.Tests.Fixtures;
 
 namespace YourRest.WebApi.Tests.Controllers

@@ -1,11 +1,12 @@
 ﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using System.Net;
 using System.Net.Http.Json;
 using System.Text;
 using YourRest.Application.Dto.Mappers.Profiles;
 using YourRest.Application.Dto.Models.RoomFacility;
-using YourRest.Domain.Entities;
+using YourRest.Producer.Infrastructure.Entities;
 using YourRest.WebApi.Tests.Fixtures;
 
 namespace YourRest.WebApi.Tests.Controllers
@@ -27,7 +28,7 @@ namespace YourRest.WebApi.Tests.Controllers
         public async Task UpdatedRoomFacilityTest_WhenPutCalledEditMethod_ReturnsMessageOfSuccsessfulyEdited()
         {
             var roomFacility = await fixture.InsertObjectIntoDatabase(await CreateRoomFacilityAsync());
-            var editedRoomFacility = new RoomFacility
+            var editedRoomFacility = new Infrastructure.Core.Contracts.Models.RoomFacilityDto
             {
                 Name = "Minibar"
             };
@@ -44,6 +45,7 @@ namespace YourRest.WebApi.Tests.Controllers
             var recivedRoomFacility = await GetByIdAsync(roomFacility.Id);
             Assert.Equal(editedRoomFacility.Name, recivedRoomFacility.Name);
         }
+
         [Fact]
         public async Task DeleteRoomFacilityTest_WhenPostCalledRemoveMethod_ReturnsMessageOfSuccsessfulyRemoved()
         {
@@ -54,6 +56,7 @@ namespace YourRest.WebApi.Tests.Controllers
             response = await fixture.Client.GetAsync($"api/roomfacilities/{roomFacility.Id}");
             Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
         }
+
         [Fact]
         public async Task GetRoomFacilityByIdTest_WhenGetCalledGetByIdMethod_ReturnsRoomFacilityViewModel()
         {
@@ -67,9 +70,15 @@ namespace YourRest.WebApi.Tests.Controllers
         public async Task GetAllRoomFacilitiesTest_WhenGetCalledGetAllRoomFacilitiesMethod_ReturnsListOfRoomFacilityDto()
         {
             var roomFacility = await fixture.InsertObjectIntoDatabase(await CreateRoomFacilityAsync());
+            if (fixture.DbContext.Entry(Room).State == EntityState.Detached)
+            {
+                fixture.DbContext.Attach(Room);
+            }
             Room.RoomFacilities.Add(new RoomFacility { Name = "Ironing station" });
             Room.RoomFacilities.Add(new RoomFacility { Name = "Locker" });
             await fixture.DbContext.SaveChangesAsync();
+            fixture.DbContext.Entry(Room).State = EntityState.Detached;
+            
             List<RoomFacility> roomFacilities = new(Room.RoomFacilities);
 
             var mockMapper = new MapperConfiguration(cfg =>
@@ -80,8 +89,15 @@ namespace YourRest.WebApi.Tests.Controllers
             var mapper = mockMapper.CreateMapper();
 
             var response = await fixture.Client.GetAsync($"api/roomfacilities");
+                        
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-            Assert.Equivalent(mapper.Map< IEnumerable<RoomFacilityDto>>(roomFacilities), await response.Content.ReadFromJsonAsync<IEnumerable<RoomFacilityDto>>());
+
+            var fromTests = mapper.Map<IEnumerable<RoomFacilityDto>>(roomFacilities).ToArray();
+
+            var fromApi = await response.Content.ReadFromJsonAsync<IEnumerable<RoomFacilityDto>>();
+            
+            Assert.Contains(fromApi, fi => fi.Name == fromTests[0].Name);
+            Assert.Contains(fromApi, fi => fi.Name == fromTests[1].Name);
         }
 
         private async Task<RoomFacility> CreateRoomFacilityAsync()

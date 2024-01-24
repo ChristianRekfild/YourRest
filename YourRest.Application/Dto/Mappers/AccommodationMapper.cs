@@ -1,12 +1,12 @@
 ﻿using YourRest.Application.Dto.ViewModels;
-using YourRest.Domain.Models;
+using YourRest.Infrastructure.Core.Contracts.Models;
 
 namespace YourRest.Application.Dto.Mappers{
     public class AccommodationMapper : IAccommodationMapper
     {
-        public AccommodationFilterCriteria MapToFilterCriteria(FetchAccommodationsViewModel viewModel)
+        public AccommodationFilterCriteriaDto MapToFilterCriteria(FetchAccommodationsViewModel viewModel)
         {
-            return new AccommodationFilterCriteria
+            return new AccommodationFilterCriteriaDto
             {
                 CountryIds = viewModel.CountryIds,
                 CityIds = viewModel.CityIds,

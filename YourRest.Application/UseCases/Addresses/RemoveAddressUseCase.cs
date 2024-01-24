@@ -1,5 +1,5 @@
 ﻿using YourRest.Application.Interfaces.Addresses;
-using YourRest.Domain.Repositories;
+using YourRest.Infrastructure.Core.Contracts.Repositories;
 
 namespace YourRest.Application.UseCases.Addresses
 {

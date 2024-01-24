@@ -1,10 +1,8 @@
 ﻿using AutoMapper;
-using YourRest.Application.Dto.Mappers;
 using YourRest.Application.Dto.Models.RoomFacility;
 using YourRest.Application.Exceptions;
 using YourRest.Application.Interfaces.Facility;
-using YourRest.Domain.Entities;
-using YourRest.Domain.Repositories;
+using YourRest.Infrastructure.Core.Contracts.Repositories;
 
 namespace YourRest.Application.UseCases.Facility
 {
