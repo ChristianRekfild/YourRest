@@ -1,0 +1,28 @@
+﻿@page "/hotels"
+@attribute [Authorize]
+
+<PageTitle>Hotels</PageTitle>
+
+<div class="container-fluid">
+    <div class="row">
+        <h4>Мои Отели</h4>
+    </div>
+    <div class="row table-row justify-content-center">
+        <div>
+            @if (Hotels.Any())
+            {
+                <HotelTableComponent @bind-Hotels="@Hotels" />
+            }
+            else
+            {
+                <p class="hotel_empty">У Вас пока нет добавленных отелей</p>
+                <p class="hotel-empty_description">Для добавления отеля нажмите на кнопку "Добвить отель"</p>
+            }
+        </div>
+    </div>
+    <div class="row row_btn justify-content-end">
+        <div class="create_btn" @onclick="NavigateToCreate">
+            Добавить отель
+        </div>
+    </div>
+</div>

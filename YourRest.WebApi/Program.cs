@@ -92,6 +92,7 @@ public class Program
         services.AddInfrastructure();
         services.AddApplication();
         services.AddWebApi();
+        
 
         services.AddHttpClient();
         services.AddTransient<ICustomHttpClientFactory, CustomHttpClientFactory>();

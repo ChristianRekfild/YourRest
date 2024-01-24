@@ -8,9 +8,12 @@
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
       "Docker": {
-        "commandName": "DockerCompose"
+        "commandName": "DockerCompose",
+        "launchBrowser": true,
+        "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}/weatherforecast",
+        "publishAllPorts": true
       },
-      "applicationUrl": "https://localhost:52892;http://localhost:52893"
+      "applicationUrl": "http://localhost:52893;https://localhost:52892;"
     }
   }
 }
