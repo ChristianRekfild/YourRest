@@ -521,6 +521,7 @@ namespace YourRest.WebApi.Tests.Controllers
             Assert.Equal(accommodation2.Address.Id, accommodationsReturn.Address.Id);
             Assert.Equal(accommodation2.Name, accommodationsReturn.Name);
             Assert.Equal(accommodation2.AccommodationTypeId, accommodationsReturn.AccommodationType.Id);
+            Assert.Equal(accommodation2.StarRating.Stars, accommodationsReturn.Stars);
 
         }
 
@@ -612,102 +613,110 @@ namespace YourRest.WebApi.Tests.Controllers
             }
         }
 
+        [Fact]
+        public async Task Edit_ReturnsOk_WhenAccommodationsInDB()
+        {
+            var accommodationType = new AccommodationType
+            {
+                Name = "Test Type"
+            };
+            var accommodationTypeEdit = new AccommodationType
+            {
+                Name = "Test Type2"
+            };
+            var accType = await fixture.InsertObjectIntoDatabase(accommodationType);
+
+            var country = await fixture.InsertObjectIntoDatabase(new Country() { Name = "Russia" });
+            var region = await fixture.InsertObjectIntoDatabase(new Region() { Name = "Московская область", CountryId = country.Id });
+            var city = await fixture.InsertObjectIntoDatabase(new City { Name = "Moscow", RegionId = region.Id });
+
+            var address1 = await fixture.InsertObjectIntoDatabase(new Domain.Entities.Address
+            {
+                Street = "Test Street",
+                ZipCode = "123456",
+                Longitude = 0,
+                Latitude = 0,
+                CityId = city.Id
+            });
+            var address2 = await fixture.InsertObjectIntoDatabase(new Domain.Entities.Address
+            {
+                Street = "Test Street1",
+                ZipCode = "123458",
+                Longitude = 0,
+                Latitude = 0,
+                CityId = city.Id
+            });
+
+            var accommodation1 = await fixture.InsertObjectIntoDatabase(new Accommodation
+            {
+                Name = "FirstHotel",
+                AccommodationTypeId = accType.Id,
+                AccommodationType = accType,
+                AddressId = address1.Id,
+                Description = "testAccommodationDescription1",
+                StarRating = new AccommodationStarRating { Stars = 4 },
+                Rooms = new List<Room>
+                {
+                    new Room { Name = "330", Capacity = 21, SquareInMeter = 230, RoomType = new RoomType { Name = "Test 1" } },
+                    new Room { Name = "340", Capacity = 21, SquareInMeter = 10, RoomType = new RoomType { Name = "Test 2" } }
+                }
+            });
+            var accommodation2 = await fixture.InsertObjectIntoDatabase(new Accommodation
+            {
+                Name = "SecondHotel",
+                AccommodationTypeId = accType.Id,
+                AccommodationType = accType,
+                AddressId = address2.Id,
+                Description = "testAccommodationDescription2",
+                StarRating = new AccommodationStarRating { Stars = 4 },
+                Rooms = new List<Room>
+                {
+                    new Room { Name = "310", Capacity = 1, SquareInMeter = 20, RoomType = new RoomType { Name = "Test 3" } },
+                    new Room { Name = "320", Capacity = 1, SquareInMeter = 20, RoomType = new RoomType { Name = "Test 4" } }
+                }
+            });
+
+            var accommodationChanges = new CreateAccommodationDto
+            {
+                Name = "EditAcc",
+                AccommodationTypeId = accommodationTypeEdit.Id,
+                Stars = 3,
+                Description = "EditDisc"
+            };
+
+            var content = new StringContent(JsonConvert.SerializeObject(accommodationChanges), Encoding.UTF8, "application/json");
+            var responsePut = await fixture.Client.PutAsync($"api/accommodations/{accommodation1.Id}", content);
+            Assert.Equal(HttpStatusCode.OK, responsePut.StatusCode);
+
+            var responseGet1 = await fixture.Client.GetAsync($"api/accommodations/{accommodation1.Id}");
+            Assert.Equal(HttpStatusCode.OK, responseGet1.StatusCode);
+
+            var responseString1 = await responseGet1.Content.ReadAsStringAsync();
+            var accommodationsReturn1 = JsonConvert.DeserializeObject<AccommodationExtendedDto>(responseString1);
+
+            Assert.Equal(accommodation1.Id, accommodationsReturn1.Id);
+            Assert.Equal(accommodation1.Address.Id, accommodationsReturn1.Address.Id);
+            Assert.Equal(accommodation1.Name, accommodationsReturn1.Name);
+            Assert.Equal(accommodation1.AccommodationTypeId, accommodationsReturn1.AccommodationType.Id);
+            Assert.Equal(accommodation1.Name, accommodationsReturn1.Name);
+            Assert.Equal(accommodation1.StarRating.Stars, accommodationsReturn1.Stars);
+
+            var responseGet2 = await fixture.Client.GetAsync($"api/accommodations/{accommodation2.Id}");
+            Assert.Equal(HttpStatusCode.OK, responseGet2.StatusCode);
+
+            var responseString2 = await responseGet2.Content.ReadAsStringAsync();
+            var accommodationsReturn2 = JsonConvert.DeserializeObject<AccommodationExtendedDto>(responseString2);
+
+            Assert.Equal(accommodation2.Id, accommodationsReturn2.Id);
+            Assert.Equal(accommodation2.Address.Id, accommodationsReturn2.Address.Id);
+            Assert.Equal(accommodationChanges.Name, accommodationsReturn2.Name);
+            Assert.Equal(accommodationChanges.AccommodationTypeId, accommodationsReturn2.AccommodationType.Id);
+            Assert.Equal(accommodationChanges.Name, accommodationsReturn2.Name);
+            Assert.Equal(accommodationChanges.Stars, accommodationsReturn2.Stars);
+        }
 
 
-        //[Fact]
-        //public async Task Edit_ReturnsOk_WhenAccommodationsInDB()
-        //{
-        //    var accommodationType = new AccommodationType
-        //    {
-        //        Name = "Test Type"
-        //    };
-        //    var accType = await fixture.InsertObjectIntoDatabase(accommodationType);
-
-        //    var country = await fixture.InsertObjectIntoDatabase(new Country() { Name = "Russia" });
-        //    var region = await fixture.InsertObjectIntoDatabase(new Region() { Name = "Московская область", CountryId = country.Id });
-        //    var city = await fixture.InsertObjectIntoDatabase(new City { Name = "Moscow", RegionId = region.Id });
-
-        //    var address1 = await fixture.InsertObjectIntoDatabase(new Domain.Entities.Address
-        //    {
-        //        Street = "Test Street",
-        //        ZipCode = "123456",
-        //        Longitude = 0,
-        //        Latitude = 0,
-        //        CityId = city.Id
-        //    });
-        //    var address2 = await fixture.InsertObjectIntoDatabase(new Domain.Entities.Address
-        //    {
-        //        Street = "Test Street1",
-        //        ZipCode = "123458",
-        //        Longitude = 0,
-        //        Latitude = 0,
-        //        CityId = city.Id
-        //    });
-
-        //    var accommodation1 = await fixture.InsertObjectIntoDatabase(new Accommodation
-        //    {
-        //        Name = "FirstHotel",
-        //        //AccommodationTypeId = accType.Id,
-        //        AccommodationType = accType,
-        //        AddressId = address1.Id,
-        //        Description = "testAccommodationDescription1",
-        //        StarRating = new AccommodationStarRating { Stars = 4 },
-        //        Rooms = new List<Room>
-        //        {
-        //            new Room { Name = "330", Capacity = 21, SquareInMeter = 230, RoomType = new RoomType { Name = "Test 1" } },
-        //            new Room { Name = "340", Capacity = 21, SquareInMeter = 10, RoomType = new RoomType { Name = "Test 2" } }
-        //        }
-        //    });
-        //    var accommodation2 = await fixture.InsertObjectIntoDatabase(new Accommodation
-        //    {
-        //        Name = "SecondHotel",
-        //        //AccommodationTypeId = accType.Id,
-        //        AccommodationType = accType,
-        //        AddressId = address2.Id,
-        //        Description = "testAccommodationDescription2",
-        //        StarRating = new AccommodationStarRating { Stars = 4 },
-        //        Rooms = new List<Room>
-        //        {
-        //            new Room { Name = "310", Capacity = 1, SquareInMeter = 20, RoomType = new RoomType { Name = "Test 3" } },
-        //            new Room { Name = "320", Capacity = 1, SquareInMeter = 20, RoomType = new RoomType { Name = "Test 4" } }
-        //        }
-        //    });
-
-        //    var AccommodationExtendedDto = new AccommodationExtendedDto()
-        //    {
-        //        Name = "SecondHotel",
-        //        //AccommodationTypeId = accType.Id,
-        //        AccommodationType = accType,
-        //        Address = address2,
-        //        Description = "testAccommodationDescription2",
-        //        Stars =4 ,
-        //        Rooms = new List<RoomWithIdDto>
-        //        {
-        //            new RoomWithIdDto { Name = "310", Capacity = 1, SquareInMeter = 20/*, RoomType = new RoomWithIdDto { Name = "Test 3"*/ } },
-        //            new RoomWithIdDto { Name = "320", Capacity = 1, SquareInMeter = 20/*, RoomType = new RoomType { Name = "Test 4" }*/ }
-        //        }
-        //    }
-
-        //    //var validCreateAccommodationDto = new CreateAccommodationDto
-        //    //{
-        //    //    Name = "Test Accommodation",
-        //    //    AccommodationTypeId = accType.Id,
-        //    //    Stars = 4,
-        //    //    Description = "A test description"
-        //    //};
-
-        //    var content = new StringContent(JsonConvert.SerializeObject(AccommodationExtendedDto), Encoding.UTF8, "application/json");
-        //    var response = await fixture.Client.PutAsync($"api/accommodation/{accommodation2.Id}", content);
-        //    Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-
-        //    //var responseString = await response.Content.ReadAsStringAsync();
-        //    //var accommodationsReturn = JsonConvert.DeserializeObject<List<Accommodation>>(responseString);
-
-        //    fixture.CleanDatabase();
-        //}
-
-
-        private AddressDto CreateValidAddressDto(int cityId)
+    private AddressDto CreateValidAddressDto(int cityId)
         {
             return new AddressDto
             {

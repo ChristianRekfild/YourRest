@@ -29,17 +29,11 @@ namespace YourRest.Application.UseCases.Accommodations
         }
         public async Task<AccommodationExtendedDto> ExecuteAsync(int id, CancellationToken cancellationToken)
         {
-            var accommodation = await _accommodationRepository.GetAsync(id, cancellationToken);
+            var accommodation = (await _accommodationRepository.GetWithIncludeAndTrackingAsync(a => a.Id == id, cancellationToken, include => include.StarRating)).First();
             if (accommodation == null)
             {
                 throw new EntityNotFoundException($"Accommodation with id number {id} not found");
             }
-
-            //accommodation.Rooms = (await _roomRepository.GetWithIncludeAsync(
-            //    room => room.AccommodationId == accommodation.Id,
-            //    cancellationToken,
-            //include => include.RoomType
-            //    )).ToList();
 
             return _mapper.Map<AccommodationExtendedDto>(accommodation);
         }

@@ -24,31 +24,30 @@ namespace YourRest.Application.UseCases.Accommodations
             _accommodationRepository = accommodationRepository;
             _mapper = mapper;
         }
-        public async Task<AccommodationExtendedDto> ExecuteAsync(AccommodationExtendedDto AccommodationExtendedDto, CancellationToken cancellationToken)
+        public async Task<AccommodationExtendedDto> ExecuteAsync(CreateAccommodationDto accommodationChenges, int id, CancellationToken cancellationToken)
         {
-            var accommodationToEdit = await _accommodationRepository.GetAsync(AccommodationExtendedDto.Id, cancellationToken);
+            var accommodationInDb = (await _accommodationRepository.GetWithIncludeAndTrackingAsync(
+                a => a.Id == id,
+                cancellationToken,
+                include => include.StarRating,
+                include => include.Rooms,
+                include => include.UserAccommodations,
+                include => include.AccommodationType,
+                include => include.AccommodationTypeId
+                )).First();
 
-            if (accommodationToEdit == null)
+            if (accommodationInDb == null)
             {
-                throw new EntityNotFoundException($"Accommodation with id {AccommodationExtendedDto.Id} not found");
+                throw new EntityNotFoundException($"Accommodation with id {id} not found");
             }
-            //var accommodationToReturn = await _accommodationRepository.GetWithIncludeAndTrackingAsync(a => a.Id == AccommodationExtendedDto.Id, cancellationToken, include => include.StarRating , include => include.AccommodationType, include => include.Address, include => include.AccommodationFacilities);
+            accommodationInDb.Description = accommodationChenges.Description;
+            accommodationInDb.Name = accommodationChenges.Name;
+            accommodationInDb.AccommodationTypeId = accommodationChenges.AccommodationTypeId;
 
-            var accommodationToReturn = await _accommodationRepository.UpdateAsync(_mapper.Map<Accommodation>(AccommodationExtendedDto), cancellationToken: cancellationToken);
+            accommodationInDb.StarRating.Stars = (int)accommodationChenges.Stars;
 
-            //List<RoomWithIdDto> romsUpdateToReturn = new List<RoomWithIdDto>();
-            //accommodationToReturn.Rooms.ToList().ForEach(r => romsUpdateToReturn.Add(_mapper.Map<RoomWithIdDto>(r)));
+            var accommodationToReturn = await _accommodationRepository.UpdateAsync(_mapper.Map<Accommodation>(accommodationInDb), cancellationToken: cancellationToken);
 
-            //var accommodationToReturnDto = new AccommodationExtendedDto()
-            //{
-            //    Id = accommodationToReturn.Id,
-            //    Address = _mapper.Map<AddressDto>(accommodationToReturn.Address),
-            //    Name = AccommodationExtendedDto.Name,
-            //    AccommodationType = AccommodationExtendedDto.AccommodationType,
-            //    Rooms = romsUpdateToReturn,
-            //    Description = accommodationToReturn.Description,
-            //    Stars = accommodationToReturn.StarRating.Stars
-            //};
 
             return _mapper.Map<AccommodationExtendedDto>(accommodationToReturn);
         }
