@@ -17,7 +17,15 @@
             </main>
         </Authorized>
         <NotAuthorized>
-            <YouRest.HotelierWebApp.Pages.LoginPage/>
+            @if(ShowRegistryPage)
+            {
+                <YouRest.HotelierWebApp.Pages.RegisterPage OnLoginPage="@ToLoginPage" />
+            }
+            else
+            {
+                <YouRest.HotelierWebApp.Pages.LoginPage OnRegistry="@ToRegisterPage" />
+            }
+            
         </NotAuthorized>
     </AuthorizeView>
 </div>

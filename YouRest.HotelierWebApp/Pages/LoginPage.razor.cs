@@ -18,7 +18,7 @@ namespace YouRest.HotelierWebApp.Pages
         public FluentValidationValidator? LoginValidator { get; set; }
         public FluentValidationValidator? RegisterValidator { get; set; }
         public AuthorizationViewModel AuthData { get; set; } = new();
-        public RegistrationViewModel Registration { get; set; }
+        [Parameter] public EventCallback OnRegistry { get; set; }
         #endregion
 
         #region Dependency Injection

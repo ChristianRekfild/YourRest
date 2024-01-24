@@ -16,6 +16,7 @@ namespace YouRest.HotelierWebApp.Pages
         protected CancellationTokenSource tokenSource = new();
         public RegistrationViewModel RegistrationData { get; set; } = new();
         public FluentValidationValidator? RegisterFormValidator { get; set; }
+        [Parameter] public EventCallback OnLoginPage { get; set; }  
         #endregion
 
         #region Dependency Injection
@@ -39,7 +40,7 @@ namespace YouRest.HotelierWebApp.Pages
                         securityToken.ExpiredAt = jwtSecurity.GetJWTClaim(JwtClaimTypes.Expiration)?.UnixExpirationTimeToLocalDateTime();
                         await LocalStorage.SetAsync(nameof(SecurityTokenViewModel), securityToken);
                         RegistrationData = new RegistrationViewModel();
-                        Navigation.NavigateTo("/");
+                        Navigation.NavigateTo("/", true);
                     }
                 }
             }
