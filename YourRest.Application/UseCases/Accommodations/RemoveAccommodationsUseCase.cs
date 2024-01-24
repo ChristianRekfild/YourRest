@@ -17,26 +17,36 @@ namespace YourRest.Application.UseCases.Accommodations
         private readonly IAccommodationStarRatingRepository _accommodationStarRatingRepository;
 
         public RemoveAccommodationsUseCase(
-            IAccommodationRepository accommodationRepository, 
+            IAccommodationRepository accommodationRepository,
             IRoomRepository roomRepository,
             IAccommodationStarRatingRepository accommodationStarRatingRepository)
         {
             _accommodationRepository = accommodationRepository;
-            _roomRepository = roomRepository;   
+            _roomRepository = roomRepository;
             _accommodationStarRatingRepository = accommodationStarRatingRepository;
         }
         public async Task ExecuteAsync(int id, CancellationToken cancellationToken)
         {
-            var accommodation = await _accommodationRepository.GetAsync(id, cancellationToken);
+            var accommodation = (await _accommodationRepository.GetWithIncludeAndTrackingAsync(a => a.Id == id, cancellationToken, include => include.StarRating , include => include.Rooms)).First();
             if (accommodation == null)
             {
                 throw new EntityNotFoundException($"Accommodation with id number {id} not found");
             }
+            int[] accRoomsId = new int[accommodation.Rooms.Count];            
+            int i = 0;
 
             foreach (var room in accommodation.Rooms)
             {
-                await _roomRepository.DeleteAsync(room.Id, cancellationToken: cancellationToken);
+                accRoomsId[i] = room.Id;
+                i++;
             }
+
+            foreach (var roomId in accRoomsId)
+            {
+                await _roomRepository.DeleteAsync(roomId, cancellationToken: cancellationToken);
+            }
+
+
             await _accommodationStarRatingRepository.DeleteAsync(accommodation.StarRating.Id, cancellationToken: cancellationToken);
             await _accommodationRepository.DeleteAsync(id, cancellationToken: cancellationToken);
         }

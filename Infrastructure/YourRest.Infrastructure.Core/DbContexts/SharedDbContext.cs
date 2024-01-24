@@ -102,7 +102,6 @@ namespace YourRest.Infrastructure.Core.DbContexts
             Cities.RemoveRange(Cities);
             Regions.RemoveRange(Regions);
             Reviews.RemoveRange(Reviews);
-            AccommodationStarRatings.RemoveRange(AccommodationStarRatings);
             UserAccommodations.RemoveRange(UserAccommodations);
             Accommodations.RemoveRange(Accommodations);
             Users.RemoveRange(Users);
@@ -116,6 +115,7 @@ namespace YourRest.Infrastructure.Core.DbContexts
             AccommodationPhotos.RemoveRange(AccommodationPhotos);
             RoomPhotos.RemoveRange(RoomPhotos);
             UserPhotos.RemoveRange(UserPhotos);
+            AccommodationStarRatings.RemoveRange(AccommodationStarRatings);
 
             SaveChanges();
         }
