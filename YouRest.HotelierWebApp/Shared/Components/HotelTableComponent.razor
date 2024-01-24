@@ -1,0 +1,44 @@
+﻿<table class="table">
+    <thead>
+    <tr>
+        <th scope="col">№</th>
+        <th scope="col">Название отеля</th>
+        <th scope="col">Уровень комфорта</th>
+        <th scope="col">Управление</th>
+    </tr>
+    </thead>
+    @foreach (HotelViewModel hotel in Hotels)
+    {
+        <tr class="tab_row">
+
+            <th scope="row" @onclick="@( () => SelectedItem(hotel))">@(Hotels.IndexOf(hotel) + 1)</th>
+            <td @onclick="@( () => SelectedItem(hotel))">@hotel.Name</td>
+            <td @onclick="@( () => SelectedItem(hotel))">
+                <RatingOfStarComponent CountOfStar="@hotel.Stars" />
+            </td>
+            <td>
+                <ul class="control">
+                    <li data-bs-toggle="tooltip"
+                        data-bs-placement="left"
+                        title="Редактировать"
+                        @onclick="@NavigateToEdit"
+                        @onmouseover="@MouseOverOfEditBtn"
+                        @onmouseout="@MouseOutOfEditBtn">
+                        <i class="oi oi-pencil control_item @Edit"></i>
+                    </li>
+                    <li data-bs-toggle="tooltip"
+                        data-bs-placement="right"
+                        title="Удалить"
+                        @onclick="() => OnRemove(hotel)"
+                        @onmouseover="@MouseOverOfRemoveBtn"
+                        @onmouseout="@MouseOutOfRemoveBtn">
+                        <i class="oi oi-trash control_item @Remove"></i>
+                    </li>
+                </ul>
+            </td>
+        </tr>
+    }
+</table>
+<style type="text/css">
+    .tab_row:hover {@RowHoverStyle}
+</style>
