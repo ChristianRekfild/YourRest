@@ -675,17 +675,26 @@ namespace YourRest.WebApi.Tests.Controllers
                     new Room { Name = "320", Capacity = 1, SquareInMeter = 20, RoomType = new RoomType { Name = "Test 4" } }
                 }
             });
-
-            var accommodationChanges = new CreateAccommodationDto
+            var accommodationChanges = new EditAccommodationDto
             {
+                Id = 2,
                 Name = "EditAcc",
                 AccommodationTypeId = accommodationTypeEdit.Id,
                 Stars = 3,
                 Description = "EditDisc"
             };
 
+            var responseGet10 = await fixture.Client.GetAsync($"api/accommodations/{accommodation2.Id}");
+            Assert.Equal(HttpStatusCode.OK, responseGet10.StatusCode);
+            var responseString10 = await responseGet10.Content.ReadAsStringAsync();
+
+            var accommodationsReturn13 = JsonConvert.DeserializeObject<AccommodationExtendedDto>(responseString10);
+
+
+
             var content = new StringContent(JsonConvert.SerializeObject(accommodationChanges), Encoding.UTF8, "application/json");
-            var responsePut = await fixture.Client.PutAsync($"api/accommodations/{accommodation2.Id}", content);
+
+            var responsePut = await fixture.Client.PutAsync($"api/accommodations", content);
 
             Assert.Equal(HttpStatusCode.OK, responsePut.StatusCode);
 

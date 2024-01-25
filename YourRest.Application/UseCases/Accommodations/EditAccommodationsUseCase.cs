@@ -26,35 +26,35 @@ namespace YourRest.Application.UseCases.Accommodations
             _mapper = mapper;
             _starRatingRepository = starRatingRepository;
         }
-        public async Task<AccommodationExtendedDto> ExecuteAsync(CreateAccommodationDto accommodationChenges, int id, CancellationToken cancellationToken)
+        public async Task<AccommodationExtendedDto> ExecuteAsync(EditAccommodationDto editAccommodationDto, CancellationToken cancellationToken)
         {
             var accommodationInDb = (await _accommodationRepository.GetWithIncludeAndTrackingAsync(
-                a => a.Id == id,
+                a => a.Id == editAccommodationDto.Id,
                 cancellationToken,
-                include => include.StarRating,
+                include => include.StarRating,EDI 
                 include => include.Rooms,
                 include => include.AccommodationType
                 )).FirstOrDefault();
 
             if (accommodationInDb == null)
             {
-                throw new EntityNotFoundException($"Accommodation with id {id} not found");
+                throw new EntityNotFoundException($"Accommodation with id {editAccommodationDto.Id} not found");
             }
-            accommodationInDb.Description = accommodationChenges.Description;
-            accommodationInDb.Name = accommodationChenges.Name;
-            accommodationInDb.AccommodationTypeId = accommodationChenges.AccommodationTypeId;
+            accommodationInDb.Description = editAccommodationDto.Description;
+            accommodationInDb.Name = editAccommodationDto.Name;
+            accommodationInDb.AccommodationTypeId = editAccommodationDto.AccommodationTypeId;
 
             AccommodationStarRating star = new AccommodationStarRating();
             try
             {
                 star = await _starRatingRepository.GetAsync(accommodationInDb.StarRating.Id, cancellationToken);
-                star.Stars = (int)accommodationChenges.Stars;
+                star.Stars = (int)editAccommodationDto.Stars;
                 await _starRatingRepository.UpdateAsync(star, true, cancellationToken);
             }
             catch (NullReferenceException err)
             {
-                star.Stars = (int)accommodationChenges.Stars;
-                star.AccommodationId = id;
+                star.Stars = (int)editAccommodationDto.Stars;
+                star.AccommodationId = editAccommodationDto.Id;
                 await _starRatingRepository.AddAsync(star, true, cancellationToken);
             }
 

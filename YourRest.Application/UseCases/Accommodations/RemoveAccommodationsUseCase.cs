@@ -27,7 +27,7 @@ namespace YourRest.Application.UseCases.Accommodations
         }
         public async Task ExecuteAsync(int id, CancellationToken cancellationToken)
         {
-            var accommodation = (await _accommodationRepository.GetWithIncludeAndTrackingAsync(a => a.Id == id, cancellationToken, include => include.StarRating , include => include.Rooms)).First();
+            var accommodation = (await _accommodationRepository.GetWithIncludeAndTrackingAsync(a => a.Id == id, cancellationToken, include => include.StarRating , include => include.Rooms)).FirstOrDefault();
             if (accommodation == null)
             {
                 throw new EntityNotFoundException($"Accommodation with id number {id} not found");

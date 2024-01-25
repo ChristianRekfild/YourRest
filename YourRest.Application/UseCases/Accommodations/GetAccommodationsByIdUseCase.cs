@@ -29,7 +29,7 @@ namespace YourRest.Application.UseCases.Accommodations
         }
         public async Task<AccommodationExtendedDto> ExecuteAsync(int id, CancellationToken cancellationToken)
         {
-            var accommodation = (await _accommodationRepository.GetWithIncludeAndTrackingAsync(a => a.Id == id, cancellationToken, include => include.StarRating)).First();
+            var accommodation = (await _accommodationRepository.GetWithIncludeAndTrackingAsync(a => a.Id == id, cancellationToken, include => include.StarRating)).FirstOrDefault();
             if (accommodation == null)
             {
                 throw new EntityNotFoundException($"Accommodation with id number {id} not found");

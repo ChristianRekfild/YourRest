@@ -5,6 +5,6 @@ namespace YourRest.Application.Interfaces.Accommodations
 {
     public interface IEditAccommodationsUseCase
     {
-        Task<AccommodationExtendedDto> ExecuteAsync(CreateAccommodationDto accommodation, int id, CancellationToken cancellationToken);
+        Task<AccommodationExtendedDto> ExecuteAsync(EditAccommodationDto accommodation, CancellationToken cancellationToken);
     }
 }

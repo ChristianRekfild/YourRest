@@ -107,10 +107,10 @@ namespace YourRest.WebApi.Controllers
         }
 
         [HttpPut]
-        [Route("api/accommodations/{accommodationId}", Name = "EditAccommodation")]
-        public async Task<IActionResult> Put([FromRoute] int accommodationId , [FromBody] CreateAccommodationDto accommodationEdit)
+        [Route("api/accommodations", Name = "EditAccommodation")]
+        public async Task<IActionResult> Put([FromBody] EditAccommodationDto accommodationEdit)
         {
-            return Ok(await _editAccommodationUseCase.ExecuteAsync(accommodationEdit, accommodationId, HttpContext.RequestAborted));
+            return Ok(await _editAccommodationUseCase.ExecuteAsync(accommodationEdit, HttpContext.RequestAborted));
         }
 
         [HttpGet]
