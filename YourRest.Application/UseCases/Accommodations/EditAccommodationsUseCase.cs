@@ -31,7 +31,7 @@ namespace YourRest.Application.UseCases.Accommodations
             var accommodationInDb = (await _accommodationRepository.GetWithIncludeAndTrackingAsync(
                 a => a.Id == editAccommodationDto.Id,
                 cancellationToken,
-                include => include.StarRating,EDI 
+                include => include.StarRating,
                 include => include.Rooms,
                 include => include.AccommodationType
                 )).FirstOrDefault();
