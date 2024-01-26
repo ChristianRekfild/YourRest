@@ -36,6 +36,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "YourRest.ClientIdentity.Inf
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "YourRest.Producer.Infrastructure.Keycloak", "Infrastructure\YourRest.Producer.Infrastructure.Keycloak\YourRest.Producer.Infrastructure.Keycloak.csproj", "{1B40BA5B-D25A-43A3-A4A0-B9AF2DFEDA67}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "YouRest.HotelierWebApp", "YouRest.HotelierWebApp\YouRest.HotelierWebApp.csproj", "{D0DDD384-D4F2-40AD-BA78-CD6CFEF8A20D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -94,6 +96,10 @@ Global
 		{1B40BA5B-D25A-43A3-A4A0-B9AF2DFEDA67}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1B40BA5B-D25A-43A3-A4A0-B9AF2DFEDA67}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1B40BA5B-D25A-43A3-A4A0-B9AF2DFEDA67}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D0DDD384-D4F2-40AD-BA78-CD6CFEF8A20D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D0DDD384-D4F2-40AD-BA78-CD6CFEF8A20D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D0DDD384-D4F2-40AD-BA78-CD6CFEF8A20D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D0DDD384-D4F2-40AD-BA78-CD6CFEF8A20D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

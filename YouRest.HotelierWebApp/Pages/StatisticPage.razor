@@ -1,0 +1,10 @@
+﻿@page "/"
+@attribute [Authorize]
+
+<PageTitle>Statistics</PageTitle>
+
+<h2>Приветствуем вас на платформе YouRest</h2>
+<h1>@UserId</h1>
+<button @onclick="CheckAuthState">Click Me!</button>
+
+Welcome to our hotelier web application.

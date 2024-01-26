@@ -62,8 +62,9 @@ namespace YourRest.Application.UseCases.Accommodations
                 Name = accommodation.Name,
                 Description = accommodation.Description,
                 Stars = accommodation.StarRating?.Stars,
-                Address = accommodation.Address != null ? new AddressDto
+                Address = accommodation.Address != null ? new AddressWithIdDto
                 {
+                    Id = accommodation.Address.Id,
                     ZipCode = accommodation.Address.ZipCode,
                     Street = accommodation.Address.Street,
                     CityId = accommodation.Address.CityId

@@ -17,17 +17,17 @@ namespace YourRest.Application.UseCases.Addresses
             this.mapper = mapper;
         }
 
-        public async Task<AddressDto> ExecuteAsync(AddressDto addressDto, CancellationToken cancellationToken)
+        public async Task<AddressWithIdDto> ExecuteAsync(AddressWithIdDto addressWithIdDto, CancellationToken cancellationToken)
         {
 
-            if (addressDto == null)
+            if (addressWithIdDto == null)
             {
                 throw new ArgumentNullException("AddressDto");
             }
 
-            var address = await addressRepository.AddAsync(mapper.Map<Address>(addressDto), true, cancellationToken);
+            var address = await addressRepository.AddAsync(mapper.Map<Address>(addressWithIdDto), true, cancellationToken);
 
-            return mapper.Map<AddressDto>(address);
+            return mapper.Map<AddressWithIdDto>(address);
         }
     }
 }

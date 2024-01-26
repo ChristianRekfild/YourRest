@@ -29,6 +29,7 @@ namespace YourRest.WebApi.Controllers
         private readonly IRemoveAccommodationsUseCase _removeAccommodationUseCase;
         private readonly IGetAccommodationsUseCase _getAccommodation;
         private readonly IGetAccommodationsByIdUseCase _getAccommodationByIdUseCase;
+        private readonly IDeleteAddressFromAccommodationUseCase _deleteAddressFromAccommodationUseCase;
 
 
 
@@ -49,16 +50,17 @@ namespace YourRest.WebApi.Controllers
             _removeAccommodationUseCase = removeAccommodationUseCase;
             _getAccommodation = getAccommodation;
             _getAccommodationByIdUseCase = getAccommodationByIdUseCase;
+            IDeleteAddressFromAccommodationUseCase deleteAddressFromAccommodationUseCase;
         }
 
         [HttpPost("api/operators/accommodations/{accommodationId}/address", Name = "AddAddressToAccommodationAsync")]
-        public async Task<IActionResult> AddAddressToAccommodationAsync([FromRoute] int accommodationId, [FromBody] AddressDto addressDto)
+        public async Task<IActionResult> AddAddressToAccommodationAsync([FromRoute] int accommodationId, [FromBody] AddressDto addressWithIdDto)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-            var result = await _addAddressToAccommodationUseCase.Execute(accommodationId, addressDto);
+            var result = await _addAddressToAccommodationUseCase.Execute(accommodationId, addressWithIdDto);
 
             return CreatedAtRoute(nameof(AddAddressToAccommodationAsync), result);
         }
@@ -95,6 +97,14 @@ namespace YourRest.WebApi.Controllers
 
             var createdAccommodation = await _createAccommodationUseCase.ExecuteAsync(accommodationExtendedDto, sub, HttpContext.RequestAborted);
             return CreatedAtAction(nameof(Post), createdAccommodation);
+        }
+
+        [HttpDelete("api/operators/accommodations/{accommodationId}/address/{addressId}", Name = "DeleteAddressAccommodationLinkAsync")]
+        public async Task<IActionResult> DeleteAddressFromAccommodationAsync([FromRoute] int accommodationId, [FromRoute] int addressId)
+        {
+            await _deleteAddressFromAccommodationUseCase.Execute(accommodationId, addressId);
+
+            return Ok($"Address {addressId} from Accommodation {accommodationId} has been successfully deleted.");
         }
 
         [HttpDelete]

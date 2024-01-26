@@ -8,7 +8,7 @@ namespace YourRest.WebApi.Mappers
     {
         public ViewModelsProfile()
         {
-            CreateMap<AddressViewModel, AddressDto>()
+            CreateMap<AddressViewModel, AddressWithIdDto>()
                 .ReverseMap();
         }
     }

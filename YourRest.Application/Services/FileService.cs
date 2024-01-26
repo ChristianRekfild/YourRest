@@ -2,6 +2,7 @@ using YourRest.Application.Dto;
 using YourRest.Application.Dto.Models;
 using Amazon.S3;
 using Amazon.S3.Model;
+using System.Text;
 
 namespace YourRest.Application.Services;
 
@@ -21,13 +22,38 @@ public class FileService: IFileService
         {
             return null;
         }
-
+        
+        //using MemoryStream stream = new MemoryStream();
+        //response.ResponseStream.CopyTo(stream);
+        //var b = stream.ToArray();
+        //var file = Convert.ToBase64String(b);
+        
         return new FileDto
         {
             Stream = response.ResponseStream,
             MimeType = response.Headers.ContentType,
-            FileName = Path.GetFileName(filePath)
+            FileName = Path.GetFileName(filePath),
+            Img = string.Empty
         };
+    }
+
+    public async Task<bool> DeleteFileAsync(string path, string bucketName, CancellationToken cancellationToken)
+    {
+        try
+        {
+            var deleteObjectRequest = new DeleteObjectRequest
+            {
+                BucketName = bucketName,
+                Key = path
+            };
+
+            var response = await _s3Client.DeleteObjectAsync(deleteObjectRequest, cancellationToken);
+            return response.HttpStatusCode == System.Net.HttpStatusCode.OK;
+        }
+        catch (AmazonS3Exception e)
+        {
+            throw new InvalidOperationException($"Error occurred while deleting file from S3: {e.Message}", e);
+        }
     }
 
     public async Task<string> AddPhotoAsync(FileData fileData, string bucketName, CancellationToken cancellationToken)

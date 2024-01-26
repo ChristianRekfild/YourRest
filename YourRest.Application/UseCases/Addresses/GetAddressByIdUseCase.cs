@@ -16,12 +16,12 @@ namespace YourRest.Application.UseCases.Addresses
             this.mapper = mapper;
         }
 
-        public async Task<AddressDto> ExecuteAsync(int id, CancellationToken cancellationToken)
+        public async Task<AddressWithIdDto> ExecuteAsync(int id, CancellationToken cancellationToken)
         {
             var addresses = await addressRepository.FindAsync(a => a.Id == id, cancellationToken);
             if (addresses.Any())
             {
-                return mapper.Map<AddressDto>(addresses.First());
+                return mapper.Map<AddressWithIdDto>(addresses.First());
             }
             return null;
         }

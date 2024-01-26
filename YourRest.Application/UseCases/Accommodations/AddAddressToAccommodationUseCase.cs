@@ -22,7 +22,7 @@ namespace YourRest.Application.UseCases.Accommodations
             _cityRepository = cityRepository;
         }
 
-        public async Task<ResultDto> Execute(int accommodationId, AddressDto addressDto)
+        public async Task<ResultDto> Execute(int accommodationId, AddressDto addressWithIdDto)
         {
             var accommodations = await _accommodationRepository.GetWithIncludeAsync(
                 a => a.Id == accommodationId,
@@ -41,17 +41,17 @@ namespace YourRest.Application.UseCases.Accommodations
                 throw new ValidationException($"Address for accommodation with id {accommodationId} already exists");
             }
 
-            var city = await _cityRepository.GetAsync(addressDto.CityId);
+            var city = await _cityRepository.GetAsync(addressWithIdDto.CityId);
             if (city == null)
             {
-                throw new EntityNotFoundException($"City with id {addressDto.CityId} not found");
+                throw new EntityNotFoundException($"City with id {addressWithIdDto.CityId} not found");
             }
 
             var addresses = await _addressRepository.FindAsync(
-                a => a.Street == addressDto.Street
-                && a.ZipCode == addressDto.ZipCode
-                && a.Longitude == addressDto.Longitude
-                && a.Latitude == addressDto.Latitude
+                a => a.Street == addressWithIdDto.Street
+                && a.ZipCode == addressWithIdDto.ZipCode
+                && a.Longitude == addressWithIdDto.Longitude
+                && a.Latitude == addressWithIdDto.Latitude
             );
             var address = addresses.FirstOrDefault();
 
@@ -59,11 +59,11 @@ namespace YourRest.Application.UseCases.Accommodations
             {
                 address = new Address
                 {
-                    Street = addressDto.Street,
+                    Street = addressWithIdDto.Street,
                     CityId = city.Id,
-                    ZipCode = addressDto.ZipCode,
-                    Longitude = addressDto.Longitude,
-                    Latitude = addressDto.Latitude,
+                    ZipCode = addressWithIdDto.ZipCode,
+                    Longitude = addressWithIdDto.Longitude,
+                    Latitude = addressWithIdDto.Latitude,
                 };
 
                 address = await _addressRepository.AddAsync(address);
