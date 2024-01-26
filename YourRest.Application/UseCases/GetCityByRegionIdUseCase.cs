@@ -2,6 +2,7 @@
 using YourRest.Application.Interfaces;
 using YourRest.Domain.Repositories;
 using YourRest.Application.Dto.Models;
+using YourRest.Domain.Entities;
 
 namespace YourRest.Application.UseCases
 {
@@ -14,20 +15,27 @@ namespace YourRest.Application.UseCases
             _cityRepository = cityRepository;
         }
         
-        public async Task<IEnumerable<CityDTO>> Execute(int regionId)
+        public async Task<IEnumerable<CityDTO>> Execute(int regionId, bool isOnlyFavorite, CancellationToken cancellationToken)
         {
-            var cities = await _cityRepository.FindAsync(x => x.RegionId == regionId);
+            IEnumerable<City> cities;
 
-            if (!cities.Any())
+            if (isOnlyFavorite)
             {
-                return new List<CityDTO>();
+                cities = await _cityRepository.FindAsync(x => x.RegionId == regionId && x.IsFavorite, cancellationToken);
+            }
+            else
+            {
+                cities = await _cityRepository.FindAsync(x => x.RegionId == regionId, cancellationToken);
             }
 
             return cities.Select(c => new CityDTO
             {
                 Id = c.Id,
                 Name = c.Name,
+                Description = c.Description,
+                IsFavorite = c.IsFavorite
             }).ToList();
         }
+
     }
 }

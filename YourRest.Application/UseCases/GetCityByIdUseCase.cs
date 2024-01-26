@@ -2,6 +2,7 @@
 using YourRest.Application.Interfaces;
 using YourRest.Domain.Repositories;
 using YourRest.Application.Dto.Models;
+using YourRest.Application.Dto.Models.Photo;
 
 namespace YourRest.Application.UseCases
 {
@@ -13,18 +14,25 @@ namespace YourRest.Application.UseCases
         {
             _cityRepository = cityRepository;
         }
-
-
+        
         public async Task<CityDTO> Execute(int id)
         {
             var city = await _cityRepository.GetAsync(id);
 
             if (city is null) throw new EntityNotFoundException($"City with id {id} not found");
-
-            return new CityDTO
+            
+            var photos = city.CityPhotos.Select(photo => new PhotoPathResponseDto
+            {
+                FilePath = photo.FilePath
+            }).ToList();
+            
+            return new CityDTOWithPhotos()
             {
                 Id = city.Id,
-                Name = city.Name
+                Name = city.Name,
+                Description = city.Description,
+                IsFavorite = city.IsFavorite,
+                Photos = photos
             };
 
         }

@@ -4,6 +4,6 @@ namespace YourRest.Application.Interfaces
 {
     public interface IGetCityByCountryIdUseCase
     {
-        Task<IEnumerable<CityDTO>> Execute(int countryId);
+        Task<IEnumerable<CityDTO>> Execute(int countryId, bool isOnlyFavorite, CancellationToken cancellationToken);
     }
 }

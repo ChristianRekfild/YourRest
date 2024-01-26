@@ -34,9 +34,9 @@ public class CitySeeder
             {
                 cities.AddRange(new[]
                 {
-                    new City { RegionId = moscowRegionId.Value, Name = "Москва" },
-                    new City { RegionId = moscowRegionId.Value, Name = "Зеленоград" },
-                    new City { RegionId = moscowRegionId.Value, Name = "Подольск" }
+                    new City { RegionId = moscowRegionId.Value, Name = "Москва", Description = "Столица России, крупнейший культурный и экономический центр.", IsFavorite = true },
+                    new City { RegionId = moscowRegionId.Value, Name = "Зеленоград", Description = "Административный округ Москвы, известный как научный центр.", IsFavorite = false },
+                    new City { RegionId = moscowRegionId.Value, Name = "Подольск", Description = "Город в Московской области, с богатой историей и промышленностью.", IsFavorite = false }
                 });
             }
 
@@ -44,8 +44,8 @@ public class CitySeeder
             {
                 cities.AddRange(new[]
                 {
-                    new City { RegionId = leningradRegionId.Value, Name = "Всеволожск" },
-                    new City { RegionId = leningradRegionId.Value, Name = "Гатчина" }
+                    new City { RegionId = leningradRegionId.Value, Name = "Всеволожск", Description = "Город в Ленинградской области, известный своими историческими достопримечательностями.", IsFavorite = false },
+                    new City { RegionId = leningradRegionId.Value, Name = "Гатчина", Description = "Известен своим дворцово-парковым ансамблем и богатой историей.", IsFavorite = true }
                 });
             }
 
@@ -53,8 +53,8 @@ public class CitySeeder
             {
                 cities.AddRange(new[]
                 {
-                    new City { RegionId = sverdlovskRegionId.Value, Name = "Екатеринбург" },
-                    new City { RegionId = sverdlovskRegionId.Value, Name = "Нижний Тагил" }
+                    new City { RegionId = sverdlovskRegionId.Value, Name = "Екатеринбург", Description = "Четвёртый по величине город России, культурная столица Урала.", IsFavorite = true },
+                    new City { RegionId = sverdlovskRegionId.Value, Name = "Нижний Тагил", Description = "Один из крупнейших промышленных центров Уральского региона.", IsFavorite = false }
                 });
             }
 
@@ -62,9 +62,9 @@ public class CitySeeder
             {
                 cities.AddRange(new[]
                 {
-                    new City { RegionId = krasnodarRegionId.Value, Name = "Краснодар" },
-                    new City { RegionId = krasnodarRegionId.Value, Name = "Сочи" },
-                    new City { RegionId = krasnodarRegionId.Value, Name = "Анапа" }
+                    new City { RegionId = krasnodarRegionId.Value, Name = "Краснодар", Description = "Административный центр Краснодарского края, ключевой экономический центр юга России.", IsFavorite = false },
+                    new City { RegionId = krasnodarRegionId.Value, Name = "Сочи", Description = "Курортный город на побережье Черного моря, известен своими пляжами и горнолыжными трассами.", IsFavorite = true },
+                    new City { RegionId = krasnodarRegionId.Value, Name = "Анапа", Description = "Популярный курортный город на побережье Черного моря.", IsFavorite = true }
                 });
             }
 
@@ -76,4 +76,3 @@ public class CitySeeder
         }
     }
 }
-

@@ -16,6 +16,7 @@ namespace YourRest.WebApi.Controllers
         private readonly IAccommodationPhotoUploadUseCase _accommodationPhotoUploadUseCase;
         private readonly IRoomPhotoUploadUseCase _roomPhotoUploadUseCase;
         private readonly IUserPhotoUploadUseCase _userPhotoUploadUseCase;
+        private readonly ICityPhotoUploadUseCase _cityPhotoUploadUseCase;
         private readonly IGetUserPhotosUseCase _getUserPhotosUseCase;
         private readonly AwsOptions _awsOptions;
         private readonly IFileService _fileService;
@@ -24,6 +25,7 @@ namespace YourRest.WebApi.Controllers
             IAccommodationPhotoUploadUseCase accommodationPhotoUploadUseCase,
             IRoomPhotoUploadUseCase roomPhotoUploadUseCase,
             IUserPhotoUploadUseCase userPhotoUploadUseCase,
+            ICityPhotoUploadUseCase cityPhotoUploadUseCase,
             IGetUserPhotosUseCase getUserPhotosUseCase,
             AwsOptions awsOptions,
             IFileService fileService
@@ -32,6 +34,7 @@ namespace YourRest.WebApi.Controllers
             _accommodationPhotoUploadUseCase = accommodationPhotoUploadUseCase;
             _roomPhotoUploadUseCase = roomPhotoUploadUseCase;
             _userPhotoUploadUseCase = userPhotoUploadUseCase;
+            _cityPhotoUploadUseCase = cityPhotoUploadUseCase;
             _getUserPhotosUseCase = getUserPhotosUseCase;
             _awsOptions = awsOptions;
             _fileService = fileService;
@@ -57,6 +60,14 @@ namespace YourRest.WebApi.Controllers
         public async Task<IActionResult> UploadRoomPhotoAsync([FromForm] RoomPhotoUploadModel model)
         {
             var dto = await _roomPhotoUploadUseCase.ExecuteAsync(model, _awsOptions.BucketNames.Room, HttpContext.RequestAborted);
+            return Ok(dto);
+        }
+        
+        [HttpPost]
+        [Route("api/city-photo")]
+        public async Task<IActionResult> UploadCityPhotoAsync([FromForm] CityPhotoUploadModel model)
+        {
+            var dto = await _cityPhotoUploadUseCase.ExecuteAsync(model, _awsOptions.BucketNames.City, HttpContext.RequestAborted);
             return Ok(dto);
         }
 
@@ -105,6 +116,7 @@ namespace YourRest.WebApi.Controllers
                 "Accommodation" => _awsOptions.BucketNames.Accommodation,
                 "Room" => _awsOptions.BucketNames.Room,
                 "User" => _awsOptions.BucketNames.User,
+                "City" => _awsOptions.BucketNames.City,
                 _ => throw new ArgumentException("Invalid bucket type")
             };
 
