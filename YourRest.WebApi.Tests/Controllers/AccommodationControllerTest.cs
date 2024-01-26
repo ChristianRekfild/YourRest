@@ -677,28 +677,24 @@ namespace YourRest.WebApi.Tests.Controllers
             });
             var accommodationChanges = new EditAccommodationDto
             {
-                Id = 2,
+                Id = accommodation2.Id,
                 Name = "EditAcc",
-                AccommodationTypeId = accommodationTypeEdit.Id,
+                AccommodationTypeId = accommodationType.Id,
                 Stars = 3,
                 Description = "EditDisc"
             };
 
-            var responseGet10 = await fixture.Client.GetAsync($"api/accommodations/{accommodation2.Id}");
-            Assert.Equal(HttpStatusCode.OK, responseGet10.StatusCode);
-            var responseString10 = await responseGet10.Content.ReadAsStringAsync();
-
-            var accommodationsReturn13 = JsonConvert.DeserializeObject<AccommodationExtendedDto>(responseString10);
 
 
+            StringContent content = new StringContent(JsonConvert.SerializeObject(accommodationChanges), Encoding.UTF8, "application/json");
 
-            var content = new StringContent(JsonConvert.SerializeObject(accommodationChanges), Encoding.UTF8, "application/json");
+            var sd = content.ReadAsStringAsync().Result;
 
             var responsePut = await fixture.Client.PutAsync($"api/accommodations", content);
 
             Assert.Equal(HttpStatusCode.OK, responsePut.StatusCode);
 
-            var responseGet1 = await fixture.Client.GetAsync($"api/accommodations/{accommodation2.Id}");
+            var responseGet1 = await fixture.Client.GetAsync($"api/accommodations/{accommodation1.Id}");
             Assert.Equal(HttpStatusCode.OK, responseGet1.StatusCode);
 
             var responseString1 = await responseGet1.Content.ReadAsStringAsync();

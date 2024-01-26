@@ -26,7 +26,7 @@ namespace YourRest.Application.UseCases.Accommodations
             _mapper = mapper;
             _starRatingRepository = starRatingRepository;
         }
-        public async Task<AccommodationExtendedDto> ExecuteAsync(EditAccommodationDto editAccommodationDto, CancellationToken cancellationToken)
+        public async Task<AccommodationDto> ExecuteAsync(EditAccommodationDto editAccommodationDto, CancellationToken cancellationToken)
         {
             var accommodationInDb = (await _accommodationRepository.GetWithIncludeAndTrackingAsync(
                 a => a.Id == editAccommodationDto.Id,
@@ -62,7 +62,19 @@ namespace YourRest.Application.UseCases.Accommodations
 
             var accommodationToReturn = await _accommodationRepository.UpdateAsync((Accommodation)accommodationInDb, cancellationToken: cancellationToken);
 
-            return _mapper.Map<AccommodationExtendedDto>(accommodationToReturn);
+            AccommodationDto accommodationDtoToReturn = new AccommodationDto()
+            {
+                Id = accommodationToReturn.Id,
+                Name = accommodationToReturn.Name,
+                Stars = accommodationToReturn.StarRating.Stars,
+                AccommodationType = new AccommodationTypeDto()
+                {
+                    Id = accommodationToReturn.AccommodationType.Id,
+                    Name = accommodationToReturn.AccommodationType.Name
+                },
+                Description = accommodationToReturn.Description
+            };
+            return accommodationDtoToReturn;
         }
     }
 }

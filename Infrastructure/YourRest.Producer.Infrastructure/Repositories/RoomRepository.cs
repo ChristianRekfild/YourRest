@@ -49,13 +49,13 @@ namespace YourRest.Producer.Infrastructure.Repositories
                 .ToListAsync(cancellation);
         }
 
-        public Task<List<Room>> GetRoomsByAccommodationId(int accommodationId, CancellationToken cancellation = default)
+        public async Task<List<Room>> GetRoomsByAccommodationId(int accommodationId, CancellationToken cancellation = default)
         {
             var roomsByAccommodationId = this._dataContext.Set<Room>()
                .Where(room => room.Accommodation.Address != null &&
                 room.Accommodation.Id == accommodationId);
 
-            return roomsByAccommodationId
+            return await roomsByAccommodationId
                 .Except(roomsByAccommodationId)
                 .AsQueryable()
                 .ToListAsync(cancellation);
