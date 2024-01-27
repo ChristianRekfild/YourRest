@@ -2,6 +2,7 @@
 using YourRest.Application.Interfaces;
 using YourRest.Domain.Repositories;
 using YourRest.Application.Dto.Models;
+using YourRest.Application.Dto.Models.Photo;
 using YourRest.Domain.Entities;
 
 namespace YourRest.Application.UseCases
@@ -15,25 +16,22 @@ namespace YourRest.Application.UseCases
             _cityRepository = cityRepository;
         }
         
-        public async Task<IEnumerable<CityDTO>> Execute(int regionId, bool isOnlyFavorite, CancellationToken cancellationToken)
+        public async Task<IEnumerable<CityDTOWithLastPhoto>> Execute(int regionId, bool isOnlyFavorite, CancellationToken cancellationToken)
         {
-            IEnumerable<City> cities;
+            var cities = await _cityRepository.GetCitiesWithPhotosByRegionAsync(regionId, isOnlyFavorite, cancellationToken);
 
-            if (isOnlyFavorite)
-            {
-                cities = await _cityRepository.FindAsync(x => x.RegionId == regionId && x.IsFavorite, cancellationToken);
-            }
-            else
-            {
-                cities = await _cityRepository.FindAsync(x => x.RegionId == regionId, cancellationToken);
-            }
-
-            return cities.Select(c => new CityDTO
+            return cities.Select(c => new CityDTOWithLastPhoto
             {
                 Id = c.Id,
                 Name = c.Name,
                 Description = c.Description,
-                IsFavorite = c.IsFavorite
+                IsFavorite = c.IsFavorite,
+                LastPhoto = c.CityPhotos.OrderByDescending(photo => photo.Id)
+                    .Select(photo => new PhotoPathResponseDto
+                    {
+                        FilePath = photo.FilePath
+                    })
+                    .FirstOrDefault()
             }).ToList();
         }
 

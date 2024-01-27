@@ -22,7 +22,7 @@ namespace YourRest.Application.UseCases
         }
 
 
-        public async Task<IEnumerable<CityDTO>> Execute(int countryId, bool isOnlyFavorite, CancellationToken cancellationToken)
+        public async Task<IEnumerable<CityDTOWithLastPhoto>> Execute(int countryId, bool isOnlyFavorite, CancellationToken cancellationToken)
         {
             var country = await _countryRepository.GetAsync(countryId, cancellationToken);
             if (country == null)
@@ -30,41 +30,22 @@ namespace YourRest.Application.UseCases
                 throw new EntityNotFoundException($"Country with id {countryId} not found");
             }
 
-            var regions = (await _regionRepository.FindAsync(x => x.CountryId == countryId, cancellationToken)).Select(c => c.Id).ToList();
-            if (!regions.Any())
-            {
-                throw new EntityNotFoundException($"Regions in country {countryId} not found");
-            }
+            var cities = await _cityRepository.GetCitiesWithPhotosByCountryAsync(countryId, isOnlyFavorite, cancellationToken);
 
-            IEnumerable<City> cities;
-            if (isOnlyFavorite)
-            {
-                cities = await _cityRepository.FindAsync(x => regions.Contains(x.RegionId) && x.IsFavorite, cancellationToken);
-            }
-            else
-            {
-                cities = await _cityRepository.FindAsync(x => regions.Contains(x.RegionId), cancellationToken);
-            }
-
-            if (!cities.Any())
-            {
-                throw new EntityNotFoundException($"Cities in country {countryId} not found");
-            }
-
-            var resultCitiesList = cities.Select(c => new CityDTOWithLastPhoto
+            return cities.Select(c => new CityDTOWithLastPhoto
             {
                 Id = c.Id,
                 Name = c.Name,
                 Description = c.Description,
                 IsFavorite = c.IsFavorite,
-                LastPhoto = c.CityPhotos.Select(photo => new PhotoPathResponseDto
-                {
-                    FilePath = photo.FilePath
-                }).LastOrDefault()
+                LastPhoto = c.CityPhotos.OrderByDescending(photo => photo.Id)
+                    .Select(photo => new PhotoPathResponseDto
+                    {
+                        FilePath = photo.FilePath
+                    })
+                    .FirstOrDefault()
             }).ToList();
-
-
-            return resultCitiesList;
         }
+
     }
 }

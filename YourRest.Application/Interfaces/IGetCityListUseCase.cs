@@ -4,6 +4,6 @@ namespace YourRest.Application.Interfaces
 {
     public interface IGetCityListUseCase
     {
-        Task<IEnumerable<CityDTO>> Execute(bool isOnlyFavorite, CancellationToken cancellationToken);
+        Task<IEnumerable<CityDTOWithLastPhoto>> Execute(bool isOnlyFavorite, CancellationToken cancellationToken);
     }
 }

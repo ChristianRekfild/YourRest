@@ -15,17 +15,17 @@ namespace YourRest.Application.UseCases
             _cityRepository = cityRepository;
         }
         
-        public async Task<CityDTO> Execute(int id)
+        public async Task<CityDTOWithPhotos> Execute(int id)
         {
-            var city = await _cityRepository.GetAsync(id);
+            var city = await _cityRepository.GetCityWithPhotosAsync(id);
 
             if (city is null) throw new EntityNotFoundException($"City with id {id} not found");
-            
+    
             var photos = city.CityPhotos.Select(photo => new PhotoPathResponseDto
             {
                 FilePath = photo.FilePath
             }).ToList();
-            
+    
             return new CityDTOWithPhotos()
             {
                 Id = city.Id,
@@ -34,7 +34,6 @@ namespace YourRest.Application.UseCases
                 IsFavorite = city.IsFavorite,
                 Photos = photos
             };
-
         }
     }
 }
