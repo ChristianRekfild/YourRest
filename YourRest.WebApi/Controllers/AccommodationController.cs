@@ -2,6 +2,7 @@
 using YourRest.Application.Dto;
 using YourRest.Application.Dto.ViewModels;
 using YourRest.Application.Interfaces;
+using YourRest.Application.Interfaces.Accommodations;
 using Microsoft.AspNetCore.Authorization;
 using SharpGrip.FluentValidation.AutoValidation.Mvc.Attributes;
 using System.Security.Claims;
@@ -17,18 +18,30 @@ namespace YourRest.WebApi.Controllers
         private readonly IFetchAccommodationsUseCase _fetchAccommodationsUseCase;
         private readonly ICreateAccommodationUseCase _createAccommodationUseCase;
         private readonly IDeleteAddressFromAccommodationUseCase _deleteAddressFromAccommodationUseCase;
+        private readonly IEditAccommodationsUseCase _editAccommodationUseCase;
+        private readonly IRemoveAccommodationsUseCase _removeAccommodationUseCase;
+        private readonly IGetAccommodationsUseCase _getAccommodation;
+        private readonly IGetAccommodationsByIdUseCase _getAccommodationByIdUseCase;
 
         public AccommodationController(
             IAddAddressToAccommodationUseCase addAddressToAccommodationUseCase,
             IFetchAccommodationsUseCase fetchAccommodationsUseCase,
             ICreateAccommodationUseCase createAccommodationUseCase,
-            IDeleteAddressFromAccommodationUseCase deleteAddressFromAccommodationUseCase
+            IDeleteAddressFromAccommodationUseCase deleteAddressFromAccommodationUseCase,
+            IEditAccommodationsUseCase editAccommodationUseCase,
+            IRemoveAccommodationsUseCase removeAccommodationUseCase,
+            IGetAccommodationsUseCase getAccommodation,
+            IGetAccommodationsByIdUseCase getAccommodationByIdUseCase
             )
         {
             _addAddressToAccommodationUseCase = addAddressToAccommodationUseCase;
             _fetchAccommodationsUseCase = fetchAccommodationsUseCase;
             _createAccommodationUseCase = createAccommodationUseCase;
             _deleteAddressFromAccommodationUseCase = deleteAddressFromAccommodationUseCase;
+            _editAccommodationUseCase = editAccommodationUseCase;
+            _removeAccommodationUseCase = removeAccommodationUseCase;
+            _getAccommodation = getAccommodation;
+            _getAccommodationByIdUseCase = getAccommodationByIdUseCase;
         }
 
         [HttpPost("api/operators/accommodations/{accommodationId}/address", Name = "AddAddressToAccommodationAsync")]
@@ -83,6 +96,35 @@ namespace YourRest.WebApi.Controllers
 
             var createdAccommodation = await _createAccommodationUseCase.ExecuteAsync(accommodationExtendedDto, sub, HttpContext.RequestAborted);
             return CreatedAtAction(nameof(Post), createdAccommodation);
+        }
+        [HttpDelete]
+        [Route("api/accommodations/{accommodationId}")]
+        public async Task<IActionResult> Delete([FromRoute] int accommodationId)
+        {
+
+            await _removeAccommodationUseCase.ExecuteAsync(accommodationId, HttpContext.RequestAborted);
+            return Ok("The Accommodation has been Deleted");
+        }
+
+        [HttpPut]
+        [Route("api/accommodations", Name = "EditAccommodation")]
+        public async Task<IActionResult> Put([FromBody] EditAccommodationDto accommodationEdit)
+        {
+            return Ok(await _editAccommodationUseCase.ExecuteAsync(accommodationEdit, HttpContext.RequestAborted));
+        }
+
+        [HttpGet]
+        [Route("api/accommodations")]
+        public async Task<IActionResult> GetAccommodation()
+        {
+            return Ok(await _getAccommodation.ExecuteAsync(HttpContext.RequestAborted));
+        }
+
+        [HttpGet]
+        [Route("api/accommodations/{accommodationId}")]
+        public async Task<IActionResult> GetAccommodationById([FromRoute] int accommodationId)
+        {
+            return Ok(await _getAccommodationByIdUseCase.ExecuteAsync(accommodationId, HttpContext.RequestAborted));
         }
     }
 }
