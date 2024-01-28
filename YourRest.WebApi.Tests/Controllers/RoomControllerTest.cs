@@ -228,6 +228,41 @@ namespace YourRest.WebApi.Tests.Controllers
             Assert.Equal(roomResponse?.Capacity, roomEntity.Capacity);
             Assert.Equal(roomResponse?.SquareInMeter, roomEntity.SquareInMeter);
         }
+        
+        public async Task AddRooms_Concurrently_ReturnsStatusCodeCreated()
+        {
+            var tasks = new List<Task>();
+            int numberOfParallelTasks = 10; // Количество одновременных задач
+
+            for (int i = 0; i < numberOfParallelTasks; i++)
+            {
+                tasks.Add(Task.Run(async () =>
+                {
+                    var roomType = new RoomType { Name = "Test Type " + i };
+                    await fixture.InsertObjectIntoDatabase(roomType);
+
+                    var accommodationEntity = new Accommodation { Name = "Test " + i, AccommodationType = new AccommodationType { Name = "Test Type " + i }};
+                    var accommodation = await fixture.InsertObjectIntoDatabase(accommodationEntity);
+
+                    var roomEntity = new RoomDto { Name = "Room" + i, Capacity = 20, SquareInMeter = 30, RoomTypeId = roomType.Id };
+                    var content = new StringContent(JsonConvert.SerializeObject(roomEntity), Encoding.UTF8, "application/json");
+                    var response = await fixture.Client.PostAsync($"api/accommodations/{accommodation.Id}/rooms", content);
+
+                    Assert.Equal(HttpStatusCode.Created, response.StatusCode);
+
+                    var responseContent = await response.Content.ReadAsStringAsync();
+                    var roomResponse = JsonConvert.DeserializeObject<RoomWithIdDto>(responseContent);
+
+                    Assert.Equal(roomResponse?.Name, roomEntity.Name);
+                    Assert.Equal(roomResponse?.RoomTypeId, roomEntity.RoomTypeId);
+                    Assert.Equal(roomResponse?.Capacity, roomEntity.Capacity);
+                    Assert.Equal(roomResponse?.SquareInMeter, roomEntity.SquareInMeter);
+                }));
+            }
+
+            await Task.WhenAll(tasks);
+        }
+
         [Fact]
         public async Task AddRoom_ReturnsNotFound_WhenAddRoomWitFakeAccommodation()
         {
