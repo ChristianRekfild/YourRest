@@ -3,6 +3,7 @@ using Blazored.FluentValidation;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
 using YouRest.HotelierWebApp.Data.Models;
+using YouRest.HotelierWebApp.Data.Services;
 using YouRest.HotelierWebApp.Data.Services.Abstractions;
 using YouRest.HotelierWebApp.Data.ViewModels.Interfaces;
 
@@ -14,18 +15,12 @@ namespace YouRest.HotelierWebApp.Pages
         protected CancellationTokenSource _tokenSource = new();
         protected string inputFileId = Guid.NewGuid().ToString();
         public FluentValidationValidator? CreateFormValidator { get; set; }
-        public CreateHotelModel CreateHotelViewModel { get; set; } = new();
+        public FormHotelModel CreateHotelViewModel { get; set; } = new();
         #endregion
 
         #region Dependeny Injections
-        [Inject] public IFileService FileService { get; set; }
-        [Inject] public ICountryService CountryService { get; set; }
-        [Inject] public IRegionService RegionService { get; set; }
-        [Inject] public ICityService CityService { get; set; }
-        [Inject] public IHotelService HotelService { get; set; }
-        [Inject] public IHotelTypeService HotelTypeService { get; set; }
-        [Inject] public IAddressService AddressService { get; set; }
-        [Inject] public NavigationManager Navigation { get; set; }
+        [Inject] public NavigationManager NavigationManager { get; set; }
+        [Inject] public IServiceRepository ServiceRepository { get; set; }
         [Inject] public IHotelViewModel HotelViewModel { get; set; }
         #endregion
 
@@ -39,10 +34,10 @@ namespace YouRest.HotelierWebApp.Pages
         protected async override Task OnInitializedAsync()
         {
             await base.OnInitializedAsync();
-            Countries = await CountryService.FetchCountriesAsync();
-            Regions = await RegionService.FetchRegionsAsync();
-            Cities = await CityService.FetchCytiesAsync();
-            HotelTypes = await HotelTypeService.FetchHotelTypesAsync();
+            Countries = await ServiceRepository.CountryService.FetchCountriesAsync(_tokenSource.Token);
+            Regions = await ServiceRepository.RegionService.FetchRegionsAsync(_tokenSource.Token);
+            Cities = await ServiceRepository.CityService.FetchCytiesAsync(_tokenSource.Token);
+            HotelTypes = await ServiceRepository.HotelTypeService.FetchHotelTypesAsync(_tokenSource.Token);
             //Images.Add(await FileService.FetchImg("b9bac2d9-0c83-429b-baa6-a44ed5db619d.jpg", "Accomodation"));
         }
 
@@ -50,17 +45,17 @@ namespace YouRest.HotelierWebApp.Pages
         {
             if (await CreateFormValidator!.ValidateAsync())
             {
-                var createdHotel = await HotelService.CreateHotelAsync(
+                var createdHotel = await ServiceRepository.HotelService.CreateHotelAsync(
                     new HotelModel()
                     {
                         AccommodationTypeId = HotelTypes.Single(x => x.Name == CreateHotelViewModel.HotelType).Id,
                         Name = CreateHotelViewModel.HotelName,
-                        Stars = GetRatingValue(CreateHotelViewModel.HotelRating),
+                        Stars = ServiceRepository.HotelService.ConvertHotelRating(CreateHotelViewModel.HotelRating),
                         Description = CreateHotelViewModel.HotelDescription
                     },
                 _tokenSource.Token);
 
-               var createdAddress =  await AddressService.CreateAddressAsync(
+               var createdAddress =  await ServiceRepository.AddressService.CreateAddressAsync(
                     new AddressModel()
                     {
                         CityId = Cities.Single(s => s.Name == CreateHotelViewModel.City).Id,
@@ -79,8 +74,8 @@ namespace YouRest.HotelierWebApp.Pages
                     Rooms = createdHotel.Rooms,
                     Address = createdAddress
                 });
-                CreateHotelViewModel = new CreateHotelModel();
-                Navigation.NavigateTo("/hotels");
+                CreateHotelViewModel = new FormHotelModel();
+                NavigationManager.NavigateTo("/hotels");
             }
         }
 
@@ -97,17 +92,6 @@ namespace YouRest.HotelierWebApp.Pages
             //await FileService.Upload(e.File);
             inputFileId = Guid.NewGuid().ToString();
         }
-
-        private int GetRatingValue(string value) => value switch
-        {
-            "Без рейтинга" => 0,
-            "Одна звезда" => 1,
-            "Две звезды" => 2,
-            "Три звезды" => 3,
-            "Четыре звезды" => 4,
-            "Пять звезд" => 5,
-            _ => 0
-        };
 
         public void Dispose()
         {

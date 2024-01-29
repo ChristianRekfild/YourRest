@@ -3,7 +3,8 @@
 
 <div class="hotel-title">
     <p class="hotel_title-name">@HotelViewModel.CurrentHotel.Name</p>
-    <div>
+    <div class="hotel_title-rating">
+        <p>Рейтинг</p>
         <Icon Name="IconName.HandThumbsUp" Color="IconColor.Primary" Size="IconSize.x5" />
         <RatingOfStarComponent CountOfStar="@HotelViewModel.CurrentHotel.Stars" />
     </div>
@@ -11,7 +12,7 @@
 
 <div class="hotel-subtitle">
     <Icon Name="IconName.GeoAltFill" Color="IconColor.Primary" Size="IconSize.x6" />
-    <p class="hotel_subtitle-address">@HotelViewModel.CurrentHotel.Address?.Street</p>
+    <p class="hotel_subtitle-address">@HotelViewModel.CurrentHotelModelForm.Country @HotelViewModel.CurrentHotelModelForm.Region @HotelViewModel.CurrentHotelModelForm.City @HotelViewModel.CurrentHotelModelForm.Address</p>
 </div>
 <div class="hotel-body">
     <div class="hotel_body-gallery">

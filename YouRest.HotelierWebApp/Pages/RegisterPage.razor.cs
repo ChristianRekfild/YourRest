@@ -7,6 +7,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Net;
 using YouRest.HotelierWebApp.Data;
 using YouRest.HotelierWebApp.Data.Models;
+using YouRest.HotelierWebApp.Data.Services;
 using YouRest.HotelierWebApp.Data.Services.Abstractions;
 
 namespace YouRest.HotelierWebApp.Pages
@@ -21,7 +22,7 @@ namespace YouRest.HotelierWebApp.Pages
         #endregion
 
         #region Dependency Injection
-        [Inject] IAuthorizationService AuthorizationService { get; set; }
+        [Inject] IServiceRepository ServiceRepository { get; set; }
         [Inject] NavigationManager Navigation { get; set; }
         [Inject] ProtectedLocalStorage LocalStorage { get; set; }
         [Inject] PreloadService PreloadService { get; set; }
@@ -32,7 +33,7 @@ namespace YouRest.HotelierWebApp.Pages
             if (await RegisterFormValidator.ValidateAsync())
             {
                 PreloadService.Show(SpinnerColor.Light, "Идет регистрация в системе YourRest...");
-                var response = await AuthorizationService.RegistrationAsync(RegistrationData, tokenSource.Token);
+                var response = await ServiceRepository.AuthorizationService.RegistrationAsync(RegistrationData, tokenSource.Token);
                 if (response.StatusCode == HttpStatusCode.OK)
                 {
                     var securityToken = (await response.Content.ReadFromJsonAsync<SecurityTokenModel>(cancellationToken: tokenSource.Token));

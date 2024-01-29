@@ -34,6 +34,7 @@ namespace YourRest.Application.UseCases
             var resultCitiesList = cities.Select(c => new CityDTO
             {
                 Id = c.Id,
+                RegionId = c.RegionId,
                 Name = c.Name,
             }).ToList();
 

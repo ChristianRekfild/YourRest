@@ -13,5 +13,8 @@ namespace YouRest.HotelierWebApp.Data.Models
         public HotelTypeModel? AccommodationType { get; set; }
         public List<RoomModel>? Rooms { get; set; }
         public AddressModel? Address { get; set; }
+        public CityModel? City { get; set; }
+        public RegionModel? Region { get; set; }
+        public CountryModel? Country { get; set;}
     }
 }

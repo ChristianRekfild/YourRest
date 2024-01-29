@@ -1,6 +1,7 @@
 ﻿using BlazorBootstrap;
 using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System.Text;
 using YouRest.HotelierWebApp.Data.Models;
 using YouRest.HotelierWebApp.Data.Services.Abstractions;
@@ -22,6 +23,28 @@ namespace YouRest.HotelierWebApp.Data.Services
             this.preloadService = preloadService;
             WebApiUrl = configuration.GetSection("webApiUrl").Value;
         }
+
+        public int ConvertHotelRating(string ratingValue) => ratingValue switch
+        {
+            "Без рейтинга" => 0,
+            "Одна звезда" => 1,
+            "Две звезды" => 2,
+            "Три звезды" => 3,
+            "Четыре звезды" => 4,
+            "Пять звезд" => 5,
+            _ => 0
+        };
+
+        public string ConvertHotelRating(int ratingValue) => ratingValue switch
+        {
+            0 => "Без рейтинга",
+            1 => "Одна звезда",
+            2 => "Две звезды",
+            3 => "Три звезды",
+            4 => "Четыре звезды",
+            5 => "Пять звезд",
+            _ => "Без рейтинга"
+        };
 
         public async Task<HotelModel> CreateHotelAsync(HotelModel hotel, CancellationToken cancellationToken = default)
         {
@@ -48,7 +71,7 @@ namespace YouRest.HotelierWebApp.Data.Services
             return result;
         }
 
-        public async Task<HttpResponseMessage> RemoveHotelAsync(int addressId, int hotelId ,CancellationToken cancellationToken = default)
+        public async Task<HttpResponseMessage> RemoveHotelAsync(int addressId, int hotelId, CancellationToken cancellationToken = default)
         {
             await httpClient.SetAccessToken(localStorage);
             return await httpClient.DeleteAsync($"{WebApiUrl}/api/operators/accommodations/{hotelId}/address/{addressId}", cancellationToken);

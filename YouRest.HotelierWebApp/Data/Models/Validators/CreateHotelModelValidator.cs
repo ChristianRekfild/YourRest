@@ -2,7 +2,7 @@
 
 namespace YouRest.HotelierWebApp.Data.Models.Validators
 {
-    public class CreateHotelModelValidator : AbstractValidator<CreateHotelModel>
+    public class CreateHotelModelValidator : AbstractValidator<FormHotelModel>
     {
         public CreateHotelModelValidator()
         {
