@@ -1,6 +1,28 @@
 ﻿@page "/hotels/{CurrentHotelId:int}"
 @attribute [Authorize]
 
-<h3>CurrentHotelPage</h3>
-<h5>@HotelViewModel.CurrentHotel.Name</h5>
-<h5>@HotelViewModel.CurrentHotel.Address?.Street</h5>
+<div class="hotel-title">
+    <p class="hotel_title-name">@HotelViewModel.CurrentHotel.Name</p>
+    <div>
+        <Icon Name="IconName.HandThumbsUp" Color="IconColor.Primary" Size="IconSize.x5" />
+        <RatingOfStarComponent CountOfStar="@HotelViewModel.CurrentHotel.Stars" />
+    </div>
+</div>
+
+<div class="hotel-subtitle">
+    <Icon Name="IconName.GeoAltFill" Color="IconColor.Primary" Size="IconSize.x6" />
+    <p class="hotel_subtitle-address">@HotelViewModel.CurrentHotel.Address?.Street</p>
+</div>
+<div class="hotel-body">
+    <div class="hotel_body-gallery">
+        <div class="hotel_body_gallery-first">
+            <img src="/Images/1.jpg" alt="first photo" />
+        </div>
+        <div class="hotel_body_gallery-second">
+            <img src="/Images/2.jpg" alt="second photo" />
+        </div>
+        <div class="hotel_body_gallery-main">
+            <img src="/Images/2.jpg" alt="main photo" />
+        </div>
+    </div>
+</div>

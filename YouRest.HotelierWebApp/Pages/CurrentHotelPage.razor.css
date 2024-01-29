@@ -1,0 +1,44 @@
+﻿p {
+    padding: 0;
+    margin: 0;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+
+.hotel-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.hotel_title-name {
+    font-size: 20pt;
+    font-weight: bold;
+}
+
+.hotel-subtitle {
+    display: flex;
+    align-items: flex-end
+}
+
+.hotel_subtitle-address {
+    margin-left: 5px;
+    font-size: 10pt;
+}
+
+.hotel_body-gallery {
+    display: grid;
+    grid-template-columns: 33.6% 65.2%;
+    grid-template-rows: repeat(2, 175px);
+    grid-template-areas:
+        "first main "
+        "second main"
+}
+hotel_body_gallery-main{
+    grid-area: main;
+}
+.hotel_body_gallery-first {
+    grid-area: first;
+}
+.hotel_body_gallery-second {
+    grid-area: second;
+}

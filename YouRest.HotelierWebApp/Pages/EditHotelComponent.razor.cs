@@ -26,6 +26,7 @@ namespace YouRest.HotelierWebApp.Pages
         [Inject] public NavigationManager Navigation { get; set; }
         #endregion
 
+        [Parameter] public int CurrentHotelId { get; set; }
         [Parameter] public IEnumerable<CountryModel> Countries { get; set; } = new List<CountryModel>();
         [Parameter] public IEnumerable<RegionModel> Regions { get; set; } = new List<RegionModel>();
         [Parameter] public IEnumerable<CityModel> Cities { get; set; } = new List<CityModel>();

@@ -10,7 +10,8 @@ namespace YouRest.HotelierWebApp.Pages
         protected override void OnInitialized()
         {
             base.OnInitialized();
-            HotelViewModel.PropertyChenged += HotelViewModel_PropertyChenged;
+            HotelViewModel.OnHotelChanged += HotelViewModel_PropertyChenged;
+            
         }
 
         private void HotelViewModel_PropertyChenged()
@@ -20,7 +21,7 @@ namespace YouRest.HotelierWebApp.Pages
 
         public void Dispose()
         {
-            HotelViewModel.PropertyChenged += HotelViewModel_PropertyChenged;
+            HotelViewModel.OnHotelChanged += HotelViewModel_PropertyChenged;
         }
     }
 }

@@ -1,6 +1,6 @@
 ﻿using BlazorBootstrap;
 using Microsoft.AspNetCore.Components;
-using System.ComponentModel;
+using System.Net;
 using YouRest.HotelierWebApp.Data.Models;
 using YouRest.HotelierWebApp.Data.Services.Abstractions;
 using YouRest.HotelierWebApp.Data.ViewModels.Interfaces;
@@ -11,6 +11,7 @@ namespace YouRest.HotelierWebApp.Pages
     {
         protected CancellationTokenSource tokenSource = new();
         [Inject] public NavigationManager Navigation { get; set; }
+        [Inject] PreloadService PreloadService { get; set; }
         [Inject] public IHotelService HotelService { get; set; }
         [Inject] public IHotelViewModel HotelViewModel { get; set; }
 
@@ -18,9 +19,9 @@ namespace YouRest.HotelierWebApp.Pages
         protected override async Task OnInitializedAsync()
         {
             await base.OnInitializedAsync();
-            HotelViewModel.PropertyChenged += HotelViewModel_PropertyChenged;
-            await HotelViewModel.Initialize();
-            HotelViewModel.Hotels = await HotelService.FetchHotelsAsync(tokenSource.Token);
+            HotelViewModel.OnHotelChanged += HotelViewModel_PropertyChenged;
+            var _hotels = await HotelService.FetchHotelsAsync(tokenSource.Token);
+            await HotelViewModel.Initialize(_hotels);
         }
 
         public void NavigateToCreate() => Navigation.NavigateTo("hotels/create");
@@ -29,9 +30,35 @@ namespace YouRest.HotelierWebApp.Pages
         {
             StateHasChanged();
         }
+        public void SelectedHotel(HotelModel hotel)
+        {
+            HotelViewModel.CurrentHotel = hotel;
+            Navigation.NavigateTo($"hotels/{hotel.Id}");
+        }
+        public void EditHotel(HotelModel hotel)
+        {
+            Navigation.NavigateTo($"hotels/{hotel.Id}/edit");
+        }
+        public async Task RemoveHotel(HotelModel hotel)
+        {
+
+            PreloadService.Show(SpinnerColor.Light, $"Идёт удаление...");
+            await Task.Delay(1000);
+            if (hotel is null)
+            {
+                PreloadService.Hide();
+                return;
+            }
+            //var response = await HotelService.RemoveHotelAsync(hotel.Address.Id, hotel.Id);
+            //if (response.StatusCode == HttpStatusCode.OK)
+            //{
+                HotelViewModel.Hotels.Remove(hotel);  
+            //}
+            PreloadService.Hide();
+        }
         public void Dispose()
         {
-            HotelViewModel.PropertyChenged -= HotelViewModel_PropertyChenged;
+            HotelViewModel.OnHotelChanged -= HotelViewModel_PropertyChenged;
             tokenSource.Cancel();
             tokenSource.Dispose();
         }

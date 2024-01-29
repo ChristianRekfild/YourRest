@@ -1,12 +1,9 @@
 ﻿using BlazorBootstrap;
-using IdentityModel.Client;
-using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
 using Newtonsoft.Json;
 using System.Text;
 using YouRest.HotelierWebApp.Data.Models;
 using YouRest.HotelierWebApp.Data.Services.Abstractions;
-using YouRest.HotelierWebApp.Data.ViewModels;
 
 namespace YouRest.HotelierWebApp.Data.Services
 {
@@ -50,5 +47,12 @@ namespace YouRest.HotelierWebApp.Data.Services
             preloadService.Hide();
             return result;
         }
+
+        public async Task<HttpResponseMessage> RemoveHotelAsync(int addressId, int hotelId ,CancellationToken cancellationToken = default)
+        {
+            await httpClient.SetAccessToken(localStorage);
+            return await httpClient.DeleteAsync($"{WebApiUrl}/api/operators/accommodations/{hotelId}/address/{addressId}", cancellationToken);
+        }
+
     }
 }

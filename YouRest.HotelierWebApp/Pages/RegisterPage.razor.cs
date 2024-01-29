@@ -1,4 +1,5 @@
-﻿using Blazored.FluentValidation;
+﻿using BlazorBootstrap;
+using Blazored.FluentValidation;
 using IdentityModel;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
@@ -23,12 +24,14 @@ namespace YouRest.HotelierWebApp.Pages
         [Inject] IAuthorizationService AuthorizationService { get; set; }
         [Inject] NavigationManager Navigation { get; set; }
         [Inject] ProtectedLocalStorage LocalStorage { get; set; }
+        [Inject] PreloadService PreloadService { get; set; }
         #endregion
 
         public async Task RegisterAsync()
         {
             if (await RegisterFormValidator.ValidateAsync())
             {
+                PreloadService.Show(SpinnerColor.Light, "Идет регистрация в системе YourRest...");
                 var response = await AuthorizationService.RegistrationAsync(RegistrationData, tokenSource.Token);
                 if (response.StatusCode == HttpStatusCode.OK)
                 {
@@ -43,6 +46,7 @@ namespace YouRest.HotelierWebApp.Pages
                         Navigation.NavigateTo("/", true);
                     }
                 }
+                PreloadService.Hide();
             }
         }
     }

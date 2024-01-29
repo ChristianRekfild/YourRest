@@ -11,7 +11,11 @@
         <div>
             @if (HotelViewModel.Hotels.Any())
             {
-                <HotelTableComponent @bind-Hotels="@HotelViewModel.Hotels" />
+                <HotelTableComponent @bind-Hotels="@HotelViewModel.Hotels"
+                    OnSelected="@SelectedHotel"    
+                    OnEdit="@EditHotel" 
+                    OnRemove="@RemoveHotel"
+                />
             }
             else
             {

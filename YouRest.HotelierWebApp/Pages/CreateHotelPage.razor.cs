@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
 using YouRest.HotelierWebApp.Data.Models;
 using YouRest.HotelierWebApp.Data.Services.Abstractions;
+using YouRest.HotelierWebApp.Data.ViewModels.Interfaces;
 
 namespace YouRest.HotelierWebApp.Pages
 {
@@ -25,6 +26,7 @@ namespace YouRest.HotelierWebApp.Pages
         [Inject] public IHotelTypeService HotelTypeService { get; set; }
         [Inject] public IAddressService AddressService { get; set; }
         [Inject] public NavigationManager Navigation { get; set; }
+        [Inject] public IHotelViewModel HotelViewModel { get; set; }
         #endregion
 
         [Parameter] public IEnumerable<CountryModel> Countries { get; set; } = new List<CountryModel>();
@@ -58,7 +60,7 @@ namespace YouRest.HotelierWebApp.Pages
                     },
                 _tokenSource.Token);
 
-                await AddressService.CreateAddressAsync(
+               var createdAddress =  await AddressService.CreateAddressAsync(
                     new AddressModel()
                     {
                         CityId = Cities.Single(s => s.Name == CreateHotelViewModel.City).Id,
@@ -66,7 +68,17 @@ namespace YouRest.HotelierWebApp.Pages
                         ZipCode = CreateHotelViewModel.ZipCode,
                     }, createdHotel.Id,
                 _tokenSource.Token);
-
+                HotelViewModel.Hotels.Add(new HotelModel
+                {
+                    Id = createdHotel.Id,
+                    AccommodationTypeId = createdHotel.AccommodationTypeId,
+                    Name = createdHotel.Name,
+                    Description= createdHotel.Description,
+                    Stars= createdHotel.Stars,
+                    AccommodationType = createdHotel.AccommodationType,
+                    Rooms = createdHotel.Rooms,
+                    Address = createdAddress
+                });
                 CreateHotelViewModel = new CreateHotelModel();
                 Navigation.NavigateTo("/hotels");
             }

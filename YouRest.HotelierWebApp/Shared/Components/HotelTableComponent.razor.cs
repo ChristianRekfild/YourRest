@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components;
+using System.Collections.ObjectModel;
 using YouRest.HotelierWebApp.Data.Models;
-using YouRest.HotelierWebApp.Data.ViewModels.Interfaces;
 
 namespace YouRest.HotelierWebApp.Shared.Components
 {
@@ -9,10 +9,11 @@ namespace YouRest.HotelierWebApp.Shared.Components
         public string RowHoverStyle { get; set; }
         public string Edit { get; set; }
         public string Remove { get; set; }
-        [Inject] public NavigationManager Navigation { get; set; }
-        [Inject] public IHotelViewModel HotelViewModel { get; set; }
-        [Parameter] public List<HotelModel> Hotels { get; set; }
-        [Parameter] public EventCallback<List<HotelModel>> HotelsChanged { get; set; }
+        [Parameter] public ObservableCollection<HotelModel> Hotels { get; set; } 
+        [Parameter] public EventCallback<ObservableCollection<HotelModel>> HotelsChanged { get; set; }
+        [Parameter] public EventCallback<HotelModel> OnRemove { get; set; }
+        [Parameter] public EventCallback<HotelModel> OnEdit { get; set; }
+        [Parameter] public EventCallback<HotelModel> OnSelected { get; set; }
         public void MouseOverOfEditBtn()
         {
             Edit = "edit";
@@ -34,16 +35,5 @@ namespace YouRest.HotelierWebApp.Shared.Components
             Remove = string.Empty;
             RowHoverStyle = string.Empty;
         }
-        public async Task OnRemove(HotelModel hotel)
-        {
-            Hotels.Remove(hotel);
-            await HotelsChanged.InvokeAsync(Hotels);
-        }
-        public void NavigateToEdit() => Navigation.NavigateTo("hotels/edit");
-        public void SelectedItem(HotelModel hotel)
-        {
-            HotelViewModel.CurrentHotel = hotel;
-            Navigation.NavigateTo($"/hotels/{hotel.Id}");
-        } 
     }
 }
