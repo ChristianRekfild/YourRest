@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using AutoMapper;
 using Newtonsoft.Json;
 using System.Net;
@@ -229,21 +230,27 @@ namespace YourRest.WebApi.Tests.Controllers
             Assert.Equal(roomResponse?.SquareInMeter, roomEntity.SquareInMeter);
         }
         
+        [Fact]
         public async Task AddRooms_Concurrently_ReturnsStatusCodeCreated()
         {
+            var roomType = new RoomType { Name = "Test Type " };
+            await fixture.InsertObjectIntoDatabase(roomType);
+
+            var accommodationEntity = new Accommodation
+            {
+                Name = "Test ",
+                AccommodationType = new AccommodationType { Name = "Test Type " }
+            };
+            var accommodation = await fixture.InsertObjectIntoDatabase(accommodationEntity);
+            
             var tasks = new List<Task>();
-            int numberOfParallelTasks = 10; // Количество одновременных задач
+            int numberOfParallelTasks = 10;
+            var stopwatch = Stopwatch.StartNew();
 
             for (int i = 0; i < numberOfParallelTasks; i++)
             {
                 tasks.Add(Task.Run(async () =>
                 {
-                    var roomType = new RoomType { Name = "Test Type " + i };
-                    await fixture.InsertObjectIntoDatabase(roomType);
-
-                    var accommodationEntity = new Accommodation { Name = "Test " + i, AccommodationType = new AccommodationType { Name = "Test Type " + i }};
-                    var accommodation = await fixture.InsertObjectIntoDatabase(accommodationEntity);
-
                     var roomEntity = new RoomDto { Name = "Room" + i, Capacity = 20, SquareInMeter = 30, RoomTypeId = roomType.Id };
                     var content = new StringContent(JsonConvert.SerializeObject(roomEntity), Encoding.UTF8, "application/json");
                     var response = await fixture.Client.PostAsync($"api/accommodations/{accommodation.Id}/rooms", content);
@@ -261,6 +268,11 @@ namespace YourRest.WebApi.Tests.Controllers
             }
 
             await Task.WhenAll(tasks);
+            stopwatch.Stop();
+            Console.WriteLine($"Total execution time: {stopwatch.ElapsedMilliseconds} ms");
+
+            long maxAllowedTime = 1000;
+            Assert.True(stopwatch.ElapsedMilliseconds <= maxAllowedTime, $"Execution time exceeded the maximum allowed time of {maxAllowedTime} ms.");
         }
 
         [Fact]
