@@ -1,17 +1,46 @@
-﻿using Newtonsoft.Json;
-using System.Text.Json.Serialization;
+﻿using System.Collections.ObjectModel;
+using YouRest.HotelierWebApp.Data.Models;
+using YouRest.HotelierWebApp.Data.ViewModels.Interfaces;
 
 namespace YouRest.HotelierWebApp.Data.ViewModels
 {
-    public class HotelViewModel
+    public class HotelViewModel : BaseViewModel, IHotelViewModel, IDisposable
     {
-        public int Id { get; set; }
-        public int? AccommodationTypeId { get; set; }
-        public string Name { get; set; }
-        public string Description { get; set; }
-        public int Stars { get; set; }
-        public HotelTypeViewModel? AccommodationType { get; set; }   
-        public List<RoomViewModel>? Rooms { get; set; } 
-        public AddressViewModel? Address { get; set; }
+        private List<HotelModel> _hotels = new();
+        private HotelModel _currentHotelModel;
+        private FormHotelModel _currentFormHotelModel;
+
+        public FormHotelModel CurrentHotelModelForm { get => _currentFormHotelModel; set => SetProperty(ref _currentFormHotelModel, value); }
+        public HotelModel CurrentHotel { get => _currentHotelModel; set => SetProperty(ref _currentHotelModel, value); }
+        public ObservableCollection<HotelModel> Hotels { get; set; } = new();
+        
+        public event Action? OnHotelChanged;
+
+        public HotelViewModel()
+        {
+            OnChanged += NotifyHotelChanged;
+            Hotels.CollectionChanged += Hotels_CollectionChanged;
+        }
+
+        private void Hotels_CollectionChanged(object? sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            NotifyHotelChanged();
+        }
+
+        public Task Initialize(IEnumerable<HotelModel> hotels)
+        {
+            CurrentHotel = new();
+            Hotels = new(hotels);
+            CurrentHotelModelForm = new();
+            NotifyHotelChanged();
+            return Task.CompletedTask;
+        }
+
+        private void NotifyHotelChanged() => OnHotelChanged?.Invoke();
+
+        public void Dispose()
+        {
+            OnChanged -= NotifyHotelChanged;
+        }
     }
 }

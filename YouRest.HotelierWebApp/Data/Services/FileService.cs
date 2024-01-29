@@ -4,8 +4,8 @@ using Microsoft.Extensions.Primitives;
 using Newtonsoft.Json;
 using System.Net.Http.Headers;
 using System.Text;
+using YouRest.HotelierWebApp.Data.Models;
 using YouRest.HotelierWebApp.Data.Services.Abstractions;
-using YouRest.HotelierWebApp.Data.ViewModels;
 
 namespace YouRest.HotelierWebApp.Data.Services
 {
@@ -34,7 +34,7 @@ namespace YouRest.HotelierWebApp.Data.Services
             await file.OpenReadStream(file.Size).ReadAsync(data);
             //MemoryStream stream = new MemoryStream(data);
             //IFormFile _file = new FormFile(stream, 0, file.Size, file.Name, file.Name);
-            HotelImgViewModel hotel = new()
+            HotelImgModel hotel = new()
             {
                 AccommodationId = 1,
                 Photo = $"{Convert.ToBase64String(data)}",
@@ -47,7 +47,7 @@ namespace YouRest.HotelierWebApp.Data.Services
             //    FileName = file.Name,
             //};
 
-            //var data = new HotelImgViewModel()
+            //var data = new HotelImgModel()
             //{
             //    AccommodationId = 1,
             //    Photo = img

@@ -2,6 +2,7 @@
 using YourRest.Application.Interfaces;
 using YourRest.Domain.Repositories;
 using YourRest.Application.Dto.Models;
+using YourRest.Domain.Entities;
 
 namespace YourRest.Application.UseCases
 {
@@ -24,6 +25,7 @@ namespace YourRest.Application.UseCases
             return new CityDTO
             {
                 Id = city.Id,
+                RegionId = city.RegionId,
                 Name = city.Name
             };
 

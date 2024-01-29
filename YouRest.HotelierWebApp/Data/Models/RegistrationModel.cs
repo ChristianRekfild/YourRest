@@ -1,6 +1,6 @@
-﻿namespace YouRest.HotelierWebApp.Data.ViewModels
+﻿namespace YouRest.HotelierWebApp.Data.Models
 {
-    public class RegistrationViewModel
+    public class RegistrationModel
     {
         public string UserName { get; set; }
         public string Password { get; set; }

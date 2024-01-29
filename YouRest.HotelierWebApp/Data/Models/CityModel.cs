@@ -1,6 +1,6 @@
-﻿namespace YourRest.Application.Dto.Models
+﻿namespace YouRest.HotelierWebApp.Data.Models
 {
-    public class CityDTO
+    public class CityModel
     {
         public int Id { get; set; }
         public int RegionId { get; set; }

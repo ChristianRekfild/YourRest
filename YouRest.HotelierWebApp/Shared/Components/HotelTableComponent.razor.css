@@ -52,14 +52,14 @@ li {
     cursor: pointer;
 }
 
-.edit:hover {
+::deep .edit:hover {
     cursor: pointer;
-    color: hsl(38 90% 55%);
+    color: hsl(38 90% 55%) !important;
 }
 
-.remove:hover {
+::deep .remove:hover {
     cursor: pointer;
-    color: #dc3545;
+    color: #dc3545 !important;
 }
 
 .tab_row:hover {

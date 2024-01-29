@@ -1,8 +1,8 @@
 ﻿using Newtonsoft.Json;
 
-namespace YouRest.HotelierWebApp.Data.ViewModels
+namespace YouRest.HotelierWebApp.Data.Models
 {
-    public class SecurityTokenViewModel
+    public class SecurityTokenModel
     {
         public string? UserName { get; set; }
         public string AccessToken { get; set; }

@@ -1,10 +1,10 @@
 ﻿using FluentValidation;
 
-namespace YouRest.HotelierWebApp.Data.ViewModels.Validators
+namespace YouRest.HotelierWebApp.Data.Models.Validators
 {
-    public class CreateHotelViewModelValidator: AbstractValidator<CreateHotelViewModel>
+    public class CreateHotelModelValidator : AbstractValidator<FormHotelModel>
     {
-        public CreateHotelViewModelValidator()
+        public CreateHotelModelValidator()
         {
             RuleFor(hotel => hotel.Country).NotEmpty().WithName("Поле Страна");
             RuleFor(hotel => hotel.Region).NotEmpty().WithName("Поле Регион");

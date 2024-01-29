@@ -1,5 +1,5 @@
-﻿using YouRest.HotelierWebApp.Data.Services.Abstractions;
-using YouRest.HotelierWebApp.Data.ViewModels;
+﻿using YouRest.HotelierWebApp.Data.Models;
+using YouRest.HotelierWebApp.Data.Services.Abstractions;
 
 namespace YouRest.HotelierWebApp.Data.Services
 {
@@ -12,14 +12,14 @@ namespace YouRest.HotelierWebApp.Data.Services
             this.httpClient = httpClientFactory.CreateClient();
             webApiUrl = configuration.GetSection("WebApiUrl").Value;
         }
-        public async Task<IEnumerable<RegionViewModel>> FetchRegionsAsync(CancellationToken cancellationToken = default)
+        public async Task<IEnumerable<RegionModel>> FetchRegionsAsync(CancellationToken cancellationToken = default)
         {
             var response = await httpClient.GetAsync($"{webApiUrl}/api/regions", cancellationToken);
-            var regions = await response.Content.ReadFromJsonAsync<IEnumerable<RegionViewModel>>(cancellationToken: cancellationToken);
+            var regions = await response.Content.ReadFromJsonAsync<IEnumerable<RegionModel>>(cancellationToken: cancellationToken);
             return regions;
         }
 
-        public async Task<RegionViewModel> FetchRegionAsync(int id, CancellationToken cancellationToken = default)
+        public async Task<RegionModel> FetchRegionAsync(int id, CancellationToken cancellationToken = default)
         {
             var regions = await FetchRegionsAsync(cancellationToken);
             return regions.FirstOrDefault(x => x.Id == id);

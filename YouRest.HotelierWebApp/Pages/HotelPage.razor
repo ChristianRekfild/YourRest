@@ -7,11 +7,15 @@
     <div class="row">
         <h4>Мои Отели</h4>
     </div>
-    <div class="row table-row justify-content-center">
+    <div class="row justify-content-center">
         <div>
-            @if (Hotels.Any())
+            @if (HotelViewModel.Hotels.Any())
             {
-                <HotelTableComponent @bind-Hotels="@Hotels" />
+                <HotelTableComponent @bind-Hotels="@HotelViewModel.Hotels"
+                    OnSelected="@SelectedHotel"    
+                    OnEdit="@EditHotel" 
+                    OnRemove="@RemoveHotel"
+                />
             }
             else
             {
@@ -20,9 +24,11 @@
             }
         </div>
     </div>
-    <div class="row row_btn justify-content-end">
-        <div class="create_btn" @onclick="NavigateToCreate">
-            Добавить отель
+    <div class="row">
+        <div class="col-12 d-flex justify-content-end">
+            <Button class="create_btn" @onclick="NavigateToCreate" Color="ButtonColor.Primary" Size="Size.Medium" Outline="true">
+                <Icon Name="IconName.PlusLg" /> Создать Отель
+            </Button>
         </div>
     </div>
 </div>

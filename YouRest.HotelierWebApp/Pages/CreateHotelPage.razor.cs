@@ -1,8 +1,11 @@
-﻿using Blazored.FluentValidation;
+﻿using BlazorBootstrap;
+using Blazored.FluentValidation;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
+using YouRest.HotelierWebApp.Data.Models;
+using YouRest.HotelierWebApp.Data.Services;
 using YouRest.HotelierWebApp.Data.Services.Abstractions;
-using YouRest.HotelierWebApp.Data.ViewModels;
+using YouRest.HotelierWebApp.Data.ViewModels.Interfaces;
 
 namespace YouRest.HotelierWebApp.Pages
 {
@@ -12,32 +15,29 @@ namespace YouRest.HotelierWebApp.Pages
         protected CancellationTokenSource _tokenSource = new();
         protected string inputFileId = Guid.NewGuid().ToString();
         public FluentValidationValidator? CreateFormValidator { get; set; }
-        public CreateHotelViewModel CreateHotelViewModel { get; set; } = new();
+        public FormHotelModel CreateHotelViewModel { get; set; } = new();
         #endregion
 
         #region Dependeny Injections
-        [Inject] public IFileService FileService { get; set; }
-        [Inject] public ICountryService CountryService { get; set; }
-        [Inject] public IRegionService RegionService { get; set; }
-        [Inject] public ICityService CityService { get; set; }
-        [Inject] public IHotelService HotelService { get; set; }
-        [Inject] public IHotelTypeService HotelTypeService { get; set; }
-        [Inject] public IAddressService AddressService { get; set; }
-        [Inject] public NavigationManager Navigation { get; set; }
+        [Inject] public NavigationManager NavigationManager { get; set; }
+        [Inject] public IServiceRepository ServiceRepository { get; set; }
+        [Inject] public IHotelViewModel HotelViewModel { get; set; }
         #endregion
 
-        [Parameter] public IEnumerable<CountryViewModel> Countries { get; set; } = new List<CountryViewModel>();
-        [Parameter] public IEnumerable<RegionViewModel> Regions { get; set; } = new List<RegionViewModel>();
-        [Parameter] public IEnumerable<CityViewModel> Cities { get; set; } = new List<CityViewModel>();
-        [Parameter] public IEnumerable<HotelTypeViewModel> HotelTypes { get; set; } = new List<HotelTypeViewModel>();
+        [Parameter] public IEnumerable<CountryModel> Countries { get; set; } = new List<CountryModel>();
+        [Parameter] public IEnumerable<RegionModel> Regions { get; set; } = new List<RegionModel>();
+        [Parameter] public IEnumerable<CityModel> Cities { get; set; } = new List<CityModel>();
+        [Parameter] public IEnumerable<HotelTypeModel> HotelTypes { get; set; } = new List<HotelTypeModel>();
+
+        
 
         protected async override Task OnInitializedAsync()
         {
             await base.OnInitializedAsync();
-            Countries = await CountryService.FetchCountriesAsync();
-            Regions = await RegionService.FetchRegionsAsync();
-            Cities = await CityService.FetchCytiesAsync();
-            HotelTypes = await HotelTypeService.FetchHotelTypesAsync();
+            Countries = await ServiceRepository.CountryService.FetchCountriesAsync(_tokenSource.Token);
+            Regions = await ServiceRepository.RegionService.FetchRegionsAsync(_tokenSource.Token);
+            Cities = await ServiceRepository.CityService.FetchCytiesAsync(_tokenSource.Token);
+            HotelTypes = await ServiceRepository.HotelTypeService.FetchHotelTypesAsync(_tokenSource.Token);
             //Images.Add(await FileService.FetchImg("b9bac2d9-0c83-429b-baa6-a44ed5db619d.jpg", "Accomodation"));
         }
 
@@ -45,27 +45,37 @@ namespace YouRest.HotelierWebApp.Pages
         {
             if (await CreateFormValidator!.ValidateAsync())
             {
-                var createdHotel = await HotelService.CreateHotelAsync(
-                    new HotelViewModel()
+                var createdHotel = await ServiceRepository.HotelService.CreateHotelAsync(
+                    new HotelModel()
                     {
                         AccommodationTypeId = HotelTypes.Single(x => x.Name == CreateHotelViewModel.HotelType).Id,
                         Name = CreateHotelViewModel.HotelName,
-                        Stars = GetRatingValue(CreateHotelViewModel.HotelRating),
+                        Stars = ServiceRepository.HotelService.ConvertHotelRating(CreateHotelViewModel.HotelRating),
                         Description = CreateHotelViewModel.HotelDescription
                     },
                 _tokenSource.Token);
 
-                await AddressService.CreateAddressAsync(
-                    new AddressViewModel()
+               var createdAddress =  await ServiceRepository.AddressService.CreateAddressAsync(
+                    new AddressModel()
                     {
                         CityId = Cities.Single(s => s.Name == CreateHotelViewModel.City).Id,
                         Street = CreateHotelViewModel.Address,
                         ZipCode = CreateHotelViewModel.ZipCode,
                     }, createdHotel.Id,
                 _tokenSource.Token);
-
-                CreateHotelViewModel = new CreateHotelViewModel();
-                Navigation.NavigateTo("/hotels");
+                HotelViewModel.Hotels.Add(new HotelModel
+                {
+                    Id = createdHotel.Id,
+                    AccommodationTypeId = createdHotel.AccommodationTypeId,
+                    Name = createdHotel.Name,
+                    Description= createdHotel.Description,
+                    Stars= createdHotel.Stars,
+                    AccommodationType = createdHotel.AccommodationType,
+                    Rooms = createdHotel.Rooms,
+                    Address = createdAddress
+                });
+                CreateHotelViewModel = new FormHotelModel();
+                NavigationManager.NavigateTo("/hotels");
             }
         }
 
@@ -82,17 +92,6 @@ namespace YouRest.HotelierWebApp.Pages
             //await FileService.Upload(e.File);
             inputFileId = Guid.NewGuid().ToString();
         }
-
-        private int GetRatingValue(string value) => value switch
-        {
-            "Без рейтинга" => 0,
-            "Одна звезда" => 1,
-            "Две звезды" => 2,
-            "Три звезды" => 3,
-            "Четыре звезды" => 4,
-            "Пять звезд" => 5,
-            _ => 0
-        };
 
         public void Dispose()
         {

@@ -1,23 +1,55 @@
 ﻿@inherits LayoutComponentBase
-
-<PageTitle>YouRest.HotelierWebApp</PageTitle>
-<div class="page">
+<div class="bb-page">
     <AuthorizeView>
         <Authorized>
-            <div class="sidebar">
-                <NavMenu />
-            </div>
+            <Sidebar @ref="@sidebar"
+                     Title=""
+                     ImageSrc="Images/YouRest.svg"
+                     DataProvider="SidebarDataProvider" />
             <main>
-                <div class="top-row px-4">
-                    <div class="logout" @onclick="@LogoutAsync"><span class="oi oi-account-logout"></span></div>
+                <div class="bb-top-row px-4 d-flex justify-content-end">
+                   
                 </div>
                 <article class="content px-4">
-                    @Body
+                    <div class="py-2">
+                        @Body
+                    </div>
                 </article>
             </main>
         </Authorized>
         <NotAuthorized>
-            <YouRest.HotelierWebApp.Pages.LoginPage/>
+            @if (ShowRegistryPage)
+            {
+                <YouRest.HotelierWebApp.Pages.RegisterPage OnLoginPage="@ToLoginPage" />
+            }
+            else
+            {
+                <YouRest.HotelierWebApp.Pages.LoginPage OnRegistry="@ToRegisterPage" />
+            }
+
         </NotAuthorized>
     </AuthorizeView>
 </div>
+<Modal IsServiceModal="true" />
+<style>
+    :root {
+        --bb-sidebar-width: 270px;
+        --bb-sidebar-collapsed-width: 50px;
+        --bb-sidebar-background-color: white;
+        --bb-sidebar-top-row-background-color: white;
+        --bb-sidebar-top-row-border-color: rgb(194,192,192);
+        --bb-sidebar-title-text-color: rgb(0,0,0);
+        --bb-sidebar-brand-image-width: 90px;
+        --bb-sidebar-brand-image-height: 45px;
+        --bb-sidebar-navbar-toggler-icon-color: #333;
+        --bb-sidebar-navbar-toggler-background-color: rgba(0,0,0,0.08);
+        --bb-sidebar-content-border-color: rgb(194,192,192);
+        --bb-sidebar-nav-item-text-color: #333;
+        --bb-sidebar-nav-item-text-active-color-rgb: 0,0,0;
+        --bb-sidebar-nav-item-text-hover-color: rgba(var(--bb-sidebar-nav-item-text-active-color-rgb),0.9);
+        --bb-sidebar-nav-item-text-active-color: rgba(var(--bb-sidebar-nav-item-text-active-color-rgb),0.9);
+        --bb-sidebar-nav-item-background-hover-color: rgba(var(--bb-sidebar-nav-item-text-active-color-rgb),0.08);
+        --bb-sidebar-nav-item-group-background-color: rgba(var(--bb-sidebar-nav-item-text-active-color-rgb),0.08);
+    }
+</style>
+<Preload />

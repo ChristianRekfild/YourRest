@@ -1,5 +1,5 @@
-﻿using YouRest.HotelierWebApp.Data.Services.Abstractions;
-using YouRest.HotelierWebApp.Data.ViewModels;
+﻿using YouRest.HotelierWebApp.Data.Models;
+using YouRest.HotelierWebApp.Data.Services.Abstractions;
 
 namespace YouRest.HotelierWebApp.Data.Services
 {
@@ -13,10 +13,10 @@ namespace YouRest.HotelierWebApp.Data.Services
             this.httpClient = httpClientFactory.CreateClient();
             WebApiUrl = configuration.GetSection("webApiUrl").Value;
         }
-        public async Task<IEnumerable<HotelTypeViewModel>> FetchHotelTypesAsync(CancellationToken cancellationToken = default)
+        public async Task<IEnumerable<HotelTypeModel>> FetchHotelTypesAsync(CancellationToken cancellationToken = default)
         {
            var response = await httpClient.GetAsync($"{WebApiUrl}/api/accommodation-types", cancellationToken);
-           var hotelTypes = await response.Content.ReadFromJsonAsync<IEnumerable<HotelTypeViewModel>>(cancellationToken: cancellationToken);
+           var hotelTypes = await response.Content.ReadFromJsonAsync<IEnumerable<HotelTypeModel>>(cancellationToken: cancellationToken);
             return hotelTypes;
         }
     }

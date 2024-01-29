@@ -1,1 +1,26 @@
-﻿
+﻿::deep .form-control {
+    background-color: #fff !important;
+    border: 1px solid #ced4da !important;
+    color: #212529 !important;
+}
+
+.edit_btn, .cancel_btn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 150px;
+    height: 40px;
+    border: 1px solid #1751A6;
+    border-radius: 5px;
+}
+
+.edit_btn:hover, .cancel_btn:hover {
+    cursor: pointer;
+    background-color: rgba(3, 3, 3, 0.02);
+    border: 1.5px solid #0d6efd;
+    color: #333;
+}
+
+::deep .row {
+    margin-top: 2%;
+}

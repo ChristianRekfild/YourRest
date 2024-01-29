@@ -1,10 +1,10 @@
-﻿using YouRest.HotelierWebApp.Data.ViewModels;
+﻿using YouRest.HotelierWebApp.Data.Models;
 
 namespace YouRest.HotelierWebApp.Data.Services.Abstractions
 {
     public interface IRegionService
     {
-        Task<IEnumerable<RegionViewModel>> FetchRegionsAsync(CancellationToken cancellationToken = default);
-        Task<RegionViewModel> FetchRegionAsync(int id, CancellationToken cancellationToken = default);
+        Task<IEnumerable<RegionModel>> FetchRegionsAsync(CancellationToken cancellationToken = default);
+        Task<RegionModel> FetchRegionAsync(int id, CancellationToken cancellationToken = default);
     }
 }

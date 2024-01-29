@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Components.Server;
 using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
-using YouRest.HotelierWebApp.Data.ViewModels;
+using YouRest.HotelierWebApp.Data.Models;
 
 namespace YouRest.HotelierWebApp.Data.Providers
 {
@@ -25,7 +25,7 @@ namespace YouRest.HotelierWebApp.Data.Providers
                 return new AuthenticationState(anonymousPrincipal);
             }
 
-            var securityToken = (await localStorage.GetAsync<SecurityTokenViewModel>(nameof(SecurityTokenViewModel))).Value;
+            var securityToken = (await localStorage.GetAsync<SecurityTokenModel>(nameof(SecurityTokenModel))).Value;
             if (!IsValidToken(securityToken)) return CreateAnonymous();
 
             var tokenSecurity = new JwtSecurityToken(securityToken.AccessToken);
@@ -40,19 +40,19 @@ namespace YouRest.HotelierWebApp.Data.Providers
 
         protected override async Task<bool> ValidateAuthenticationStateAsync(AuthenticationState authenticationState, CancellationToken cancellationToken)
         {
-            var securityToken = (await localStorage.GetAsync<SecurityTokenViewModel>(nameof(SecurityTokenViewModel))).Value;
+            var securityToken = (await localStorage.GetAsync<SecurityTokenModel>(nameof(SecurityTokenModel))).Value;
             return IsValidToken(securityToken);
         }
 
         public async Task MakeUserAnonymous()
         {
-            await localStorage.DeleteAsync(nameof(SecurityTokenViewModel));
+            await localStorage.DeleteAsync(nameof(SecurityTokenModel));
             var anonymousPrincipal = new ClaimsPrincipal(new ClaimsIdentity());
             var authState = Task.FromResult(new AuthenticationState(anonymousPrincipal));
             NotifyAuthenticationStateChanged(authState);
         }
 
-        protected bool IsValidToken(SecurityTokenViewModel? securityToken)
+        protected bool IsValidToken(SecurityTokenModel? securityToken)
         {
             if (securityToken is null) return false;
 

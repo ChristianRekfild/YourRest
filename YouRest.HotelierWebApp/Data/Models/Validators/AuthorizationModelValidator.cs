@@ -1,11 +1,10 @@
 ﻿using FluentValidation;
-using YouRest.HotelierWebApp.Data.ViewModels;
 
-namespace YouRest.HotelierWebApp.Data.ViewModels.Validators
+namespace YouRest.HotelierWebApp.Data.Models.Validators
 {
-    public class AuthorizationViewModelValidator : AbstractValidator<AuthorizationViewModel>
+    public class AuthorizationModelValidator : AbstractValidator<AuthorizationModel>
     {
-        public AuthorizationViewModelValidator()
+        public AuthorizationModelValidator()
         {
             RuleFor(auth => auth.Username).NotEmpty().WithName("Поле Email адрес").EmailAddress().WithMessage("Не верный email адрес.");
             RuleFor(auth => auth.Password).NotEmpty().WithName("Поле Пароль").MinimumLength(6);

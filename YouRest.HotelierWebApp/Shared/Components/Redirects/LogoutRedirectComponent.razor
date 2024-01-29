@@ -1,0 +1,11 @@
+﻿@using YouRest.HotelierWebApp.Data.Providers;
+@page "/logout"
+@code {
+    [Inject] NavigationManager NavigationManager { get; set; }
+    [Inject] AuthenticationStateProvider Provider { get; set; }
+    protected override async Task OnInitializedAsync()
+    {
+        await((CustomAuthValidateProvider)Provider).MakeUserAnonymous();
+        NavigationManager.NavigateTo("/login");
+    }
+}

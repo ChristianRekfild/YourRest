@@ -19,9 +19,13 @@
 }
 
 .modal-content {
+    height: 100%;
     border-radius: 20px;
     border-color: rgba(80,80,80,0.5);
     background-color: rgba(0,0,0,0.65);
+}
+.modal-header, .modal-body, .modal-footer{
+    padding: 4%;
 }
 
 ::deep .form-control {
