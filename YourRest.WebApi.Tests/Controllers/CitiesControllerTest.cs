@@ -46,7 +46,7 @@ namespace YourRest.WebApi.Tests.Controllers
             var resultCities = await GetCitiesFromApi();
 
             Assert.NotNull(resultCities);
-            Assert.Equal(expectedCity1.Name, resultCities.FirstOrDefault(c => c.Id == expectedCity1.Id)?.Name);
+            Assert.Equal(expectedCity1.Name, resultCities.FirstOrDefault(c => c.City.Id == expectedCity1.Id)?.City.Name);
             fixture.CleanDatabase();
         }
 
@@ -130,10 +130,10 @@ namespace YourRest.WebApi.Tests.Controllers
             {
                 PropertyNameCaseInsensitive = true
             };
-            var cities = SystemJson.JsonSerializer.Deserialize<List<City>>(content, options);
+            var cities = SystemJson.JsonSerializer.Deserialize<List<CityDTOWithPhotos>>(content, options);
 
-            var city1 = cities?.FirstOrDefault(x => x.Name == "Moscow666");
-            var city2 = cities?.FirstOrDefault(x => x.Name == "TestCity666");
+            var city1 = cities?.FirstOrDefault(x => x.City.Name == "Moscow666");
+            var city2 = cities?.FirstOrDefault(x => x.City.Name == "TestCity666");
 
             Assert.NotNull(city1);
             Assert.NotNull(city2);
@@ -173,10 +173,10 @@ namespace YourRest.WebApi.Tests.Controllers
             {
                 PropertyNameCaseInsensitive = true
             };
-            var cities = SystemJson.JsonSerializer.Deserialize<List<City>>(content, options);
+            var cities = SystemJson.JsonSerializer.Deserialize<List<CityDTOWithPhotos>>(content, options);
 
-            var city1 = cities?.FirstOrDefault(x => x.Name == "Moscow666");
-            var city2 = cities?.FirstOrDefault(x => x.Name == "TestCity666");
+            var city1 = cities?.FirstOrDefault(x => x.City.Name == "Moscow666");
+            var city2 = cities?.FirstOrDefault(x => x.City.Name == "TestCity666");
 
             Assert.NotNull(city1);
             Assert.NotNull(city2);
@@ -196,7 +196,7 @@ namespace YourRest.WebApi.Tests.Controllers
             Assert.Empty(cities);
         }
 
-        private async Task<List<City>> GetCitiesFromApi()
+        private async Task<List<CityDTOWithPhotos>> GetCitiesFromApi()
         {
             var response = await fixture.Client.GetAsync("/api/cities");
             response.EnsureSuccessStatusCode();
@@ -205,7 +205,7 @@ namespace YourRest.WebApi.Tests.Controllers
             {
                 PropertyNameCaseInsensitive = true
             };
-            var cities = SystemJson.JsonSerializer.Deserialize<List<City>>(content, options);
+            var cities = SystemJson.JsonSerializer.Deserialize<List<CityDTOWithPhotos>>(content, options);
 
             return cities;
         }
@@ -227,7 +227,7 @@ namespace YourRest.WebApi.Tests.Controllers
             return city;
         }
 
-        private async Task<List<City>> GetCitiesByRegionId(int regionId)
+        private async Task<List<CityDTOWithPhotos>> GetCitiesByRegionId(int regionId)
         {
             var response = await fixture.Client.GetAsync($"/api/cities?regionId={regionId}");
 
@@ -239,12 +239,12 @@ namespace YourRest.WebApi.Tests.Controllers
             {
                 PropertyNameCaseInsensitive = true
             };
-            var cities = SystemJson.JsonSerializer.Deserialize<List<City>>(content, options);
+            var cities = SystemJson.JsonSerializer.Deserialize<List<CityDTOWithPhotos>>(content, options);
 
             return cities;
         }
 
-        private async Task<List<City>> GetCitiesByCountryId(int countryId)
+        private async Task<List<CityDTOWithPhotos>> GetCitiesByCountryId(int countryId)
         {
             var response = await fixture.Client.GetAsync($"/api/cities?countryId={countryId}");
 
@@ -256,7 +256,7 @@ namespace YourRest.WebApi.Tests.Controllers
             {
                 PropertyNameCaseInsensitive = true
             };
-            var cities = SystemJson.JsonSerializer.Deserialize<List<City>>(content, options);
+            var cities = SystemJson.JsonSerializer.Deserialize<List<CityDTOWithPhotos>>(content, options);
 
             return cities;
         }

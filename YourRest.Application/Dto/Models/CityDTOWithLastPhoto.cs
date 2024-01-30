@@ -2,8 +2,9 @@
 
 namespace YourRest.Application.Dto.Models
 {
-    public class CityDTOWithLastPhoto : CityDTO
+    public class CityDTOWithLastPhoto
     {
+        public CityDTO City { get; set; }
         public PhotoPathResponseDto? LastPhoto { get; set; }
     }
 }

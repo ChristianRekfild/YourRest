@@ -27,7 +27,7 @@ namespace YourRest.WebApi.Tests.Controllers
         {
             var ageRange = new AgeRangeDto() { AgeFrom = 6, AgeTo = 14 };
             var content = new StringContent(JsonConvert.SerializeObject(ageRange), Encoding.UTF8, "application/json");
-            var response = await fixture.Client.PostAsync($"api/operators/AgeRanges", content);
+            var response = await fixture.Client.PostAsync($"api/age-ranges", content);
 
             Assert.Equal(HttpStatusCode.Created, response.StatusCode);
 
@@ -44,7 +44,7 @@ namespace YourRest.WebApi.Tests.Controllers
         {
             var ageRange = new AgeRangeDto() { AgeFrom = 14, AgeTo = 6 };
             var content = new StringContent(JsonConvert.SerializeObject(ageRange), Encoding.UTF8, "application/json");
-            var response = await fixture.Client.PostAsync($"api/operators/AgeRanges", content);
+            var response = await fixture.Client.PostAsync($"api/age-ranges", content);
 
             Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
 
@@ -61,7 +61,7 @@ namespace YourRest.WebApi.Tests.Controllers
 
             AgeRange ageRange = await fixture.InsertObjectIntoDatabase(ageRangeEntity);
 
-            var response = await fixture.Client.GetAsync($"api/operators/AgeRanges/{ageRange.Id}");
+            var response = await fixture.Client.GetAsync($"api/age-ranges/{ageRange.Id}");
 
             var responseContent = await response.Content.ReadAsStringAsync();
             var ageRangeResponse = JsonConvert.DeserializeObject<AgeRangeDto>(responseContent);
@@ -79,7 +79,7 @@ namespace YourRest.WebApi.Tests.Controllers
 
             var ageRangePut = new AgeRangeWithIdDto() { Id = 1, AgeFrom = 4, AgeTo = 16 };
             var content = new StringContent(JsonConvert.SerializeObject(ageRangePut), Encoding.UTF8, "application/json");
-            var response = await fixture.Client.PutAsync($"api/operators/AgeRanges/", content);
+            var response = await fixture.Client.PutAsync($"api/age-ranges/", content);
 
             Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
         }
@@ -92,7 +92,7 @@ namespace YourRest.WebApi.Tests.Controllers
 
             var ageRangePut = new AgeRange() { Id = ageRange.Id, AgeFrom = 4, AgeTo = 16 };
             var content = new StringContent(JsonConvert.SerializeObject(ageRangePut), Encoding.UTF8, "application/json");
-            var response = await fixture.Client.PutAsync($"api/operators/AgeRanges/", content);
+            var response = await fixture.Client.PutAsync($"api/age-ranges/", content);
 
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 

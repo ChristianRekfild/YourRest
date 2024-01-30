@@ -2,8 +2,9 @@
 
 namespace YourRest.Application.Dto.Models
 {
-    public class CityDTOWithPhotos : CityDTO
+    public class CityDTOWithPhotos
     {
+        public CityDTO City { get; set; }
         public List<PhotoPathResponseDto> Photos { get; set; }
     }
 }

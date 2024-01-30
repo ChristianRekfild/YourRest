@@ -28,10 +28,12 @@ namespace YourRest.Application.UseCases
     
             return new CityDTOWithPhotos()
             {
-                Id = city.Id,
-                Name = city.Name,
-                Description = city.Description,
-                IsFavorite = city.IsFavorite,
+                City = new CityDTO{
+                    Id = city.Id,
+                    Name = city.Name,
+                    Description = city.Description,
+                    IsFavorite = city.IsFavorite
+                },
                 Photos = photos
             };
         }

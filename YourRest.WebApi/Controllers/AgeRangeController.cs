@@ -22,7 +22,7 @@ namespace YourRest.WebApi.Controllers
         }
 
         [HttpGet]
-        [Route("api/operators/AgeRanges/{id}")]
+        [Route("api/age-ranges/{id}")]
         public async Task<IActionResult> GetAgeRange(int id)
         {
             var ageRangeResponse = await _getAgeRangeByIdUseCase.ExecuteAsync(id, HttpContext.RequestAborted);
@@ -30,7 +30,7 @@ namespace YourRest.WebApi.Controllers
         }
 
         [HttpPost]
-        [Route("api/operators/AgeRanges/")]
+        [Route("api/age-ranges/")]
         public async Task<IActionResult> PostAgeRange([FromBody] AgeRangeDto ageRangeDto)
         {
             var createdRoom = await _createAgeRangeUseCase.ExecuteAsync(ageRangeDto, HttpContext.RequestAborted);
@@ -38,7 +38,7 @@ namespace YourRest.WebApi.Controllers
         }
 
         [HttpPut]
-        [Route("api/operators/AgeRanges/")]
+        [Route("api/age-ranges/")]
         public async Task<IActionResult> EditAgeRange([FromBody] AgeRangeWithIdDto ageRangeWithId)
         {
             await _editAgeRangeUseCase.ExecuteAsync(ageRangeWithId, HttpContext.RequestAborted);

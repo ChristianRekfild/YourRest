@@ -31,7 +31,7 @@ namespace YourRest.WebApi.Controllers
             _deleteAddressFromAccommodationUseCase = deleteAddressFromAccommodationUseCase;
         }
 
-        [HttpPost("api/operators/accommodations/{accommodationId}/address", Name = "AddAddressToAccommodationAsync")]
+        [HttpPost("api/accommodations/{accommodationId}/address", Name = "AddAddressToAccommodationAsync")]
         public async Task<IActionResult> AddAddressToAccommodationAsync([FromRoute] int accommodationId, [FromBody] AddressDto addressWithIdDto)
         {
             if (!ModelState.IsValid)
@@ -43,7 +43,7 @@ namespace YourRest.WebApi.Controllers
             return CreatedAtRoute(nameof(AddAddressToAccommodationAsync), result);
         }
         
-        [HttpDelete("api/operators/accommodations/{accommodationId}/address/{addressId}", Name = "DeleteAddressAccommodationLinkAsync")]
+        [HttpDelete("api/accommodations/{accommodationId}/address/{addressId}", Name = "DeleteAddressAccommodationLinkAsync")]
         public async Task<IActionResult> DeleteAddressFromAccommodationAsync([FromRoute] int accommodationId, [FromRoute] int addressId)
         {
             await _deleteAddressFromAccommodationUseCase.Execute(accommodationId, addressId);

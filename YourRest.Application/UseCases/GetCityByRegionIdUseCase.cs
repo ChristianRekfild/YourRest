@@ -22,10 +22,12 @@ namespace YourRest.Application.UseCases
 
             return cities.Select(c => new CityDTOWithLastPhoto
             {
-                Id = c.Id,
-                Name = c.Name,
-                Description = c.Description,
-                IsFavorite = c.IsFavorite,
+                City = new CityDTO{
+                    Id = c.Id,
+                    Name = c.Name,
+                    Description = c.Description,
+                    IsFavorite = c.IsFavorite
+                },
                 LastPhoto = c.CityPhotos.OrderByDescending(photo => photo.Id)
                     .Select(photo => new PhotoPathResponseDto
                     {
