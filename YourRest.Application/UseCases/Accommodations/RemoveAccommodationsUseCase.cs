@@ -13,43 +13,39 @@ namespace YourRest.Application.UseCases.Accommodations
     public class RemoveAccommodationsUseCase : IRemoveAccommodationsUseCase
     {
         private readonly IAccommodationRepository _accommodationRepository;
-        private readonly IRoomRepository _roomRepository;
-        private readonly IAccommodationStarRatingRepository _accommodationStarRatingRepository;
+        //private readonly IRoomRepository _roomRepository;
 
         public RemoveAccommodationsUseCase(
-            IAccommodationRepository accommodationRepository,
-            IRoomRepository roomRepository,
-            IAccommodationStarRatingRepository accommodationStarRatingRepository)
+            IAccommodationRepository accommodationRepository
+            //IRoomRepository roomRepository
+            )
         {
             _accommodationRepository = accommodationRepository;
-            _roomRepository = roomRepository;
-            _accommodationStarRatingRepository = accommodationStarRatingRepository;
+            //_roomRepository = roomRepository;
         }
         public async Task ExecuteAsync(int id, CancellationToken cancellationToken)
         {
-            var accommodation = (await _accommodationRepository.GetWithIncludeAndTrackingAsync(a => a.Id == id, cancellationToken, include => include.StarRating , include => include.Rooms)).FirstOrDefault();
+            var accommodations = await _accommodationRepository.GetWithIncludeAsync(a => a.Id == id, cancellationToken, include => include.StarRating, include => include.Rooms);
+            var accommodation = accommodations.FirstOrDefault();
             if (accommodation == null)
             {
                 throw new EntityNotFoundException($"Accommodation with id number {id} not found");
             }
-            int[] accRoomsId = new int[accommodation.Rooms.Count];            
-            int i = 0;
+            //int[] accRoomsId = new int[accommodation.Rooms.Count];
+            //int i = 0;
 
-            foreach (var room in accommodation.Rooms)
-            {
-                accRoomsId[i] = room.Id;
-                i++;
-            }
+            //foreach (var room in accommodation.Rooms)
+            //{
+            //    accRoomsId[i] = room.Id;
+            //    i++;
+            //}
 
-            foreach (var roomId in accRoomsId)
-            {
-                await _roomRepository.DeleteAsync(roomId, cancellationToken: cancellationToken);
-            }
+            //foreach (var roomId in accRoomsId)
+            //{
+            //    await _roomRepository.DeleteAsync(roomId, cancellationToken: cancellationToken);
+            //}
 
-
-            await _accommodationStarRatingRepository.DeleteAsync(accommodation.StarRating.Id, cancellationToken: cancellationToken);
-            await _accommodationRepository.DeleteAsync(id, cancellationToken: cancellationToken);
+            await _accommodationRepository.DeleteAsync(accommodation.Id, cancellationToken: cancellationToken);
         }
-
     }
 }

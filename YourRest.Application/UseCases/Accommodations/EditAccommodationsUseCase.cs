@@ -17,14 +17,10 @@ namespace YourRest.Application.UseCases.Accommodations
     public class EditAccommodationsUseCase : IEditAccommodationsUseCase
     {
         private readonly IAccommodationRepository _accommodationRepository;
-        private readonly IMapper _mapper;
-        private readonly IAccommodationStarRatingRepository _starRatingRepository;
 
-        public EditAccommodationsUseCase(IAccommodationRepository accommodationRepository, IMapper mapper, IAccommodationStarRatingRepository starRatingRepository)
+        public EditAccommodationsUseCase(IAccommodationRepository accommodationRepository, IMapper mapper/*, IAccommodationStarRatingRepository starRatingRepository*/)
         {
             _accommodationRepository = accommodationRepository;
-            _mapper = mapper;
-            _starRatingRepository = starRatingRepository;
         }
         public async Task<AccommodationDto> ExecuteAsync(EditAccommodationDto editAccommodationDto, CancellationToken cancellationToken)
         {
@@ -43,22 +39,20 @@ namespace YourRest.Application.UseCases.Accommodations
             accommodationInDb.Description = editAccommodationDto.Description;
             accommodationInDb.Name = editAccommodationDto.Name;
             accommodationInDb.AccommodationTypeId = editAccommodationDto.AccommodationTypeId;
-
-            AccommodationStarRating star = new AccommodationStarRating();
-            try
+            if (accommodationInDb.StarRating == null)
             {
-                star = await _starRatingRepository.GetAsync(accommodationInDb.StarRating.Id, cancellationToken);
-                star.Stars = (int)editAccommodationDto.Stars;
-                await _starRatingRepository.UpdateAsync(star, true, cancellationToken);
+                accommodationInDb.StarRating = new AccommodationStarRating()
+                {
+                    Stars = (int)editAccommodationDto.Stars,
+                    Accommodation = accommodationInDb,
+                    AccommodationId = accommodationInDb.Id
+                };
             }
-            catch (NullReferenceException err)
+            else
             {
-                star.Stars = (int)editAccommodationDto.Stars;
-                star.AccommodationId = editAccommodationDto.Id;
-                await _starRatingRepository.AddAsync(star, true, cancellationToken);
+                accommodationInDb.StarRating.Stars = (int)editAccommodationDto.Stars;
             }
 
-            accommodationInDb.StarRating = star;
 
             var accommodationToReturn = await _accommodationRepository.UpdateAsync((Accommodation)accommodationInDb, cancellationToken: cancellationToken);
 

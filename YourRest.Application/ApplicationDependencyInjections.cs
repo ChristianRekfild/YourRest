@@ -117,8 +117,8 @@ namespace YourRest.Application
             services.AddScoped<IDeleteAddressFromAccommodationUseCase, DeleteAddressFromAccommodationUseCase>();
 
             ////Accommodations
-            services.AddScoped<IRemoveAccommodationsUseCase, RemoveAccommodationsUseCase>();
-            services.AddScoped<IEditAccommodationsUseCase, EditAccommodationsUseCase>();
+            //services.AddScoped<IRemoveAccommodationsUseCase, RemoveAccommodationsUseCase>();
+            //services.AddScoped<IEditAccommodationsUseCase, EditAccommodationsUseCase>();
             services.AddScoped<IGetAccommodationsByIdUseCase, GetAccommodationsByIdUseCase>();
             services.AddScoped<IGetAccommodationsUseCase, GetAccommodationsUseCase>();
 

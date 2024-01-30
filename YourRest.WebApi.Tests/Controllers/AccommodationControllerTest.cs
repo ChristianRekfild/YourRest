@@ -656,7 +656,7 @@ namespace YourRest.WebApi.Tests.Controllers
                 AccommodationType = accType,
                 AddressId = address2.Id,
                 Description = "testAccommodationDescription2",
-                StarRating = new AccommodationStarRating { Stars = 4 },
+                //StarRating = new AccommodationStarRating { Stars = 4 },
                 Rooms = new List<Room>
                 {
                     new Room { Name = "310", Capacity = 1, SquareInMeter = 20, RoomType = new RoomType { Name = "Test 3" } },
