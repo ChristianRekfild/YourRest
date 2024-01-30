@@ -54,6 +54,14 @@ namespace YourRest.WebApi.Controllers
             var dto = await _accommodationPhotoUploadUseCase.ExecuteAsync(_model, _awsOptions.BucketNames.Accommodation, HttpContext.RequestAborted);
             return Ok(dto);
         }
+        
+        [HttpPost]
+        [Route("api/accommodation-photos")]
+        public async Task<IActionResult> UploadAccommodationPhotosAsync([FromForm] PhotoUploadModel model)
+        {
+            var dto = await _accommodationPhotoUploadUseCase.ExecuteAsync(model, _awsOptions.BucketNames.Accommodation, HttpContext.RequestAborted);
+            return Ok(dto);
+        }
 
         [HttpPost]
         [Route("api/room-photo")]
