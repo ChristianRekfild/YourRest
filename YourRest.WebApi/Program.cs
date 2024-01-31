@@ -156,7 +156,7 @@ public class Program
         });
         
         services.AddMassTransitHostedService();
-        services.AddSingleton<IEventHandler<AccommodationCreatedEvent>, NotificationListener>();
+        services.AddScoped<IEventHandler<AccommodationCreatedEvent>, NotificationListener>();
 
         var awsOptions = configuration.GetSection("AWS").Get<AwsOptions>();
         if (awsOptions != null)

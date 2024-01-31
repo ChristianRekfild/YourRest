@@ -89,7 +89,6 @@ volumes:
   pgdata:
   minio-data:
   keycloak-data:
-  keycloakdb-data:
   rabbitmq_data:
 
 networks:

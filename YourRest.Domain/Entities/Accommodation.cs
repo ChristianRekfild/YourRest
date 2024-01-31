@@ -26,7 +26,7 @@ namespace YourRest.Domain.Entities
             
             State = stateValue;
             Rooms = new List<Room>();
-            Record(new AccommodationCreatedEvent(1));
+            Record(new AccommodationCreatedEvent(this.Id));
         }
     }
 }
