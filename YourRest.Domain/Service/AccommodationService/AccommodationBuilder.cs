@@ -4,6 +4,7 @@ namespace YourRest.Domain.Service.AccommodationService
 {
     public class AccommodationBuilder
     {
+        private int _state = 0;
         private readonly string _name;
         private readonly AccommodationType _accommodationType;
         private string? _description;
@@ -50,7 +51,12 @@ namespace YourRest.Domain.Service.AccommodationService
             _starRating = starRating;
             return this;
         }
-
+        
+        public AccommodationBuilder WithState(int state)
+        {
+            _state = state;
+            return this;
+        }
         public AccommodationBuilder WithAccommodationFacilities(ICollection<AccommodationFacilityLink> accommodationFacilities)
         {
             _accommodationFacilities = accommodationFacilities;
@@ -67,6 +73,7 @@ namespace YourRest.Domain.Service.AccommodationService
                 Address = _address,
                 AddressId = _addressId,
                 Rooms = _rooms,
+                State = _state,
                 UserAccommodations = _userAccommodations,
                 StarRating = _starRating,
                 AccommodationFacilities = _accommodationFacilities

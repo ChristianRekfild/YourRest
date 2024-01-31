@@ -3,6 +3,7 @@ using YourRest.Application.Interfaces;
 using YourRest.Domain.Repositories;
 using YourRest.Domain.Entities;
 using YourRest.Application.Dto;
+using YourRest.Application.Services;
 using YourRest.Domain.Service.AccommodationService;
 
 namespace YourRest.Application.UseCases
@@ -12,15 +13,18 @@ namespace YourRest.Application.UseCases
         private readonly IAccommodationTypeRepository _accommodationTypeRepository;
         private readonly IAccommodationRepository _accommodationRepository;
         private readonly IUserRepository _userRepository;
+        private readonly EventDispatcher _eventDispatcher;
 
         public CreateAccommodationUseCase(
             IAccommodationTypeRepository accommodationTypeRepository,
             IAccommodationRepository accommodationRepository,
-            IUserRepository userRepository
+            IUserRepository userRepository,
+            EventDispatcher eventDispatcher
         ) {
             _accommodationTypeRepository = accommodationTypeRepository;
             _accommodationRepository = accommodationRepository;
             _userRepository = userRepository;
+            _eventDispatcher = eventDispatcher;
         }
 
         public async Task<AccommodationDto> ExecuteAsync(CreateAccommodationDto accommodationDto, string userKeyCloakId, CancellationToken cancellationToken)
@@ -57,6 +61,11 @@ namespace YourRest.Application.UseCases
 
             var savedAccommodation = await _accommodationRepository.AddAsync(accommodation, cancellationToken: cancellationToken);
 
+            foreach (var domainEvent in accommodation.ReleaseEvents())
+            {
+                await _eventDispatcher.Dispatch(domainEvent);
+            }
+            
             var accommodationTypeDto = new AccommodationTypeDto
             {
                 Id = accommodationType.Id,

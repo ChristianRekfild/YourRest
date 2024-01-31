@@ -1,5 +1,6 @@
 using YourRest.Domain.Entities;
 using YourRest.Domain.Models;
+using YourRest.Domain.ValueObjects;
 
 namespace YourRest.Domain.Repositories;
 public interface IAccommodationRepository : IRepository<Accommodation, int>
@@ -9,4 +10,6 @@ public interface IAccommodationRepository : IRepository<Accommodation, int>
 
     Task<IEnumerable<Accommodation>> GetAccommodationsWithFacilitiesAsync(int id,
         CancellationToken cancellationToken = default);
+
+    Task UpdateStateAsync(int messageId, AccommodationState state);
 }

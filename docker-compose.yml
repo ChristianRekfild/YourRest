@@ -71,12 +71,26 @@ services:
       - minio-data:/data
     networks:
       - local-network
+        
+  rabbitmq:
+    image: rabbitmq:3-management
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    volumes:
+      - ./rabbitmq_data:/var/lib/rabbitmq
+    networks:
+      - local-network
 
 volumes:
   pgdata:
   minio-data:
   keycloak-data:
   keycloakdb-data:
+  rabbitmq_data:
 
 networks:
   local-network:

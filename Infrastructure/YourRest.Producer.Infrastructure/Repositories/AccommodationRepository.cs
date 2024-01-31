@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using YourRest.Domain.Entities;
 using YourRest.Domain.Models;
 using YourRest.Domain.Repositories;
+using YourRest.Domain.ValueObjects;
 using YourRest.Infrastructure.Core.DbContexts;
 using YourRest.Infrastructure.Core.Repositories;
 using YourRest.Producer.Infrastructure.Repositories.Extensions;
@@ -57,6 +58,17 @@ namespace YourRest.Producer.Infrastructure.Repositories
                 .Include(a => a.AccommodationFacilities)
                 .ThenInclude(af => af.AccommodationFacility)
                 .ToListAsync(cancellationToken);
+        }
+        
+        public async Task UpdateStateAsync(int accommodationId, AccommodationState state)
+        {
+            var accommodation = await GetAsync(accommodationId);
+            if (accommodation != null)
+            {
+                accommodation.State = (int)state;
+                await UpdateAsync(accommodation);
+                await SaveChangesAsync();
+            }
         }
     }
 }

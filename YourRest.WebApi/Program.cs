@@ -18,7 +18,13 @@ using YourRest.Producer.Infrastructure.Seeds;
 using YourRest.Producer.Infrastructure.Keycloak.Settings;
 using YourRest.WebApi.Options;
 using Amazon.S3;
+using MassTransit;
 using Microsoft.AspNetCore.Http.Features;
+using YourRest.Application.Services;
+using YourRest.Domain.Events;
+using YourRest.Producer.Infrastructure.Listeners;
+using YourRest.Producer.Infrastructure.Messaging.RabbitMQ;
+using YourRest.Producer.Infrastructure.Messaging.RabbitMQ.Consumers;
 using YourRest.WebApi;
 
 public class Program
@@ -121,6 +127,36 @@ public class Program
                 IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration.GetValue<string>("KeycloakSetting:ClientSecret"))),
             };
         });
+        
+        services.AddMassTransit(x =>
+        {
+            // x.AddConsumer<AccommodationCreatedConsumer>();
+
+            x.UsingRabbitMq((context, cfg) =>
+            {
+                cfg.Host(new Uri("rabbitmq://rabbitmq"), h =>
+                {
+                    h.Username("guest");
+                    h.Password("guest");
+                });
+
+                // cfg.ReceiveEndpoint("accommodation_created_queue", e =>
+                // {
+                //     e.ConfigureConsumer<AccommodationCreatedConsumer>(context);
+                // });
+            });
+        });
+        
+        services.AddSingleton<RabbitMqMessageProducer>(provider =>
+        {
+            string hostname = "rabbitmq";
+            string queueName = "accommodation_created_queue";
+
+            return new RabbitMqMessageProducer(hostname, queueName);
+        });
+        
+        services.AddMassTransitHostedService();
+        services.AddSingleton<IEventHandler<AccommodationCreatedEvent>, NotificationListener>();
 
         var awsOptions = configuration.GetSection("AWS").Get<AwsOptions>();
         if (awsOptions != null)
