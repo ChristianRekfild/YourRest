@@ -74,12 +74,12 @@ namespace YouRest.HotelierWebApp.Pages
                     Rooms = createdHotel.Rooms,
                     Address = createdAddress
                 });
-                if (CreateHotelViewModel.Images is not null)
+                if (CreateHotelViewModel.ImagesForLoad is not null)
                 {
-                    foreach (var image in CreateHotelViewModel.Images)
+                    foreach (var image in CreateHotelViewModel.ImagesForLoad)
                     {
                         image.AccommodationId = createdHotel.Id;
-                        await ServiceRepository.FileService.UploadAsync(image, _tokenSource.Token);
+                      var a =  await ServiceRepository.FileService.UploadAsync(image, _tokenSource.Token);
                     }
                 }
                 NavigationManager.NavigateTo("/hotels");
@@ -88,16 +88,16 @@ namespace YouRest.HotelierWebApp.Pages
 
         public async Task LoadFiles(InputFileChangeEventArgs e)
         {
-            CreateHotelViewModel.Images = new();
+            CreateHotelViewModel.ImagesForLoad = new();
             var files = e.GetMultipleFiles(maximumFileCount: 5);
             foreach (var file in files)
             {
                 using MemoryStream memoryStream = new();
                 await file.OpenReadStream(file.Size).CopyToAsync(memoryStream);
-                CreateHotelViewModel.Images.Add(new()
+                CreateHotelViewModel.ImagesForLoad.Add(new()
                 {
                     FileName = file.Name,
-                    Photo = $"data:{file.ContentType}; base64,{Convert.ToBase64String(memoryStream.ToArray())}"
+                    Photo = $"{Convert.ToBase64String(memoryStream.ToArray())}"
                 });
 
             }

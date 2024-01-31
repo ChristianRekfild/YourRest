@@ -16,5 +16,6 @@ namespace YouRest.HotelierWebApp.Data.Models
         public CityModel? City { get; set; }
         public RegionModel? Region { get; set; }
         public CountryModel? Country { get; set;}
+        public List<string>? FilesPath { get; set; }
     }
 }

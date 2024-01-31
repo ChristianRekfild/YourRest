@@ -46,7 +46,8 @@ namespace YourRest.Producer.Infrastructure.Repositories
                 h => h.Address,
                 h => h.StarRating,
                 h => h.AccommodationType,
-                h => h.UserAccommodations
+                h => h.UserAccommodations,
+                h => h.AccommodationPhotos
             );
         }
         

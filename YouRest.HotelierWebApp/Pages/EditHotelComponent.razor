@@ -118,9 +118,9 @@
                            multiple accept=".png,.jpg,.jpeg" type="file" class="form-control" id="inputGroupFile"></InputFile>
                 <label class="input-group-text" for="inputGroupFile">Добавить фото</label>
             </div>
-            @if (EditHotelViewModel.Images is not null)
+            @if (EditHotelViewModel.ImagesForView is not null)
             {
-                <PreviewImagesComponent @bind-Images="@EditHotelViewModel.Images" />
+                <PreviewImagesComponent @bind-Images="@EditHotelViewModel.ImagesForView" />
             }
         </EditForm>
     </div>

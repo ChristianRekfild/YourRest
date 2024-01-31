@@ -78,18 +78,18 @@ namespace YouRest.HotelierWebApp.Pages
         }
         public async Task LoadFiles(InputFileChangeEventArgs e)
         {
-            if (EditHotelViewModel.Images is null)
-                EditHotelViewModel.Images = new();
+            if (EditHotelViewModel.ImagesForLoad is null)
+                EditHotelViewModel.ImagesForLoad = new();
             var files = e.GetMultipleFiles(maximumFileCount: 5);
             foreach (var file in files)
             {
                 using MemoryStream memoryStream = new();
                 await file.OpenReadStream(file.Size).CopyToAsync(memoryStream);
-                EditHotelViewModel.Images.Add(new()
+                EditHotelViewModel.ImagesForLoad.Add(new()
                 {
                     AccommodationId = HotelViewModel.CurrentHotel.Id,
                     FileName = file.Name,
-                    Photo = $"data:{file.ContentType}; base64,{Convert.ToBase64String(memoryStream.ToArray())}"
+                    Photo = $"{Convert.ToBase64String(memoryStream.ToArray())}"
                 });
 
             }

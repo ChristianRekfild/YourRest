@@ -12,6 +12,8 @@
     <PackageReference Include="Blazored.FluentValidation" Version="2.1.0" />
     <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="11.9.0" />
     <PackageReference Include="IdentityModel" Version="6.2.0" />
+    <PackageReference Include="MassTransit" Version="8.2.0-develop.1655" />
+    <PackageReference Include="MassTransit.RabbitMQ" Version="8.2.0-develop.1655" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="7.0.15" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />

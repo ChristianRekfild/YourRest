@@ -78,7 +78,8 @@ namespace YourRest.Application.UseCases
                     Name = r.Name,
                     SquareInMeter = r.SquareInMeter,
                     RoomTypeId = r.RoomType.Id
-                }).ToList() ?? new List<RoomWithIdDto>()
+                }).ToList() ?? new List<RoomWithIdDto>(),
+                FilesPath = accommodation.AccommodationPhotos?.Select(f => f.FilePath).ToList(),
             };
         }
     }

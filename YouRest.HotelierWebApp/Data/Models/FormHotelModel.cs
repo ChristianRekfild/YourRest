@@ -11,6 +11,7 @@
         public string HotelRating { get; set; }
         public string HotelDescription { get; set; }
         public string ZipCode { get; set; }
-        public List<HotelImgModel>? Images { get; set; }
+        public List<HotelImgModel>? ImagesForLoad { get; set; }
+        public List<string>? ImagesForView { get; set; }
     }
 }

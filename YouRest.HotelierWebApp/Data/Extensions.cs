@@ -1,11 +1,9 @@
-﻿using IdentityModel;
-using IdentityModel.Client;
+﻿using IdentityModel.Client;
 using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
 using System.IdentityModel.Tokens.Jwt;
-using System.Runtime.CompilerServices;
+using System.Net.Mime;
 using System.Text.Json;
 using YouRest.HotelierWebApp.Data.Models;
-using YouRest.HotelierWebApp.Data.Services;
 using YouRest.HotelierWebApp.Data.Services.Abstractions;
 using YouRest.HotelierWebApp.Data.ViewModels.Interfaces;
 
@@ -34,7 +32,7 @@ namespace YouRest.HotelierWebApp.Data
             else return null;
         }
         public static T DeepCopy<T>(this T obj) => JsonSerializer.Deserialize<T>(JsonSerializer.Serialize<T>(obj));
-        
+
         public static async Task FillHotelModelFormAsync(this HotelModel hotel, IServiceRepository serviceRepository, IHotelViewModel viewModel, CancellationToken cancellationToken = default)
         {
 

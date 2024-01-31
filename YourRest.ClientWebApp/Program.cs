@@ -8,6 +8,7 @@ using System.Text;
 using YourRest.ClientIdentity.Infrastructure;
 using YourRest.ClientIdentity.Infrastructure.Contracts.Entities;
 using YourRest.Infrastructure.Core.DbContexts;
+using MassTransit;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -27,6 +28,19 @@ builder.Services.AddIdentity<User, Role>()
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+builder.Services.AddMassTransit(x =>
+{
+    x.UsingRabbitMq((context, cfg) =>
+    {
+        cfg.Host("localhost", "/", h => {
+            h.Username("guest");
+            h.Password("guest");
+        });
+
+        cfg.ConfigureEndpoints(context);
+    });
+});
 
 // добавление сервисов аутентификации
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)  // схема аутентификации - с помощью jwt-токенов

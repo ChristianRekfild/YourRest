@@ -9,7 +9,7 @@
     </div>
     <div class="row justify-content-center">
         <div>
-            @if (HotelViewModel.Hotels is not null)
+            @if (HotelViewModel.Hotels != null && HotelViewModel.Hotels.Any())
             {
                 <HotelTableComponent @bind-Hotels="@HotelViewModel.Hotels"
                     OnSelected="@SelectedHotel"    

@@ -7,7 +7,6 @@ namespace YouRest.HotelierWebApp.Pages
     public partial class CurrentHotelPage : ComponentBase, IDisposable
     {
         private CancellationTokenSource _tokenSource = new();
-        private string DefaultPath = "/Images/1.jpg";
         [Inject] public IServiceRepository ServiceRepository { get; set; }
         [Inject] public IHotelViewModel HotelViewModel { get; set; }
         [Parameter] public int CurrentHotelId { get; set; }

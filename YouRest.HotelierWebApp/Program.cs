@@ -1,6 +1,9 @@
 using FluentValidation;
+using MassTransit;
 using Microsoft.AspNetCore.Components.Authorization;
 using System.Globalization;
+using YouRest.HotelierWebApp.Data.Consumers;
+using YouRest.HotelierWebApp.Data.Models;
 using YouRest.HotelierWebApp.Data.Models.Validators;
 using YouRest.HotelierWebApp.Data.Providers;
 using YouRest.HotelierWebApp.Data.Services;
@@ -22,6 +25,21 @@ builder.Services.AddBlazorBootstrap();
 builder.Services.AddOptions();
 builder.Services.AddAuthorizationCore();
 builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthValidateProvider>();
+
+builder.Services.AddMassTransit(x =>
+{
+    
+    x.AddConsumer<BookingConsumer>();
+    x.UsingRabbitMq((context, cfg) =>
+    {
+        cfg.Host("localhost", "/", h => {
+            h.Username("guest");
+            h.Password("guest");
+        });
+
+        cfg.ConfigureEndpoints(context);
+    });
+});
 
 var app = builder.Build();
 

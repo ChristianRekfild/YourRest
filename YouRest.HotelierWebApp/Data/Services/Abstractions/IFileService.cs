@@ -5,8 +5,7 @@ namespace YouRest.HotelierWebApp.Data.Services.Abstractions
 {
     public interface IFileService
     {
-        Task UploadAsync(HotelImgModel hotelImg, CancellationToken cancellationToken);
-        Task<string> FetchImg(string filePath, string bucketType);
-       
+        Task<string> UploadAsync(HotelImgModel hotelImg, CancellationToken cancellationToken);
+        Task<string> FetchAccommodationImg(string filePath);
     }
 }
