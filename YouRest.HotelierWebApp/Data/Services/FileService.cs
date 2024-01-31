@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Primitives;
 using Newtonsoft.Json;
+using System.IO;
 using System.Net.Http.Headers;
 using System.Text;
 using YouRest.HotelierWebApp.Data.Models;
@@ -28,37 +29,10 @@ namespace YouRest.HotelierWebApp.Data.Services
             return await response.Content.ReadAsStringAsync();
         }
 
-        public async Task Upload(IBrowserFile file)
+        public async Task UploadAsync(HotelImgModel hotelImg, CancellationToken cancellationToken = default)
         {
-            var data = new byte[file.Size];
-            await file.OpenReadStream(file.Size).ReadAsync(data);
-            //MemoryStream stream = new MemoryStream(data);
-            //IFormFile _file = new FormFile(stream, 0, file.Size, file.Name, file.Name);
-            HotelImgModel hotel = new()
-            {
-                AccommodationId = 1,
-                Photo = $"{Convert.ToBase64String(data)}",
-                FileName = file.Name
-            };
-            //HttpContent streamContent = new StreamContent(file.OpenReadStream());
-            //streamContent.Headers.ContentDisposition = new ("form-data")
-            //{
-            //    Name = "model",
-            //    FileName = file.Name,
-            //};
-
-            //var data = new HotelImgModel()
-            //{
-            //    AccommodationId = 1,
-            //    Photo = img
-            //};
-            var a = JsonConvert.SerializeObject(hotel);
-            HttpContent content = new StringContent(a, Encoding.UTF8, "application/json");
-            //streamContent.Headers.ContentType = new MediaTypeHeaderValue(file.ContentType);
-            //using var formData = new MultipartFormDataContent();
-            //formData.Add(streamContent, "model", file.Name);
-
-            var response = await httpClient.PostAsync($"{WebApiUrl}/api/accommodation-photo", content);
+            HttpContent content = new StringContent(JsonConvert.SerializeObject(hotelImg), Encoding.UTF8, "application/json");
+            var response = await httpClient.PostAsync($"{WebApiUrl}/api/accommodation-photo", content, cancellationToken);
         }
     }
 }

@@ -1,6 +1,3 @@
-using YourRest.Application.Dto.Models;
-using YourRest.Application.Dto.Models.Room;
-
 namespace YourRest.Application.Dto
 {
     public class CreateAccommodationDto
@@ -9,5 +6,6 @@ namespace YourRest.Application.Dto
         public int AccommodationTypeId { get; set; }
         public int? Stars { get; set; }
         public string Description { get; set; }
+        public List<string>? FilesPath { get; set; }
     }
 }

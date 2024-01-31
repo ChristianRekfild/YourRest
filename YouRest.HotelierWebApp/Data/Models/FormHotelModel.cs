@@ -8,9 +8,9 @@
         public string Address { get; set; }
         public string HotelName { get; set; }
         public string HotelType { get; set; }
-        public string HotelRating { get; set; } = "Без рейтинга";
+        public string HotelRating { get; set; }
         public string HotelDescription { get; set; }
         public string ZipCode { get; set; }
-        public List<string> Images { get; set; } = new();
+        public List<HotelImgModel>? Images { get; set; }
     }
 }

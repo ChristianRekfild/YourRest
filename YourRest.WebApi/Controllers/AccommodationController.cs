@@ -17,18 +17,21 @@ namespace YourRest.WebApi.Controllers
         private readonly IFetchAccommodationsUseCase _fetchAccommodationsUseCase;
         private readonly ICreateAccommodationUseCase _createAccommodationUseCase;
         private readonly IDeleteAddressFromAccommodationUseCase _deleteAddressFromAccommodationUseCase;
+        private readonly IGetAccomodationFilesPathByAccomodationIdUseCase getAccomodationFilesPathByAccomodationIdUseCase;
 
         public AccommodationController(
             IAddAddressToAccommodationUseCase addAddressToAccommodationUseCase,
             IFetchAccommodationsUseCase fetchAccommodationsUseCase,
             ICreateAccommodationUseCase createAccommodationUseCase,
-            IDeleteAddressFromAccommodationUseCase deleteAddressFromAccommodationUseCase
+            IDeleteAddressFromAccommodationUseCase deleteAddressFromAccommodationUseCase,
+            IGetAccomodationFilesPathByAccomodationIdUseCase getAccomodationFilesPathByAccomodationIdUseCase
             )
         {
             _addAddressToAccommodationUseCase = addAddressToAccommodationUseCase;
             _fetchAccommodationsUseCase = fetchAccommodationsUseCase;
             _createAccommodationUseCase = createAccommodationUseCase;
             _deleteAddressFromAccommodationUseCase = deleteAddressFromAccommodationUseCase;
+            this.getAccomodationFilesPathByAccomodationIdUseCase = getAccomodationFilesPathByAccomodationIdUseCase;
         }
 
         [HttpPost("api/operators/accommodations/{accommodationId}/address", Name = "AddAddressToAccommodationAsync")]
@@ -83,6 +86,13 @@ namespace YourRest.WebApi.Controllers
 
             var createdAccommodation = await _createAccommodationUseCase.ExecuteAsync(accommodationExtendedDto, sub, HttpContext.RequestAborted);
             return CreatedAtAction(nameof(Post), createdAccommodation);
+        }
+        [HttpGet]
+        [Route("api/accommodations/{id}")]
+        public async Task<IActionResult> GetFilesPath([FromRoute] RouteViewModel route)
+        {
+            var getAccommodationWithFilesPath = await getAccomodationFilesPathByAccomodationIdUseCase.ExecuteAsync(route.Id, HttpContext.RequestAborted);
+            return Ok(getAccommodationWithFilesPath);
         }
     }
 }

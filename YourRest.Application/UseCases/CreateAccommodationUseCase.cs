@@ -16,7 +16,8 @@ namespace YourRest.Application.UseCases
             IAccommodationTypeRepository accommodationTypeRepository,
             IAccommodationRepository accommodationRepository,
             IUserRepository userRepository
-        ) {
+        )
+        {
             _accommodationTypeRepository = accommodationTypeRepository;
             _accommodationRepository = accommodationRepository;
             _userRepository = userRepository;
@@ -30,7 +31,7 @@ namespace YourRest.Application.UseCases
             {
                 throw new EntityNotFoundException($"Accommodation Type with id {accommodationDto.AccommodationTypeId} not found");
             }
-            
+
             var users = await _userRepository.FindAsync(a => a.KeyCloakId == userKeyCloakId, cancellationToken);
             var user = users.FirstOrDefault();
 
@@ -43,20 +44,24 @@ namespace YourRest.Application.UseCases
             accommodation.Description = accommodationDto.Description;
             accommodation.Name = accommodationDto.Name;
             accommodation.AccommodationTypeId = accommodationDto.AccommodationTypeId;
-            
+
             if (accommodationDto.Stars >= 1 && accommodationDto.Stars <= 5)
             {
                 var accommodationStarRating = new AccommodationStarRating
                 {
-                    Stars = accommodationDto.Stars.Value, 
+                    Stars = accommodationDto.Stars.Value,
                     Accommodation = accommodation
                 };
                 accommodation.StarRating = accommodationStarRating;
             }
-            
+
             accommodation.UserAccommodations.Add(new UserAccommodation { User = user, Accommodation = accommodation });
 
-            var savedAccommodation = await _accommodationRepository.AddAsync(accommodation, cancellationToken:cancellationToken);
+            var savedAccommodation = await _accommodationRepository.AddAsync(accommodation, cancellationToken: cancellationToken);
+
+            var addedFilesPath = (await _accommodationRepository.GetWithIncludeAsync(acc => acc.Id == savedAccommodation.Id, cancellationToken, include => include.AccommodationPhotos))
+                .FirstOrDefault()?.AccommodationPhotos?.Select(accPhoto => accPhoto.FilePath).ToList();
+
 
             var accommodationTypeDto = new AccommodationTypeDto()
             {
@@ -69,7 +74,8 @@ namespace YourRest.Application.UseCases
                 Description = savedAccommodation.Description,
                 Name = savedAccommodation.Name,
                 AccommodationType = accommodationTypeDto,
-                Stars = savedAccommodation.StarRating?.Stars
+                Stars = savedAccommodation.StarRating?.Stars,
+                FilesPath = addedFilesPath,
             };
 
             return savedAccommodationDto;

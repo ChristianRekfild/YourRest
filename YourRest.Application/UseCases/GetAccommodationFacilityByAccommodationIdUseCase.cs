@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using YourRest.Application.Dto.Mappers;
 using YourRest.Application.Dto.Models.AccommodationFacility;
 using YourRest.Application.Exceptions;
 using YourRest.Application.Interfaces.AccommodationFacility;

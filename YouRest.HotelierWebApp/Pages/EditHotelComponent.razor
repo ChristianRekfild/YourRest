@@ -5,19 +5,19 @@
         <h4> Редактирование отеля в системе YouRest</h4>
     </div>
     <div class="row">
-        <EditForm Model="@HotelViewModel.CurrentHotelModelForm" OnSubmit="@EditHotel">
+        <EditForm Model="@EditHotelViewModel" OnSubmit="@EditHotel">
             <FluentValidationValidator @ref="EditFormValidator" />
             <ValidationSummary />
             <div class="input-group mb-3">
                 <label class="input-group-text" for="Countries">Страна</label>
-                <InputSelect class="form-select" id="Countries" @bind-Value="HotelViewModel.CurrentHotelModelForm.Country">
-                    @if (string.IsNullOrEmpty(HotelViewModel.CurrentHotelModelForm.Country))
+                <InputSelect class="form-select" id="Countries" @bind-Value="EditHotelViewModel.Country">
+                    @if (string.IsNullOrEmpty(EditHotelViewModel.Country))
                     {
                         <option selected>Выберите страну</option>
                     }
                     @foreach (CountryModel country in Countries)
                     {
-                        if (country.Name == HotelViewModel.CurrentHotelModelForm.Country)
+                        if (country.Name == EditHotelViewModel.Country)
                         {
                             <option selected>@country.Name</option>
                         }
@@ -30,14 +30,14 @@
             </div>
 
             <div class="input-group mb-3">
-                <InputSelect class="form-select" id="Regions" @bind-Value="@HotelViewModel.CurrentHotelModelForm.Region">
-                    @if (string.IsNullOrEmpty(HotelViewModel.CurrentHotelModelForm.Region))
+                <InputSelect class="form-select" id="Regions" @bind-Value="@EditHotelViewModel.Region">
+                    @if (string.IsNullOrEmpty(EditHotelViewModel.Region))
                     {
                         <option selected>Выберите регион</option>
                     }
                     @foreach (RegionModel region in Regions)
                     {
-                        if (region.Name == HotelViewModel.CurrentHotelModelForm.Region)
+                        if (region.Name == EditHotelViewModel.Region)
                         {
                             <option selected>@region.Name</option>
                         }
@@ -51,14 +51,14 @@
             </div>
             <div class="input-group mb-3">
                 <label class="input-group-text" for="Cities">Населенный пункт</label>
-                <InputSelect class="form-select" id="Cities" @bind-Value="@HotelViewModel.CurrentHotelModelForm.City">
-                    @if (string.IsNullOrEmpty(HotelViewModel.CurrentHotelModelForm.City))
+                <InputSelect class="form-select" id="Cities" @bind-Value="@EditHotelViewModel.City">
+                    @if (string.IsNullOrEmpty(EditHotelViewModel.City))
                     {
                         <option selected>Выберите населенный пункт</option>
                     }
                     @foreach (CityModel city in Cities)
                     {
-                        if (city.Name == HotelViewModel.CurrentHotelModelForm.City)
+                        if (city.Name == EditHotelViewModel.City)
                         {
                             <option selected>@city.Name</option>
                         }
@@ -71,29 +71,29 @@
             </div>
             <div class="input-group mb-3">
                 <label class="input-group-text" for="Address">Адрес</label>
-                <InputText @bind-Value="@HotelViewModel.CurrentHotelModelForm.Address" id="Address" type="text" class="form-control" placeholder="Введите адрес"></InputText>
+                <InputText @bind-Value="@EditHotelViewModel.Address" id="Address" type="text" class="form-control" placeholder="Введите адрес"></InputText>
                 <label class="input-group-text" for="ZipCode">Индекс</label>
-                <InputText @bind-Value="@HotelViewModel.CurrentHotelModelForm.ZipCode" id="ZipCode" type="text" class="form-control" placeholder="Введите индекс"></InputText>
+                <InputText @bind-Value="@EditHotelViewModel.ZipCode" id="ZipCode" type="text" class="form-control" placeholder="Введите индекс"></InputText>
             </div>
             <div class="input-group mb-3">
                 <label class="input-group-text" for="HotelName">Название объекта</label>
-                <InputText id="HotelName" type="text" @bind-Value="HotelViewModel.CurrentHotelModelForm.HotelName"
+                <InputText id="HotelName" type="text" @bind-Value="EditHotelViewModel.HotelName"
                            class="form-control" placeholder="Введите название объекта"></InputText>
             </div>
             <div class="input-group mb-3">
                 <span class="input-group-text">Описание объекта</span>
-                <InputTextArea @bind-Value="HotelViewModel.CurrentHotelModelForm.HotelDescription" class="form-control" placeholder="Введите описание объекта"></InputTextArea>
+                <InputTextArea @bind-Value="EditHotelViewModel.HotelDescription" class="form-control" placeholder="Введите описание объекта"></InputTextArea>
             </div>
             <div class="input-group mb-3">
                 <label class="input-group-text" for="HotelType">Тип объекта</label>
-                <InputSelect class="form-select" id="HotelType" @bind-Value="@HotelViewModel.CurrentHotelModelForm.HotelType">
-                    @if (string.IsNullOrEmpty(HotelViewModel.CurrentHotelModelForm.HotelType))
+                <InputSelect class="form-select" id="HotelType" @bind-Value="@EditHotelViewModel.HotelType">
+                    @if (string.IsNullOrEmpty(EditHotelViewModel.HotelType))
                     {
                         <option selected>Выберите тип</option>
                     }
                     @foreach (HotelTypeModel hotelType in HotelTypes)
                     {
-                        if (hotelType.Name == HotelViewModel.CurrentHotelModelForm.HotelType)
+                        if (hotelType.Name == EditHotelViewModel.HotelType)
                         {
                             <option selected>@hotelType.Name</option>
                         }
@@ -104,7 +104,7 @@
                     }
                 </InputSelect>
                 <label class="input-group-text" for="HotelRating">Уровень комфорта</label>
-                <InputSelect class="form-select" id="HotelRating" @bind-Value="@HotelViewModel.CurrentHotelModelForm.HotelRating">
+                <InputSelect class="form-select" id="HotelRating" @bind-Value="@EditHotelViewModel.HotelRating">
                     <option selected>Без рейтинга</option>
                     <option>Одна звезда</option>
                     <option>Две звезды</option>
@@ -118,14 +118,14 @@
                            multiple accept=".png,.jpg,.jpeg" type="file" class="form-control" id="inputGroupFile"></InputFile>
                 <label class="input-group-text" for="inputGroupFile">Добавить фото</label>
             </div>
-            @if (HotelViewModel.CurrentHotelModelForm.Images.Any())
+            @if (EditHotelViewModel.Images is not null)
             {
-                <PreviewImagesComponent @bind-Images="@HotelViewModel.CurrentHotelModelForm.Images" />
+                <PreviewImagesComponent @bind-Images="@EditHotelViewModel.Images" />
             }
         </EditForm>
     </div>
     <div class="row row_btn justify-content-end">
-        <div class="cancel_btn" style="margin-right: 1%;" @onclick="@(() => Navigation.NavigateTo("/hotels"))"> Отменить </div>
+        <div class="cancel_btn" style="margin-right: 1%;" @onclick="CancelEdit"> Отменить </div>
         <div class="edit_btn" @onclick="EditHotel"> Изменить </div>
     </div>
 </div>

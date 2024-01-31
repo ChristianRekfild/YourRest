@@ -11,5 +11,6 @@ namespace YourRest.Application.Dto
         public string? Description { get; set; }
         
         public int? Stars { get; set; }
+        public List<string>? FilesPath { get; set; }
     }
 }

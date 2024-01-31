@@ -29,7 +29,7 @@ namespace YouRest.HotelierWebApp.Pages
         [Parameter] public IEnumerable<CityModel> Cities { get; set; } = new List<CityModel>();
         [Parameter] public IEnumerable<HotelTypeModel> HotelTypes { get; set; } = new List<HotelTypeModel>();
 
-        
+
 
         protected async override Task OnInitializedAsync()
         {
@@ -55,41 +55,52 @@ namespace YouRest.HotelierWebApp.Pages
                     },
                 _tokenSource.Token);
 
-               var createdAddress =  await ServiceRepository.AddressService.CreateAddressAsync(
-                    new AddressModel()
-                    {
-                        CityId = Cities.Single(s => s.Name == CreateHotelViewModel.City).Id,
-                        Street = CreateHotelViewModel.Address,
-                        ZipCode = CreateHotelViewModel.ZipCode,
-                    }, createdHotel.Id,
-                _tokenSource.Token);
+                var createdAddress = await ServiceRepository.AddressService.CreateAddressAsync(
+                     new AddressModel()
+                     {
+                         CityId = Cities.Single(s => s.Name == CreateHotelViewModel.City).Id,
+                         Street = CreateHotelViewModel.Address,
+                         ZipCode = CreateHotelViewModel.ZipCode,
+                     }, createdHotel.Id,
+                 _tokenSource.Token);
                 HotelViewModel.Hotels.Add(new HotelModel
                 {
                     Id = createdHotel.Id,
                     AccommodationTypeId = createdHotel.AccommodationTypeId,
                     Name = createdHotel.Name,
-                    Description= createdHotel.Description,
-                    Stars= createdHotel.Stars,
+                    Description = createdHotel.Description,
+                    Stars = createdHotel.Stars,
                     AccommodationType = createdHotel.AccommodationType,
                     Rooms = createdHotel.Rooms,
                     Address = createdAddress
                 });
-                CreateHotelViewModel = new FormHotelModel();
+                if (CreateHotelViewModel.Images is not null)
+                {
+                    foreach (var image in CreateHotelViewModel.Images)
+                    {
+                        image.AccommodationId = createdHotel.Id;
+                        await ServiceRepository.FileService.UploadAsync(image, _tokenSource.Token);
+                    }
+                }
                 NavigationManager.NavigateTo("/hotels");
             }
         }
 
         public async Task LoadFiles(InputFileChangeEventArgs e)
         {
-            if (!CreateHotelViewModel.Images.Any()) CreateHotelViewModel.Images.Clear();
+            CreateHotelViewModel.Images = new();
             var files = e.GetMultipleFiles(maximumFileCount: 5);
             foreach (var file in files)
             {
                 using MemoryStream memoryStream = new();
                 await file.OpenReadStream(file.Size).CopyToAsync(memoryStream);
-                CreateHotelViewModel.Images.Add($"data:{file.ContentType}; base64,{Convert.ToBase64String(memoryStream.ToArray())}");
+                CreateHotelViewModel.Images.Add(new()
+                {
+                    FileName = file.Name,
+                    Photo = $"data:{file.ContentType}; base64,{Convert.ToBase64String(memoryStream.ToArray())}"
+                });
+
             }
-            //await FileService.Upload(e.File);
             inputFileId = Guid.NewGuid().ToString();
         }
 

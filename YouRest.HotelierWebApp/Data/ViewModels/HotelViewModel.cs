@@ -12,14 +12,14 @@ namespace YouRest.HotelierWebApp.Data.ViewModels
 
         public FormHotelModel CurrentHotelModelForm { get => _currentFormHotelModel; set => SetProperty(ref _currentFormHotelModel, value); }
         public HotelModel CurrentHotel { get => _currentHotelModel; set => SetProperty(ref _currentHotelModel, value); }
-        public ObservableCollection<HotelModel> Hotels { get; set; } = new();
+        public ObservableCollection<HotelModel>? Hotels { get; set; }
         
         public event Action? OnHotelChanged;
 
         public HotelViewModel()
         {
             OnChanged += NotifyHotelChanged;
-            Hotels.CollectionChanged += Hotels_CollectionChanged;
+            //Hotels?.CollectionChanged += Hotels_CollectionChanged;
         }
 
         private void Hotels_CollectionChanged(object? sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)

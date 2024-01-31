@@ -1,10 +1,8 @@
 ﻿using BlazorBootstrap;
 using Microsoft.AspNetCore.Components;
-using System.Net;
 using YouRest.HotelierWebApp.Data;
 using YouRest.HotelierWebApp.Data.Models;
 using YouRest.HotelierWebApp.Data.Services.Abstractions;
-using YouRest.HotelierWebApp.Data.ViewModels;
 using YouRest.HotelierWebApp.Data.ViewModels.Interfaces;
 
 namespace YouRest.HotelierWebApp.Pages
@@ -23,7 +21,16 @@ namespace YouRest.HotelierWebApp.Pages
             await base.OnInitializedAsync();
             HotelViewModel.OnHotelChanged += HotelViewModel_PropertyChenged;
             var _hotels = await ServiceRepository.HotelService.FetchHotelsAsync(tokenSource.Token);
-            await HotelViewModel.Initialize(_hotels);
+            if(HotelViewModel.Hotels is null)
+            {
+                await HotelViewModel.Initialize(_hotels);
+            }
+            HotelViewModel.Hotels?.Clear();
+            foreach (var hotel in _hotels) 
+            {
+                HotelViewModel.Hotels?.Add(hotel);
+            }
+                
         }
 
         public void NavigateToCreate() => Navigation.NavigateTo("hotels/create");
@@ -32,15 +39,16 @@ namespace YouRest.HotelierWebApp.Pages
         {
             StateHasChanged();
         }
-        public void SelectedHotel(HotelModel hotel)
+        public async Task SelectedHotel(HotelModel hotel)
         {
             HotelViewModel.CurrentHotel = hotel;
+            await hotel.FillHotelModelFormAsync(ServiceRepository, HotelViewModel);
             Navigation.NavigateTo($"hotels/{hotel.Id}");
         }
         public async Task EditHotel(HotelModel hotel)
         {
             HotelViewModel.CurrentHotel = hotel;
-            HotelViewModel.CurrentHotelModelForm = await hotel.FillHotelModelFormAsync(ServiceRepository);
+            await hotel.FillHotelModelFormAsync(ServiceRepository, HotelViewModel);
             Navigation.NavigateTo($"hotels/{hotel.Id}/edit");
         }
         public async Task RemoveHotel(HotelModel hotel)

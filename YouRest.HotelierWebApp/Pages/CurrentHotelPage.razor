@@ -12,18 +12,40 @@
 
 <div class="hotel-subtitle">
     <Icon Name="IconName.GeoAltFill" Color="IconColor.Primary" Size="IconSize.x6" />
-    <p class="hotel_subtitle-address">@HotelViewModel.CurrentHotelModelForm.Country @HotelViewModel.CurrentHotelModelForm.Region @HotelViewModel.CurrentHotelModelForm.City @HotelViewModel.CurrentHotelModelForm.Address</p>
+    <p class="hotel_subtitle-address">@HotelViewModel.CurrentHotelModelForm.ZipCode @HotelViewModel.CurrentHotelModelForm.Country @HotelViewModel.CurrentHotelModelForm.Region @HotelViewModel.CurrentHotelModelForm.City @HotelViewModel.CurrentHotelModelForm.Address</p>
 </div>
 <div class="hotel-body">
     <div class="hotel_body-gallery">
+        <div class="hotel_body_gallery-main">
+            @if (HotelViewModel.CurrentHotelModelForm.Images?.Count >= 1)
+            {
+                <img src="@HotelViewModel.CurrentHotelModelForm.Images.ElementAt(0).Photo" alt="main photo" />
+            }
+            else
+            {
+                <img class="border" src="/Images/hotel_default_2.png" alt="main photo" />
+            }
+            
+        </div>
         <div class="hotel_body_gallery-first">
-            <img src="/Images/1.jpg" alt="first photo" />
+            @if (HotelViewModel.CurrentHotelModelForm.Images?.Count >= 2)
+            {
+                <img src="@HotelViewModel.CurrentHotelModelForm.Images.ElementAt(1).Photo" alt="first photo" />
+            }
+            else
+            {
+                <img class="border" src="/Images/hotel_default_2.png" alt="first photo" />
+            }
         </div>
         <div class="hotel_body_gallery-second">
-            <img src="/Images/2.jpg" alt="second photo" />
-        </div>
-        <div class="hotel_body_gallery-main">
-            <img src="/Images/2.jpg" alt="main photo" />
+            @if (HotelViewModel.CurrentHotelModelForm.Images?.Count >= 3)
+            {
+                <img src="@HotelViewModel.CurrentHotelModelForm.Images.ElementAt(2).Photo" alt="second photo" />
+            }
+            else
+            {
+                <img class="border" src="/Images/hotel_default_2.png" alt="second photo" />
+            }
         </div>
     </div>
 </div>

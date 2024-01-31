@@ -3,9 +3,11 @@ using IdentityModel.Client;
 using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
 using System.IdentityModel.Tokens.Jwt;
 using System.Runtime.CompilerServices;
+using System.Text.Json;
 using YouRest.HotelierWebApp.Data.Models;
 using YouRest.HotelierWebApp.Data.Services;
 using YouRest.HotelierWebApp.Data.Services.Abstractions;
+using YouRest.HotelierWebApp.Data.ViewModels.Interfaces;
 
 namespace YouRest.HotelierWebApp.Data
 {
@@ -31,32 +33,33 @@ namespace YouRest.HotelierWebApp.Data
             }
             else return null;
         }
-        public static async Task<FormHotelModel> FillHotelModelFormAsync(this HotelModel hotel, IServiceRepository serviceRepository, CancellationToken cancellationToken = default)
+        public static T DeepCopy<T>(this T obj) => JsonSerializer.Deserialize<T>(JsonSerializer.Serialize<T>(obj));
+        
+        public static async Task FillHotelModelFormAsync(this HotelModel hotel, IServiceRepository serviceRepository, IHotelViewModel viewModel, CancellationToken cancellationToken = default)
         {
-            FormHotelModel result = new()
-            {
-                HotelName = hotel.Name,
-                HotelDescription = hotel.Description,
-                HotelRating = serviceRepository.HotelService.ConvertHotelRating(hotel.Stars)
-            };
-            if (hotel.AccommodationType is null) return result;
-            result.HotelType = hotel.AccommodationType.Name;
-            if (hotel.Address is null) return result;
-            result.Address = hotel.Address.Street;
-            result.ZipCode = hotel.Address.ZipCode;
+
+            viewModel.CurrentHotelModelForm.HotelName = hotel.Name;
+            viewModel.CurrentHotelModelForm.HotelDescription = hotel.Description;
+            viewModel.CurrentHotelModelForm.HotelRating = serviceRepository.HotelService.ConvertHotelRating(hotel.Stars);
+
+            if (hotel.AccommodationType is null) return;
+            viewModel.CurrentHotelModelForm.HotelType = hotel.AccommodationType.Name;
+            if (hotel.Address is null) return;
+            viewModel.CurrentHotelModelForm.Address = hotel.Address.Street;
+            viewModel.CurrentHotelModelForm.ZipCode = hotel.Address.ZipCode;
             var hotelType = (await serviceRepository.HotelTypeService.FetchHotelTypesAsync(cancellationToken))?.FirstOrDefault(ht => ht.Id == hotel.AccommodationType?.Id);
-            if (hotelType is null) return result;
-            result.HotelType = hotelType.Name;
+            if (hotelType is null) return;
+            viewModel.CurrentHotelModelForm.HotelType = hotelType.Name;
             var city = (await serviceRepository.CityService.FetchCytiesAsync(cancellationToken))?.FirstOrDefault(c => c.Id == hotel.Address.CityId);
-            if (city is null) return result;
-            result.City = city.Name;
+            if (city is null) return;
+            viewModel.CurrentHotelModelForm.City = city.Name;
             var region = (await serviceRepository.RegionService.FetchRegionsAsync(cancellationToken))?.FirstOrDefault(r => r.Id == city.RegionId);
-            if (region is null) return result;
-            result.Region = region.Name;
+            if (region is null) return;
+            viewModel.CurrentHotelModelForm.Region = region.Name;
             var country = await serviceRepository.CountryService.FetchCountryAsync(region.CountryId, cancellationToken);
-            if (country is null) return result;
-            result.Country = country.Name;
-            return result;
+            if (country is null) return;
+            viewModel.CurrentHotelModelForm.Country = country.Name;
+
         }
     }
 }
