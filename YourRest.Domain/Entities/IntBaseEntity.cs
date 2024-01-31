@@ -1,6 +1,8 @@
-﻿namespace YourRest.Domain.Entities
+﻿using YourRest.Domain.Events;
+
+namespace YourRest.Domain.Entities
 {
-    public abstract class IntBaseEntity : BaseEntity<Int32>
+    public abstract class IntBaseEntity : BaseEntity<int>, IDomainEvent
     {
     }
 }

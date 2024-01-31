@@ -114,6 +114,7 @@ namespace YourRest.Application
             services.AddScoped<IGetAddressUseCase, GetAddressUseCase>();
             services.AddScoped<IRemoveAddressUseCase, RemoveAddressUseCase>();
             services.AddScoped<IDeleteAddressFromAccommodationUseCase, DeleteAddressFromAccommodationUseCase>();
+            services.AddSingleton<EventDispatcher>();
 
             return services;
         }
