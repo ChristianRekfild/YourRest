@@ -43,7 +43,7 @@ namespace YourRest.WebApi.Tests.Controllers
             var addressDto = CreateValidAddressDto(city.Id);
             
             var content = new StringContent(JsonConvert.SerializeObject(addressDto), Encoding.UTF8, "application/json");
-            var response = await fixture.Client.PostAsync($"api/operators/accommodations/{accommodation.Id}/address", content);
+            var response = await fixture.Client.PostAsync($"api/accommodations/{accommodation.Id}/address", content);
             Assert.Equal(HttpStatusCode.Created, response.StatusCode);
 
             var responseString = await response.Content.ReadAsStringAsync();
@@ -76,7 +76,7 @@ namespace YourRest.WebApi.Tests.Controllers
             var addressDto = CreateValidAddressDto(city.Id);
             addressDto.Street = "Second street";
             var content = new StringContent(JsonConvert.SerializeObject(addressDto), Encoding.UTF8, "application/json");
-            var response = await fixture.Client.PostAsync($"api/operators/accommodations/{accommodation.Id}/address", content);
+            var response = await fixture.Client.PostAsync($"api/accommodations/{accommodation.Id}/address", content);
             Assert.Equal(HttpStatusCode.Created, response.StatusCode);
 
             var createdAddress = await response.Content.ReadFromJsonAsync<ResultDto>();
@@ -96,7 +96,7 @@ namespace YourRest.WebApi.Tests.Controllers
             addressDto.Street = "Thrid street";
 
             var content = new StringContent(JsonConvert.SerializeObject(addressDto), Encoding.UTF8, "application/json");
-            var response = await fixture.Client.PostAsync($"api/operators/accommodations/{accommodationId}/address", content);
+            var response = await fixture.Client.PostAsync($"api/accommodations/{accommodationId}/address", content);
            
             var errorMassage = await response.Content.ReadAsStringAsync();
             var expectedMessage = new { message = $"Accommodation with id {accommodationId} not found" };
@@ -125,7 +125,7 @@ namespace YourRest.WebApi.Tests.Controllers
             };
 
             var content = new StringContent(JsonConvert.SerializeObject(addressDto), Encoding.UTF8, "application/json");
-            var response = await fixture.Client.PostAsync($"api/operators/accommodations/{accommodation.Id}/address", content);
+            var response = await fixture.Client.PostAsync($"api/accommodations/{accommodation.Id}/address", content);
 
             Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
 
@@ -155,7 +155,7 @@ namespace YourRest.WebApi.Tests.Controllers
                 CityId = -1
             };
             var content = new StringContent(JsonConvert.SerializeObject(addressDto), Encoding.UTF8, "application/json");
-            var response = await fixture.Client.PostAsync($"api/operators/accommodations/{accommodation.Id}/address", content);
+            var response = await fixture.Client.PostAsync($"api/accommodations/{accommodation.Id}/address", content);
             var errorData = await response.Content.ReadFromJsonAsync<ErrorViewModel>();
 
             Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
@@ -196,7 +196,7 @@ namespace YourRest.WebApi.Tests.Controllers
             addressDto.Street = "Fifth street";
 
             var content = new StringContent(JsonConvert.SerializeObject(addressDto), Encoding.UTF8, "application/json");
-            var response = await fixture.Client.PostAsync($"api/operators/accommodations/{accommodation.Id}/address", content);
+            var response = await fixture.Client.PostAsync($"api/accommodations/{accommodation.Id}/address", content);
 
             Assert.Equal(HttpStatusCode.UnprocessableEntity, response.StatusCode);
 

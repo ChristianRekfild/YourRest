@@ -37,23 +37,21 @@ namespace YourRest.WebApi.Controllers
 
         [HttpGet]
         [Route("api/cities")]
-        public async Task<IActionResult> GetCities([FromQuery] int? regionId = null, [FromQuery] int? countryId = null)
+        public async Task<IActionResult> GetCities([FromQuery] int? regionId = null, [FromQuery] int? countryId = null, [FromQuery] bool isOnlyFavorite = false)
         {
             if (regionId.HasValue)
             {
-                var citiesByRegion = await _getCityByRegionIdUseCase.Execute(regionId.Value);
+                var citiesByRegion = await _getCityByRegionIdUseCase.Execute(regionId.Value, isOnlyFavorite, HttpContext.RequestAborted);
                 return Ok(citiesByRegion);
             }
-            else if (countryId.HasValue)
+
+            if (countryId.HasValue)
             {
-                var citiesByCountry = await _getCityByCountryIdUseCase.Execute(countryId.Value);
+                var citiesByCountry = await _getCityByCountryIdUseCase.Execute(countryId.Value, isOnlyFavorite, HttpContext.RequestAborted);
                 return Ok(citiesByCountry);
             }
-            else
-            {
-                var allCities = await _getCityListUseCase.Execute();
-                return Ok(allCities);
-            }
+            var allCities = await _getCityListUseCase.Execute(isOnlyFavorite, HttpContext.RequestAborted);
+            return Ok(allCities);
         }
     }
 }

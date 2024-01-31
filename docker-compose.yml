@@ -32,6 +32,8 @@ services:
       - keycloakdb
     networks:
       - local-network
+    volumes:
+      - keycloak-data:/opt/jboss/keycloak/standalone/data
 
   keycloakdb:
     image: postgres:latest
@@ -73,6 +75,7 @@ services:
 volumes:
   pgdata:
   minio-data:
+  keycloak-data:
 
 networks:
   local-network:

@@ -5,5 +5,7 @@ namespace YourRest.WebApi.Options
         public string Accommodation { get; set; }
         public string Room { get; set; }
         public string User { get; set; }
+        
+        public string City { get; set; }
     }
 }

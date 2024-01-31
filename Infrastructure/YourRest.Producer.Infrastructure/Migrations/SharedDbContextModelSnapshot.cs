@@ -288,6 +288,12 @@ namespace YourRest.Producer.Infrastructure.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("Description")
+                        .HasColumnType("text");
+
+                    b.Property<bool>("IsFavorite")
+                        .HasColumnType("boolean");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text");
@@ -300,6 +306,28 @@ namespace YourRest.Producer.Infrastructure.Migrations
                     b.HasIndex("RegionId");
 
                     b.ToTable("Cities");
+                });
+
+            modelBuilder.Entity("YourRest.Domain.Entities.CityPhoto", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("CityId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("FilePath")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CityId");
+
+                    b.ToTable("CityPhotos");
                 });
 
             modelBuilder.Entity("YourRest.Domain.Entities.Country", b =>
@@ -690,6 +718,17 @@ namespace YourRest.Producer.Infrastructure.Migrations
                     b.Navigation("Region");
                 });
 
+            modelBuilder.Entity("YourRest.Domain.Entities.CityPhoto", b =>
+                {
+                    b.HasOne("YourRest.Domain.Entities.City", "City")
+                        .WithMany("CityPhotos")
+                        .HasForeignKey("CityId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("City");
+                });
+
             modelBuilder.Entity("YourRest.Domain.Entities.Region", b =>
                 {
                     b.HasOne("YourRest.Domain.Entities.Country", "Country")
@@ -792,7 +831,7 @@ namespace YourRest.Producer.Infrastructure.Migrations
             modelBuilder.Entity("YourRest.Domain.Entities.UserPhoto", b =>
                 {
                     b.HasOne("YourRest.Domain.Entities.User", "User")
-                        .WithMany()
+                        .WithMany("UserPhotos")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -819,6 +858,8 @@ namespace YourRest.Producer.Infrastructure.Migrations
             modelBuilder.Entity("YourRest.Domain.Entities.City", b =>
                 {
                     b.Navigation("Addresses");
+
+                    b.Navigation("CityPhotos");
                 });
 
             modelBuilder.Entity("YourRest.Domain.Entities.Country", b =>
@@ -834,6 +875,8 @@ namespace YourRest.Producer.Infrastructure.Migrations
             modelBuilder.Entity("YourRest.Domain.Entities.User", b =>
                 {
                     b.Navigation("UserAccommodations");
+
+                    b.Navigation("UserPhotos");
                 });
 #pragma warning restore 612, 618
         }

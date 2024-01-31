@@ -30,6 +30,8 @@ namespace YourRest.Infrastructure.Core.DbContexts
         
         public DbSet<RoomPhoto> RoomPhotos { get; set; }
         public DbSet<UserPhoto> UserPhotos { get; set; }
+        
+        public DbSet<CityPhoto> CityPhotos { get; set; }
 
         static SharedDbContext()
         {
@@ -116,6 +118,7 @@ namespace YourRest.Infrastructure.Core.DbContexts
             AccommodationPhotos.RemoveRange(AccommodationPhotos);
             RoomPhotos.RemoveRange(RoomPhotos);
             UserPhotos.RemoveRange(UserPhotos);
+            CityPhotos.RemoveRange(CityPhotos);
 
             SaveChanges();
         }

@@ -1,0 +1,782 @@
+{
+	"info": {
+		"_postman_id": "d51b39ae-aa07-4f3a-b855-3b86ad5e1c04",
+		"name": "YourRest -City images",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "2219203"
+	},
+	"item": [
+		{
+			"name": "http://localhost:5000/api/city-photo Москва",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"let cityId = parseInt(pm.environment.get(\"cityId\") || 1);",
+							"",
+							"if (cityId <= 10) {",
+							"    pm.environment.set(\"cityId\", cityId);",
+							"    pm.environment.set(\"cityfilepath\", `${cityId}.jpg`);",
+							"",
+							"    pm.environment.set(\"cityId\", cityId + 1);",
+							"} else {",
+							"    pm.environment.set(\"cityId\", 1);",
+							"    postman.setNextRequest(null);",
+							"}",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"let counter = pm.environment.get(\"counter\") || 1;",
+							"if (counter < 10) {",
+							"    pm.environment.set(\"counter\", ++counter);",
+							"    postman.setNextRequest(\"http://localhost:5000/api/city-photo\");",
+							"} else {",
+							"    pm.environment.unset(\"counter\");",
+							"    postman.setNextRequest(null);",
+							"}",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "CityId",
+							"value": "{{cityId}}",
+							"type": "text"
+						},
+						{
+							"key": "Photo",
+							"type": "file",
+							"src": "1.jpg"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:5000/api/city-photo",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"city-photo"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:5000/api/city-photo Зеленоград",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"let cityId = parseInt(pm.environment.get(\"cityId\") || 1);",
+							"",
+							"if (cityId <= 10) {",
+							"    pm.environment.set(\"cityId\", cityId);",
+							"    pm.environment.set(\"cityfilepath\", `${cityId}.jpg`);",
+							"",
+							"    pm.environment.set(\"cityId\", cityId + 1);",
+							"} else {",
+							"    pm.environment.set(\"cityId\", 1);",
+							"    postman.setNextRequest(null);",
+							"}",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"let counter = pm.environment.get(\"counter\") || 1;",
+							"if (counter < 10) {",
+							"    pm.environment.set(\"counter\", ++counter);",
+							"    postman.setNextRequest(\"http://localhost:5000/api/city-photo\");",
+							"} else {",
+							"    pm.environment.unset(\"counter\");",
+							"    postman.setNextRequest(null);",
+							"}",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "CityId",
+							"value": "{{cityId}}",
+							"type": "text"
+						},
+						{
+							"key": "Photo",
+							"type": "file",
+							"src": "1.jpg"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:5000/api/city-photo",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"city-photo"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:5000/api/city-photo Подольск",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"let cityId = parseInt(pm.environment.get(\"cityId\") || 1);",
+							"",
+							"if (cityId <= 10) {",
+							"    pm.environment.set(\"cityId\", cityId);",
+							"    pm.environment.set(\"cityfilepath\", `${cityId}.jpg`);",
+							"",
+							"    pm.environment.set(\"cityId\", cityId + 1);",
+							"} else {",
+							"    pm.environment.set(\"cityId\", 1);",
+							"    postman.setNextRequest(null);",
+							"}",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"let counter = pm.environment.get(\"counter\") || 1;",
+							"if (counter < 10) {",
+							"    pm.environment.set(\"counter\", ++counter);",
+							"    postman.setNextRequest(\"http://localhost:5000/api/city-photo\");",
+							"} else {",
+							"    pm.environment.unset(\"counter\");",
+							"    postman.setNextRequest(null);",
+							"}",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "CityId",
+							"value": "{{cityId}}",
+							"type": "text"
+						},
+						{
+							"key": "Photo",
+							"type": "file",
+							"src": "1.jpg"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:5000/api/city-photo",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"city-photo"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:5000/api/city-photo Всеволожск",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"let cityId = parseInt(pm.environment.get(\"cityId\") || 1);",
+							"",
+							"if (cityId <= 10) {",
+							"    pm.environment.set(\"cityId\", cityId);",
+							"    pm.environment.set(\"cityfilepath\", `${cityId}.jpg`);",
+							"",
+							"    pm.environment.set(\"cityId\", cityId + 1);",
+							"} else {",
+							"    pm.environment.set(\"cityId\", 1);",
+							"    postman.setNextRequest(null);",
+							"}",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"let counter = pm.environment.get(\"counter\") || 1;",
+							"if (counter < 10) {",
+							"    pm.environment.set(\"counter\", ++counter);",
+							"    postman.setNextRequest(\"http://localhost:5000/api/city-photo\");",
+							"} else {",
+							"    pm.environment.unset(\"counter\");",
+							"    postman.setNextRequest(null);",
+							"}",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "CityId",
+							"value": "{{cityId}}",
+							"type": "text"
+						},
+						{
+							"key": "Photo",
+							"type": "file",
+							"src": "1.jpg"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:5000/api/city-photo",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"city-photo"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:5000/api/city-photo Гатчина",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"let cityId = parseInt(pm.environment.get(\"cityId\") || 1);",
+							"",
+							"if (cityId <= 10) {",
+							"    pm.environment.set(\"cityId\", cityId);",
+							"    pm.environment.set(\"cityfilepath\", `${cityId}.jpg`);",
+							"",
+							"    pm.environment.set(\"cityId\", cityId + 1);",
+							"} else {",
+							"    pm.environment.set(\"cityId\", 1);",
+							"    postman.setNextRequest(null);",
+							"}",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"let counter = pm.environment.get(\"counter\") || 1;",
+							"if (counter < 10) {",
+							"    pm.environment.set(\"counter\", ++counter);",
+							"    postman.setNextRequest(\"http://localhost:5000/api/city-photo\");",
+							"} else {",
+							"    pm.environment.unset(\"counter\");",
+							"    postman.setNextRequest(null);",
+							"}",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "CityId",
+							"value": "{{cityId}}",
+							"type": "text"
+						},
+						{
+							"key": "Photo",
+							"type": "file",
+							"src": "1.jpg"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:5000/api/city-photo",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"city-photo"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:5000/api/city-photo Екатеринбург",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"let cityId = parseInt(pm.environment.get(\"cityId\") || 1);",
+							"",
+							"if (cityId <= 10) {",
+							"    pm.environment.set(\"cityId\", cityId);",
+							"    pm.environment.set(\"cityfilepath\", `${cityId}.jpg`);",
+							"",
+							"    pm.environment.set(\"cityId\", cityId + 1);",
+							"} else {",
+							"    pm.environment.set(\"cityId\", 1);",
+							"    postman.setNextRequest(null);",
+							"}",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"let counter = pm.environment.get(\"counter\") || 1;",
+							"if (counter < 10) {",
+							"    pm.environment.set(\"counter\", ++counter);",
+							"    postman.setNextRequest(\"http://localhost:5000/api/city-photo\");",
+							"} else {",
+							"    pm.environment.unset(\"counter\");",
+							"    postman.setNextRequest(null);",
+							"}",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "CityId",
+							"value": "{{cityId}}",
+							"type": "text"
+						},
+						{
+							"key": "Photo",
+							"type": "file",
+							"src": "1.jpg"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:5000/api/city-photo",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"city-photo"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:5000/api/city-photo Нижний Тагил",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"let cityId = parseInt(pm.environment.get(\"cityId\") || 1);",
+							"",
+							"if (cityId <= 10) {",
+							"    pm.environment.set(\"cityId\", cityId);",
+							"    pm.environment.set(\"cityfilepath\", `${cityId}.jpg`);",
+							"",
+							"    pm.environment.set(\"cityId\", cityId + 1);",
+							"} else {",
+							"    pm.environment.set(\"cityId\", 1);",
+							"    postman.setNextRequest(null);",
+							"}",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"let counter = pm.environment.get(\"counter\") || 1;",
+							"if (counter < 10) {",
+							"    pm.environment.set(\"counter\", ++counter);",
+							"    postman.setNextRequest(\"http://localhost:5000/api/city-photo\");",
+							"} else {",
+							"    pm.environment.unset(\"counter\");",
+							"    postman.setNextRequest(null);",
+							"}",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "CityId",
+							"value": "{{cityId}}",
+							"type": "text"
+						},
+						{
+							"key": "Photo",
+							"type": "file",
+							"src": "1.jpg"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:5000/api/city-photo",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"city-photo"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:5000/api/city-photo Краснодар",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"let cityId = parseInt(pm.environment.get(\"cityId\") || 1);",
+							"",
+							"if (cityId <= 10) {",
+							"    pm.environment.set(\"cityId\", cityId);",
+							"    pm.environment.set(\"cityfilepath\", `${cityId}.jpg`);",
+							"",
+							"    pm.environment.set(\"cityId\", cityId + 1);",
+							"} else {",
+							"    pm.environment.set(\"cityId\", 1);",
+							"    postman.setNextRequest(null);",
+							"}",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"let counter = pm.environment.get(\"counter\") || 1;",
+							"if (counter < 10) {",
+							"    pm.environment.set(\"counter\", ++counter);",
+							"    postman.setNextRequest(\"http://localhost:5000/api/city-photo\");",
+							"} else {",
+							"    pm.environment.unset(\"counter\");",
+							"    postman.setNextRequest(null);",
+							"}",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "CityId",
+							"value": "{{cityId}}",
+							"type": "text"
+						},
+						{
+							"key": "Photo",
+							"type": "file",
+							"src": "1.jpg"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:5000/api/city-photo",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"city-photo"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:5000/api/city-photo Сочи",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"let cityId = parseInt(pm.environment.get(\"cityId\") || 1);",
+							"",
+							"if (cityId <= 10) {",
+							"    pm.environment.set(\"cityId\", cityId);",
+							"    pm.environment.set(\"cityfilepath\", `${cityId}.jpg`);",
+							"",
+							"    pm.environment.set(\"cityId\", cityId + 1);",
+							"} else {",
+							"    pm.environment.set(\"cityId\", 1);",
+							"    postman.setNextRequest(null);",
+							"}",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"let counter = pm.environment.get(\"counter\") || 1;",
+							"if (counter < 10) {",
+							"    pm.environment.set(\"counter\", ++counter);",
+							"    postman.setNextRequest(\"http://localhost:5000/api/city-photo\");",
+							"} else {",
+							"    pm.environment.unset(\"counter\");",
+							"    postman.setNextRequest(null);",
+							"}",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "CityId",
+							"value": "{{cityId}}",
+							"type": "text"
+						},
+						{
+							"key": "Photo",
+							"type": "file",
+							"src": "1.jpg"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:5000/api/city-photo",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"city-photo"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:5000/api/city-photo Анапа",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"let cityId = parseInt(pm.environment.get(\"cityId\") || 1);",
+							"",
+							"if (cityId <= 10) {",
+							"    pm.environment.set(\"cityId\", cityId);",
+							"    pm.environment.set(\"cityfilepath\", `${cityId}.jpg`);",
+							"",
+							"    pm.environment.set(\"cityId\", cityId + 1);",
+							"} else {",
+							"    pm.environment.set(\"cityId\", 1);",
+							"    postman.setNextRequest(null);",
+							"}",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"let counter = pm.environment.get(\"counter\") || 1;",
+							"if (counter < 10) {",
+							"    pm.environment.set(\"counter\", ++counter);",
+							"    postman.setNextRequest(\"http://localhost:5000/api/city-photo\");",
+							"} else {",
+							"    pm.environment.unset(\"counter\");",
+							"    postman.setNextRequest(null);",
+							"}",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "CityId",
+							"value": "{{cityId}}",
+							"type": "text"
+						},
+						{
+							"key": "Photo",
+							"type": "file",
+							"src": "1.jpg"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:5000/api/city-photo",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"city-photo"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "cityId",
+			"value": "1",
+			"type": "string"
+		},
+		{
+			"key": "cityfilepath",
+			"value": "1",
+			"type": "string"
+		}
+	]
+}

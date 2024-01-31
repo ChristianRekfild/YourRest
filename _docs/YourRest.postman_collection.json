@@ -2,10 +2,127 @@
 	"info": {
 		"_postman_id": "aadd7753-db4e-4236-a9b5-991a44f67cc5",
 		"name": "YourRest",
-		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "2219203"
 	},
 	"item": [
+		{
+			"name": "http://localhost:5000/api/user-registration",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"",
+							"pm.environment.set(\"token\", jsonData.accessToken);",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"username\": \"lilia.retsia\",\n  \"password\": \"123456\",\n  \"firstname\": \"Lilia\",\n  \"lastname\": \"Retsia\",\n  \"email\": \"retsialilia@gmail.com\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5000/api/user-registration",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"user-registration"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:5000/api/user-photo",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"var file = jsonData;",
+							"pm.environment.set(\"filepath\", file.filePath);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "Photo",
+							"type": "file",
+							"src": "avatar.jpeg"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:5000/api/user-photo",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"user-photo"
+					]
+				}
+			},
+			"response": []
+		},
 		{
 			"name": "http://localhost:5000/api/accommodation-types",
 			"event": [
@@ -26,7 +143,18 @@
 			"request": {
 				"method": "GET",
 				"header": [],
-				"url": "http://localhost:5000/api/accommodation-types"
+				"url": {
+					"raw": "http://localhost:5000/api/accommodation-types",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"accommodation-types"
+					]
+				}
 			},
 			"response": []
 		},
@@ -47,10 +175,8 @@
 					"script": {
 						"exec": [
 							"var jsonData = JSON.parse(responseBody);",
-							"if(jsonData.length > 0){",
-							"    var accommodation = jsonData;",
-							"    pm.environment.set(\"accommodationId\", accommodation.id);",
-							"}"
+							"var accommodation = jsonData;",
+							"pm.environment.set(\"accommodationId\", accommodation.id);"
 						],
 						"type": "text/javascript"
 					}
@@ -60,11 +186,21 @@
 				"disabledSystemHeaders": {}
 			},
 			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
 				"method": "POST",
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n  \"description\": \"The Test Hotel is a modern, mid-sized hotel located in the heart of the city. It features 100 well-appointed rooms, each equipped with comfortable bedding, a work desk, and complimentary Wi-Fi. Guests can enjoy amenities like an on-site restaurant serving international cuisine, a fitness center, and a rooftop terrace with panoramic city views. The hotel is ideal for both business and leisure travelers seeking convenience and quality service.\",\n  \"name\": \"The Test Hotel\",\n  \"accommodationTypeId\": \"{{accommodationTypeId}}\"\n}",
+					"raw": "{\n  \"description\": \"The Test Hotel is a modern, mid-sized hotel located in the heart of the city. It features 100 well-appointed rooms, each equipped with comfortable bedding, a work desk, and complimentary Wi-Fi. Guests can enjoy amenities like an on-site restaurant serving international cuisine, a fitness center, and a rooftop terrace with panoramic city views. The hotel is ideal for both business and leisure travelers seeking convenience and quality service.\",\n  \"name\": \"The Test Hotel\",\n  \"accommodationTypeId\": \"{{accommodationTypeId}}\",\n  \"stars\": 4\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -104,56 +240,7 @@
 			"response": []
 		},
 		{
-			"name": "http://localhost:5000/api/operator/accommodation-photo",
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "formdata",
-					"formdata": [
-						{
-							"key": "AccommodationId",
-							"value": "{{accommodationId}}",
-							"type": "text"
-						},
-						{
-							"key": "Photo",
-							"type": "file",
-							"src": "fernando-alvarez-rodriguez-M7GddPqJowg-unsplash.jpg"
-						}
-					]
-				},
-				"url": "http://localhost:5000/api/operator/accommodation-photo"
-			},
-			"response": []
-		},
-		{
-			"name": "http://localhost:5000/api/roomTypes",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"var jsonData = JSON.parse(responseBody);",
-							"if(jsonData.length > 0){",
-							"    var roomType = jsonData[0];",
-							"    pm.environment.set(\"roomTypeId\", roomType.Id);",
-							"}",
-							""
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": "http://localhost:5000/api/roomTypes"
-			},
-			"response": []
-		},
-		{
-			"name": "http://localhost:5000/api/accommodation/1/rooms",
+			"name": "http://localhost:5000/api/accommodations/{{accommodationId}}/address",
 			"event": [
 				{
 					"listen": "test",
@@ -184,19 +271,223 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n  \"name\": \"deluxe\",\n  \"squareInMeter\": 60,\n  \"roomType\": \"deluxe\",\n  \"capacity\": 3\n}",
+					"raw": "{\n  \"street\": \"Измайловское шоссе, 71, к 3В\",\n  \"zipCode\": \"105187\",\n  \"longitude\": 55.7558,\n  \"latitude\": 37.6173,\n  \"cityId\": 1\n}",
 					"options": {
 						"raw": {
 							"language": "json"
 						}
 					}
 				},
-				"url": "http://localhost:5000/api/accommodation/1/rooms"
+				"url": {
+					"raw": "http://localhost:5000/api/accommodations/{{accommodationId}}/address",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"accommodations",
+						"{{accommodationId}}",
+						"address"
+					]
+				}
 			},
 			"response": []
 		},
 		{
-			"name": "http://localhost:5000/api/operator/room-photo",
+			"name": "http://localhost:5000/api/accommodation/{{accommodationId}}/facility",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"let counter = pm.environment.get(\"counter\") || 1;",
+							"if (counter < 2) {",
+							"    pm.environment.set(\"counter\", ++counter);",
+							"    postman.setNextRequest(\"http://localhost:5000/api/accommodation/{{accommodationId}}/facility\");",
+							"} else {",
+							"    pm.environment.unset(\"counter\");",
+							"}",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"let facilityId = parseInt(pm.environment.get(\"facilityId\") || 0);",
+							"",
+							"if (facilityId < 2) {",
+							"    pm.environment.set(\"facilityId\", facilityId + 1);",
+							"} else {",
+							"    pm.environment.set(\"facilityId\", 1);",
+							"}"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"facilityId\": {{facilityId}}\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5000/api/accommodation/{{accommodationId}}/facility",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"accommodation",
+						"{{accommodationId}}",
+						"facility"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:5000/api/accommodation-photo",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "AccommodationId",
+							"value": "{{accommodationId}}",
+							"type": "text"
+						},
+						{
+							"key": "Photo",
+							"type": "file",
+							"src": "fernando-alvarez-rodriguez-M7GddPqJowg-unsplash.jpg"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:5000/api/accommodation-photo",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"accommodation-photo"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:5000/api/roomTypes",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"var roomType = jsonData[0];",
+							"pm.environment.set(\"roomTypeId\", roomType.id);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:5000/api/roomTypes",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"roomTypes"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:5000/api/accommodations/{{accommodationId}}/rooms",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"if(jsonData.length > 0){",
+							"    var room = jsonData;",
+							"    pm.environment.set(\"roomId\", room.id);",
+							"}"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"var roomTypeId = pm.environment.get(\"roomTypeId\");",
+							"pm.variables.set(\"roomTypeId\", roomTypeId);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"name\": \"deluxe\",\n  \"squareInMeter\": 60,\n  \"roomTypeId\": {{roomTypeId}},\n  \"capacity\": 3\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5000/api/accommodations/{{accommodationId}}/rooms",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"accommodations",
+						"{{accommodationId}}",
+						"rooms"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:5000/api/room-photo",
 			"event": [
 				{
 					"listen": "prerequest",
@@ -237,16 +528,49 @@
 						}
 					]
 				},
-				"url": "http://localhost:5000/api/operator/room-photo"
+				"url": {
+					"raw": "http://localhost:5000/api/room-photo",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"room-photo"
+					]
+				}
 			},
 			"response": []
 		},
 		{
-			"name": "http://localhost:5000/api/operator/photo/{{filepath}}",
+			"name": "http://localhost:5000/api/photo/{{filepath}}",
 			"request": {
 				"method": "GET",
 				"header": [],
-				"url": "http://localhost:5000/api/operator/photo/{{filepath}}"
+				"url": {
+					"raw": "http://localhost:5000/api/photo/{{filepath}}?bucketType=Room&shouldReturnStream=true",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"photo",
+						"{{filepath}}"
+					],
+					"query": [
+						{
+							"key": "bucketType",
+							"value": "Room"
+						},
+						{
+							"key": "shouldReturnStream",
+							"value": "true"
+						}
+					]
+				}
 			},
 			"response": []
 		}
@@ -295,6 +619,16 @@
 		{
 			"key": "filepath",
 			"value": "test",
+			"type": "string"
+		},
+		{
+			"key": "token",
+			"value": "test_token",
+			"type": "string"
+		},
+		{
+			"key": "facilityId",
+			"value": "1",
 			"type": "string"
 		}
 	]
