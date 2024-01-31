@@ -130,7 +130,7 @@ public class Program
         
         services.AddMassTransit(x =>
         {
-            // x.AddConsumer<AccommodationCreatedConsumer>();
+            x.AddConsumer<AccommodationCreatedConsumer>();
 
             x.UsingRabbitMq((context, cfg) =>
             {
@@ -140,10 +140,10 @@ public class Program
                     h.Password("guest");
                 });
 
-                // cfg.ReceiveEndpoint("accommodation_created_queue", e =>
-                // {
-                //     e.ConfigureConsumer<AccommodationCreatedConsumer>(context);
-                // });
+                cfg.ReceiveEndpoint("accommodation_created_queue", e =>
+                {
+                    e.ConfigureConsumer<AccommodationCreatedConsumer>(context);
+                });
             });
         });
         
