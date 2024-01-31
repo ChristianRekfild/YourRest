@@ -42,7 +42,7 @@ services:
       - POSTGRES_USER=keycloak
       - POSTGRES_PASSWORD=keycloakpassword
     volumes:
-      - keycloakdb-data:/var/lib/postgresql/data
+      - pgdata:/var/lib/postgresql/data
     networks:
       - local-network
 
