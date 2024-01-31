@@ -1,6 +1,6 @@
 ﻿using MassTransit;
 using Microsoft.AspNetCore.Components;
-using YourRest.ClientWebApp.Models;
+using YouRest.HotelierWebApp.Data.Models;
 using YourRest.Domain.Entities;
 
 namespace YourRest.ClientWebApp.Views.Shared.Components

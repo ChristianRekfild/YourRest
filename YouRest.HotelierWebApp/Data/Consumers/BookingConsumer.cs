@@ -11,11 +11,11 @@ namespace YouRest.HotelierWebApp.Data.Consumers
         {
             this.logger = logger;
         }
-        public async Task Consume(ConsumeContext<BookingModel> context)
+        public Task Consume(ConsumeContext<BookingModel> context)
         {
-            var response = new BookingModel();
-            await context.RespondAsync(response);
-            logger.LogInformation($"You have received a new reservation from: {response.FirstName} {response.LastName}");
+
+            logger.LogInformation($"[Received][{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")}] У Вас новое бронирование от: {context.Message.FirstName} {context.Message.LastName}");
+            return Task.CompletedTask;
         }
     }
 }
