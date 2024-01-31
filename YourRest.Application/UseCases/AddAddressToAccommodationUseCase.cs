@@ -84,6 +84,5 @@ namespace YourRest.Application.UseCases
                 CityId = address.CityId,
             };
         }
-
     }
 }

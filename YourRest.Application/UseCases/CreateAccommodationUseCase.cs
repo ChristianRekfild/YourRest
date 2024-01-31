@@ -3,6 +3,7 @@ using YourRest.Application.Interfaces;
 using YourRest.Domain.Repositories;
 using YourRest.Domain.Entities;
 using YourRest.Application.Dto;
+using YourRest.Domain.Service.AccommodationService;
 
 namespace YourRest.Application.UseCases
 {
@@ -30,7 +31,7 @@ namespace YourRest.Application.UseCases
             {
                 throw new EntityNotFoundException($"Accommodation Type with id {accommodationDto.AccommodationTypeId} not found");
             }
-            
+    
             var users = await _userRepository.FindAsync(a => a.KeyCloakId == userKeyCloakId, cancellationToken);
             var user = users.FirstOrDefault();
 
@@ -39,31 +40,29 @@ namespace YourRest.Application.UseCases
                 throw new EntityNotFoundException(userKeyCloakId);
             }
 
-            var accommodation = new Accommodation();
-            accommodation.Description = accommodationDto.Description;
-            accommodation.Name = accommodationDto.Name;
-            accommodation.AccommodationTypeId = accommodationDto.AccommodationTypeId;
-            
-            if (accommodationDto.Stars >= 1 && accommodationDto.Stars <= 5)
+            var accommodationBuilder = new AccommodationBuilder(accommodationDto.Name, accommodationType);
+            accommodationBuilder.WithDescription(accommodationDto.Description);
+
+            if (accommodationDto.Stars.HasValue && accommodationDto.Stars >= 1 && accommodationDto.Stars <= 5)
             {
-                var accommodationStarRating = new AccommodationStarRating
+                accommodationBuilder.WithStarRating(new AccommodationStarRating
                 {
-                    Stars = accommodationDto.Stars.Value, 
-                    Accommodation = accommodation
-                };
-                accommodation.StarRating = accommodationStarRating;
+                    Stars = accommodationDto.Stars.Value
+                });
             }
-            
+
+            var accommodation = accommodationBuilder.Build();
+
             accommodation.UserAccommodations.Add(new UserAccommodation { User = user, Accommodation = accommodation });
 
-            var savedAccommodation = await _accommodationRepository.AddAsync(accommodation, cancellationToken:cancellationToken);
+            var savedAccommodation = await _accommodationRepository.AddAsync(accommodation, cancellationToken: cancellationToken);
 
-            var accommodationTypeDto = new AccommodationTypeDto()
+            var accommodationTypeDto = new AccommodationTypeDto
             {
                 Id = accommodationType.Id,
                 Name = accommodationType.Name
             };
-            var savedAccommodationDto = new AccommodationDto()
+            var savedAccommodationDto = new AccommodationDto
             {
                 Id = savedAccommodation.Id,
                 Description = savedAccommodation.Description,
