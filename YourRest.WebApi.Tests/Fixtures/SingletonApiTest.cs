@@ -46,11 +46,8 @@ namespace YourRest.WebApi.Tests.Fixtures
             Task.WaitAll(projectTask, keycloakTask);
             //keycloakFixture.EnsureInitialized();
             //keycloakFixture.Start();
-
-
         }
-
-
+        
         private string BuildConnectionString()
         {
             var originalConnectionString = dbFixture.ConnectionString;

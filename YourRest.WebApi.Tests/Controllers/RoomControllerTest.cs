@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using AutoMapper;
 using Newtonsoft.Json;
 using System.Net;
@@ -228,6 +229,52 @@ namespace YourRest.WebApi.Tests.Controllers
             Assert.Equal(roomResponse?.Capacity, roomEntity.Capacity);
             Assert.Equal(roomResponse?.SquareInMeter, roomEntity.SquareInMeter);
         }
+        
+        [Fact]
+        public async Task AddRooms_Concurrently_ReturnsStatusCodeCreated()
+        {
+            var roomType = new RoomType { Name = "Test Type " };
+            await fixture.InsertObjectIntoDatabase(roomType);
+
+            var accommodationEntity = new Accommodation
+            {
+                Name = "Test ",
+                AccommodationType = new AccommodationType { Name = "Test Type " }
+            };
+            var accommodation = await fixture.InsertObjectIntoDatabase(accommodationEntity);
+            
+            var tasks = new List<Task>();
+            int numberOfParallelTasks = 10;
+            var stopwatch = Stopwatch.StartNew();
+
+            for (int i = 0; i < numberOfParallelTasks; i++)
+            {
+                tasks.Add(Task.Run(async () =>
+                {
+                    var roomEntity = new RoomDto { Name = "Room" + i, Capacity = 20, SquareInMeter = 30, RoomTypeId = roomType.Id };
+                    var content = new StringContent(JsonConvert.SerializeObject(roomEntity), Encoding.UTF8, "application/json");
+                    var response = await fixture.Client.PostAsync($"api/accommodations/{accommodation.Id}/rooms", content);
+
+                    Assert.Equal(HttpStatusCode.Created, response.StatusCode);
+
+                    var responseContent = await response.Content.ReadAsStringAsync();
+                    var roomResponse = JsonConvert.DeserializeObject<RoomWithIdDto>(responseContent);
+
+                    Assert.Equal(roomResponse?.Name, roomEntity.Name);
+                    Assert.Equal(roomResponse?.RoomTypeId, roomEntity.RoomTypeId);
+                    Assert.Equal(roomResponse?.Capacity, roomEntity.Capacity);
+                    Assert.Equal(roomResponse?.SquareInMeter, roomEntity.SquareInMeter);
+                }));
+            }
+
+            await Task.WhenAll(tasks);
+            stopwatch.Stop();
+            Console.WriteLine($"Total execution time: {stopwatch.ElapsedMilliseconds} ms");
+
+            long maxAllowedTime = 1000;
+            Assert.True(stopwatch.ElapsedMilliseconds <= maxAllowedTime, $"Execution time exceeded the maximum allowed time of {maxAllowedTime} ms.");
+        }
+
         [Fact]
         public async Task AddRoom_ReturnsNotFound_WhenAddRoomWitFakeAccommodation()
         {
